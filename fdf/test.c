@@ -251,7 +251,7 @@ int		main(int argc, char **argv)
 			return (ft_unexpected_error());
 		if (!(mlx = ft_new_mlx(WIDTH, HEIGHT, "fdf")))
 			return (ft_connection_failed());
-		pov->head_balance = -50.0;
+		pov->head_balance = 30.0;
 		mlx->mesh = mesh;
 		mlx->pov = pov;
 		//ft_render_mesh(mlx);
