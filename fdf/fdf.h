@@ -6,7 +6,7 @@
 /*   By: dbousque <dbousque@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/12/09 15:05:02 by dbousque          #+#    #+#             */
-/*   Updated: 2015/12/10 12:29:39 by dbousque         ###   ########.fr       */
+/*   Updated: 2015/12/10 20:39:33 by dbousque         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,7 @@ typedef struct	s_pov
 	double		y;
 	double		height;
 	double		head_balance;
+	double		zoom;
 }				t_pov;
 
 typedef struct	s_rect
@@ -65,5 +66,7 @@ int				ft_unexpected_error(void);
 t_point			*ft_new_point(double x, double y, int height);
 t_rect			*ft_new_rect(t_point *one, t_point *two, t_point *three, t_point *four);
 int				ft_get_color(t_point *p1, t_point *p2, double percentage);
+void			ft_draw_line(t_mlx *mlx, t_point *p1, t_point *p2,
+					int (*ft_clr) (t_point *p1, t_point *p2, double perc));
 
 #endif

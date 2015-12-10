@@ -215,6 +215,7 @@ t_pov	*ft_stdpov(void)
 	res->y = (double)(HEIGHT / 2);
 	res->height = 500.0;
 	res->head_balance = 0.0;
+	res->zoom = 2.0;
 	return (res);
 }
 

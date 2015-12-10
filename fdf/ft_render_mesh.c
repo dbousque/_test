@@ -6,7 +6,7 @@
 /*   By: dbousque <dbousque@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/12/09 14:24:19 by dbousque          #+#    #+#             */
-/*   Updated: 2015/12/10 19:02:07 by dbousque         ###   ########.fr       */
+/*   Updated: 2015/12/10 20:43:13 by dbousque         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,14 @@ typedef struct	s_vector
 	double		x_step;
 	double		y_step;
 }				t_vector;
+
+int		ft_get_color2(t_point *p1, t_point *p2, double percentage)
+{
+	(void)p1;
+	(void)p2;
+	(void)percentage;
+	return (0xFF0000);
+}
 
 int			ft_nb_lines(int **mesh)
 {
@@ -59,55 +67,75 @@ double		ft_invert(double inp)
 	return (1.0 - inp);
 }
 
-double		ft_get_min(int **mesh)
+double		ft_get_min(t_mlx *mlx)
 {
 	double		min;
+	int			nb_lines;
 
-	min = (double)((double)(HEIGHT) * 0.5 / ft_nb_lines(mesh));
-	if (min > (double)(((double)WIDTH) * 0.5 / ft_nb_lines(mesh)))
-		min = (double)(((double)WIDTH) * 0.5 / ft_nb_lines(mesh));
-	if (min > (double)(((double)HEIGHT) * 0.5 / mesh[0][0]))
-		min = (double)(((double)HEIGHT) * 0.5 / mesh[0][0]);
-	if (min > (double)(((double)WIDTH) * 0.5 / mesh[0][0]))
-		min = (double)(((double)WIDTH) * 0.5 / mesh[0][0]);
+	nb_lines = ft_nb_lines(mlx->mesh);
+	min = (double)((double)(HEIGHT) / mlx->pov->zoom / nb_lines);
+	if (min > (double)(((double)WIDTH) / mlx->pov->zoom / nb_lines))
+		min = (double)(((double)WIDTH) / mlx->pov->zoom / nb_lines);
+	if (min > (double)(((double)HEIGHT) / mlx->pov->zoom / mlx->mesh[0][0]))
+		min = (double)(((double)HEIGHT) / mlx->pov->zoom / mlx->mesh[0][0]);
+	if (min > (double)(((double)WIDTH) / mlx->pov->zoom / mlx->mesh[0][0]))
+		min = (double)(((double)WIDTH) / mlx->pov->zoom / mlx->mesh[0][0]);
 	return (min);
 }
 
-void		ft_get_start_point(double *x_start, double *y_start, t_pov *pov, t_vector *dev, int **mesh, double min, t_mlx *mlx)
+void		ft_get_start_point(double *x_start, double *y_start, t_mlx *mlx, t_vector *dev)
 {
 	int		tab_height;
 	int		tab_width;
 	t_point	*tmp_pnt;
 
-	tab_width = mesh[0][0];
-	tab_height = ft_nb_lines(mesh);
+	tab_width = mlx->mesh[0][0];
+	tab_height = ft_nb_lines(mlx->mesh);
 
-	tmp_pnt = ft_new_point(WIDTH / 2 + (   (  ((tab_height - 1) * min)   / 2.0) * sin(pov->head_balance * RAD)   ),
-		   				HEIGHT / 2 - (     (  ((tab_height - 1) * min)   / 2.0) * cos(pov->head_balance * RAD)), 0.0);
+	tmp_pnt = ft_new_point(WIDTH / 2 + ((tab_height - 1) / 2.0 * dev->y_step),
+		   				HEIGHT / 2 - ((tab_height - 1) / 2.0 * dev->x_step), 0.0);
+	*x_start = tmp_pnt->x - (((tab_width - 1) / 2.0) * dev->x_step);
+	*y_start = tmp_pnt->y - (((tab_width - 1) / 2.0) * dev->y_step);
+}
 
+/*void		ft_draw_multicolumn_start(t_mlx *mlx, double start_x, double start_y, t_vector *dev)
+{
+	int		nb_lines;
+	int		i;
 
-	mlx_pixel_put(mlx->mlx, mlx->win, WIDTH / 2, HEIGHT / 2, 0x00FF00);
-	mlx_pixel_put(mlx->mlx, mlx->win, WIDTH / 2 + 1, HEIGHT / 2, 0x00FF00);
-	mlx_pixel_put(mlx->mlx, mlx->win, WIDTH / 2 - 1, HEIGHT / 2 + 1, 0x00FF00);
-	mlx_pixel_put(mlx->mlx, mlx->win, WIDTH / 2 + 1, HEIGHT / 2 + 1, 0x00FF00);
+	i = 0;
+	nb_lines = ft_nb_lines(mlx->mesh);
+	while (i < nb_lines)
+	{
+		ft_draw_line(mlx, ft_new_point(start_x, start_y), ft_new_point(start_x + dev->x_step, start_y + dev->y_step), ft_fet_color2);
+		start_x += dev->y_step;
+		start_y += dev->x_step;
+		i++;
+	}
+}*/
 
-	mlx_pixel_put(mlx->mlx, mlx->win, tmp_pnt->x, tmp_pnt->y, 0x0000FF);
-	mlx_pixel_put(mlx->mlx, mlx->win, tmp_pnt->x + 1, tmp_pnt->y, 0x0000FF);
-	mlx_pixel_put(mlx->mlx, mlx->win, tmp_pnt->x - 1, tmp_pnt->y + 1, 0x0000FF);
-	mlx_pixel_put(mlx->mlx, mlx->win, tmp_pnt->x + 1, tmp_pnt->y + 1, 0x0000FF);
+void		ft_draw_multiline(t_mlx *mlx, double start_x, double start_y, t_vector *dev)
+{
+	int		i;
 
+	i = 1;
+	while (i < mlx->mesh[0][0])
+	{
+		ft_draw_line(mlx, ft_new_point(start_x, start_y, 0.0), ft_new_point(start_x + dev->x_step, start_y + dev->y_step, 0.0), ft_get_color2);
+		start_x += dev->x_step;
+		start_y += dev->y_step;
+		i++;
+	}
+}
 
-	*x_start = tmp_pnt->x - (((tab_width - 1) * min / 2.0) * cos(pov->head_balance * RAD));
-	*y_start = tmp_pnt->y - (((tab_width - 1) * min / 2.0) * sin(pov->head_balance * RAD));
-	   	
-	
-	mlx_pixel_put(mlx->mlx, mlx->win, *x_start, *y_start, 0xFFFFFF);
-	mlx_pixel_put(mlx->mlx, mlx->win, *x_start + 1, *y_start, 0xFFFFFF);
-	mlx_pixel_put(mlx->mlx, mlx->win, *x_start - 1, *y_start + 1, 0xFFFFFF);
-	mlx_pixel_put(mlx->mlx, mlx->win, *x_start + 1, *y_start + 1, 0xFFFFFF);
+void		ft_draw_around_mesh(t_mlx *mlx, t_vector *dev, double start_x, double start_y)
+{
+	int		nb_lines;
 
-	//*x_start = WIDTH / 2 + (-dev->x_step * (((double)tab_width) / 2.0));
-	//*y_start = HEIGHT / 2 + (-dev->y_step * (((double)tab_height) / 2.0));
+	nb_lines = ft_nb_lines(mlx->mesh);
+	ft_draw_multiline(mlx, start_x, start_y, dev);
+	ft_draw_multiline(mlx, start_x - (nb_lines - 1) * dev->y_step, start_y + (nb_lines - 1) * dev->x_step, dev);
+	//ft_draw_multicolum(mlx->mesh, 1, start_x, start_y, dev);
 }
 
 int			ft_render_mesh(void *mlx_param)
@@ -117,37 +145,38 @@ int			ft_render_mesh(void *mlx_param)
 	double		current_x;
 	double		current_y;
 	t_vector	*dev;
-	t_pov		*pov;
 	t_mlx		*mlx;
-	int			**mesh;
+	double		start_x;
+	double		start_y;
+	int			nb_lines;
 
 	mlx = (t_mlx*)mlx_param;
-	mesh = mlx->mesh;
-	mlx->pov->head_balance += 0.01;
-	pov = mlx->pov;
+	mlx->pov->zoom -= 0.01;
+//	mlx->pov->head_balance += 0.1;
 	double	min;
+	nb_lines = ft_nb_lines(mlx->mesh);
 
-	min = ft_get_min(mesh);
-	dev = ft_new_vector(cos(pov->head_balance * RAD) * min, sin(pov->head_balance * RAD) * min);
-	//printf("%f, %f\n",dev->x_step, dev->y_step);
+	min = ft_get_min(mlx);
+	dev = ft_new_vector(cos(mlx->pov->head_balance * RAD) * min, sin(mlx->pov->head_balance * RAD) * min);
+	ft_get_start_point(&start_x, &start_y, mlx, dev);
+	ft_draw_around_mesh(mlx, dev, start_x, start_y);
 	y = 0;
-	while (mesh[y + 1])
+	while (mlx->mesh[y + 1])
 	{
-		x = 1;
-		ft_get_start_point(&current_x, &current_y, pov, dev, mesh, min, mlx);
-		current_x -= (y * dev->y_step);
-		current_y += (y * dev->x_step);
-		while (x < mesh[y][0])
+		x = (y % 2 == 0 ? 1 : 2);
+		current_x = (x == 1 ? start_x - (y * dev->y_step) : start_x - (y * dev->y_step) + dev->x_step);
+		current_y = (x == 1 ? start_y + (y * dev->x_step) : start_y + (y * dev->x_step) + dev->y_step);
+		while (x < mlx->mesh[y][0])
 		{
 			ft_draw_rect(mlx, ft_new_rect(
-					ft_new_point(current_x, current_y, mesh[y][x]),
-					ft_new_point(current_x + dev->x_step, current_y + dev->y_step, mesh[y][x + 1]),
-					ft_new_point(current_x + dev->x_step - dev->y_step, current_y + dev->y_step + dev->x_step, mesh[y + 1][x + 1]),
-					ft_new_point(current_x - dev->y_step, current_y + dev->x_step, mesh[y + 1][x])
+					ft_new_point(current_x, current_y, mlx->mesh[y][x]),
+					ft_new_point(current_x + dev->x_step, current_y + dev->y_step, mlx->mesh[y][x + 1]),
+					ft_new_point(current_x + dev->x_step - dev->y_step, current_y + dev->y_step + dev->x_step, mlx->mesh[y + 1][x + 1]),
+					ft_new_point(current_x - dev->y_step, current_y + dev->x_step, mlx->mesh[y + 1][x])
 										), ft_get_color);
-			current_x += dev->x_step;
-			current_y += dev->y_step;
-			x++;
+			current_x += dev->x_step * 2;
+			current_y += dev->y_step * 2;
+			x += 2;
 		}
 		y++;
 	}
