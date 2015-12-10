@@ -6,7 +6,7 @@
 /*   By: dbousque <dbousque@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/12/09 14:24:19 by dbousque          #+#    #+#             */
-/*   Updated: 2015/12/09 18:50:23 by dbousque         ###   ########.fr       */
+/*   Updated: 2015/12/10 12:28:38 by dbousque         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,9 +41,7 @@ t_vector	*ft_new_vector(double x, double y)
 
 double		ft_invert(double inp)
 {
-	if (inp >= 0.0)
-		return (1.0 - inp);
-	return (-1.0 - inp);
+	return (1.0 - inp);
 }
 
 int			ft_render_mesh(void *mlx_param)
@@ -59,14 +57,14 @@ int			ft_render_mesh(void *mlx_param)
 
 	mlx = (t_mlx*)mlx_param;
 	mesh = mlx->mesh;
-	mlx->pov->head_balance += 0.005;
+	mlx->pov->head_balance += 0.1;
 	pov = mlx->pov;
 	double	min;
 
 	min = (double)((double)(HEIGHT) * 0.5 / ft_nb_lines(mesh));
 	if (min > (double)(((double)WIDTH) * 0.5 / mesh[0][0]))
 		min = (double)(((double)WIDTH) * 0.5 / mesh[0][0]);
-	dev = ft_new_vector(ft_invert(pov->head_balance) * min, pov->head_balance * min);
+	dev = ft_new_vector(sin(pov->head_balance * RAD) * min, cos(pov->head_balance * RAD) * min);
 	y = 0;
 	while (mesh[y + 1])
 	{

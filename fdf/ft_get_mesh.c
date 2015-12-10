@@ -6,19 +6,11 @@
 /*   By: dbousque <dbousque@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/12/09 11:21:21 by dbousque          #+#    #+#             */
-/*   Updated: 2015/12/09 15:07:32 by dbousque         ###   ########.fr       */
+/*   Updated: 2015/12/10 11:24:57 by dbousque         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <fcntl.h>
-
-#include <unistd.h>
-
-#include <stdlib.h>
-
-#include "libft.h"
-
-#include "get_next_line.h"
+#include "fdf.h"
 
 int		ft_strstrlen(char **strstr)
 {

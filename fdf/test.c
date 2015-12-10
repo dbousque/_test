@@ -251,12 +251,13 @@ int		main(int argc, char **argv)
 			return (ft_unexpected_error());
 		if (!(mlx = ft_new_mlx(WIDTH, HEIGHT, "fdf")))
 			return (ft_connection_failed());
-		pov->head_balance = -0.1;
+		pov->head_balance = -50.0;
 		mlx->mesh = mesh;
 		mlx->pov = pov;
-		//res = ft_render_mesh(mlx, mesh, pov);
+		//ft_render_mesh(mlx);
 		mlx_loop_hook(mlx->mlx, ft_render_mesh, (void*)mlx);
 		mlx_loop(mlx->mlx);
+		//sleep(5);
 	}
 	return (0);
 }

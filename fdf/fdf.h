@@ -6,14 +6,14 @@
 /*   By: dbousque <dbousque@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/12/09 15:05:02 by dbousque          #+#    #+#             */
-/*   Updated: 2015/12/09 18:46:23 by dbousque         ###   ########.fr       */
+/*   Updated: 2015/12/10 12:15:44 by dbousque         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef FDF_H
 # define FDF_H
 
-# include <mlx.h>
+#include "mlx.h"
 # include <unistd.h>
 # include <stdlib.h>
 # include "libft.h"
@@ -21,6 +21,8 @@
 # include <fcntl.h>
 # include "get_next_line.h"
 
+
+# define RAD 0.01745329252
 # define WIDTH 1680
 # define HEIGHT 1280
 
