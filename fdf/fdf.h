@@ -23,8 +23,8 @@
 
 
 # define RAD 0.01745329252
-# define WIDTH 1680
-# define HEIGHT 1280
+# define WIDTH 1280
+# define HEIGHT 860
 
 typedef struct	s_point
 {

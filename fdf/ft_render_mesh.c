@@ -180,6 +180,26 @@ void		ft_put_image_to_window(void *mlx, void *win, void *img, int x, int y)
 	}
 }
 
+t_vector	*get_3d_dev(t_mlx *mlx)
+{
+	double		angle;
+	double		hypothenuse;
+	t_vector	*dev_3d;
+
+	hypothenuse = sqrt(((mlx->pov->y - HEIGHT / 2) * (mlx->pov->y - HEIGHT / 2))
+						+ (mlx->pov->height * mlx->pov->height));
+	angle = sin(((double)mlx->pov->height) / hypothenuse * RAD);
+	printf("%f\n", angle);
+	dev_3d = ft_new_vector(1.0, asin(angle));
+	return (dev_3d);
+}
+
+void		restore_window(t_mlx *mlx)
+{
+	ft_rem_img_from_window(mlx->mlx, mlx->win, mlx->img, 0, 0);
+	ft_bzero(mlx->img, mlx->width * mlx->height * sizeof(int));
+}
+
 int			ft_render_mesh(void *mlx_param)
 {
 	int			y;
@@ -187,22 +207,22 @@ int			ft_render_mesh(void *mlx_param)
 	double		current_x;
 	double		current_y;
 	t_vector	*dev;
+	t_vector	*dev_3d;
 	t_mlx		*mlx;
 	double		start_x;
 	double		start_y;
 	double	min;
 
 	mlx = (t_mlx*)mlx_param;
+	mlx->pov->y = mlx->height * 2;
 	//mlx->pov->zoom -= 0.005;
 	//mlx->pov->head_balance += 0.7;
 
-	ft_rem_img_from_window(mlx->mlx, mlx->win, mlx->img, 0, 0);
-
-	ft_bzero(mlx->img, WIDTH * HEIGHT * sizeof(int));
-	ft_putendl("LOL1");
+	restore_window(mlx);
 	
 	min = ft_get_min(mlx);
-	dev = ft_new_vector(cos(mlx->pov->head_balance * RAD) * min, sin(mlx->pov->head_balance * RAD) * min);
+	dev_3d = get_3d_dev(mlx);
+	dev = ft_new_vector(cos(mlx->pov->head_balance * RAD) * min * dev_3d->x_step, sin(mlx->pov->head_balance * RAD) * min * dev_3d->y_step);
 	ft_get_start_point(&start_x, &start_y, mlx, dev);
 	y = 0;
 	while (mlx->mesh[y + 1])
@@ -224,7 +244,6 @@ int			ft_render_mesh(void *mlx_param)
 		}
 		y++;
 	}
-	ft_putendl("LOL");
 	ft_put_image_to_window(mlx->mlx, mlx->win, mlx->img, 0, 0);
 	return (0);
 }
