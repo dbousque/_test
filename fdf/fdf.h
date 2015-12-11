@@ -6,7 +6,7 @@
 /*   By: dbousque <dbousque@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/12/09 15:05:02 by dbousque          #+#    #+#             */
-/*   Updated: 2015/12/10 20:39:33 by dbousque         ###   ########.fr       */
+/*   Updated: 2015/12/11 13:53:39 by dbousque         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,8 @@ typedef struct	s_mlx
 {
 	void		*mlx;
 	void		*win;
-	void		*img;
+	int			*img;
+	int			last_pixel;
 	int			width;
 	int			height;
 	t_pov		*pov;
@@ -68,5 +69,6 @@ t_rect			*ft_new_rect(t_point *one, t_point *two, t_point *three, t_point *four)
 int				ft_get_color(t_point *p1, t_point *p2, double percentage);
 void			ft_draw_line(t_mlx *mlx, t_point *p1, t_point *p2,
 					int (*ft_clr) (t_point *p1, t_point *p2, double perc));
+int				ft_get_mouse(int x, int y, t_mlx *param);
 
 #endif
