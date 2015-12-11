@@ -27,18 +27,12 @@
 
 
 
-typedef struct	s_vector
-{
-	double		x_step;
-	double		y_step;
-}				t_vector;
-
 int		ft_get_color2(t_point *p1, t_point *p2, double percentage)
 {
 	(void)p1;
 	(void)p2;
 	(void)percentage;
-	return (0xFF0000);
+	return (0x999999);
 }
 
 int			ft_nb_lines(int **mesh)
@@ -83,7 +77,7 @@ double		ft_get_min(t_mlx *mlx)
 	return (min);
 }
 
-void		ft_get_start_point(double *x_start, double *y_start, t_mlx *mlx, t_vector *dev, t_vector *dev_3d)
+void		ft_get_start_point(double *x_start, double *y_start, t_mlx *mlx, t_vector *dev)
 {
 	int		tab_height;
 	int		tab_width;
@@ -92,7 +86,7 @@ void		ft_get_start_point(double *x_start, double *y_start, t_mlx *mlx, t_vector 
 	tab_width = mlx->mesh[0][0];
 	tab_height = ft_nb_lines(mlx->mesh);
 
-	tmp_pnt = ft_new_point(WIDTH / 2 + ((tab_height - 1) / 2.0 * dev->y_step * dev_3d->y_step),
+	tmp_pnt = ft_new_point(WIDTH / 2 + ((tab_height - 1) / 2.0 * dev->y_step),
 		   				HEIGHT / 2 - ((tab_height - 1) / 2.0 * dev->x_step), 0.0);
 	*x_start = tmp_pnt->x - (((tab_width - 1) / 2.0) * dev->x_step);
 	*y_start = tmp_pnt->y - (((tab_width - 1) / 2.0) * dev->y_step);
@@ -190,9 +184,9 @@ t_vector	*get_3d_dev(t_mlx *mlx)
 						+ (mlx->pov->height * mlx->pov->height));
 	angle = mlx->pov->height / hypothenuse;
 	printf("height : %f, hypo : %f\n", mlx->pov->height, hypothenuse);
-	angle = asin(angle) / RAD;
-	dev_3d = ft_new_vector(1.0, sin(angle * RAD));
-	printf("%f\n", angle);
+	angle = asin(angle);
+	dev_3d = ft_new_vector(1.0, sin(angle));
+	printf("%f\n", angle / RAD);
 	return (dev_3d);
 }
 
@@ -200,6 +194,24 @@ void		restore_window(t_mlx *mlx)
 {
 	ft_rem_img_from_window(mlx->mlx, mlx->win, mlx->img, 0, 0);
 	ft_bzero(mlx->img, mlx->width * mlx->height * sizeof(int));
+}
+
+t_3d_vec	*get_pov_vec(t_mlx *mlx)
+{
+	t_3d_vec	*res;
+
+	if (!(res = (t_3d_vec*)malloc(sizeof(t_3d_vec))))
+		return (NULL);
+	res->ux = mlx->width / 2
+}
+
+int			ft_render_mesh2(void *mlx_param)
+{
+	t_3d_vec	*pov_vec;
+	t_mlx		*mlx;
+
+	mlx = (t_mlx*)mlx_param;
+	pov_vec = get_pov_vec(mlx);
 }
 
 int			ft_render_mesh(void *mlx_param)
@@ -216,8 +228,8 @@ int			ft_render_mesh(void *mlx_param)
 	double		min;
 
 	mlx = (t_mlx*)mlx_param;
-	mlx->pov->y = mlx->height / 2 * 3;
-	mlx->pov->height -= 5;
+	mlx->pov->y = mlx->height;
+	mlx->pov->height = mlx->height / 2;
 	//mlx->pov->zoom -= 0.005;
 	//mlx->pov->head_balance += 0.7;
 
@@ -226,23 +238,23 @@ int			ft_render_mesh(void *mlx_param)
 	min = ft_get_min(mlx);
 	dev_3d = get_3d_dev(mlx);
 	dev = ft_new_vector(cos(mlx->pov->head_balance * RAD) * min, sin(mlx->pov->head_balance * RAD) * min);
-	ft_get_start_point(&start_x, &start_y, mlx, dev, dev_3d);
+	ft_get_start_point(&start_x, &start_y, mlx, dev);
 	y = 0;
 	while (mlx->mesh[y + 1])
 	{
 		x = 1;
 		current_x = start_x - (y * dev->y_step);
-		current_y = start_y + (y * dev->x_step * dev_3d->y_step);
+		current_y = start_y + (y * dev->x_step);
 		while (x < mlx->mesh[y][0])
 		{
 			ft_draw_rect(mlx, ft_new_rect(
 					ft_new_point(current_x, current_y, mlx->mesh[y][x]),
-					ft_new_point(current_x + dev->x_step, current_y + (dev->y_step * dev_3d->y_step), mlx->mesh[y][x + 1]),
-					ft_new_point(current_x + dev->x_step - (dev->y_step * dev_3d->y_step), current_y + ((dev->y_step + dev->x_step) * dev_3d->y_step), mlx->mesh[y + 1][x + 1]),
-					ft_new_point(current_x - (dev->y_step * dev_3d->y_step), current_y + (dev->x_step * dev_3d->y_step), mlx->mesh[y + 1][x])
+					ft_new_point(current_x + dev->x_step, current_y + (dev->y_step), mlx->mesh[y][x + 1]),
+					ft_new_point(current_x + dev->x_step - (dev->y_step), current_y + (dev->y_step + dev->x_step), mlx->mesh[y + 1][x + 1]),
+					ft_new_point(current_x - dev->y_step, current_y + dev->x_step, mlx->mesh[y + 1][x])
 										), ft_get_color);
 			current_x += dev->x_step;
-			current_y += (dev->y_step * dev_3d->y_step);
+			current_y += dev->y_step;
 			x++;
 		}
 		y++;

@@ -59,6 +59,19 @@ typedef struct	s_mlx
 	int			**mesh;
 }				t_mlx;
 
+typedef struct	s_vector
+{
+	double		x_step;
+	double		y_step;
+}				t_vector;
+
+typedef struct	s_3d_vec
+{
+	double		ux;
+	double		uy;
+	double		uz;
+}				t_3d_vec;
+
 int				**ft_get_mesh(char *filename);
 void			ft_draw_rect(t_mlx *mlx, t_rect *rect,
 					int (*ft_clr) (t_point *p1, t_point *p2, double perc));

@@ -20,7 +20,7 @@ int		ft_get_color(t_point *p1, t_point *p2, double percentage)
 	(void)p1;
 	(void)p2;
 	(void)percentage;
-	return (0xFF0000);
+	return (0xCCCCCC);
 }
 
 double	ft_real_value(double value)
