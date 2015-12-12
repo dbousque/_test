@@ -62,6 +62,7 @@ typedef struct	s_mlx
 	double		start_x;
 	double		start_y;
 	double		height_factor;
+	double		angle;
 }				t_mlx;
 
 typedef struct	s_vector

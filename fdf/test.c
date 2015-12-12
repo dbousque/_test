@@ -138,6 +138,35 @@ int		*ft_new_img(int width, int height)
 	return (img);
 }
 
+t_point		***empty_points(t_mlx *mlx)
+{
+	int		y;
+	int		x;
+	int		nb_lines;
+	t_point	***res;
+
+	nb_lines = ft_nb_lines(mlx->mesh);
+	if (!(res = (t_point***)malloc(sizeof(t_point**) * (nb_lines + 1))))
+		return (NULL);
+	res[nb_lines] = NULL;
+	y = 0;
+	while (y < nb_lines)
+	{
+		if (!(res[y] = (t_point**)malloc(sizeof(t_point*) * (mlx->mesh[y][0] + 1))))
+			return (NULL);
+		res[y][mlx->mesh[y][0]] = NULL;
+		x = 1;
+		while (x <= mlx->mesh[y][0])
+		{
+			if (!(res[y][x - 1] = ft_new_point(0.0, 0.0, 0.0)))
+				return (NULL);
+			x++;
+		}
+		y++;
+	}
+	return (res);
+}
+
 t_mlx	*ft_new_mlx(int width, int height, char *title)
 {
 	t_mlx	*res;
@@ -155,6 +184,7 @@ t_mlx	*ft_new_mlx(int width, int height, char *title)
 	res->height = height;
 	res->unit = 130.0;
 	res->height_factor = 15.0;
+	res->angle = 30.0;
 	return (res);
 }
 
@@ -228,6 +258,8 @@ int		main(int argc, char **argv)
 		pov->head_balance = 0.0;
 		mlx->mesh = mesh;
 		mlx->pov = pov;
+		if (!(mlx->points = empty_points(mlx)))
+			return (ft_unexpected_error());
 		//ft_render_mesh(mlx);
 		mlx_mouse_hook(mlx->win, ft_get_mouse, mlx);
 		mlx_loop_hook(mlx->mlx, ft_render, (void*)mlx);

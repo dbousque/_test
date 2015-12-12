@@ -15,11 +15,10 @@
 int		ft_get_mouse(int x, int y, t_mlx *mlx)
 {
 	(void)y;
-	(void)mlx;
 	//(void)button;
 	if (x == 4)
 	{
-		mlx->pov->zoom += 0.1;
+		mlx->unit += 0.1;
 	}
 	ft_putnbr(x);
 	ft_putchar('\n');

@@ -56,60 +56,51 @@ void		restore_window(t_mlx *mlx)
 	ft_bzero(mlx->img, mlx->width * mlx->height * sizeof(int));
 }
 
-t_point		*get_coords_at_xy(t_mlx *mlx, int y, int x)
+void		get_coords_at_xy(t_mlx *mlx, int y, int x)
 {
-	t_point		*res;
-
-	if (!(res = (t_point*)malloc(sizeof(t_point))))
-		return (NULL);
-	res->height = mlx->mesh[y][x];
-	res->x = mlx->start_x - y * mlx->unit * cos(30 * RAD) + x * mlx->unit * cos(30 * RAD);
-	res->y = mlx->start_y + y * mlx->unit * sin(30 * RAD) + x * mlx->unit * sin(30 * RAD) - res->height * mlx->unit / mlx->height_factor;
-	return (res);
+	mlx->points[y][x - 1]->height = mlx->mesh[y][x];
+	mlx->points[y][x - 1]->x = mlx->start_x - y * mlx->unit * cos(mlx->angle * RAD) + x * mlx->unit * cos(mlx->angle * RAD);
+	mlx->points[y][x - 1]->y = mlx->start_y + y * mlx->unit * sin(mlx->angle * RAD) + x * mlx->unit * sin(mlx->angle * RAD) - mlx->mesh[y][x] * mlx->unit / mlx->height_factor;
 }
 
-t_point		***mesh_to_points(t_mlx *mlx)
+void		mesh_to_points(t_mlx *mlx)
 {
 	int		y;
 	int		x;
 	int		nb_lines;
-	t_point	***res;
 
 	mlx->start_x = 400;
 	mlx->start_y = 100;
-	mlx->unit = 20.0;
-	mlx->height_factor = 5.0;
+	mlx->unit = 4.0;
+	mlx->height_factor = 10.0;
+	//mlx->angle -= 0.1;
 	nb_lines = ft_nb_lines(mlx->mesh);
-	if (!(res = (t_point***)malloc(sizeof(t_point**) * (nb_lines + 1))))
-		return (NULL);
-	res[nb_lines] = NULL;
 	y = 0;
 	while (y < nb_lines)
 	{
-		if (!(res[y] = (t_point**)malloc(sizeof(t_point*) * (mlx->mesh[y][0] + 1))))
-			return (NULL);
-		res[y][mlx->mesh[y][0]] = NULL;
 		x = 1;
 		while (x <= mlx->mesh[y][0])
 		{
-			if (!(res[y][x - 1] = get_coords_at_xy(mlx, y, x)))
-				return (NULL);
+			get_coords_at_xy(mlx, y, x);
 			x++;
 		}
 		y++;
 	}
-	return (res);
 }
 
 int			ft_render(void *mlx_param)
 {
+	static int	i = 0;
 	t_mlx	*mlx;
 	int		x;
 	int		y;
 
+	ft_putnbr(i);
+	ft_putchar('\n');
+	i++;
 	mlx = (t_mlx*)mlx_param;
 	restore_window(mlx);
-	mlx->points = mesh_to_points(mlx);
+	mesh_to_points(mlx);
 	y = 0;
 	while (mlx->points[y + 1])
 	{
