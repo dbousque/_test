@@ -57,6 +57,11 @@ typedef struct	s_mlx
 	int			height;
 	t_pov		*pov;
 	int			**mesh;
+	t_point		***points;
+	double		unit;
+	double		start_x;
+	double		start_y;
+	double		height_factor;
 }				t_mlx;
 
 typedef struct	s_vector

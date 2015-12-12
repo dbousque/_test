@@ -153,6 +153,8 @@ t_mlx	*ft_new_mlx(int width, int height, char *title)
 	res->last_pixel = width * height;
 	res->width = width;
 	res->height = height;
+	res->unit = 130.0;
+	res->height_factor = 15.0;
 	return (res);
 }
 
