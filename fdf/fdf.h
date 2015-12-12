@@ -83,5 +83,9 @@ int				ft_get_color(t_point *p1, t_point *p2, double percentage);
 void			ft_draw_line(t_mlx *mlx, t_point *p1, t_point *p2,
 					int (*ft_clr) (t_point *p1, t_point *p2, double perc));
 int				ft_get_mouse(int x, int y, t_mlx *param);
+int				ft_render(void *mlx_param);
+int				ft_nb_lines(int **mesh);
+void			ft_put_image_to_window(void *mlx, void *win, void *img, int x, int y);
+void			restore_window(t_mlx *mlx);
 
 #endif

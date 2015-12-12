@@ -17,10 +17,25 @@ t_point	*ft_new_point(double x, double y, int height)
 
 int		ft_get_color(t_point *p1, t_point *p2, double percentage)
 {
-	(void)p1;
-	(void)p2;
-	(void)percentage;
-	return (0xCCCCCC);
+	double	height;
+	int		green;
+
+	if (p1->height || p2->height)
+	{
+		//ft_putstr("P1 : ");
+		//ft_putnbr((int)p1->height);
+		//ft_putstr(", P2 : ");
+		//ft_putnbr((int)p2->height);
+		//ft_putchar('\n');
+	}
+	height = p1->height + ((p2->height - p1->height) * percentage / 100.0);
+	if (height)
+	{
+		//ft_putnbr((int)height);
+		//ft_putchar('\n');
+	}
+	green = 0x0000CC - height * 10;
+	return (0xCC00CC + green * 256);
 }
 
 double	ft_real_value(double value)
@@ -213,7 +228,7 @@ int		main(int argc, char **argv)
 		mlx->pov = pov;
 		//ft_render_mesh(mlx);
 		mlx_mouse_hook(mlx->win, ft_get_mouse, mlx);
-		mlx_loop_hook(mlx->mlx, ft_render_mesh, (void*)mlx);
+		mlx_loop_hook(mlx->mlx, ft_render, (void*)mlx);
 		mlx_loop(mlx->mlx);
 		//sleep(5);
 	}

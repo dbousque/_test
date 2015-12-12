@@ -35,16 +35,6 @@ int		ft_get_color2(t_point *p1, t_point *p2, double percentage)
 	return (0x999999);
 }
 
-int			ft_nb_lines(int **mesh)
-{
-	int		i;
-
-	i = 0;
-	while (mesh[i])
-		i++;
-	return (i);
-}
-
 t_vector	*ft_new_vector(double x, double y)
 {
 	t_vector	*res;
@@ -136,44 +126,6 @@ void		ft_draw_around_mesh(t_mlx *mlx, t_vector *dev, double start_x, double star
 	//ft_draw_multicolum(mlx->mesh, 1, start_x, start_y, dev);
 }
 
-void		ft_rem_img_from_window(void *mlx, void *win, void *img, int x, int y)
-{
-	int		*image;
-
-	image = (int*)img;
-	y = 0;
-	while (y < HEIGHT)
-	{
-		x = 0;
-		while (x < WIDTH)
-		{
-			if (image[y * WIDTH + x])
-				mlx_pixel_put(mlx, win, x, y, 0);
-			x++;
-		}
-		y++;
-	}
-}
-
-void		ft_put_image_to_window(void *mlx, void *win, void *img, int x, int y)
-{
-	int		*image;
-
-	image = (int*)img;
-	y = 0;
-	while (y < HEIGHT)
-	{
-		x = 0;
-		while (x < WIDTH)
-		{
-			if (image[y * WIDTH + x])
-				mlx_pixel_put(mlx, win, x, y, image[y * WIDTH + x]);
-			x++;
-		}
-		y++;
-	}
-}
-
 t_vector	*get_3d_dev(t_mlx *mlx)
 {
 	double		angle;
@@ -190,29 +142,14 @@ t_vector	*get_3d_dev(t_mlx *mlx)
 	return (dev_3d);
 }
 
-void		restore_window(t_mlx *mlx)
-{
-	ft_rem_img_from_window(mlx->mlx, mlx->win, mlx->img, 0, 0);
-	ft_bzero(mlx->img, mlx->width * mlx->height * sizeof(int));
-}
+//int			ft_render_mesh2(void *mlx_param)
+//{
+//	t_3d_vec	*pov_vec;
+//	t_mlx		*mlx;
 
-t_3d_vec	*get_pov_vec(t_mlx *mlx)
-{
-	t_3d_vec	*res;
-
-	if (!(res = (t_3d_vec*)malloc(sizeof(t_3d_vec))))
-		return (NULL);
-	res->ux = mlx->width / 2
-}
-
-int			ft_render_mesh2(void *mlx_param)
-{
-	t_3d_vec	*pov_vec;
-	t_mlx		*mlx;
-
-	mlx = (t_mlx*)mlx_param;
-	pov_vec = get_pov_vec(mlx);
-}
+//	mlx = (t_mlx*)mlx_param;
+	//pov_vec = get_pov_vec(mlx);
+//}
 
 int			ft_render_mesh(void *mlx_param)
 {
