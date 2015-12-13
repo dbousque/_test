@@ -25,16 +25,6 @@
 
 #include <stdio.h>
 
-
-
-int		ft_get_color2(t_point *p1, t_point *p2, double percentage)
-{
-	(void)p1;
-	(void)p2;
-	(void)percentage;
-	return (0x999999);
-}
-
 t_vector	*ft_new_vector(double x, double y)
 {
 	t_vector	*res;
