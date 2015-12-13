@@ -59,13 +59,18 @@ void		restore_window(t_mlx *mlx)
 void		get_coords_at_xy(t_mlx *mlx, int y, int x, t_vector *dev)
 {
 	mlx->points[y][x - 1]->height = mlx->mesh[y][x];
-	//mlx->points[y][x - 1]->x = mlx->start_x - y * dev->y_step + x * dev->x_step;
-	//mlx->points[y][x - 1]->y = mlx->start_y + y * dev->x_step * 0.52 + x * 0.52 * dev->y_step - mlx->mesh[y][x] * mlx->unit / mlx->height_factor;
-	mlx->points[y][x - 1]->x = mlx->start_x - y * dev->y_step + x * dev->y_step;
-	mlx->points[y][x - 1]->y = mlx->start_y + y * dev->x_step
-		+ x * dev->x_step - mlx->mesh[y][x] * mlx->unit / mlx->height_factor;
-	//mlx->points[y][x - 1]->x = mlx->start_x - y * mlx->unit * cos(mlx->angle * RAD) + x * mlx->unit * cos(mlx->angle * RAD);
-	//mlx->points[y][x - 1]->y = mlx->start_y + y * mlx->unit * sin(mlx->angle * RAD) + x * mlx->unit * sin(mlx->angle * RAD) - mlx->mesh[y][x] * mlx->unit / mlx->height_factor;
+	if (mlx->view_mode == 0)
+	{
+		mlx->points[y][x - 1]->x = mlx->start_x - y * dev->y_step + x * dev->x_step;
+		mlx->points[y][x - 1]->y = mlx->start_y + y * dev->x_step * mlx->elevation
+			+ x * mlx->elevation * dev->y_step - mlx->mesh[y][x] * mlx->unit / mlx->height_factor;
+	}
+	else
+	{
+		mlx->points[y][x - 1]->x = mlx->start_x - y * dev->y_step + x * dev->y_step;
+		mlx->points[y][x - 1]->y = mlx->start_y + y * dev->x_step
+			+ x * dev->x_step - mlx->mesh[y][x] * mlx->unit / mlx->height_factor;
+	}
 }
 
 void		mesh_to_points(t_mlx *mlx)
@@ -75,13 +80,20 @@ void		mesh_to_points(t_mlx *mlx)
 	int		nb_lines;
 	t_vector	*dev;
 
-	mlx->start_x = 400;
-	mlx->start_y = 100;
-	mlx->unit = 4.0;
+	//mlx->unit -= 0.1;
 	mlx->height_factor = 10.0;
+	mlx->view_mode = 0;
+	//mlx->center->x -= 10.0;
+	mlx->center->y -= 10.0;
+	//mlx->elevation -= 0.01;
 	//mlx->angle += 0.1;
-	dev = ft_new_vector(sin(mlx->angle * RAD) * mlx->unit, cos(mlx->angle * RAD) * mlx->unit);
+	if (mlx->view_mode != 1)
+		dev = ft_new_vector(sin(mlx->angle * RAD) * mlx->unit, cos(mlx->angle * RAD) * mlx->unit);
+	else
+		dev = ft_new_vector(sin(30 * RAD) * mlx->unit, cos(30 * RAD) * mlx->unit);
 	nb_lines = ft_nb_lines(mlx->mesh);
+	mlx->start_x = mlx->center->x - mlx->mesh[0][0] * dev->x_step / 2.0;
+	mlx->start_y = mlx->center->y - nb_lines * dev->y_step / 2.0;
 	y = 0;
 	while (y < nb_lines)
 	{

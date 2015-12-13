@@ -1,1 +1,1 @@
-gcc -Wall -Wextra -Werror ft_render_mesh.c ft_get_mesh.c ftget_mouse.c test.c get_next_line.c ft_render.c -I/usr/local/include -framework OpenGL -framework Appkit -I. libft.a -I. libmlx.a
+gcc -Wall -Wextra -Werror ft_get_mesh.c ft_get_mouse.c test.c get_next_line.c ft_render.c draw.c error.c new_mlx.c color.c main.c -I/usr/local/include -framework OpenGL -framework Appkit -I. libft.a -I. libmlx.a
