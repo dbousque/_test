@@ -32,6 +32,8 @@ t_point		***empty_points(t_mlx *mlx)
 	nb_lines = ft_nb_lines(mlx->mesh);
 	if (!(res = (t_point***)malloc(sizeof(t_point**) * (nb_lines + 1))))
 		return (NULL);
+	mlx->higher_point = mlx->mesh[0][1];
+	mlx->lower_point = mlx->mesh[0][1];
 	res[nb_lines] = NULL;
 	y = 0;
 	while (y < nb_lines)
@@ -44,6 +46,10 @@ t_point		***empty_points(t_mlx *mlx)
 		{
 			if (!(res[y][x - 1] = ft_new_point(0.0, 0.0, 0.0)))
 				return (NULL);
+			if (mlx->mesh[y][x] < mlx->lower_point)
+				mlx->lower_point = mlx->mesh[y][x];
+			else if (mlx->mesh[y][x] > mlx->higher_point)
+				mlx->higher_point = mlx->mesh[y][x];
 			x++;
 		}
 		y++;
@@ -69,7 +75,7 @@ t_mlx	*ft_new_mlx(int width, int height, char *title)
 	res->unit = 4.0;
 	res->height_factor = 10.0;
 	res->angle = 90.0;
-	res->color_function = ft_get_color2;
+	res->color_function = ft_get_color3;
 	res->view_mode = 0;
 	res->elevation = 0.82;
 	res->center = ft_new_point(WIDTH / 2, HEIGHT / 2, 0.0);

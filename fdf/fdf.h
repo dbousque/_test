@@ -6,7 +6,7 @@
 /*   By: dbousque <dbousque@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/12/09 15:05:02 by dbousque          #+#    #+#             */
-/*   Updated: 2015/12/11 13:53:39 by dbousque         ###   ########.fr       */
+/*   Updated: 2015/12/14 14:42:49 by dbousque         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,8 +23,8 @@
 
 
 # define RAD 0.01745329252
-# define WIDTH 1280
-# define HEIGHT 860
+# define WIDTH 1680
+# define HEIGHT 1260
 
 typedef struct	s_point
 {
@@ -55,8 +55,10 @@ typedef struct	s_mlx
 	double		height_factor;
 	double		angle;
 	double		elevation;
+	double		lower_point;
+	double		higher_point;
 	t_point		*center;
-	int			(*color_function) (t_point *p1, t_point *p2, double perc);
+	int			(*color_function) (struct s_mlx *mlx, t_point *p1, t_point *p2, double perc);
 }				t_mlx;
 
 typedef struct	s_vector
@@ -67,16 +69,16 @@ typedef struct	s_vector
 
 int				**ft_get_mesh(char *filename);
 void			ft_draw_rect(t_mlx *mlx, t_rect *rect,
-					int (*ft_clr) (t_point *p1, t_point *p2, double perc));
+					int (*ft_clr) (t_mlx *mlx, t_point *p1, t_point *p2, double perc));
 int				ft_render_mesh(void *mlx_param);
 int				ft_unexpected_error(void);
 t_point			*ft_new_point(double x, double y, int height);
 t_rect			*ft_new_rect(t_point *one, t_point *two, t_point *three, t_point *four);
-int				ft_get_color(t_point *p1, t_point *p2, double percentage);
-int				ft_get_color2(t_point *p1, t_point *p2, double percentage);
-int				ft_get_color3(t_point *p1, t_point *p2, double percentage);
+int				ft_get_color(t_mlx *mlx, t_point *p1, t_point *p2, double percentage);
+int				ft_get_color2(t_mlx *mlx, t_point *p1, t_point *p2, double percentage);
+int				ft_get_color3(t_mlx *mlx, t_point *p1, t_point *p2, double percentage);
 void			ft_draw_line(t_mlx *mlx, t_point *p1, t_point *p2,
-					int (*ft_clr) (t_point *p1, t_point *p2, double perc));
+					int (*ft_clr) (t_mlx *mlx, t_point *p1, t_point *p2, double perc));
 int				ft_get_mouse(int x, int y, t_mlx *param);
 int				ft_render(void *mlx_param);
 int				ft_nb_lines(int **mesh);

@@ -23,7 +23,7 @@ void	ft_get_steps(t_point *p1, t_point *p2, double *x_step, double *y_step)
 }
 
 void	ft_draw_line(t_mlx *mlx, t_point *p1, t_point *p2,
-			int (*ft_clr) (t_point *p1, t_point *p2, double perc))
+			int (*ft_clr) (t_mlx *mlx, t_point *p1, t_point *p2, double perc))
 {
 	double	x;
 	double	y;
@@ -42,14 +42,14 @@ void	ft_draw_line(t_mlx *mlx, t_point *p1, t_point *p2,
 	{
 		if (x <= WIDTH && y <= HEIGHT)
 			img_pixel_put(mlx, lround(x), lround(y),
-				ft_clr(p1, p2, ft_perc(p1, p2, x, y)));
+				ft_clr(mlx, p1, p2, ft_perc(p1, p2, x, y)));
 		y += y_step;
 		x += x_step;
 	}
 }
 
 void	ft_draw_rect(t_mlx *mlx, t_rect *rect,
-			int (*ft_clr) (t_point *p1, t_point *p2, double perc))
+			int (*ft_clr) (t_mlx *mlx, t_point *p1, t_point *p2, double perc))
 {
 	ft_draw_line(mlx, rect->points[0], rect->points[1], ft_clr);
 	ft_draw_line(mlx, rect->points[1], rect->points[2], ft_clr);

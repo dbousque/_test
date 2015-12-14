@@ -1,4 +1,14 @@
-
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_render.c                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: dbousque <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2015/12/14 14:09:05 by dbousque          #+#    #+#             */
+/*   Updated: 2015/12/14 16:13:27 by dbousque         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
 #include "fdf.h"
 
@@ -98,43 +108,47 @@ char		conditions_continue_x(t_mlx *mlx, t_vector *dev, int x)
 	return (1);
 }
 
-double		get_extreme(t_mlx *mlx, int nb_lines, char is_x)
+double		get_extreme_y(t_mlx *mlx, int nb_lines)
 {
 	double	smaller;
 	double	higher;
 
-	smaller = (is_x ? mlx->points[0][0]->x : mlx->points[0][0]->y);
-	higher = (is_x ? mlx->points[0][0]->x : mlx->points[0][0]->y);
-	if (is_x)
-	{
-		if (mlx->points[0][mlx->mesh[0][0] - 1]->x < smaller)
-			smaller = mlx->points[0][mlx->mesh[0][0] - 1]->x;
-		else if (mlx->points[0][mlx->mesh[0][0] - 1]->x > higher)
-			higher = mlx->points[0][mlx->mesh[0][0] - 1]->x;
-		if (mlx->points[nb_lines][mlx->mesh[nb_lines][0] - 1]->x < smaller)
-			smaller = mlx->points[nb_lines][mlx->mesh[nb_lines][0] - 1]->x;
-		else if (mlx->points[nb_lines][mlx->mesh[nb_lines][0] - 1]->x > higher)
-			higher = mlx->points[nb_lines][mlx->mesh[nb_lines][0] - 1]->x;
-		if (mlx->points[nb_lines][0]->x < smaller)
-			smaller = mlx->points[nb_lines][0]->x;
-		else if (mlx->points[nb_lines][0]->x > higher)
-			higher = mlx->points[nb_lines][0]->x;
-	}
-	else
-	{
-		if (mlx->points[0][mlx->mesh[0][0] - 1]->y < smaller)
-			smaller = mlx->points[0][mlx->mesh[0][0] - 1]->y;
-		else if (mlx->points[0][mlx->mesh[0][0] - 1]->y > higher)
-			higher = mlx->points[0][mlx->mesh[0][0] - 1]->y;
-		if (mlx->points[nb_lines][mlx->mesh[nb_lines][0] - 1]->y < smaller)
-			smaller = mlx->points[nb_lines][mlx->mesh[nb_lines][0] - 1]->y;
-		else if (mlx->points[nb_lines][mlx->mesh[nb_lines][0] - 1]->y > higher)
-			higher = mlx->points[nb_lines][mlx->mesh[nb_lines][0] - 1]->y;
-		if (mlx->points[nb_lines][0]->y < smaller)
-			smaller = mlx->points[nb_lines][0]->y;
-		else if (mlx->points[nb_lines][0]->y > higher)
-			higher = mlx->points[nb_lines][0]->y;
-	}
+	smaller = mlx->points[0][0]->y;
+	higher = mlx->points[0][0]->y;
+	if (mlx->points[0][mlx->mesh[0][0] - 1]->y < smaller)
+		smaller = mlx->points[0][mlx->mesh[0][0] - 1]->y;
+	else if (mlx->points[0][mlx->mesh[0][0] - 1]->y > higher)
+		higher = mlx->points[0][mlx->mesh[0][0] - 1]->y;
+	if (mlx->points[nb_lines][mlx->mesh[nb_lines][0] - 1]->y < smaller)
+		smaller = mlx->points[nb_lines][mlx->mesh[nb_lines][0] - 1]->y;
+	else if (mlx->points[nb_lines][mlx->mesh[nb_lines][0] - 1]->y > higher)
+		higher = mlx->points[nb_lines][mlx->mesh[nb_lines][0] - 1]->y;
+	if (mlx->points[nb_lines][0]->y < smaller)
+		smaller = mlx->points[nb_lines][0]->y;
+	else if (mlx->points[nb_lines][0]->y > higher)
+		higher = mlx->points[nb_lines][0]->y;
+	return ((smaller + higher) / 2.0);
+}
+
+double		get_extreme_x(t_mlx *mlx, int nb_lines)
+{
+	double	smaller;
+	double	higher;
+
+	smaller = mlx->points[0][0]->x;
+	higher = mlx->points[0][0]->x;
+	if (mlx->points[0][mlx->mesh[0][0] - 1]->x < smaller)
+		smaller = mlx->points[0][mlx->mesh[0][0] - 1]->x;
+	else if (mlx->points[0][mlx->mesh[0][0] - 1]->x > higher)
+		higher = mlx->points[0][mlx->mesh[0][0] - 1]->x;
+	if (mlx->points[nb_lines][mlx->mesh[nb_lines][0] - 1]->x < smaller)
+		smaller = mlx->points[nb_lines][mlx->mesh[nb_lines][0] - 1]->x;
+	else if (mlx->points[nb_lines][mlx->mesh[nb_lines][0] - 1]->x > higher)
+		higher = mlx->points[nb_lines][mlx->mesh[nb_lines][0] - 1]->x;
+	if (mlx->points[nb_lines][0]->x < smaller)
+		smaller = mlx->points[nb_lines][0]->x;
+	else if (mlx->points[nb_lines][0]->x > higher)
+		higher = mlx->points[nb_lines][0]->x;
 	return ((smaller + higher) / 2.0);
 }
 
@@ -149,8 +163,8 @@ void		set_start_point(t_mlx *mlx, t_vector *dev, int nb_lines)
 	get_coords_at_xy(mlx, nb_lines, 1, dev);
 	get_coords_at_xy(mlx, 0, 1, dev);
 	get_coords_at_xy(mlx, 0, mlx->mesh[0][0], dev);
-	extreme_x = get_extreme(mlx, nb_lines, 1);
-	extreme_y = get_extreme(mlx, nb_lines, 0);
+	extreme_x = get_extreme_x(mlx, nb_lines);
+	extreme_y = get_extreme_y(mlx, nb_lines);
 	printf("%f, %f\n", extreme_x, extreme_y);
 	mlx->start_x = mlx->center->x - extreme_x;
 	mlx->start_y = mlx->center->y - extreme_y;
@@ -163,13 +177,13 @@ void		mesh_to_points(t_mlx *mlx)
 	int		nb_lines;
 	t_vector	*dev;
 
-	mlx->unit += 0.4;
-	//mlx->height_factor = 10000.0;
+	//mlx->unit *= 1.1;
+	//mlx->height_factor *= 0.9;
 	mlx->view_mode = 0;
-	mlx->center->x -= 100.0;
-	mlx->center->y -= 10.0;
-	//mlx->elevation = 0.2;
-	//mlx->angle += 1.0;
+	//mlx->center->x -= 100.0;
+	//mlx->center->y -= 10.0;
+	mlx->elevation = 0.35;
+	//mlx->angle += 6.0;
 	if (mlx->view_mode != 1)
 		dev = ft_new_vector(sin(mlx->angle * RAD) * mlx->unit, cos(mlx->angle * RAD) * mlx->unit);
 	else
