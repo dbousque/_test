@@ -28,8 +28,8 @@ double	get_unit(t_mlx *mlx)
 
 	tmp = ((double)mlx->width) / ft_nb_lines(mlx->mesh);
 	if (tmp > ((double)mlx->height) / mlx->mesh[0][0])
-		return (((double)mlx->height) / mlx->mesh[0][0] * 0.65);
-	return (tmp * 0.65);
+		return (((double)mlx->height) / mlx->mesh[0][0]);
+	return (tmp);
 }
 
 int		main(int argc, char **argv)

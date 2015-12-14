@@ -2,6 +2,12 @@
 
 #include "fdf.h"
 
+
+
+
+#include <stdio.h>
+
+
 int			ft_nb_lines(int **mesh)
 {
 	int		i;
@@ -73,6 +79,83 @@ void		get_coords_at_xy(t_mlx *mlx, int y, int x, t_vector *dev)
 	}
 }
 
+char		conditions_continue_y(t_mlx *mlx, t_vector *dev, int y)
+{
+	//if ((y > 0 && mlx->points[y - 1][0]->y <= 0.0 && dev->y_step < 0.0)
+	//	|| (y > 0 && mlx->points[y - 1][0]->y >= HEIGHT && dev->y_step > 0.0))
+	//	return (0);
+	(void)mlx;
+	(void)dev;
+	(void)y;
+	return (1);
+}
+
+char		conditions_continue_x(t_mlx *mlx, t_vector *dev, int x)
+{
+	(void)mlx;
+	(void)dev;
+	(void)x;
+	return (1);
+}
+
+double		get_extreme(t_mlx *mlx, int nb_lines, char is_x)
+{
+	double	smaller;
+	double	higher;
+
+	smaller = (is_x ? mlx->points[0][0]->x : mlx->points[0][0]->y);
+	higher = (is_x ? mlx->points[0][0]->x : mlx->points[0][0]->y);
+	if (is_x)
+	{
+		if (mlx->points[0][mlx->mesh[0][0] - 1]->x < smaller)
+			smaller = mlx->points[0][mlx->mesh[0][0] - 1]->x;
+		else if (mlx->points[0][mlx->mesh[0][0] - 1]->x > higher)
+			higher = mlx->points[0][mlx->mesh[0][0] - 1]->x;
+		if (mlx->points[nb_lines][mlx->mesh[nb_lines][0] - 1]->x < smaller)
+			smaller = mlx->points[nb_lines][mlx->mesh[nb_lines][0] - 1]->x;
+		else if (mlx->points[nb_lines][mlx->mesh[nb_lines][0] - 1]->x > higher)
+			higher = mlx->points[nb_lines][mlx->mesh[nb_lines][0] - 1]->x;
+		if (mlx->points[nb_lines][0]->x < smaller)
+			smaller = mlx->points[nb_lines][0]->x;
+		else if (mlx->points[nb_lines][0]->x > higher)
+			higher = mlx->points[nb_lines][0]->x;
+	}
+	else
+	{
+		if (mlx->points[0][mlx->mesh[0][0] - 1]->y < smaller)
+			smaller = mlx->points[0][mlx->mesh[0][0] - 1]->y;
+		else if (mlx->points[0][mlx->mesh[0][0] - 1]->y > higher)
+			higher = mlx->points[0][mlx->mesh[0][0] - 1]->y;
+		if (mlx->points[nb_lines][mlx->mesh[nb_lines][0] - 1]->y < smaller)
+			smaller = mlx->points[nb_lines][mlx->mesh[nb_lines][0] - 1]->y;
+		else if (mlx->points[nb_lines][mlx->mesh[nb_lines][0] - 1]->y > higher)
+			higher = mlx->points[nb_lines][mlx->mesh[nb_lines][0] - 1]->y;
+		if (mlx->points[nb_lines][0]->y < smaller)
+			smaller = mlx->points[nb_lines][0]->y;
+		else if (mlx->points[nb_lines][0]->y > higher)
+			higher = mlx->points[nb_lines][0]->y;
+	}
+	return ((smaller + higher) / 2.0);
+}
+
+void		set_start_point(t_mlx *mlx, t_vector *dev, int nb_lines)
+{
+	double		extreme_y;
+	double		extreme_x;
+
+	mlx->start_x = 0.0;
+	mlx->start_y = 0.0;
+	get_coords_at_xy(mlx, nb_lines, mlx->mesh[nb_lines][0], dev);
+	get_coords_at_xy(mlx, nb_lines, 1, dev);
+	get_coords_at_xy(mlx, 0, 1, dev);
+	get_coords_at_xy(mlx, 0, mlx->mesh[0][0], dev);
+	extreme_x = get_extreme(mlx, nb_lines, 1);
+	extreme_y = get_extreme(mlx, nb_lines, 0);
+	printf("%f, %f\n", extreme_x, extreme_y);
+	mlx->start_x = mlx->center->x - extreme_x;
+	mlx->start_y = mlx->center->y - extreme_y;
+}
+
 void		mesh_to_points(t_mlx *mlx)
 {
 	int		y;
@@ -80,25 +163,24 @@ void		mesh_to_points(t_mlx *mlx)
 	int		nb_lines;
 	t_vector	*dev;
 
-	//mlx->unit -= 0.1;
-	mlx->height_factor = 10.0;
+	mlx->unit += 0.4;
+	//mlx->height_factor = 10000.0;
 	mlx->view_mode = 0;
-	//mlx->center->x -= 10.0;
+	mlx->center->x -= 100.0;
 	mlx->center->y -= 10.0;
-	//mlx->elevation -= 0.01;
-	//mlx->angle += 0.1;
+	//mlx->elevation = 0.2;
+	//mlx->angle += 1.0;
 	if (mlx->view_mode != 1)
 		dev = ft_new_vector(sin(mlx->angle * RAD) * mlx->unit, cos(mlx->angle * RAD) * mlx->unit);
 	else
 		dev = ft_new_vector(sin(30 * RAD) * mlx->unit, cos(30 * RAD) * mlx->unit);
 	nb_lines = ft_nb_lines(mlx->mesh);
-	mlx->start_x = mlx->center->x - mlx->mesh[0][0] * dev->x_step / 2.0;
-	mlx->start_y = mlx->center->y - nb_lines * dev->y_step / 2.0;
+	set_start_point(mlx, dev, nb_lines - 1);
 	y = 0;
-	while (y < nb_lines)
+	while (y < nb_lines && conditions_continue_y(mlx, dev, y))
 	{
 		x = 1;
-		while (x <= mlx->mesh[y][0])
+		while (x <= mlx->mesh[y][0] && conditions_continue_x(mlx, dev, x))
 		{
 			get_coords_at_xy(mlx, y, x, dev);
 			x++;
