@@ -48,11 +48,15 @@ void	ft_draw_line(t_mlx *mlx, t_point *p1, t_point *p2,
 	}
 }
 
-void	ft_draw_rect(t_mlx *mlx, t_rect *rect,
-			int (*ft_clr) (t_mlx *mlx, t_point *p1, t_point *p2, double perc))
+void	draw_full_rect(t_mlx *mlx, t_rect *rect)
 {
-	ft_draw_line(mlx, rect->points[0], rect->points[1], ft_clr);
-	ft_draw_line(mlx, rect->points[1], rect->points[2], ft_clr);
-	ft_draw_line(mlx, rect->points[2], rect->points[3], ft_clr);
-	ft_draw_line(mlx, rect->points[3], rect->points[0], ft_clr);
+	//t_point		*tmp1;
+	//t_point		*tmp2;
+
+	//tmp1 = ft_new_point((rect->points[0]->x + rect->points[1]->x) / 2.0
+	//ft_draw_full_triangle(mlx, re
+	ft_draw_line(mlx, rect->points[0], rect->points[1], mlx->color_function);
+	ft_draw_line(mlx, rect->points[1], rect->points[3], mlx->color_function);
+	ft_draw_line(mlx, rect->points[3], rect->points[2], mlx->color_function);
+	ft_draw_line(mlx, rect->points[2], rect->points[0], mlx->color_function);
 }

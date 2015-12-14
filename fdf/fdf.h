@@ -6,7 +6,7 @@
 /*   By: dbousque <dbousque@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/12/09 15:05:02 by dbousque          #+#    #+#             */
-/*   Updated: 2015/12/14 17:24:58 by dbousque         ###   ########.fr       */
+/*   Updated: 2015/12/14 18:17:40 by dbousque         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,6 +57,7 @@ typedef struct	s_mlx
 	double		elevation;
 	double		lower_point;
 	double		higher_point;
+	double		full_drawing;
 	t_point		*center;
 	int			(*color_function) (struct s_mlx *mlx, t_point *p1, t_point *p2, double perc);
 }				t_mlx;
@@ -68,8 +69,7 @@ typedef struct	s_vector
 }				t_vector;
 
 int				**ft_get_mesh(char *filename);
-void			ft_draw_rect(t_mlx *mlx, t_rect *rect,
-					int (*ft_clr) (t_mlx *mlx, t_point *p1, t_point *p2, double perc));
+void			ft_draw_rect(t_mlx *mlx, int y, int x);
 int				ft_render_mesh(void *mlx_param);
 int				ft_unexpected_error(void);
 t_point			*ft_new_point(double x, double y, int height);
@@ -92,5 +92,6 @@ int				ft_connection_failed(void);
 int				ft_unexpected_error(void);
 t_mlx			*ft_new_mlx(int width, int height, char *title);
 t_point			***empty_points(t_mlx *mlx);
+void			draw_full_rect(t_mlx *mlx, t_rect *rect);
 
 #endif

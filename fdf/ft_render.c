@@ -6,7 +6,7 @@
 /*   By: dbousque <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/12/14 14:09:05 by dbousque          #+#    #+#             */
-/*   Updated: 2015/12/14 17:23:30 by dbousque         ###   ########.fr       */
+/*   Updated: 2015/12/14 18:15:34 by dbousque         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -179,7 +179,7 @@ void		mesh_to_points(t_mlx *mlx)
 
 	//mlx->unit *= 1.1;
 	//mlx->height_factor *= 0.9;
-	mlx->view_mode = 0;
+	mlx->view_mode = 1;
 	//mlx->color_function = ft_get_color2;
 	//mlx->center->x -= 100.0;
 	//mlx->center->y -= 10.0;
@@ -204,6 +204,19 @@ void		mesh_to_points(t_mlx *mlx)
 	}
 }
 
+void		ft_draw_rect(t_mlx *mlx, int y, int x)
+{
+	t_rect	*rect;
+
+	if ((rect = ft_new_rect(mlx->points[y][x], mlx->points[y][x + 1]
+							, mlx->points[y + 1][x], mlx->points[y + 1][x + 1])))
+	{
+		draw_full_rect(mlx, rect);
+		free(rect);
+		rect = NULL;
+	}
+}
+
 int			ft_render(void *mlx_param)
 {
 	static int	i = 0;
@@ -223,10 +236,15 @@ int			ft_render(void *mlx_param)
 		x = 0;
 		while (mlx->points[y][x + 1])
 		{
-			ft_draw_line(mlx, mlx->points[y][x], mlx->points[y][x + 1], mlx->color_function);
-			ft_draw_line(mlx, mlx->points[y][x], mlx->points[y + 1][x], mlx->color_function);
-			ft_draw_line(mlx, mlx->points[y][x + 1], mlx->points[y + 1][x + 1], mlx->color_function);
-			ft_draw_line(mlx, mlx->points[y + 1][x], mlx->points[y + 1][x + 1], mlx->color_function);
+			if (!mlx->full_drawing)
+			{
+				ft_draw_line(mlx, mlx->points[y][x], mlx->points[y][x + 1], mlx->color_function);
+				ft_draw_line(mlx, mlx->points[y][x], mlx->points[y + 1][x], mlx->color_function);
+				ft_draw_line(mlx, mlx->points[y][x + 1], mlx->points[y + 1][x + 1], mlx->color_function);
+				ft_draw_line(mlx, mlx->points[y + 1][x], mlx->points[y + 1][x + 1], mlx->color_function);
+			}
+			else
+				ft_draw_rect(mlx, y, x);
 			x++;
 		}
 		y++;

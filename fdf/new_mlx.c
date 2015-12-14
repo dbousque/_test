@@ -75,9 +75,10 @@ t_mlx	*ft_new_mlx(int width, int height, char *title)
 	res->unit = 4.0;
 	res->height_factor = 10.0;
 	res->angle = 90.0;
-	res->color_function = ft_get_color3;
+	res->color_function = ft_get_color2;
 	res->view_mode = 0;
 	res->elevation = 0.82;
 	res->center = ft_new_point(WIDTH / 2, HEIGHT / 2, 0.0);
+	res->full_drawing = 1;
 	return (res);
 }
