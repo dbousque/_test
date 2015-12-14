@@ -6,7 +6,7 @@
 /*   By: dbousque <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/12/14 14:09:05 by dbousque          #+#    #+#             */
-/*   Updated: 2015/12/14 16:13:27 by dbousque         ###   ########.fr       */
+/*   Updated: 2015/12/14 16:18:19 by dbousque         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -177,13 +177,14 @@ void		mesh_to_points(t_mlx *mlx)
 	int		nb_lines;
 	t_vector	*dev;
 
-	//mlx->unit *= 1.1;
+	mlx->unit *= 1.1;
 	//mlx->height_factor *= 0.9;
 	mlx->view_mode = 0;
+	//mlx->color_function = ft_get_color2;
 	//mlx->center->x -= 100.0;
 	//mlx->center->y -= 10.0;
-	mlx->elevation = 0.35;
-	//mlx->angle += 6.0;
+	mlx->elevation = 1.00;
+	//mlx->angle += 10.0;
 	if (mlx->view_mode != 1)
 		dev = ft_new_vector(sin(mlx->angle * RAD) * mlx->unit, cos(mlx->angle * RAD) * mlx->unit);
 	else
