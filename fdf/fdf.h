@@ -6,7 +6,7 @@
 /*   By: dbousque <dbousque@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/12/09 15:05:02 by dbousque          #+#    #+#             */
-/*   Updated: 2015/12/14 18:17:40 by dbousque         ###   ########.fr       */
+/*   Updated: 2015/12/15 11:29:20 by dbousque         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ typedef struct	s_point
 {
 	double		x;
 	double		y;
-	int			height;
+	double		height;
 }				t_point;
 
 typedef struct	s_rect
