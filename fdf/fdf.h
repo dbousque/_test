@@ -6,7 +6,7 @@
 /*   By: dbousque <dbousque@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/12/09 15:05:02 by dbousque          #+#    #+#             */
-/*   Updated: 2015/12/15 11:29:20 by dbousque         ###   ########.fr       */
+/*   Updated: 2015/12/15 18:58:20 by dbousque         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,6 +60,8 @@ typedef struct	s_mlx
 	double		full_drawing;
 	t_point		*center;
 	int			(*color_function) (struct s_mlx *mlx, t_point *p1, t_point *p2, double perc);
+	int			clr_function_num;
+	int			keycode;
 }				t_mlx;
 
 typedef struct	s_vector
@@ -79,7 +81,7 @@ int				ft_get_color2(t_mlx *mlx, t_point *p1, t_point *p2, double percentage);
 int				ft_get_color3(t_mlx *mlx, t_point *p1, t_point *p2, double percentage);
 void			ft_draw_line(t_mlx *mlx, t_point *p1, t_point *p2,
 					int (*ft_clr) (t_mlx *mlx, t_point *p1, t_point *p2, double perc));
-int				ft_get_mouse(int x, int y, t_mlx *param);
+int				ft_get_mouse(int x, int y, void *param);
 int				ft_render(void *mlx_param);
 int				ft_nb_lines(int **mesh);
 void			ft_put_image_to_window(void *mlx, void *win, void *img, int x, int y);
@@ -93,5 +95,6 @@ int				ft_unexpected_error(void);
 t_mlx			*ft_new_mlx(int width, int height, char *title);
 t_point			***empty_points(t_mlx *mlx);
 void			draw_full_rect(t_mlx *mlx, t_rect *rect);
+int				key_hook(int keycode, void *mlx_param);
 
 #endif

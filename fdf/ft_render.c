@@ -6,7 +6,7 @@
 /*   By: dbousque <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/12/14 14:09:05 by dbousque          #+#    #+#             */
-/*   Updated: 2015/12/14 18:15:34 by dbousque         ###   ########.fr       */
+/*   Updated: 2015/12/15 19:03:45 by dbousque         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -179,12 +179,12 @@ void		mesh_to_points(t_mlx *mlx)
 
 	//mlx->unit *= 1.1;
 	//mlx->height_factor *= 0.9;
-	mlx->view_mode = 1;
+	//mlx->view_mode = 1;
 	//mlx->color_function = ft_get_color2;
 	//mlx->center->x -= 100.0;
 	//mlx->center->y -= 10.0;
-	mlx->elevation = 1.00;
-	//mlx->angle += 10.0;
+	//mlx->elevation = 1.00;
+	//mlx->angle += 4.0;
 	if (mlx->view_mode != 1)
 		dev = ft_new_vector(sin(mlx->angle * RAD) * mlx->unit, cos(mlx->angle * RAD) * mlx->unit);
 	else
@@ -252,53 +252,3 @@ int			ft_render(void *mlx_param)
 	ft_put_image_to_window(mlx->mlx, mlx->win, mlx->img, 0, 0);
 	return (0);
 }
-
-/*int		ft_render(void *mlx_param)
-{
-	t_mlx	*mlx;
-	int		base;
-	double	start_x;
-	double	start_y;
-	int		x;
-	int		y;
-	double	current_x;
-	double	current_y;
-	int		nb_lines;
-	//double	decal;
-
-	mlx = (t_mlx*)mlx_param;
-	restore_window(mlx);
-	nb_lines = ft_nb_lines(mlx->mesh);
-	base = 155;
-	start_x = 600;
-	start_y = 100;
-	y = 0;
-	while (y < nb_lines - 1)
-	{
-		x = 1;
-		current_x = start_x - y * base * cos(30 * RAD);
-		current_y = start_y + y * base * sin(30 * RAD);
-		while (x < mlx->mesh[y][0])
-		{
-			ft_draw_line(mlx, ft_new_point(current_x, current_y, mlx->mesh[y][x]),
-						ft_new_point(current_x + base * cos(30 * RAD), current_y + base * sin(30 * RAD), mlx->mesh[y][x + 1]),
-							ft_get_color);
-			ft_draw_line(mlx, ft_new_point(current_x - base * cos(30 * RAD), current_y + base * sin(30 * RAD), mlx->mesh[y + 1][x]),
-						ft_new_point(current_x, current_y, mlx->mesh[y][x]),
-							ft_get_color);
-			ft_draw_line(mlx, ft_new_point(current_x - base * cos(30 * RAD), current_y + base * sin(30 * RAD), mlx->mesh[y + 1][x]),
-						ft_new_point(current_x, current_y + base, mlx->mesh[y + 1][x + 1]),
-							ft_get_color);
-			ft_draw_line(mlx, ft_new_point(current_x, current_y + base, mlx->mesh[y + 1][x + 1]),
-						ft_new_point(current_x + base * cos(30 * RAD), current_y + base * sin(30 * RAD), mlx->mesh[y][x + 1]),
-							ft_get_color);
-			current_x = start_x - y * base * cos(30 * RAD) + x * base * cos(30 * RAD);
-			current_y = start_y + y * base * sin(30 * RAD) + x * base * sin(30 * RAD);
-			//current_y -= mlx->mesh[y][x + 1] * base / 15.0;
-			x++;
-		}
-		y++;
-	}
-	ft_put_image_to_window(mlx->mlx, mlx->win, mlx->img, 0, 0);
-	return (0);
-}*/

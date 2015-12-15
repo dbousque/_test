@@ -76,6 +76,7 @@ void	ft_draw_full_triangle(t_mlx *mlx, t_point *p1, t_point *p2, t_point *p3)
 		end->x += (p1->y > p2->y ? -x_step2 : x_step2);
 		start->height = (p2->height - p1->height) * ((start->y - p1->y) / (p2->y - p1->y));
 		end->height = (p2->height - p3->height) * ((start->y - p3->y) / (p2->y - p3->y));
+		printf("%f\n", start->x);
 	}
 	free(start);
 	free(end);
@@ -83,21 +84,59 @@ void	ft_draw_full_triangle(t_mlx *mlx, t_point *p1, t_point *p2, t_point *p3)
 	end = NULL;
 }
 
+void	sort_points(t_rect *rect, t_point *highest[4])
+{
+	t_point	*tmp;
+	int		i;
+
+	i = 0;
+	/*highest[0] = rect->points[1];
+	highest[1] = rect->points[0];
+	highest[2] = rect->points[3];
+	highest[3] = rect->points[2];*/
+	
+	highest[0] = rect->points[2];
+	highest[1] = rect->points[3];
+	highest[2] = rect->points[0];
+	highest[3] = rect->points[1];
+
+	while (i < 4)
+	{
+		if (i > 0 && highest[i]->y < highest[i - 1]->y)
+		{
+			tmp = highest[i];
+			highest[i] = highest[i - 1];
+			highest[i - 1] = tmp;
+			i-=2;
+		}
+		i++;
+	}
+}
+
 void	draw_full_rect(t_mlx *mlx, t_rect *rect)
 {
 	//t_point		*tmp1;
 	//t_point		*tmp2;
+	t_point		*highest[4];
 
-	//tmp1 = ft_new_point((rect->points[1]->x - rect->points[2]->x) * ((rect->points[2]->y - rect->points[0]->y) / (rect->points[2]->y - rect->points[1]->y)) + rect->points[2]->x
-	//			,rect->points[1]->y, rect->points[0]->height);
+	sort_points(rect, highest);
+	/*tmp1 = ft_new_point((highest[0]->x - highest[2]->x) * ((highest[2]->y - highest[1]->y) / (highest[2]->y - highest[0]->y)) + highest[2]->x
+				, highest[1]->y
+				, highest[0]->height);
 	
-	//ft_draw_full_triangle(mlx, tmp1, rect->points[0], rect->points[1]);
-	//ft_draw_full_triangle(mlx, tmp1, rect->points[2], rect->points[1]);
-	//ft_draw_full_triangle(mlx, rect->points[2], rect->points[1], tmp2);
-	//ft_draw_full_triangle(mlx, rect->points[2], rect->points[3], tmp2);
+	tmp2 = ft_new_point((highest[1]->x - highest[3]->x) * ((highest[3]->y - highest[2]->y) / (highest[3]->y - highest[1]->y)) + highest[3]->x
+				, highest[2]->y
+				, highest[3]->height);
 
-	ft_draw_full_triangle(mlx, rect->points[2], rect->points[0], rect->points[1]);
-	ft_draw_full_triangle(mlx, rect->points[2], rect->points[3], rect->points[1]);
+	ft_draw_full_triangle(mlx, tmp1, highest[0], highest[1]);
+	ft_draw_full_triangle(mlx, tmp1, highest[2], highest[1]);
+
+	ft_draw_full_triangle(mlx, highest[2], highest[1], tmp2);
+	ft_draw_full_triangle(mlx, highest[2], highest[3], tmp2);
+	ft_draw_line(mlx, highest[2], tmp2, ft_get_color3);
+	ft_draw_line(mlx, highest[1], tmp1, ft_get_color);*/
+	//ft_draw_full_triangle(mlx, highest[1], highest[0], highest[2]);
+	//ft_draw_full_triangle(mlx, highest[1], highest[3], highest[2]);
 	ft_draw_line(mlx, rect->points[0], rect->points[1], mlx->color_function);
 	ft_draw_line(mlx, rect->points[1], rect->points[3], mlx->color_function);
 	ft_draw_line(mlx, rect->points[3], rect->points[2], mlx->color_function);
