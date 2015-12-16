@@ -43,7 +43,6 @@ int		ft_get_color3(t_mlx *mlx, t_point *p1, t_point *p2, double percentage)
 {
 	double	height;
 
-	(void)mlx;
 	height = p1->height + ((p2->height - p1->height) * percentage / 100.0);
 	if (height <= 0.0)
 		return (0x0000FF - (mlx->lower_point > -1.0 ? 0.0 : height / mlx->lower_point * 200));
@@ -54,4 +53,14 @@ int		ft_get_color3(t_mlx *mlx, t_point *p1, t_point *p2, double percentage)
 	else
 		return (rgb_to_color(230 * height / mlx->higher_point * 1.3, 230 * height / mlx->higher_point * 1.3, 230 * height / mlx->higher_point * 1.3));
 	return (0x999999);
+}
+
+int		ft_get_color4(t_mlx *mlx, t_point *p1, t_point *p2, double percentage)
+{
+	double	height;
+	double	value;
+
+	height = p1->height + ((p2->height - p1->height) * percentage / 100.0);
+	value = (height - mlx->lower_point) / (mlx->higher_point - mlx->lower_point);
+	return (rgb_to_color(20 + value * 230, 20 + value * 230, 20 + value * 230));
 }

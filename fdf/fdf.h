@@ -79,6 +79,7 @@ t_rect			*ft_new_rect(t_point *one, t_point *two, t_point *three, t_point *four)
 int				ft_get_color(t_mlx *mlx, t_point *p1, t_point *p2, double percentage);
 int				ft_get_color2(t_mlx *mlx, t_point *p1, t_point *p2, double percentage);
 int				ft_get_color3(t_mlx *mlx, t_point *p1, t_point *p2, double percentage);
+int				ft_get_color4(t_mlx *mlx, t_point *p1, t_point *p2, double percentage);
 void			ft_draw_line(t_mlx *mlx, t_point *p1, t_point *p2,
 					int (*ft_clr) (t_mlx *mlx, t_point *p1, t_point *p2, double perc));
 int				ft_get_mouse(int x, int y, void *param);

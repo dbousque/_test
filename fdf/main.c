@@ -16,6 +16,8 @@
 #define A 0
 #define S 1
 #define D 2
+#define H 4
+#define J 38
 #define LEFT 123
 #define UP 126
 #define DOWN 125
@@ -93,6 +95,11 @@ int		key_hook(int keycode, void *mlx_param)
 			mlx->color_function = ft_get_color3;
 			mlx->clr_function_num = 2;
 		}
+		else if (mlx->clr_function_num == 2)
+		{
+			mlx->color_function = ft_get_color4;
+			mlx->clr_function_num = 3;
+		}
 		else
 		{
 			mlx->color_function = ft_get_color;
@@ -121,8 +128,25 @@ int		key_hook(int keycode, void *mlx_param)
 		else
 			mlx->view_mode = 0;
 	}
+	else if (keycode == H)
+		mlx->height_factor /= 1.1;
+	else if (keycode == J)
+		mlx->height_factor *= 1.1;
 	mlx->keycode = keycode;
 	ft_render(mlx);
+	return (0);
+}
+
+int		loop(void *mlx_param)
+{
+	t_mlx	*mlx;
+
+	mlx = (t_mlx*)mlx_param;
+	ft_putnbr(mlx->keycode);
+	ft_putchar('\n');
+	ft_render(mlx);
+	if (mlx->keycode != -1)
+		key_hook(mlx->keycode, mlx);
 	return (0);
 }
 
@@ -135,7 +159,6 @@ int		main(int argc, char **argv)
 	{
 		if (!(mesh = ft_get_mesh(argv[1])))
 			return (ft_map_error());
-		//ft_putintint(mesh);
 		if (!(mlx = ft_new_mlx(WIDTH, HEIGHT, "fdf")))
 			return (ft_connection_failed());
 		mlx->mesh = mesh;
@@ -144,7 +167,8 @@ int		main(int argc, char **argv)
 		mlx->unit = get_unit(mlx);
 		ft_render((void*)mlx);
 		mlx_expose_hook(mlx->win, expose_hook, mlx);
-		mlx_key_hook(mlx->win, key_hook, (void*)mlx);
+		mlx_hook(mlx->win, 2, 3, key_hook, (void*)mlx);
+		//mlx_loop_hook(mlx->win, loop, (void*)mlx);
 		mlx_loop(mlx->mlx);
 	}
 	return (0);
