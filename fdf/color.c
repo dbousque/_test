@@ -6,7 +6,7 @@
 /*   By: dbousque <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/12/14 17:39:03 by dbousque          #+#    #+#             */
-/*   Updated: 2015/12/14 17:39:22 by dbousque         ###   ########.fr       */
+/*   Updated: 2015/12/16 21:05:18 by dbousque         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,22 +45,23 @@ int		ft_get_color3(t_mlx *mlx, t_point *p1, t_point *p2, double percentage)
 
 	height = p1->height + ((p2->height - p1->height) * percentage / 100.0);
 	if (height <= 0.0)
-		return (0x0000FF - (mlx->lower_point > -1.0 ? 0.0 : height / mlx->lower_point * 200));
+		return (0x0000FF - (mlx->lower_point > -1.0 ? 0.0
+					: height / mlx->lower_point * 200));
 	else if (height < mlx->higher_point / 8)
 		return (rgb_to_color(0, 70 + height / mlx->higher_point * 1000, 35));
 	else if (height < mlx->higher_point / 1.8)
-		return (rgb_to_color(230 - height / mlx->higher_point * 300 , 65, 45));
-	else
-		return (rgb_to_color(230 * height / mlx->higher_point * 1.3, 230 * height / mlx->higher_point * 1.3, 230 * height / mlx->higher_point * 1.3));
-	return (0x999999);
+		return (rgb_to_color(230 - height / mlx->higher_point * 300, 65, 45));
+	return (rgb_to_color(230 * height / mlx->higher_point * 1.1
+				, 230 * height / mlx->higher_point * 1.1
+				, 230 * height / mlx->higher_point * 1.1));
 }
 
 int		ft_get_color4(t_mlx *mlx, t_point *p1, t_point *p2, double percentage)
 {
-	double	height;
+	double	heigh;
 	double	value;
 
-	height = p1->height + ((p2->height - p1->height) * percentage / 100.0);
-	value = (height - mlx->lower_point) / (mlx->higher_point - mlx->lower_point);
+	heigh = p1->height + ((p2->height - p1->height) * percentage / 100.0);
+	value = (heigh - mlx->lower_point) / (mlx->higher_point - mlx->lower_point);
 	return (rgb_to_color(20 + value * 230, 20 + value * 230, 20 + value * 230));
 }

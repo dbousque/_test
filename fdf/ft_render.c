@@ -6,17 +6,11 @@
 /*   By: dbousque <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/12/14 14:09:05 by dbousque          #+#    #+#             */
-/*   Updated: 2015/12/15 19:03:45 by dbousque         ###   ########.fr       */
+/*   Updated: 2015/12/16 21:13:34 by dbousque         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "fdf.h"
-
-
-
-
-#include <stdio.h>
-
 
 int			ft_nb_lines(int **mesh)
 {
@@ -28,48 +22,17 @@ int			ft_nb_lines(int **mesh)
 	return (i);
 }
 
-void		ft_rem_img_from_window(void *mlx, void *win, void *img, int x, int y)
+void		ft_put_image_to_window(void *mlx, void *win, void *img)
 {
-	int		*image;
-
-	image = (int*)img;
-	y = 0;
-	while (y < HEIGHT)
-	{
-		x = 0;
-		while (x < WIDTH)
-		{
-			if (image[y * WIDTH + x])
-				mlx_pixel_put(mlx, win, x, y, 0);
-			x++;
-		}
-		y++;
-	}
-}
-
-void		ft_put_image_to_window(void *mlx, void *win, void *img, int x, int y)
-{
-	int		*image;
-
-	image = (int*)img;
-	y = 0;
-	while (y < HEIGHT)
-	{
-		x = 0;
-		while (x < WIDTH)
-		{
-			if (image[y * WIDTH + x])
-				mlx_pixel_put(mlx, win, x, y, image[y * WIDTH + x]);
-			x++;
-		}
-		y++;
-	}
+	mlx_put_image_to_window(mlx, win, img, 0, 0);
 }
 
 void		restore_window(t_mlx *mlx)
 {
-	ft_rem_img_from_window(mlx->mlx, mlx->win, mlx->img, 0, 0);
-	ft_bzero(mlx->img, mlx->width * mlx->height * sizeof(int));
+	mlx_destroy_image(mlx->mlx, mlx->img);
+	mlx->img = mlx_new_image(mlx->mlx, WIDTH, HEIGHT);
+	mlx->pixels = mlx_get_data_addr(mlx->img, &(mlx->bpp), &(mlx->s_line)
+					, &(mlx->ed));
 }
 
 void		get_coords_at_xy(t_mlx *mlx, int y, int x, t_vector *dev)
@@ -77,35 +40,19 @@ void		get_coords_at_xy(t_mlx *mlx, int y, int x, t_vector *dev)
 	mlx->points[y][x - 1]->height = mlx->mesh[y][x];
 	if (mlx->view_mode == 0)
 	{
-		mlx->points[y][x - 1]->x = mlx->start_x - y * dev->y_step + x * dev->x_step;
-		mlx->points[y][x - 1]->y = mlx->start_y + y * dev->x_step * mlx->elevation
-			+ x * mlx->elevation * dev->y_step - mlx->mesh[y][x] * mlx->unit / mlx->height_factor;
+		mlx->points[y][x - 1]->x = mlx->start_x - y * dev->y_step
+			+ x * dev->x_step;
+		mlx->points[y][x - 1]->y = mlx->start_y + y * dev->x_step
+			* mlx->elevation + x * mlx->elevation * dev->y_step
+			- mlx->mesh[y][x] * mlx->unit / mlx->height_factor;
 	}
 	else
 	{
-		mlx->points[y][x - 1]->x = mlx->start_x - y * dev->y_step + x * dev->y_step;
-		mlx->points[y][x - 1]->y = mlx->start_y + y * dev->x_step
-			+ x * dev->x_step - mlx->mesh[y][x] * mlx->unit / mlx->height_factor;
+		mlx->points[y][x - 1]->x = mlx->start_x - y * dev->y_step
+			+ x * dev->y_step;
+		mlx->points[y][x - 1]->y = mlx->start_y + y * dev->x_step + x
+			* dev->x_step - mlx->mesh[y][x] * mlx->unit / mlx->height_factor;
 	}
-}
-
-char		conditions_continue_y(t_mlx *mlx, t_vector *dev, int y)
-{
-	//if ((y > 0 && mlx->points[y - 1][0]->y <= 0.0 && dev->y_step < 0.0)
-	//	|| (y > 0 && mlx->points[y - 1][0]->y >= HEIGHT && dev->y_step > 0.0))
-	//	return (0);
-	(void)mlx;
-	(void)dev;
-	(void)y;
-	return (1);
-}
-
-char		conditions_continue_x(t_mlx *mlx, t_vector *dev, int x)
-{
-	(void)mlx;
-	(void)dev;
-	(void)x;
-	return (1);
 }
 
 double		get_extreme_y(t_mlx *mlx, int nb_lines)
@@ -165,7 +112,6 @@ void		set_start_point(t_mlx *mlx, t_vector *dev, int nb_lines)
 	get_coords_at_xy(mlx, 0, mlx->mesh[0][0], dev);
 	extreme_x = get_extreme_x(mlx, nb_lines);
 	extreme_y = get_extreme_y(mlx, nb_lines);
-	printf("%f, %f\n", extreme_x, extreme_y);
 	mlx->start_x = mlx->center->x - extreme_x;
 	mlx->start_y = mlx->center->y - extreme_y;
 }
@@ -177,25 +123,19 @@ void		mesh_to_points(t_mlx *mlx)
 	int		nb_lines;
 	t_vector	*dev;
 
-	//mlx->unit *= 1.1;
-	//mlx->height_factor *= 0.9;
-	//mlx->view_mode = 1;
-	//mlx->color_function = ft_get_color2;
-	//mlx->center->x -= 100.0;
-	//mlx->center->y -= 10.0;
-	//mlx->elevation = 1.00;
-	//mlx->angle += 4.0;
 	if (mlx->view_mode != 1)
-		dev = ft_new_vector(sin(mlx->angle * RAD) * mlx->unit, cos(mlx->angle * RAD) * mlx->unit);
+		dev = ft_new_vector(sin(mlx->angle * RAD) * mlx->unit
+				, cos(mlx->angle * RAD) * mlx->unit);
 	else
-		dev = ft_new_vector(sin(30 * RAD) * mlx->unit, cos(30 * RAD) * mlx->unit);
+		dev = ft_new_vector(sin(30 * RAD) * mlx->unit
+				, cos(30 * RAD) * mlx->unit);
 	nb_lines = ft_nb_lines(mlx->mesh);
 	set_start_point(mlx, dev, nb_lines - 1);
 	y = 0;
-	while (y < nb_lines && conditions_continue_y(mlx, dev, y))
+	while (y < nb_lines)
 	{
 		x = 1;
-		while (x <= mlx->mesh[y][0] && conditions_continue_x(mlx, dev, x))
+		while (x <= mlx->mesh[y][0])
 		{
 			get_coords_at_xy(mlx, y, x, dev);
 			x++;
@@ -209,7 +149,7 @@ void		ft_draw_rect(t_mlx *mlx, int y, int x)
 	t_rect	*rect;
 
 	if ((rect = ft_new_rect(mlx->points[y][x], mlx->points[y][x + 1]
-							, mlx->points[y + 1][x], mlx->points[y + 1][x + 1])))
+						, mlx->points[y + 1][x], mlx->points[y + 1][x + 1])))
 	{
 		draw_full_rect(mlx, rect);
 		free(rect);
@@ -217,16 +157,20 @@ void		ft_draw_rect(t_mlx *mlx, int y, int x)
 	}
 }
 
+void		ft_draw_void_rect(t_mlx *mlx, int y, int x)
+{
+	ft_draw_line(mlx, mlx->points[y][x], mlx->points[y][x + 1]);
+	ft_draw_line(mlx, mlx->points[y][x], mlx->points[y + 1][x]);
+	ft_draw_line(mlx, mlx->points[y][x + 1], mlx->points[y + 1][x + 1]);
+	ft_draw_line(mlx, mlx->points[y + 1][x], mlx->points[y + 1][x + 1]);
+}
+
 int			ft_render(void *mlx_param)
 {
-	static int	i = 0;
 	t_mlx	*mlx;
 	int		x;
 	int		y;
 
-	ft_putnbr(i);
-	ft_putchar('\n');
-	i++;
 	mlx = (t_mlx*)mlx_param;
 	restore_window(mlx);
 	mesh_to_points(mlx);
@@ -236,19 +180,11 @@ int			ft_render(void *mlx_param)
 		x = 0;
 		while (mlx->points[y][x + 1])
 		{
-			if (!mlx->full_drawing)
-			{
-				ft_draw_line(mlx, mlx->points[y][x], mlx->points[y][x + 1], mlx->color_function);
-				ft_draw_line(mlx, mlx->points[y][x], mlx->points[y + 1][x], mlx->color_function);
-				ft_draw_line(mlx, mlx->points[y][x + 1], mlx->points[y + 1][x + 1], mlx->color_function);
-				ft_draw_line(mlx, mlx->points[y + 1][x], mlx->points[y + 1][x + 1], mlx->color_function);
-			}
-			else
-				ft_draw_rect(mlx, y, x);
+			ft_draw_void_rect(mlx, y, x);
 			x++;
 		}
 		y++;
 	}
-	ft_put_image_to_window(mlx->mlx, mlx->win, mlx->img, 0, 0);
+	ft_put_image_to_window(mlx->mlx, mlx->win, mlx->img);
 	return (0);
 }

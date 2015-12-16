@@ -6,7 +6,7 @@
 /*   By: dbousque <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/12/14 14:33:05 by dbousque          #+#    #+#             */
-/*   Updated: 2015/12/15 19:03:55 by dbousque         ###   ########.fr       */
+/*   Updated: 2015/12/16 21:15:40 by dbousque         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,62 +58,16 @@ double	get_unit(t_mlx *mlx)
 	return (tmp);
 }
 
-int		expose_hook(t_mlx *mlx)
+int		key_hook2(int keycode, t_mlx *mlx)
 {
-	(void)mlx;
-	//ft_render(mlx);
-	return (0);
-}
-
-int		key_hook(int keycode, void *mlx_param)
-{
-	t_mlx	*mlx;
-	
-
-	mlx = (t_mlx*)mlx_param;
-	ft_putnbr(keycode);
-	ft_putchar('\n');
-	if (keycode == SPACE)
-		mlx->keycode = -1;
-	else if (keycode == Z)
-		mlx->unit *= 1.1;
-	else if (keycode == X)
-		mlx->unit /= 1.1;
-	else if (keycode == LEFT)
-		mlx->center->x += 10.0;
-	else if (keycode == RIGHT)
-		mlx->center->x -= 10.0;
-	else if (keycode == F)
-	{
-		if (mlx->clr_function_num == 0)
-		{
-			mlx->color_function = ft_get_color2;
-			mlx->clr_function_num = 1;
-		}
-		else if (mlx->clr_function_num == 1)
-		{
-			mlx->color_function = ft_get_color3;
-			mlx->clr_function_num = 2;
-		}
-		else if (mlx->clr_function_num == 2)
-		{
-			mlx->color_function = ft_get_color4;
-			mlx->clr_function_num = 3;
-		}
-		else
-		{
-			mlx->color_function = ft_get_color;
-			mlx->clr_function_num = 0;
-		}
-	}
-	else if (keycode == UP)
-		mlx->center->y += 10.0;
+	if (keycode == UP)
+		mlx->center->y += 30.0;
 	else if (keycode == DOWN)
-		mlx->center->y -= 10.0;
+		mlx->center->y -= 30.0;
 	else if (keycode == W && mlx->elevation < 1.0)
-		mlx->elevation += 0.05;
+		mlx->elevation += 0.03;
 	else if (keycode == S && mlx->elevation > -1.0)
-		mlx->elevation -= 0.05;
+		mlx->elevation -= 0.03;
 	else if (keycode == A && mlx->view_mode == 0)
 		mlx->angle += 1.0;
 	else if (keycode == D && mlx->view_mode == 0)
@@ -137,16 +91,48 @@ int		key_hook(int keycode, void *mlx_param)
 	return (0);
 }
 
-int		loop(void *mlx_param)
+int		key_hook(int keycode, void *mlx_param)
 {
 	t_mlx	*mlx;
-
+	
 	mlx = (t_mlx*)mlx_param;
-	ft_putnbr(mlx->keycode);
-	ft_putchar('\n');
+	if (keycode == SPACE)
+		mlx->keycode = -1;
+	else if (keycode == Z)
+		mlx->unit *= 1.1;
+	else if (keycode == X)
+		mlx->unit /= 1.1;
+	else if (keycode == LEFT)
+		mlx->center->x += 30.0;
+	else if (keycode == RIGHT)
+		mlx->center->x -= 30.0;
+	else if (keycode == F)
+	{
+		if (mlx->clr_function_num == 0)
+		{
+			mlx->color_function = ft_get_color2;
+			mlx->clr_function_num = 1;
+		}
+		else if (mlx->clr_function_num == 1)
+		{
+			mlx->color_function = ft_get_color3;
+			mlx->clr_function_num = 2;
+		}
+		else if (mlx->clr_function_num == 2)
+		{
+			mlx->color_function = ft_get_color4;
+			mlx->clr_function_num = 3;
+		}
+		else
+		{
+			mlx->color_function = ft_get_color;
+			mlx->clr_function_num = 0;
+		}
+	}
+	else
+		return (key_hook2(keycode, mlx));
+	mlx->keycode = keycode;
 	ft_render(mlx);
-	if (mlx->keycode != -1)
-		key_hook(mlx->keycode, mlx);
 	return (0);
 }
 
@@ -162,11 +148,13 @@ int		main(int argc, char **argv)
 		if (!(mlx = ft_new_mlx(WIDTH, HEIGHT, "fdf")))
 			return (ft_connection_failed());
 		mlx->mesh = mesh;
+		mlx->higher_point = mlx->mesh[0][1];
+		mlx->lower_point = mlx->mesh[0][1];
 		if (!(mlx->points = empty_points(mlx)))
 			return (ft_unexpected_error());
 		mlx->unit = get_unit(mlx);
 		ft_render((void*)mlx);
-		mlx_expose_hook(mlx->win, expose_hook, mlx);
+		//mlx_expose_hook(mlx->win, expose_hook, mlx);
 		mlx_hook(mlx->win, 2, 3, key_hook, (void*)mlx);
 		//mlx_loop_hook(mlx->win, loop, (void*)mlx);
 		mlx_loop(mlx->mlx);

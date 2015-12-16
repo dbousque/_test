@@ -1,4 +1,14 @@
-
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   new_mlx.c                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: dbousque <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2015/12/16 21:05:45 by dbousque          #+#    #+#             */
+/*   Updated: 2015/12/16 21:17:04 by dbousque         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
 #include "fdf.h"
 
@@ -22,6 +32,19 @@ int		*ft_new_img(int width, int height)
 	return (img);
 }
 
+t_point		*ft_create_point_n_update_max(t_mlx *mlx, int y, int x)
+{
+	t_point		*res;
+
+	if (!(res = ft_new_point(0.0, 0.0, 0.0)))
+		return (NULL);
+	if (mlx->mesh[y][x] < mlx->lower_point)
+		mlx->lower_point = mlx->mesh[y][x];
+	else if (mlx->mesh[y][x] > mlx->higher_point)
+		mlx->higher_point = mlx->mesh[y][x];
+	return (res);
+}
+
 t_point		***empty_points(t_mlx *mlx)
 {
 	int		y;
@@ -32,27 +55,21 @@ t_point		***empty_points(t_mlx *mlx)
 	nb_lines = ft_nb_lines(mlx->mesh);
 	if (!(res = (t_point***)malloc(sizeof(t_point**) * (nb_lines + 1))))
 		return (NULL);
-	mlx->higher_point = mlx->mesh[0][1];
-	mlx->lower_point = mlx->mesh[0][1];
 	res[nb_lines] = NULL;
-	y = 0;
-	while (y < nb_lines)
+	y = -1;
+	while (++y < nb_lines)
 	{
-		if (!(res[y] = (t_point**)malloc(sizeof(t_point*) * (mlx->mesh[y][0] + 1))))
+		if (!(res[y] = (t_point**)malloc(sizeof(t_point*)
+						* (mlx->mesh[y][0] + 1))))
 			return (NULL);
 		res[y][mlx->mesh[y][0]] = NULL;
 		x = 1;
 		while (x <= mlx->mesh[y][0])
 		{
-			if (!(res[y][x - 1] = ft_new_point(0.0, 0.0, 0.0)))
+			if (!(res[y][x - 1] = ft_create_point_n_update_max(mlx, y, x)))
 				return (NULL);
-			if (mlx->mesh[y][x] < mlx->lower_point)
-				mlx->lower_point = mlx->mesh[y][x];
-			else if (mlx->mesh[y][x] > mlx->higher_point)
-				mlx->higher_point = mlx->mesh[y][x];
 			x++;
 		}
-		y++;
 	}
 	return (res);
 }
@@ -80,7 +97,6 @@ t_mlx	*ft_new_mlx(int width, int height, char *title)
 	res->view_mode = 0;
 	res->elevation = 0.72;
 	res->center = ft_new_point(WIDTH / 2, HEIGHT / 2, 0.0);
-	res->full_drawing = 1;
 	res->keycode = -1;
 	return (res);
 }

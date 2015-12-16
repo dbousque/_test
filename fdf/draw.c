@@ -12,8 +12,15 @@
 
 void	img_pixel_put(t_mlx *mlx, int x, int y, int color)
 {
+	int		i;
+
+	i = x * 4 + y * mlx->s_line;
 	if (y >= 0 && x >= 0 && y * WIDTH + x < mlx->last_pixel)
-		mlx->img[y * WIDTH + x] = color;
+	{
+		mlx->pixels[i + 2] = color / (256 * 256);
+		mlx->pixels[i + 1] = (color / 256) % 256;
+		mlx->pixels[i] = color % (256 * 256);
+	}
 }
 
 void	ft_get_steps(t_point *p1, t_point *p2, double *x_step, double *y_step)
@@ -30,8 +37,35 @@ void	ft_get_steps(t_point *p1, t_point *p2, double *x_step, double *y_step)
 	*x_step /= ft_real_value(max);
 }
 
-void	ft_draw_line(t_mlx *mlx, t_point *p1, t_point *p2,
-			int (*ft_clr) (t_mlx *mlx, t_point *p1, t_point *p2, double perc))
+void	ft_draw_line2(t_mlx *mlx, t_point *p1, t_point *p2)
+{
+	double	x;
+	double	y;
+	double	x_step;
+	double	y_step;
+	int		nb_steps;
+	int		i;
+
+	ft_get_steps(p1, p2, &x_step, &y_step);
+	if (p2->y != p1->y)
+		nb_steps = (int)((p2->y - p1->y) / y_step);
+	else
+		nb_steps = (int)((p2->x - p1->x) / x_step);
+	y = (double)p1->y;
+	x = (double)p1->x;
+	i = 0;
+	while (i < nb_steps)
+	{
+			img_pixel_put(mlx, lround(x), lround(y),
+				mlx->color_function(mlx, p1, p2, ft_perc(p1, p2, x, y)));
+		y += y_step;
+		x += x_step;
+		i++;
+	}
+
+}
+
+void	ft_draw_line(t_mlx *mlx, t_point *p1, t_point *p2)
 {
 	double	x;
 	double	y;
@@ -50,7 +84,7 @@ void	ft_draw_line(t_mlx *mlx, t_point *p1, t_point *p2,
 	{
 		if (x <= WIDTH && y <= HEIGHT && x >= 0.0 && y  >= 0.0)
 			img_pixel_put(mlx, lround(x), lround(y),
-				ft_clr(mlx, p1, p2, ft_perc(p1, p2, x, y)));
+				mlx->color_function(mlx, p1, p2, ft_perc(p1, p2, x, y)));
 		y += y_step;
 		x += x_step;
 	}
@@ -69,7 +103,7 @@ void	ft_draw_full_triangle(t_mlx *mlx, t_point *p1, t_point *p2, t_point *p3)
 	x_step2 = ((int)(p2->x - p3->x)) / (p2->y - p3->y);
 	while ((p1->y > p2->y ? start->y >= p2->y : start->y <= p2->y))
 	{
-		ft_draw_line(mlx, start, end, mlx->color_function);
+		ft_draw_line(mlx, start, end);
 		start->y += (p1->y > p2->y ? -1 : 1);
 		start->x += (p1->y > p2->y ? -x_step1 : x_step1);
 		end->y += (p1->y > p2->y ? -1 : 1);
@@ -90,11 +124,6 @@ void	sort_points(t_rect *rect, t_point *highest[4])
 	int		i;
 
 	i = 0;
-	/*highest[0] = rect->points[1];
-	highest[1] = rect->points[0];
-	highest[2] = rect->points[3];
-	highest[3] = rect->points[2];*/
-	
 	highest[0] = rect->points[2];
 	highest[1] = rect->points[3];
 	highest[2] = rect->points[0];
@@ -137,8 +166,8 @@ void	draw_full_rect(t_mlx *mlx, t_rect *rect)
 	ft_draw_line(mlx, highest[1], tmp1, ft_get_color);*/
 	//ft_draw_full_triangle(mlx, highest[1], highest[0], highest[2]);
 	//ft_draw_full_triangle(mlx, highest[1], highest[3], highest[2]);
-	ft_draw_line(mlx, rect->points[0], rect->points[1], mlx->color_function);
-	ft_draw_line(mlx, rect->points[1], rect->points[3], mlx->color_function);
-	ft_draw_line(mlx, rect->points[3], rect->points[2], mlx->color_function);
-	ft_draw_line(mlx, rect->points[2], rect->points[0], mlx->color_function);
+	ft_draw_line(mlx, rect->points[0], rect->points[1]);
+	ft_draw_line(mlx, rect->points[1], rect->points[3]);
+	ft_draw_line(mlx, rect->points[3], rect->points[2]);
+	ft_draw_line(mlx, rect->points[2], rect->points[0]);
 }
