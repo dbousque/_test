@@ -6,7 +6,7 @@
 /*   By: dbousque <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/12/14 14:33:05 by dbousque          #+#    #+#             */
-/*   Updated: 2015/12/16 21:15:40 by dbousque         ###   ########.fr       */
+/*   Updated: 2015/12/17 12:59:24 by dbousque         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -136,6 +136,59 @@ int		key_hook(int keycode, void *mlx_param)
 	return (0);
 }
 
+void	update_point(t_mlx *mlx, int ind_y, int ind_x, int keycode)
+{
+	if (keycode == 1)
+	{
+		if (mlx->higher_point - mlx->lower->point < 1)
+		{
+			mlx->mesh[ind_y][ind_x + 1] = mlx->lower_point + 1
+		}
+		mlx->mesh[ind_y][ind_x + 1] += (mlx->higher_point - mlx->lower_point) / 10;
+	}
+	else
+	{
+		mlx->mesh[ind_y][ind_x + 1] -= (mlx->higher_point - mlx->lower_point) / 10;
+	}
+	ft_render(mlx);
+}
+
+int		mouse_hook(int keycode, int x, int y, void *mlx_param)
+{
+	t_mlx	*mlx;
+	int		ix;
+	int		iy;
+	double	close_score;
+	int		ind_x;
+	int		ind_y;
+
+	mlx = (t_mlx*)mlx_param;
+	close_score = ft_real_value(mlx->points[0][0]->x - x)
+		+ ft_real_value(mlx->points[0][0]->y - y);
+	ind_x = 0;
+	ind_y = 0;
+	iy = 0;
+	while (mlx->points[iy])
+	{
+		ix = 0;
+		while (mlx->points[iy][ix])
+		{
+			if (ft_real_value(mlx->points[iy][ix]->x - x)
+					+ ft_real_value(mlx->points[iy][ix]->y - y) < close_score)
+			{
+				close_score = ft_real_value(mlx->points[iy][ix]->x - x)
+					+ ft_real_value(mlx->points[iy][ix]->y - y);
+				ind_y = iy;
+				ind_x = ix;
+			}
+			ix++;
+		}
+		iy++;
+	}
+	update_point(mlx, ind_y, ind_x, keycode);
+	return (0);
+}
+
 int		main(int argc, char **argv)
 {
 	t_mlx	*mlx;
@@ -156,6 +209,7 @@ int		main(int argc, char **argv)
 		ft_render((void*)mlx);
 		//mlx_expose_hook(mlx->win, expose_hook, mlx);
 		mlx_hook(mlx->win, 2, 3, key_hook, (void*)mlx);
+		mlx_mouse_hook(mlx->win, mouse_hook, (void*)mlx);
 		//mlx_loop_hook(mlx->win, loop, (void*)mlx);
 		mlx_loop(mlx->mlx);
 	}
