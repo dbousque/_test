@@ -1,28 +1,43 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line.h                                    :+:      :+:    :+:   */
+/*   read_utils.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: dbousque <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2015/12/04 13:35:57 by dbousque          #+#    #+#             */
-/*   Updated: 2015/12/17 17:08:39 by dbousque         ###   ########.fr       */
+/*   Created: 2015/12/17 17:36:46 by dbousque          #+#    #+#             */
+/*   Updated: 2015/12/17 17:38:22 by dbousque         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef GET_NEXT_LINE_H
-# define GET_NEXT_LINE_H
+#include "fdf.h"
 
-# include "./libft/libft.h"
-
-# define BUF_SIZE 64
-
-typedef struct		s_file
+int		ft_strstrlen(char **strstr)
 {
-	int				fd;
-	char			*content;
-}					t_file;
+	int		i;
 
-int					get_next_line(int const fd, char **line);
+	i = 0;
+	while (strstr[i])
+		i++;
+	return (i);
+}
 
-#endif
+int		ft_lstlen(t_list *list)
+{
+	int		i;
+
+	i = 0;
+	while (list)
+	{
+		i++;
+		list = list->next;
+	}
+	return (i);
+}
+
+void	ft_delstr(void *content, size_t size)
+{
+	ft_strdel((char**)&content);
+	content = NULL;
+	(void)size;
+}

@@ -6,57 +6,11 @@
 /*   By: dbousque <dbousque@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/12/09 11:21:21 by dbousque          #+#    #+#             */
-/*   Updated: 2015/12/17 14:51:14 by dbousque         ###   ########.fr       */
+/*   Updated: 2015/12/17 17:38:10 by dbousque         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "fdf.h"
-
-int		ft_strstrlen(char **strstr)
-{
-	int		i;
-
-	i = 0;
-	while (strstr[i])
-		i++;
-	return (i);
-}
-
-int		ft_lstlen(t_list *list)
-{
-	int		i;
-
-	i = 0;
-	while (list)
-	{
-		i++;
-		list = list->next;
-	}
-	return (i);
-}
-
-void	ft_delstr(void *content, size_t size)
-{
-	ft_strdel((char**)&content);
-	content = NULL;
-	(void)size;
-}
-
-char	ft_validchars(char *str)
-{
-	int		i;
-
-	i = 0;
-	if (str[i] == '-' || str[i] == '+')
-		i++;
-	while (str[i])
-	{
-		if (!ft_isdigit(str[i]))
-			return (0);
-		i++;
-	}
-	return (1);
-}
 
 int		*ft_atoistr(char **line, int length)
 {
@@ -69,21 +23,10 @@ int		*ft_atoistr(char **line, int length)
 	i = 0;
 	while (i < length)
 	{
-		if (!ft_validchars(line[i]))
-			return (NULL);
 		res[i + 1] = ft_atoi(line[i]);
 		i++;
 	}
 	return (res);
-}
-
-char	ft_last_elt_not_empty(t_list *list)
-{
-	while (list->next)
-		list = list->next;
-	if (ft_strlen((char*)list->content) > 0)
-		return (1);
-	return (0);
 }
 
 void	ft_initialize_vars(int *ind, int *length, int **res)
@@ -101,7 +44,7 @@ int		**ft_lst_to_int_array(t_list *lines)
 	int		ind;
 
 	len = ft_lstlen(lines);
-	if (len <= 2 || ft_last_elt_not_empty(lines))
+	if (len <= 2)
 		return (NULL);
 	if (!(res = (int**)malloc(sizeof(int*) * (len))))
 		return (NULL);
@@ -109,11 +52,10 @@ int		**ft_lst_to_int_array(t_list *lines)
 	while (lines->next)
 	{
 		tmp = ft_strsplit((char*)lines->content, ' ');
-		if (len == -1)
-			len = ft_strstrlen(tmp);
-		if ((!tmp[0] && lines->next) || len < 2 || ft_strstrlen(tmp) != len)
+		len = ft_strstrlen(tmp);
+		if ((!tmp[0] && lines->next) || len < 2)
 			return (NULL);
-		if (!(res[ind] = ft_atoistr(tmp, len)))
+		if (!(res[ind] = ft_atoistr(tmp, ft_strstrlen(tmp))))
 			return (NULL);
 		lines = lines->next;
 		ind++;

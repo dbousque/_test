@@ -6,7 +6,7 @@
 /*   By: dbousque <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/12/16 21:05:45 by dbousque          #+#    #+#             */
-/*   Updated: 2015/12/17 14:10:07 by dbousque         ###   ########.fr       */
+/*   Updated: 2015/12/17 17:35:32 by dbousque         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ t_vector	*ft_new_vector(double x, double y)
 	return (res);
 }
 
-int		*ft_new_img(int width, int height)
+int			*ft_new_img(int width, int height)
 {
 	int		*img;
 
@@ -74,7 +74,7 @@ t_point		***empty_points(t_mlx *mlx)
 	return (res);
 }
 
-t_mlx	*ft_new_mlx(int width, int height, char *title)
+t_mlx		*ft_new_mlx(int width, int height, char *title)
 {
 	t_mlx	*res;
 
@@ -92,7 +92,7 @@ t_mlx	*ft_new_mlx(int width, int height, char *title)
 	res->unit = 4.0;
 	res->height_factor = 10.0;
 	res->angle = 30.0;
-	res->color_function = ft_get_color;
+	res->clr_fct = ft_get_color;
 	res->clr_function_num = 0;
 	res->view_mode = 0;
 	res->elevation = 0.72;

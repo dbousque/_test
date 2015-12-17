@@ -6,34 +6,11 @@
 /*   By: dbousque <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/12/14 14:09:05 by dbousque          #+#    #+#             */
-/*   Updated: 2015/12/17 14:36:59 by dbousque         ###   ########.fr       */
+/*   Updated: 2015/12/17 17:42:40 by dbousque         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "fdf.h"
-
-int			ft_nb_lines(int **mesh)
-{
-	int		i;
-
-	i = 0;
-	while (mesh[i])
-		i++;
-	return (i);
-}
-
-void		ft_put_image_to_window(void *mlx, void *win, void *img)
-{
-	mlx_put_image_to_window(mlx, win, img, 0, 0);
-}
-
-void		restore_window(t_mlx *mlx)
-{
-	mlx_destroy_image(mlx->mlx, mlx->img);
-	mlx->img = mlx_new_image(mlx->mlx, WIDTH, HEIGHT);
-	mlx->pixels = mlx_get_data_addr(mlx->img, &(mlx->bpp), &(mlx->s_line)
-					, &(mlx->ed));
-}
 
 void		get_coords_at_xy(t_mlx *mlx, int y, int x, t_vector *dev)
 {
@@ -99,23 +76,6 @@ double		get_extreme_x(t_mlx *mlx, int nb_lines)
 	return ((smaller + higher) / 2.0);
 }
 
-void		set_start_point(t_mlx *mlx, t_vector *dev, int nb_lines)
-{
-	double		extreme_y;
-	double		extreme_x;
-
-	mlx->start_x = 0.0;
-	mlx->start_y = 0.0;
-	get_coords_at_xy(mlx, nb_lines, mlx->mesh[nb_lines][0], dev);
-	get_coords_at_xy(mlx, nb_lines, 1, dev);
-	get_coords_at_xy(mlx, 0, 1, dev);
-	get_coords_at_xy(mlx, 0, mlx->mesh[0][0], dev);
-	extreme_x = get_extreme_x(mlx, nb_lines);
-	extreme_y = get_extreme_y(mlx, nb_lines);
-	mlx->start_x = mlx->center->x - extreme_x;
-	mlx->start_y = mlx->center->y - extreme_y;
-}
-
 void		mesh_to_points(t_mlx *mlx)
 {
 	int		y;
@@ -142,14 +102,6 @@ void		mesh_to_points(t_mlx *mlx)
 		}
 		y++;
 	}
-}
-
-void		ft_draw_void_rect(t_mlx *mlx, int y, int x)
-{
-	ft_draw_line(mlx, mlx->points[y][x], mlx->points[y][x + 1]);
-	ft_draw_line(mlx, mlx->points[y][x], mlx->points[y + 1][x]);
-	ft_draw_line(mlx, mlx->points[y][x + 1], mlx->points[y + 1][x + 1]);
-	ft_draw_line(mlx, mlx->points[y + 1][x], mlx->points[y + 1][x + 1]);
 }
 
 int			ft_render(void *mlx_param)
