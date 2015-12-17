@@ -6,7 +6,7 @@
 /*   By: dbousque <dbousque@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/12/09 11:21:21 by dbousque          #+#    #+#             */
-/*   Updated: 2015/12/10 11:24:57 by dbousque         ###   ########.fr       */
+/*   Updated: 2015/12/17 14:51:14 by dbousque         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ int		ft_strstrlen(char **strstr)
 int		ft_lstlen(t_list *list)
 {
 	int		i;
-	
+
 	i = 0;
 	while (list)
 	{
@@ -86,29 +86,34 @@ char	ft_last_elt_not_empty(t_list *list)
 	return (0);
 }
 
+void	ft_initialize_vars(int *ind, int *length, int **res)
+{
+	res[*length - 1] = NULL;
+	*length = -1;
+	*ind = 0;
+}
+
 int		**ft_lst_to_int_array(t_list *lines)
 {
-	int		length;
+	int		len;
 	int		**res;
 	char	**tmp;
 	int		ind;
 
-	length = ft_lstlen(lines);
-	if (length <= 2 || ft_last_elt_not_empty(lines))
+	len = ft_lstlen(lines);
+	if (len <= 2 || ft_last_elt_not_empty(lines))
 		return (NULL);
-	if (!(res = (int**)malloc(sizeof(int*) * (length))))
+	if (!(res = (int**)malloc(sizeof(int*) * (len))))
 		return (NULL);
-	res[length - 1] = NULL;
-	length = -1;
-	ind = 0;
+	ft_initialize_vars(&ind, &len, res);
 	while (lines->next)
 	{
 		tmp = ft_strsplit((char*)lines->content, ' ');
-		if (length == -1)
-			length = ft_strstrlen(tmp);
-		if ((!tmp[0] && lines->next) || length < 2 || ft_strstrlen(tmp) != length)
+		if (len == -1)
+			len = ft_strstrlen(tmp);
+		if ((!tmp[0] && lines->next) || len < 2 || ft_strstrlen(tmp) != len)
 			return (NULL);
-		if (!(res[ind] = ft_atoistr(tmp, length)))
+		if (!(res[ind] = ft_atoistr(tmp, len)))
 			return (NULL);
 		lines = lines->next;
 		ind++;
@@ -121,28 +126,26 @@ int		**ft_get_mesh(char *filename)
 {
 	int		res;
 	int		fd;
-	char	**line;
+	char	**l;
 	t_list	*lines;
-	t_list	*lines_end;
+	t_list	*l_end;
 
 	lines = NULL;
-	lines_end = NULL;
+	l_end = NULL;
 	fd = open(filename, O_RDONLY);
-	if (fd < 0)
+	if (fd < 0 || !(l = (char**)malloc(sizeof(char*))))
 		return (NULL);
-	if (!(line = (char**)malloc(sizeof(char*))))
-		return (NULL);
-	while ((res = get_next_line(fd, line)) > 0)
+	while ((res = get_next_line(fd, l)) > 0)
 	{
-		ft_lstaddend(&lines_end, ft_lstnew(*line, sizeof(char) * (ft_strlen(*line) + 1)));
+		ft_lstaddend(&l_end, ft_lstnew(*l, sizeof(char) * (ft_strlen(*l) + 1)));
 		if (!lines)
-			lines = lines_end;
+			lines = l_end;
 	}
 	if (res < 0)
 		return (NULL);
 	if (lines)
-		ft_lstaddend(&lines_end, ft_lstnew(*line, sizeof(char) * (ft_strlen(*line) + 1)));
+		ft_lstaddend(&l_end, ft_lstnew(*l, sizeof(char) * (ft_strlen(*l) + 1)));
 	if (!lines)
-		lines = lines_end;
+		lines = l_end;
 	return (ft_lst_to_int_array(lines));
 }

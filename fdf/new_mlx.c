@@ -6,7 +6,7 @@
 /*   By: dbousque <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/12/16 21:05:45 by dbousque          #+#    #+#             */
-/*   Updated: 2015/12/16 21:17:04 by dbousque         ###   ########.fr       */
+/*   Updated: 2015/12/17 14:10:07 by dbousque         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,6 +97,5 @@ t_mlx	*ft_new_mlx(int width, int height, char *title)
 	res->view_mode = 0;
 	res->elevation = 0.72;
 	res->center = ft_new_point(WIDTH / 2, HEIGHT / 2, 0.0);
-	res->keycode = -1;
 	return (res);
 }

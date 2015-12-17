@@ -6,7 +6,7 @@
 /*   By: dbousque <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/12/14 14:33:05 by dbousque          #+#    #+#             */
-/*   Updated: 2015/12/17 12:59:24 by dbousque         ###   ########.fr       */
+/*   Updated: 2015/12/17 14:30:03 by dbousque         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,55 +58,9 @@ double	get_unit(t_mlx *mlx)
 	return (tmp);
 }
 
-int		key_hook2(int keycode, t_mlx *mlx)
+int		key_hook3(int keycode, t_mlx *mlx)
 {
-	if (keycode == UP)
-		mlx->center->y += 30.0;
-	else if (keycode == DOWN)
-		mlx->center->y -= 30.0;
-	else if (keycode == W && mlx->elevation < 1.0)
-		mlx->elevation += 0.03;
-	else if (keycode == S && mlx->elevation > -1.0)
-		mlx->elevation -= 0.03;
-	else if (keycode == A && mlx->view_mode == 0)
-		mlx->angle += 1.0;
-	else if (keycode == D && mlx->view_mode == 0)
-		mlx->angle -= 1.0;
-	else if (keycode == M)
-	{
-		if (mlx->view_mode == 0)
-		{
-			mlx->view_mode = 1;
-			mlx->angle = 30.0;
-		}
-		else
-			mlx->view_mode = 0;
-	}
-	else if (keycode == H)
-		mlx->height_factor /= 1.1;
-	else if (keycode == J)
-		mlx->height_factor *= 1.1;
-	mlx->keycode = keycode;
-	ft_render(mlx);
-	return (0);
-}
-
-int		key_hook(int keycode, void *mlx_param)
-{
-	t_mlx	*mlx;
-	
-	mlx = (t_mlx*)mlx_param;
-	if (keycode == SPACE)
-		mlx->keycode = -1;
-	else if (keycode == Z)
-		mlx->unit *= 1.1;
-	else if (keycode == X)
-		mlx->unit /= 1.1;
-	else if (keycode == LEFT)
-		mlx->center->x += 30.0;
-	else if (keycode == RIGHT)
-		mlx->center->x -= 30.0;
-	else if (keycode == F)
+	if (keycode == F)
 	{
 		if (mlx->clr_function_num == 0)
 		{
@@ -129,63 +83,123 @@ int		key_hook(int keycode, void *mlx_param)
 			mlx->clr_function_num = 0;
 		}
 	}
-	else
-		return (key_hook2(keycode, mlx));
-	mlx->keycode = keycode;
 	ft_render(mlx);
 	return (0);
+}
+
+int		key_hook2(int keycode, t_mlx *mlx)
+{
+	if (keycode == UP)
+		mlx->center->y += 30.0;
+	else if (keycode == DOWN)
+		mlx->center->y -= 30.0;
+	else if (keycode == M)
+	{
+		if (mlx->view_mode == 0)
+		{
+			mlx->view_mode = 1;
+			mlx->angle = 30.0;
+		}
+		else
+			mlx->view_mode = 0;
+	}
+	else if (keycode == H)
+		mlx->height_factor /= 1.1;
+	else if (keycode == J)
+		mlx->height_factor *= 1.1;
+	else
+		return (key_hook3(keycode, mlx));
+	ft_render(mlx);
+	return (0);
+}
+
+int		key_hook(int keycode, void *mlx_param)
+{
+	t_mlx	*mlx;
+
+	mlx = (t_mlx*)mlx_param;
+	if (keycode == Z)
+		mlx->unit *= 1.1;
+	else if (keycode == X)
+		mlx->unit /= 1.1;
+	else if (keycode == LEFT)
+		mlx->center->x += 30.0;
+	else if (keycode == RIGHT)
+		mlx->center->x -= 30.0;
+	else if (keycode == W && mlx->elevation < 1.0)
+		mlx->elevation += 0.03;
+	else if (keycode == S && mlx->elevation > -1.0)
+		mlx->elevation -= 0.03;
+	else if (keycode == A && mlx->view_mode == 0)
+		mlx->angle += 1.0;
+	else if (keycode == D && mlx->view_mode == 0)
+		mlx->angle -= 1.0;
+	else
+		return (key_hook2(keycode, mlx));
+	ft_render(mlx);
+	return (0);
+}
+
+void	make_point_higher(t_mlx *mlx, int ind_y, int ind_x)
+{
+	if (mlx->higher_point - mlx->lower_point < 10)
+	{
+		mlx->mesh[ind_y][ind_x + 1] = mlx->mesh[ind_y][ind_x + 1] + 1;
+		mlx->higher_point += 1;
+	}
+	else
+		mlx->mesh[ind_y][ind_x + 1] += (mlx->higher_point
+												- mlx->lower_point) / 10;
+	if (mlx->mesh[ind_y][ind_x + 1] > mlx->higher_point)
+		mlx->higher_point = mlx->mesh[ind_y][ind_x + 1];
 }
 
 void	update_point(t_mlx *mlx, int ind_y, int ind_x, int keycode)
 {
 	if (keycode == 1)
-	{
-		if (mlx->higher_point - mlx->lower->point < 1)
-		{
-			mlx->mesh[ind_y][ind_x + 1] = mlx->lower_point + 1
-		}
-		mlx->mesh[ind_y][ind_x + 1] += (mlx->higher_point - mlx->lower_point) / 10;
-	}
+		make_point_higher(mlx, ind_y, ind_x);
 	else
 	{
-		mlx->mesh[ind_y][ind_x + 1] -= (mlx->higher_point - mlx->lower_point) / 10;
+		if (mlx->higher_point - mlx->lower_point < 10)
+		{
+			mlx->mesh[ind_y][ind_x + 1] = mlx->mesh[ind_y][ind_x + 1] - 1;
+			mlx->lower_point -= 1;
+		}
+		else
+			mlx->mesh[ind_y][ind_x + 1] -= (mlx->higher_point
+												- mlx->lower_point) / 10;
+		if (mlx->mesh[ind_y][ind_x + 1] < mlx->lower_point)
+			mlx->lower_point = mlx->mesh[ind_y][ind_x + 1];
 	}
 	ft_render(mlx);
 }
 
-int		mouse_hook(int keycode, int x, int y, void *mlx_param)
+int		mouse_hook(int keycode, int x, int y, t_mlx *mlx)
 {
-	t_mlx	*mlx;
-	int		ix;
-	int		iy;
-	double	close_score;
-	int		ind_x;
-	int		ind_y;
+	int		i[2];
+	double	score;
+	int		ind[2];
 
-	mlx = (t_mlx*)mlx_param;
-	close_score = ft_real_value(mlx->points[0][0]->x - x)
-		+ ft_real_value(mlx->points[0][0]->y - y);
-	ind_x = 0;
-	ind_y = 0;
-	iy = 0;
-	while (mlx->points[iy])
+	score = -1.0;
+	i[0] = 0;
+	while (mlx->points[i[0]])
 	{
-		ix = 0;
-		while (mlx->points[iy][ix])
+		i[1] = 0;
+		while (mlx->points[i[0]][i[1]])
 		{
-			if (ft_real_value(mlx->points[iy][ix]->x - x)
-					+ ft_real_value(mlx->points[iy][ix]->y - y) < close_score)
+			if (score == -1.0 || ft_real_value(mlx->points[i[0]][i[1]]->x - x)
+					+ ft_real_value(mlx->points[i[0]][i[1]]->y - y) < score)
 			{
-				close_score = ft_real_value(mlx->points[iy][ix]->x - x)
-					+ ft_real_value(mlx->points[iy][ix]->y - y);
-				ind_y = iy;
-				ind_x = ix;
+				score = ft_real_value(mlx->points[i[0]][i[1]]->x - x)
+					+ ft_real_value(mlx->points[i[0]][i[1]]->y - y);
+				ind[0] = i[0];
+				ind[1] = i[1];
 			}
-			ix++;
+			i[1]++;
 		}
-		iy++;
+		i[0]++;
 	}
-	update_point(mlx, ind_y, ind_x, keycode);
+	update_point(mlx, ind[0], ind[1], keycode);
 	return (0);
 }
 
@@ -210,7 +224,6 @@ int		main(int argc, char **argv)
 		//mlx_expose_hook(mlx->win, expose_hook, mlx);
 		mlx_hook(mlx->win, 2, 3, key_hook, (void*)mlx);
 		mlx_mouse_hook(mlx->win, mouse_hook, (void*)mlx);
-		//mlx_loop_hook(mlx->win, loop, (void*)mlx);
 		mlx_loop(mlx->mlx);
 	}
 	return (0);

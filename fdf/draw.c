@@ -1,14 +1,16 @@
-
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   draw.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: dbousque <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2015/12/17 14:35:03 by dbousque          #+#    #+#             */
+/*   Updated: 2015/12/17 14:55:55 by dbousque         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
 #include "fdf.h"
-
-
-
-
-
-
-#include <stdio.h>
-
 
 void	img_pixel_put(t_mlx *mlx, int x, int y, int color)
 {
@@ -20,6 +22,56 @@ void	img_pixel_put(t_mlx *mlx, int x, int y, int color)
 		mlx->pixels[i + 2] = color / (256 * 256);
 		mlx->pixels[i + 1] = (color / 256) % 256;
 		mlx->pixels[i] = color % (256 * 256);
+	}
+}
+
+t_point	*ft_new_point(double x, double y, int height)
+{
+	t_point	*res;
+
+	if (!(res = (t_point*)malloc(sizeof(t_point))))
+		return (NULL);
+	res->x = x;
+	res->y = y;
+	res->height = height;
+	return (res);
+}
+
+t_rect	*ft_new_rect(t_point *one, t_point *two, t_point *three, t_point *four)
+{
+	t_rect	*res;
+
+	if (!(res = (t_rect*)malloc(sizeof(t_rect))))
+		return (NULL);
+	if (!(res->points = (t_point**)malloc(sizeof(t_point*) * 4)))
+		return (NULL);
+	res->points[0] = one;
+	res->points[1] = two;
+	res->points[2] = three;
+	res->points[3] = four;
+	return (res);
+}
+
+double	ft_real_value(double value)
+{
+	if (value < 0)
+		return (-value);
+	return (value);
+}
+
+double	ft_perc(t_point *p1, t_point *p2, double x, double y)
+{
+	double	diff;
+
+	if (p1->x != p2->x)
+	{
+		diff = ft_real_value(p2->x - p1->x);
+		return ((ft_real_value(x - p1->x) * 100) / diff);
+	}
+	else
+	{
+		diff = ft_real_value(p2->y - p1->y);
+		return ((ft_real_value(y - p1->y) * 100) / diff);
 	}
 }
 
@@ -35,34 +87,6 @@ void	ft_get_steps(t_point *p1, t_point *p2, double *x_step, double *y_step)
 		max = *y_step;
 	*y_step /= ft_real_value(max);
 	*x_step /= ft_real_value(max);
-}
-
-void	ft_draw_line2(t_mlx *mlx, t_point *p1, t_point *p2)
-{
-	double	x;
-	double	y;
-	double	x_step;
-	double	y_step;
-	int		nb_steps;
-	int		i;
-
-	ft_get_steps(p1, p2, &x_step, &y_step);
-	if (p2->y != p1->y)
-		nb_steps = (int)((p2->y - p1->y) / y_step);
-	else
-		nb_steps = (int)((p2->x - p1->x) / x_step);
-	y = (double)p1->y;
-	x = (double)p1->x;
-	i = 0;
-	while (i < nb_steps)
-	{
-			img_pixel_put(mlx, lround(x), lround(y),
-				mlx->color_function(mlx, p1, p2, ft_perc(p1, p2, x, y)));
-		y += y_step;
-		x += x_step;
-		i++;
-	}
-
 }
 
 void	ft_draw_line(t_mlx *mlx, t_point *p1, t_point *p2)
@@ -82,7 +106,7 @@ void	ft_draw_line(t_mlx *mlx, t_point *p1, t_point *p2)
 			&& ((xy_hi[0] && x >= p2->x) || (!xy_hi[0] && x <= p2->x))
 			&& (x <= WIDTH || x_step < 0.0) && (y <= HEIGHT || y_step < 0.0))
 	{
-		if (x <= WIDTH && y <= HEIGHT && x >= 0.0 && y  >= 0.0)
+		if (x <= WIDTH && y <= HEIGHT && x >= 0.0 && y >= 0.0)
 			img_pixel_put(mlx, lround(x), lround(y),
 				mlx->color_function(mlx, p1, p2, ft_perc(p1, p2, x, y)));
 		y += y_step;
@@ -108,14 +132,13 @@ void	ft_draw_full_triangle(t_mlx *mlx, t_point *p1, t_point *p2, t_point *p3)
 		start->x += (p1->y > p2->y ? -x_step1 : x_step1);
 		end->y += (p1->y > p2->y ? -1 : 1);
 		end->x += (p1->y > p2->y ? -x_step2 : x_step2);
-		start->height = (p2->height - p1->height) * ((start->y - p1->y) / (p2->y - p1->y));
-		end->height = (p2->height - p3->height) * ((start->y - p3->y) / (p2->y - p3->y));
-		printf("%f\n", start->x);
+		start->height = (p2->height - p1->height)
+			* ((start->y - p1->y) / (p2->y - p1->y));
+		end->height = (p2->height - p3->height)
+			* ((start->y - p3->y) / (p2->y - p3->y));
 	}
 	free(start);
 	free(end);
-	start = NULL;
-	end = NULL;
 }
 
 void	sort_points(t_rect *rect, t_point *highest[4])
@@ -128,7 +151,6 @@ void	sort_points(t_rect *rect, t_point *highest[4])
 	highest[1] = rect->points[3];
 	highest[2] = rect->points[0];
 	highest[3] = rect->points[1];
-
 	while (i < 4)
 	{
 		if (i > 0 && highest[i]->y < highest[i - 1]->y)
@@ -136,38 +158,8 @@ void	sort_points(t_rect *rect, t_point *highest[4])
 			tmp = highest[i];
 			highest[i] = highest[i - 1];
 			highest[i - 1] = tmp;
-			i-=2;
+			i -= 2;
 		}
 		i++;
 	}
-}
-
-void	draw_full_rect(t_mlx *mlx, t_rect *rect)
-{
-	//t_point		*tmp1;
-	//t_point		*tmp2;
-	t_point		*highest[4];
-
-	sort_points(rect, highest);
-	/*tmp1 = ft_new_point((highest[0]->x - highest[2]->x) * ((highest[2]->y - highest[1]->y) / (highest[2]->y - highest[0]->y)) + highest[2]->x
-				, highest[1]->y
-				, highest[0]->height);
-	
-	tmp2 = ft_new_point((highest[1]->x - highest[3]->x) * ((highest[3]->y - highest[2]->y) / (highest[3]->y - highest[1]->y)) + highest[3]->x
-				, highest[2]->y
-				, highest[3]->height);
-
-	ft_draw_full_triangle(mlx, tmp1, highest[0], highest[1]);
-	ft_draw_full_triangle(mlx, tmp1, highest[2], highest[1]);
-
-	ft_draw_full_triangle(mlx, highest[2], highest[1], tmp2);
-	ft_draw_full_triangle(mlx, highest[2], highest[3], tmp2);
-	ft_draw_line(mlx, highest[2], tmp2, ft_get_color3);
-	ft_draw_line(mlx, highest[1], tmp1, ft_get_color);*/
-	//ft_draw_full_triangle(mlx, highest[1], highest[0], highest[2]);
-	//ft_draw_full_triangle(mlx, highest[1], highest[3], highest[2]);
-	ft_draw_line(mlx, rect->points[0], rect->points[1]);
-	ft_draw_line(mlx, rect->points[1], rect->points[3]);
-	ft_draw_line(mlx, rect->points[3], rect->points[2]);
-	ft_draw_line(mlx, rect->points[2], rect->points[0]);
 }

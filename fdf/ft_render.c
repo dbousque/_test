@@ -6,7 +6,7 @@
 /*   By: dbousque <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/12/14 14:09:05 by dbousque          #+#    #+#             */
-/*   Updated: 2015/12/16 21:13:34 by dbousque         ###   ########.fr       */
+/*   Updated: 2015/12/17 14:36:59 by dbousque         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -141,19 +141,6 @@ void		mesh_to_points(t_mlx *mlx)
 			x++;
 		}
 		y++;
-	}
-}
-
-void		ft_draw_rect(t_mlx *mlx, int y, int x)
-{
-	t_rect	*rect;
-
-	if ((rect = ft_new_rect(mlx->points[y][x], mlx->points[y][x + 1]
-						, mlx->points[y + 1][x], mlx->points[y + 1][x + 1])))
-	{
-		draw_full_rect(mlx, rect);
-		free(rect);
-		rect = NULL;
 	}
 }
 
