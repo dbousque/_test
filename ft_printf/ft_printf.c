@@ -6,144 +6,166 @@
 
 #include <stdio.h>
 
-void	arg_putnbr(va_list ap, char flag)
+int		arg_putnbr(va_list ap, char flag)
 {
 	int		res;
 	long	res2;
+	int		length;
 
 	if (flag == L)
 	{
 		res2 = va_arg(ap, long);
-		ft_putlong(res2);
+		length = ft_putlong(res2);
 	}
 	else
 	{
 		res = va_arg(ap, int);
-		ft_putnbr(res);
+		length = ft_putlong(res);
 	}
+	return (length);
 }
 
-void	arg_putnbr_un(va_list ap, char flag)
+int		arg_putnbr_un(va_list ap, char flag)
 {
 	unsigned int	res;
 	unsigned long	res2;
+	int				length;
 
 	if (flag == L)
 	{
 		res2 = va_arg(ap, unsigned long);
-		ft_putlong_un(res2);
+		length = ft_putlong_un(res2);
 	}
 	else
 	{
 		res = va_arg(ap, unsigned int);
-		ft_putnbr_un(res);
+		length = ft_putnbr_un(res);
 	}
+	return (length);
 }
 
-void	arg_putchar(va_list ap, char flag)
+int		arg_putchar(va_list ap, char flag)
 {
 	char	res;
 (void)flag;
 	res = va_arg(ap, int);
 	ft_putchar((unsigned char)res);
+	return (1);
 }
 
-void	arg_putstr(va_list ap, char flag)
+int		arg_putstr(va_list ap, char flag)
 {
 	char	*res;
 (void)flag;
 	res = va_arg(ap, char*);
-	ft_putstr(res);
+	if (res)
+		ft_putstr(res);
+	else
+	{
+		ft_putstr("(null)");
+		return (6);
+	}
+	return (ft_strlen(res));
 }
 
-void	arg_putaddr(va_list ap, char flag)
+int		arg_putaddr(va_list ap, char flag)
 {
 	void	*res;
+	int		length;
 
 	if (flag == L)
 	{
 		res = va_arg(ap, void*);
-		ft_putaddr_un(res);
+		length = ft_putaddr_un(res, 1);
 	}
 	else
 	{
 		res = va_arg(ap, void*);
-		ft_putaddr(res);
+		length = ft_putaddr(res, 1);
 	}
+	return (length);
 }
 
-void	arg_putoctal(va_list ap, char flag)
+int		arg_putoctal(va_list ap, char flag)
 {
 	unsigned int	res;
 	unsigned long	res2;
+	int				length;
 
 	if (flag == L)
 	{
 		res2 = va_arg(ap, unsigned long);
-		ft_putoctal_un(res2);
+		length = ft_putoctal_un(res2);
 	}
 	else
 	{
 		res = va_arg(ap, unsigned int);
-		ft_putoctal_un(res);
+		length = ft_putoctal_un(res);
 	}
+	return (length);
 }
 
-void	arg_puthexa(va_list ap, char flag)
+int		arg_puthexa(va_list ap, char flag)
 {
 	unsigned int	res;
 	unsigned long	res2;
+	int				length;
 
 	if (flag == L)
 	{
 		res2 = va_arg(ap, unsigned long);
-		ft_puthexa(res2);
+		length = ft_puthexa(res2);
 	}
 	else
 	{
 		res = va_arg(ap, unsigned int);
-		ft_puthexa(res);
+		length = ft_puthexa(res);
 	}
+	return (length);
 }
 
-void	arg_puthexa_maj(va_list ap, char flag)
+int		arg_puthexa_maj(va_list ap, char flag)
 {
 	unsigned int	res;
 	unsigned long	res2;
+	int				length;
 
 	if (flag == L)
 	{
 		res2 = va_arg(ap, unsigned long);
-		ft_puthexa_maj(res2);
+		length = ft_puthexa_maj(res2);
 	}
 	else
 	{
 		res = va_arg(ap, unsigned int);
-		ft_puthexa_maj(res);
+		length = ft_puthexa_maj(res);
 	}
-
+	return (length);
 }
 
-void	print_arg(char c, va_list ap, int *i, char flag)
+int		print_arg(char c, va_list ap, int *i, char flag)
 {
+	int		length;
+
 	(*i)++;
+	length = 0;
 	if (c == 'd' || c == 'i')
-		arg_putnbr(ap, flag);
+		length = arg_putnbr(ap, flag);
 	else if (c == 'c')
-		arg_putchar(ap, flag);
+		length = arg_putchar(ap, flag);
 	else if (c == 's')
-		arg_putstr(ap, flag);
+		length = arg_putstr(ap, flag);
 	else if (c == 'u')
-		arg_putnbr_un(ap, flag);
+		length = arg_putnbr_un(ap, flag);
 	else if (c == 'p')
-		arg_putaddr(ap, flag);
+		length = arg_putaddr(ap, flag);
 	else if (c == 'o')
-		arg_putoctal(ap, flag);
+		length = arg_putoctal(ap, flag);
 	else if (c == 'x')
-		arg_puthexa(ap, flag);
+		length = arg_puthexa(ap, flag);
 	else if (c == 'X')
-		arg_puthexa_maj(ap, flag);
-
+		length = arg_puthexa_maj(ap, flag);
+	return (length);
 }
 
 char	get_flag(const char *format, int *i)
@@ -177,23 +199,31 @@ int		ft_printf(const char *format, ...)
 	va_list	ap;
 	int		i;
 	char	flag;
+	int		length;
 
-	va_start(ap, format);
+	length = 0;
+	if (format)
+		va_start(ap, format);
 	i = 0;
-	while (format[i])
+	while (format && format[i])
 	{
-		if (format[i] == '%')
+		if (format[i] == '%' && format[i + 1] != '%')
 		{
 			if ((flag = get_flag(format, &i)) == NO_FLAG)
-				print_arg(format[i + 1], ap, &i, NO_FLAG);
+				length += print_arg(format[i + 1], ap, &i, NO_FLAG);
 			else
-				print_arg(format[i + 1], ap, &i, flag);
+				length += print_arg(format[i + 1], ap, &i, flag);
 		}
 		else
+		{
+			if (format[i] == '%')
+				i++;
 			ft_putchar(format[i]);
+			length++;
+		}
 		i++;
 	}
-	return (0);
+	return (length);
 }
 
 int		main(int argc, char **argv)
@@ -201,12 +231,16 @@ int		main(int argc, char **argv)
 	int				nb;
 	unsigned int	nb2;
 	char			*inp;
+	int				i;
 
 	(void)argc;
 	(void)argv;
-	inp = "lol : %ld, %c, %lu, %lp, %lo, %lX, %lu\n";
+	inp = "lol : %ld, %c, %s, %lu, %p, %lo, %lX, %lu\n";
 	nb = -2;
 	nb2 = 0;
-	ft_printf(inp, nb, -200, -150, inp, -1, -127, 21400000000);
-	printf(inp, nb, -200, -150, inp, -1, -127, 21400000000);
+	i = -1;
+	ft_printf("%", NULL);
+	printf("%", NULL);
+	//ft_printf(inp, nb, -200, 0, -150, 0, -1, -127, 21400000000);
+	//printf(inp, nb, -200, 0, -150, 0, -1, -127, 21400000000);
 }

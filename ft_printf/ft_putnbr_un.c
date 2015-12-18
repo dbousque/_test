@@ -2,13 +2,19 @@
 
 #include "ft_printf.h"
 
-void	ft_putnbr_un(unsigned int n)
+int		ft_putnbr_un(unsigned int n)
 {
+	int		length;
+
 	if (n < 10)
+	{
 		ft_putchar(n + '0');
+		return (1);
+	}
 	else
 	{
-		ft_putnbr_un(n / 10);
+		length = ft_putnbr_un(n / 10);
 		ft_putchar(n % 10 + '0');
+		return (length + 1);
 	}
 }

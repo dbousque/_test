@@ -2,18 +2,26 @@
 
 #include "ft_printf.h"
 
-void	ft_putoctal(long long value)
+int		ft_putoctal(long long value)
 {
 	char	*res;
 
 	if ((res = ft_ntoa_base(value, "01234567")))
+	{
 		ft_putstr(res);
+		return (ft_strlen(res));
+	}
+	return (0);
 }
 
-void	ft_putoctal_un(unsigned long long value)
+int		ft_putoctal_un(unsigned long long value)
 {
 	char	*res;
 
 	if ((res = ft_ntoa_base_un(value, "01234567")))
+	{
 		ft_putstr(res);
+		return (ft_strlen(res));
+	}
+	return (0);
 }
