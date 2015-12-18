@@ -51,7 +51,7 @@ void	arg_putoctal(va_list ap)
 	long	res;
 
 	res = va_arg(ap, long);
-	ft_putoctal(res);
+	ft_putoctal((unsigned int)res);
 }
 
 void	print_arg(char c, va_list ap, int *i)
@@ -100,6 +100,8 @@ int		main(int argc, char **argv)
 	inp = "lol : %d, %c, %u, %p, %o\n";
 	nb = 5;
 	nb2 = 0;
-	ft_printf(inp, nb, -200, -150, inp, -1);
-	printf(inp, nb, -200, -150, inp, -1);
+	ft_printf("This is a simple test.");
+	printf("This is a simple test.");
+	//ft_printf(inp, nb, -200, -150, inp, -1);
+	//printf(inp, nb, -200, -150, inp, -1);
 }
