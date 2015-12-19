@@ -28,5 +28,7 @@ int		ft_putaddr_un(void *addr, char long_long);
 int		ft_puthexa_maj(unsigned long long value);
 void	ft_putunicode(wchar_t *uni);
 int		ft_unicodelen(wchar_t *uni);
+int		ft_putlonglong_un(unsigned long long value);
+int		ft_putlonglong(long long value);
 
 #endif

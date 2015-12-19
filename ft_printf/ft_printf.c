@@ -8,77 +8,73 @@
 
 int		arg_putnbr(va_list ap, char flag)
 {
-	int		res;
-	long	res2;
-	int		length;
+	long long	res;
+	int			length;
 
 	if (flag == L)
-	{
-		res2 = va_arg(ap, long);
-		length = ft_putlong(res2);
-	}
+		res = va_arg(ap, long);
+	else if (flag == LL)
+		res = va_arg(ap, long long);
+	else if (flag == H)
+		res = (short)va_arg(ap, int);
+	else if (flag == HH)
+		res = (char)va_arg(ap, int);
+	else if (flag == J)
+		res = va_arg(ap, intmax_t);
+	else if (flag == Z)
+		res = va_arg(ap, size_t);
 	else
-	{
 		res = va_arg(ap, int);
-		length = ft_putlong(res);
-	}
+	length = ft_putlonglong(res);
 	return (length);
 }
 
 int		arg_putnbr_long(va_list ap, char flag)
 {
-	long		res;
-	long long	res2;
+	long long	res;
 	int			length;
 
-	if (flag == L)
-	{
-		res2 = va_arg(ap, long long);
-		length = ft_putlong(res2);
-	}
+	if (flag == L || flag == LL)
+		res = va_arg(ap, long long);
 	else
-	{
 		res = va_arg(ap, long);
-		length = ft_putlong(res);
-	}
+	length = ft_putlonglong(res);
 	return (length);
 }
 
 int		arg_putnbr_un(va_list ap, char flag)
 {
-	unsigned int	res;
-	unsigned long	res2;
-	int				length;
+	unsigned long long	res;
+	int					length;
 
 	if (flag == L)
-	{
-		res2 = va_arg(ap, unsigned long);
-		length = ft_putlong_un(res2);
-	}
+		res = va_arg(ap, unsigned long);
+	else if (flag == LL)
+		res = va_arg(ap, unsigned long long);
+	else if (flag == H)
+		res = (unsigned short)va_arg(ap, unsigned int);
+	else if (flag == HH)
+		res = (unsigned char)va_arg(ap, unsigned int);
+	else if (flag == J)
+		res = va_arg(ap, uintmax_t);
+	else if (flag == Z)
+		res = va_arg(ap, size_t);
 	else
-	{
 		res = va_arg(ap, unsigned int);
-		length = ft_putnbr_un(res);
-	}
+	length = ft_putlonglong_un(res);
 	return (length);
 }
 
 int		arg_putnbr_un_long(va_list ap, char flag)
 {
-	unsigned long		res;
-	unsigned long long	res2;
+	unsigned long long	res;
 	int					length;
 
-	if (flag == L)
-	{
-		res2 = va_arg(ap, unsigned long long);
-		length = ft_putlong_un(res2);
-	}
+	if (flag == L || flag == LL)
+		res = va_arg(ap, unsigned long long);
 	else
-	{
 		res = va_arg(ap, unsigned long);
-		length = ft_putlong_un(res);
-	}
+	length = ft_putlonglong_un(res);
 	return (length);
 }
 
@@ -128,92 +124,95 @@ int		arg_putaddr(va_list ap, char flag)
 	void	*res;
 	int		length;
 
-	if (flag == L)
-	{
-		res = va_arg(ap, void*);
-		length = ft_putaddr_un(res, 1);
-	}
-	else
-	{
-		res = va_arg(ap, void*);
-		length = ft_putaddr(res, 1);
-	}
+	(void)flag;
+	res = va_arg(ap, void*);
+	length = ft_putaddr(res, 1);
 	return (length);
 }
 
 int		arg_putoctal(va_list ap, char flag)
 {
-	unsigned int	res;
-	unsigned long	res2;
-	int				length;
+	unsigned long long	res;
+	uintmax_t			res6;
+	size_t				res7;
+	int					length;
 
+	(void)res6;
+	(void)res7;
 	if (flag == L)
-	{
-		res2 = va_arg(ap, unsigned long);
-		length = ft_putoctal_un(res2);
-	}
+		res = va_arg(ap, unsigned long);
+	else if (flag == LL)
+		res = va_arg(ap, unsigned long long);
+	else if (flag == H)
+		res = (unsigned short)va_arg(ap, unsigned int);
+	else if (flag == HH)
+		res = (unsigned char)va_arg(ap, unsigned int);
+	else if (flag == J)
+		res = va_arg(ap, uintmax_t);
+	else if (flag == Z)
+		res = va_arg(ap, size_t);
 	else
-	{
 		res = va_arg(ap, unsigned int);
-		length = ft_putoctal_un(res);
-	}
+	length = ft_putoctal_un(res);
 	return (length);
 }
 
 int		arg_putoctal_long(va_list ap, char flag)
 {
-	unsigned long		res;
-	unsigned long long	res2;
+	unsigned long long	res;
 	int					length;
 
-	if (flag == L)
-	{
-		res2 = va_arg(ap, unsigned long long);
-		length = ft_putoctal_un(res2);
-	}
+	if (flag == L || flag == LL)
+		res = va_arg(ap, unsigned long long);
 	else
-	{
 		res = va_arg(ap, unsigned long);
-		length = ft_putoctal_un(res);
-	}
+	length = ft_putoctal_un(res);
 	return (length);
 }
 
 int		arg_puthexa(va_list ap, char flag)
 {
-	unsigned int	res;
-	unsigned long	res2;
-	int				length;
+	unsigned long long	res;
+	int					length;
 
 	if (flag == L)
-	{
-		res2 = va_arg(ap, unsigned long);
-		length = ft_puthexa(res2);
-	}
+		res = va_arg(ap, unsigned long);
+	else if (flag == LL)
+		res = va_arg(ap, unsigned long long);
+	else if (flag == H)
+		res = (unsigned short)va_arg(ap, unsigned int);
+	else if (flag == HH)
+		res = (unsigned char)va_arg(ap, unsigned int);
+	else if (flag == J)
+		res = va_arg(ap, uintmax_t);
+	else if (flag == Z)
+		res = va_arg(ap, size_t);
 	else
-	{
 		res = va_arg(ap, unsigned int);
-		length = ft_puthexa(res);
-	}
+	length = ft_puthexa(res);
 	return (length);
 }
 
 int		arg_puthexa_maj(va_list ap, char flag)
 {
-	unsigned int	res;
-	unsigned long	res2;
-	int				length;
+	unsigned long long	res;
+	int					length;
 
 	if (flag == L)
-	{
-		res2 = va_arg(ap, unsigned long);
-		length = ft_puthexa_maj(res2);
-	}
+		res = va_arg(ap, unsigned long);
+	else if (flag == LL)
+		res = va_arg(ap, unsigned long long);
+	else if (flag == H)
+		res = (unsigned short)va_arg(ap, unsigned int);
+	else if (flag == HH)
+		res = (unsigned char)va_arg(ap, unsigned int);
+	else if (flag == J)
+		res = va_arg(ap, uintmax_t);
+	else if (flag == Z)
+		res = va_arg(ap, size_t);
 	else
-	{
 		res = va_arg(ap, unsigned int);
-		length = ft_puthexa_maj(res);
-	}
+	length = ft_puthexa_maj(res);
 	return (length);
 }
 
@@ -310,26 +309,26 @@ int		ft_printf(const char *format, ...)
 
 int		main(int argc, char **argv)
 {
-	int				nb;
-	unsigned int	nb2;
+	unsigned long long			nb;
+	unsigned long long	nb2;
 	char			*inp;
 	int				i;
 	wchar_t			*lol = L"ру́сский";
 	char			*lol2 = "salut";
+	long long		long_int;
 
 	(void)argc;
 	(void)argv;
-	inp = "lol : %d, %c, %s, %u, %p, %o, %X, %u, %S\n";
-	nb = -2;
+	inp = "lol : %hhd, %c, %s, %u, %p, %lO, %X, %llu\n";
+	nb = (unsigned long long)-200000000000;
 	nb2 = 0;
 	i = -1;
+	long_int = 990000000000000000;
 	(void)lol2;
 	(void)lol;
-	ft_printf("%lx\n", 140734725794680);
-	printf("%lx\n", 140734725794680);
 	//ft_printf("1 : %S\n", L"米");
 	//printf("2 : %S\n", L"米");
-	//ft_printf(inp, nb, -200, 0, -150, 0, -1, -127, 21400000000, lol);
-	//printf(inp, nb, -200, 0, -150, 0, -1, -127, 21400000000, lol);
+	ft_printf(inp, nb, -200, 0, -150, 0, -1, 260, long_int);
+	printf(inp, nb, -200, 0, -150, 0, -1, 260, long_int);
 	return (0);
 }
