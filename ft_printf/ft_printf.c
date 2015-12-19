@@ -25,6 +25,25 @@ int		arg_putnbr(va_list ap, char flag)
 	return (length);
 }
 
+int		arg_putnbr_long(va_list ap, char flag)
+{
+	long		res;
+	long long	res2;
+	int			length;
+
+	if (flag == L)
+	{
+		res2 = va_arg(ap, long long);
+		length = ft_putlong(res2);
+	}
+	else
+	{
+		res = va_arg(ap, long);
+		length = ft_putlong(res);
+	}
+	return (length);
+}
+
 int		arg_putnbr_un(va_list ap, char flag)
 {
 	unsigned int	res;
@@ -44,6 +63,25 @@ int		arg_putnbr_un(va_list ap, char flag)
 	return (length);
 }
 
+int		arg_putnbr_un_long(va_list ap, char flag)
+{
+	unsigned long		res;
+	unsigned long long	res2;
+	int					length;
+
+	if (flag == L)
+	{
+		res2 = va_arg(ap, unsigned long long);
+		length = ft_putlong_un(res2);
+	}
+	else
+	{
+		res = va_arg(ap, unsigned long);
+		length = ft_putlong_un(res);
+	}
+	return (length);
+}
+
 int		arg_putchar(va_list ap, char flag)
 {
 	char	res;
@@ -53,10 +91,27 @@ int		arg_putchar(va_list ap, char flag)
 	return (1);
 }
 
+int		arg_putunicode(va_list ap, char flag)
+{
+	wchar_t	*res;
+(void)flag;
+	res = va_arg(ap, wchar_t*);
+	if (res)
+		ft_putunicode(res);
+	else
+	{
+		ft_putstr("(null)");
+		return (6);
+	}
+	return (ft_unicodelen(res));
+}
+
 int		arg_putstr(va_list ap, char flag)
 {
 	char	*res;
-(void)flag;
+
+	if (flag == L)
+		return (arg_putunicode(ap, flag));
 	res = va_arg(ap, char*);
 	if (res)
 		ft_putstr(res);
@@ -100,6 +155,25 @@ int		arg_putoctal(va_list ap, char flag)
 	else
 	{
 		res = va_arg(ap, unsigned int);
+		length = ft_putoctal_un(res);
+	}
+	return (length);
+}
+
+int		arg_putoctal_long(va_list ap, char flag)
+{
+	unsigned long		res;
+	unsigned long long	res2;
+	int					length;
+
+	if (flag == L)
+	{
+		res2 = va_arg(ap, unsigned long long);
+		length = ft_putoctal_un(res2);
+	}
+	else
+	{
+		res = va_arg(ap, unsigned long);
 		length = ft_putoctal_un(res);
 	}
 	return (length);
@@ -165,6 +239,14 @@ int		print_arg(char c, va_list ap, int *i, char flag)
 		length = arg_puthexa(ap, flag);
 	else if (c == 'X')
 		length = arg_puthexa_maj(ap, flag);
+	else if (c == 'S')
+		length = arg_putunicode(ap, flag);
+	else if (c == 'D')
+		length = arg_putnbr_long(ap, flag);
+	else if (c == 'O')
+		length = arg_putoctal_long(ap, flag);
+	else if (c == 'U')
+		length = arg_putnbr_un_long(ap, flag);
 	return (length);
 }
 
@@ -232,15 +314,22 @@ int		main(int argc, char **argv)
 	unsigned int	nb2;
 	char			*inp;
 	int				i;
+	wchar_t			*lol = L"ру́сский";
+	char			*lol2 = "salut";
 
 	(void)argc;
 	(void)argv;
-	inp = "lol : %ld, %c, %s, %lu, %p, %lo, %lX, %lu\n";
+	inp = "lol : %d, %c, %s, %u, %p, %o, %X, %u, %S\n";
 	nb = -2;
 	nb2 = 0;
 	i = -1;
-	ft_printf("%", NULL);
-	printf("%", NULL);
-	//ft_printf(inp, nb, -200, 0, -150, 0, -1, -127, 21400000000);
-	//printf(inp, nb, -200, 0, -150, 0, -1, -127, 21400000000);
+	(void)lol2;
+	(void)lol;
+	ft_printf("%lx\n", 140734725794680);
+	printf("%lx\n", 140734725794680);
+	//ft_printf("1 : %S\n", L"米");
+	//printf("2 : %S\n", L"米");
+	//ft_printf(inp, nb, -200, 0, -150, 0, -1, -127, 21400000000, lol);
+	//printf(inp, nb, -200, 0, -150, 0, -1, -127, 21400000000, lol);
+	return (0);
 }
