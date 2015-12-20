@@ -6,7 +6,7 @@
 /*   By: dbousque <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/12/19 22:06:26 by dbousque          #+#    #+#             */
-/*   Updated: 2015/12/19 22:09:11 by dbousque         ###   ########.fr       */
+/*   Updated: 2015/12/20 12:48:56 by dbousque         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,15 +40,15 @@ int		list_to_array(t_list *content, char ***file)
 	return (0);
 }
 
-int		get_file_content(char *filename, char stdinput, char ***file)
+int		get_file_content(char *filename, char stdinp, char ***file, char goon)
 {
 	int		fd;
 	t_list	*content;
 	t_list	*content_end;
-	int		res;
+	int		re;
 	char	**line;
 
-	if (stdinput)
+	if (stdinp)
 		fd = 0;
 	else if (filename)
 		fd = open(filename, O_RDONLY);
@@ -56,15 +56,17 @@ int		get_file_content(char *filename, char stdinput, char ***file)
 		return (-2);
 	content = NULL;
 	content_end = NULL;
-	res = 1;
-	while (((res == 1 && (res = get_next_line(fd, line)) == 0) || res > 0)
-			&& (fd != 0 || (line && line[0])))
+	re = 1;
+	while (goon && ((re == 1 && (re = get_next_line(fd, line)) == 0) || re > 0))
 	{
 		if (!line)
 			return (-2);
 		ft_lstaddend(&content_end, ft_lstnew(*line, ft_strlen(*line) + 1));
 		if (!content)
 			content = content_end;
+		goon = ((fd == 0 && !(*line && (*line)[0])) ? 0 : 1);
 	}
+	if (fd != 0)
+		close(fd);
 	return (list_to_array(content, file));
 }

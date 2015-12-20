@@ -6,7 +6,7 @@
 /*   By: dbousque <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/12/19 20:18:06 by dbousque          #+#    #+#             */
-/*   Updated: 2015/12/19 22:09:18 by dbousque         ###   ########.fr       */
+/*   Updated: 2015/12/20 12:44:34 by dbousque         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@
 # include <fcntl.h>
 
 int		get_board(char **file_cont, int **board, int *len);
-int		get_file_content(char *filename, char stdinput, char ***file);
+int		get_file_content(char *filename, char stdinp, char ***file, char goon);
+char	valid_line(char *line);
 
 #endif
