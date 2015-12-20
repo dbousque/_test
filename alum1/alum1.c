@@ -6,7 +6,7 @@
 /*   By: dbousque <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/12/19 20:17:28 by dbousque          #+#    #+#             */
-/*   Updated: 2015/12/20 12:48:11 by dbousque         ###   ########.fr       */
+/*   Updated: 2015/12/20 15:44:52 by dbousque         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,7 +80,27 @@ void	ft_putchars(char *take_last)
 	}
 }
 
-int		get_player_move(int *board, int current_last)
+void	ft_putboard(int *board)
+{
+	int		i;
+	int		x;
+
+	i = 0;
+	while (board[i])
+	{
+		x = 0;
+		while (x < board[i])
+		{
+			ft_putchar('|');
+			x++;
+		}
+		ft_putchar('\n');
+		i++;
+	}
+	ft_putchar('\n');
+}
+
+int		get_player_move(int *error)
 {
 	char	*line;
 	int		ret;
@@ -89,8 +109,8 @@ int		get_player_move(int *board, int current_last)
 	ret = get_next_line(0, &line);
 	if (ret == -1)
 	{
-		ft_putendl_fd("unexpected error (file not found, malloc error...)", 2);
-
+		*error = 1;
+		return (ft_unexpected_error());
 	}
 	if (!(valid_line(line)))
 		return (-1);
@@ -98,7 +118,7 @@ int		get_player_move(int *board, int current_last)
 	return (ret);
 }
 
-void	make_player_move(int *board, int *current_last)
+void	make_player_move(int *board, int *current_last, int *error)
 {
 	int		input;
 	int		go_on;
@@ -107,7 +127,7 @@ void	make_player_move(int *board, int *current_last)
 	go_on = 1;
 	while (go_on)
 	{
-		input = get_player_move(board, *current_last);
+		input = get_player_move(error);
 		if (!(input > 3 || input < 1 || board[*current_last] < input))
 			go_on = 0;
 		if (go_on)
@@ -120,24 +140,51 @@ void	make_player_move(int *board, int *current_last)
 
 void	make_ai_move(int *board, char *take_last, int *current_last)
 {
-	(void)take_last;
-	board[*current_last] -= 1;
+	int		nb;
+
+	if (!take_last[*current_last])
+		nb = (board[*current_last] - 1) % 4;
+	else
+		nb = board[*current_last] % 4;
+	if (nb == 0)
+		nb = 1;
+	board[*current_last] -= nb;
 	if (board[*current_last] == 0)
 		(*current_last)--;
+	ft_putstr("The AI took ");
+	ft_putnbr(nb);
+	if (nb == 1)
+		ft_putendl(" match.");
+	else
+		ft_putendl(" matches.");
 }
 
 void	make_play(int *board, char *take_last, int current_last)
 {
 	char	current_player;
+	int		error;
 
+	error = 0;
 	current_player = 1;
-	while (board[0] > 0)
+	while (board[0] > 0 && !error)
 	{
 		if (current_player == 1)
-			make_player_move(board, &current_last);
+			ft_putendl("\n_____________\nYour turn : \n");
+		else
+			ft_putendl("\n_____________\nAI's turn : \n");
+		ft_putboard(board);
+		if (current_player == 1)
+			make_player_move(board, &current_last, &error);
 		else
 			make_ai_move(board, take_last, &current_last);
 		current_player *= -1;
+	}
+	if (!error)
+	{
+		if (current_player == 1)
+			ft_putendl("You won !");
+		else
+			ft_putendl("Sorry, the AI won.");
 	}
 }
 
@@ -160,7 +207,7 @@ int		ft_launch(char *filename, char stdinput)
 		return (ft_unexpected_error());
 	if (!(take_last = get_take_last(board)))
 		return (ft_unexpected_error());
-	make_play(board, take_last);
+	make_play(board, take_last, ft_intlen(board) - 1);
 	return (0);
 }
 
