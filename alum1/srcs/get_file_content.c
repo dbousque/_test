@@ -6,7 +6,7 @@
 /*   By: dbousque <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/12/19 22:06:26 by dbousque          #+#    #+#             */
-/*   Updated: 2015/12/20 15:32:05 by dbousque         ###   ########.fr       */
+/*   Updated: 2015/12/20 17:12:33 by dbousque         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,10 +48,7 @@ int		get_file_content(char *filename, char stdinp, char ***file, char goon)
 	int		re;
 	char	**line;
 
-	if (stdinp)
-		fd = 0;
-	else if (filename)
-		fd = open(filename, O_RDONLY);
+	fd = ((!stdinp && filename) ? open(filename, O_RDONLY) : 0);
 	if (!filename || fd < 0 || !(line = (char**)malloc(sizeof(char*))))
 		return (-2);
 	content = NULL;
