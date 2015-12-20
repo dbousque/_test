@@ -6,31 +6,11 @@
 /*   By: dbousque <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/12/20 16:52:07 by dbousque          #+#    #+#             */
-/*   Updated: 2015/12/20 17:11:15 by dbousque         ###   ########.fr       */
+/*   Updated: 2015/12/20 17:29:41 by dbousque         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "alum1.h"
-
-void	ft_putboard(int *board)
-{
-	int		i;
-	int		x;
-
-	i = 0;
-	while (board[i])
-	{
-		x = 0;
-		while (x < board[i])
-		{
-			ft_putchar('|');
-			x++;
-		}
-		ft_putchar('\n');
-		i++;
-	}
-	ft_putchar('\n');
-}
 
 int		get_player_move(int *error)
 {

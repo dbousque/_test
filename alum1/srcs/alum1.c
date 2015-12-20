@@ -6,7 +6,7 @@
 /*   By: dbousque <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/12/19 20:17:28 by dbousque          #+#    #+#             */
-/*   Updated: 2015/12/20 16:56:23 by dbousque         ###   ########.fr       */
+/*   Updated: 2015/12/20 19:09:20 by dbousque         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,6 @@ void	ft_launch(char *filename, char stdinput)
 	char	**file_content;
 	int		*board;
 	int		res;
-	int		length;
 	char	*take_last;
 
 	take_last = NULL;
@@ -81,7 +80,7 @@ void	ft_launch(char *filename, char stdinput)
 		ft_unexpected_error(file_content, board, take_last);
 	else
 	{
-		res = get_board(file_content, &board, &length);
+		res = get_board(file_content, &board);
 		if (res == -1)
 			ft_error(file_content, board, take_last);
 		else if (res == -2 || !(take_last = get_take_last(board)))

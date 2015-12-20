@@ -6,7 +6,7 @@
 /*   By: dbousque <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/12/19 22:07:47 by dbousque          #+#    #+#             */
-/*   Updated: 2015/12/20 12:44:27 by dbousque         ###   ########.fr       */
+/*   Updated: 2015/12/20 19:06:10 by dbousque         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,7 @@ int		check_and_assign(char **file_cont, int **board, int i)
 	return (0);
 }
 
-int		get_board(char **file_cont, int **board, int *len)
+int		get_board(char **file_cont, int **board)
 {
 	int		i;
 	int		length;
@@ -66,8 +66,7 @@ int		get_board(char **file_cont, int **board, int *len)
 	length = ft_strstrlen(file_cont);
 	if (!(*board = (int*)malloc(sizeof(int) * (length))))
 		return (-2);
-	board[length - 1] = NULL;
-	*len = length - 1;
+	(*board)[length - 1] = 0;
 	while (file_cont[i])
 	{
 		if (check_and_assign(file_cont, board, i) == -1)
