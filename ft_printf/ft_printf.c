@@ -81,25 +81,46 @@ int		arg_putnbr_un_long(va_list ap, char flag)
 int		arg_putchar(va_list ap, char flag)
 {
 	char	res;
-(void)flag;
-	res = va_arg(ap, int);
-	ft_putchar((unsigned char)res);
-	return (1);
+	wchar_t	res2;
+	int		length;
+
+	length = 1;
+	if (flag == L)
+	{
+		res2 = va_arg(ap, wchar_t);
+		length = ft_put_wchar(res2);
+	}
+	else
+	{
+		res = va_arg(ap, int);
+		ft_putchar((unsigned char)res);
+	}
+	return (length);
+}
+
+int		arg_putwchar(va_list ap, char flag)
+{
+	wchar_t	res;
+
+	(void)flag;
+	res = va_arg(ap, wchar_t);
+	return (ft_put_wchar(res));
 }
 
 int		arg_putunicode(va_list ap, char flag)
 {
 	wchar_t	*res;
+	int		length;
 (void)flag;
 	res = va_arg(ap, wchar_t*);
 	if (res)
-		ft_putunicode(res);
+		length = ft_putunicode(res);
 	else
 	{
 		ft_putstr("(null)");
 		return (6);
 	}
-	return (ft_unicodelen(res));
+	return (length);
 }
 
 int		arg_putstr(va_list ap, char flag)
@@ -246,6 +267,8 @@ int		print_arg(char c, va_list ap, int *i, char flag)
 		length = arg_putoctal_long(ap, flag);
 	else if (c == 'U')
 		length = arg_putnbr_un_long(ap, flag);
+	else if (c == 'C')
+		length = arg_putwchar(ap, flag);
 	return (length);
 }
 
@@ -307,7 +330,7 @@ int		ft_printf(const char *format, ...)
 	return (length);
 }
 
-int		main(int argc, char **argv)
+/*int		main(int argc, char **argv)
 {
 	unsigned long long			nb;
 	unsigned long long	nb2;
@@ -326,9 +349,12 @@ int		main(int argc, char **argv)
 	long_int = 990000000000000000;
 	(void)lol2;
 	(void)lol;
-	//ft_printf("1 : %S\n", L"米");
-	//printf("2 : %S\n", L"米");
-	ft_printf(inp, nb, -200, 0, -150, 0, -1, 260, long_int);
-	printf(inp, nb, -200, 0, -150, 0, -1, 260, long_int);
+	ft_printf("1 : %S\n", L"saluté");//L"米");
+	printf("2 : %S\n", L"saluté");
+	printf("%S%S%S%S%S%S%S%S%S%S%S%S%S%S%S%S%S%S%S%S%S%S%S%S%S",
+	L"Α α", L"Β β", L"Γ γ", L"Δ δ", L"Ε ε", L"Ζ ζ", L"Η η", L"Θ θ", L"Ι ι", L"Κ κ", L"Λ λ", L"Μ μ",
+	L"Ν ν", L"Ξ ξ", L"Ο ο", L"Π π", L"Ρ ρ", L"Σ σ", L"Τ τ", L"Υ υ", L"Φ φ", L"Χ χ", L"Ψ ψ", L"Ω ω", L"");
+	//ft_printf(inp, nb, -200, 0, -150, 0, -1, 260, long_int);
+	//printf(inp, nb, -200, 0, -150, 0, -1, 260, long_int);
 	return (0);
-}
+}*/
