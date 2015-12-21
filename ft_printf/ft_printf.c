@@ -286,7 +286,7 @@ int		print_arg(char c, va_list ap, int *i, char flag, int min_width, char char_t
 		length = arg_putnbr_un_long(ap, flag, &str);
 	else if (c == 'C')
 		length = arg_putwchar(ap, flag, &str);
-	if (str && (str[0] == '-' || show_sign))
+	if (str && ((str[0] == '-' && char_to_fill == '0') || (show_sign && (c == 'd' || c == 'i'))))
 	{
 		if (str[0] == '-')
 		{
@@ -363,14 +363,14 @@ int		get_min_width(const char *format, int *i, char *char_to_fill, char *prefix,
 		*prefix = 1;
 		(*i)++;
 	}
-	else if (format[*i + 1] == '+')
-	{
-		*show_sign = 1;
-		(*i)++;
-	}
-	else if (format[*i + 1] == ' ')
+	if (format[*i + 1] == ' ')
 	{
 		*show_sign = -1;
+		(*i)++;
+	}
+	if (format[*i + 1] == '+')
+	{
+		*show_sign = 1;
 		(*i)++;
 	}
 	if (format[*i + 1] > '0' && format[*i + 1] <= '9')
@@ -467,8 +467,8 @@ int		main(int argc, char **argv)
 	long_int = 990000000000000000;
 	lol2 = NULL;
 	(void)lol;
-	printf("%d\n", printf("{%+o}", 0));
-	printf("%d\n", ft_printf("{%+o}", 0));
+	printf("%d\n", printf("{% 10d}", -42));
+	printf("%d\n", ft_printf("{% 10d}", -42));
 	//printf("%-18p\n", &i);
 	//ft_printf("%-18p\n", &i);
 	//ft_printf("1 : %S\n", L"saluté");//L"米");
