@@ -6,7 +6,7 @@
 /*   By: dbousque <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/12/19 15:59:06 by dbousque          #+#    #+#             */
-/*   Updated: 2015/12/19 16:42:26 by dbousque         ###   ########.fr       */
+/*   Updated: 2015/12/21 16:00:39 by dbousque         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,96 +80,101 @@ void	cpy_n_bits(char *res, char *tmp, int nb)
 	}
 }
 
-void	ft_put_one_uni(wchar_t car)
+int		ft_put_one_uni(wchar_t car, char *str)
 {
-	write(1, (unsigned char*)&car, 1);
+	if (!((char*)malloc(sizeof(char) * 2)))
+		return (0);
+	str[0] = (unsigned char)car;
+	str[1] = '\0';
+	return (1);
 }
 
-void	ft_put_two_uni(wchar_t car)
+int		ft_put_two_uni(wchar_t car, char *str)
 {
 	char	*val[2];
 	char	tmp[12];
-	unsigned char	tmp_value;
 	char	*res;
 
 	res = ft_ntoa_base_un((unsigned int)car, "01");
 	write_res_to_tmp(res, tmp, 11);
+	free(res);
+	res = NULL;
 	tmp[11] = '\0';
-	val[0] = (char*)malloc(sizeof(char) * 8);
+	if (!(val[0] = (char*)malloc(sizeof(char) * 8)))
+		return (0);
 	val[0][0] = '1';
 	val[0][1] = '1';
 	val[0][2] = '0';
 	cpy_n_bits(val[0] + 3, tmp, 5);
 	
-	val[1] = (char*)malloc(sizeof(char) * 8);
+	if (!(val[1] = (char*)malloc(sizeof(char) * 8)))
+		return (0);
 	val[1][0] = '1';
 	val[1][1] = '0';
 	cpy_n_bits(val[1] + 2, tmp + 5, 6);
 	
-	tmp_value = byte_array_to_uchar(val[0]);
-	write(1, &tmp_value, 1);
-	tmp_value = byte_array_to_uchar(val[1]);
-	write(1, &tmp_value, 1);
+	str[0] = byte_array_to_uchar(val[0]);
+	str[1] = byte_array_to_uchar(val[1]);
+	free(val[0]);
+	free(val[1]);
+	val[0] = NULL;
+	val[1] = NULL;
+	return (2);
 }
 
-void	ft_putendl_sp(char *str)
-{
-	int		i;
-
-	i = 0;
-	while (i < 8)
-	{
-		ft_putchar(str[i]);
-		i++;
-	}
-}
-
-void	ft_put_three_uni(wchar_t car)
+int		ft_put_three_uni(wchar_t car, char *str)
 {
 	char	*val[3];
 	char	tmp[17];
-	unsigned char	tmp_value;
 	char	*res;
 
 	res = ft_ntoa_base_un((unsigned int)car, "01");
 	write_res_to_tmp(res, tmp, 16);
 	tmp[16] = '\0';
-	val[0] = (char*)malloc(sizeof(char) * 8);
+	if (!(val[0] = (char*)malloc(sizeof(char) * 8)))
+		return (0);
 	val[0][0] = '1';
 	val[0][1] = '1';
 	val[0][2] = '1';
 	val[0][3] = '0';
 	cpy_n_bits(val[0] + 4, tmp, 4);
 
-	val[1] = (char*)malloc(sizeof(char) * 8);
+	if (!(val[1] = (char*)malloc(sizeof(char) * 8)))
+		return (0);
 	val[1][0] = '1';
 	val[1][1] = '0';
 	cpy_n_bits(val[1] + 2, tmp + 4, 6);
 	
-	val[2] = (char*)malloc(sizeof(char) * 8);
+	if (!(val[2] = (char*)malloc(sizeof(char) * 8)))
+		return (0);
 	val[2][0] = '1';
 	val[2][1] = '0';
 	cpy_n_bits(val[2] + 2, tmp + 10, 6);
 
-	tmp_value = byte_array_to_uchar(val[0]);
-	write(1, &tmp_value, 1);
-	tmp_value = byte_array_to_uchar(val[1]);
-	write(1, &tmp_value, 1);
-	tmp_value = byte_array_to_uchar(val[2]);
-	write(1, &tmp_value, 1);
+	str[0] = byte_array_to_uchar(val[0]);
+	str[1] = byte_array_to_uchar(val[1]);
+	str[2] = byte_array_to_uchar(val[2]);
+
+	free(val[0]);
+	free(val[1]);
+	free(val[2]);
+	val[0] = NULL;
+	val[1] = NULL;
+	val[2] = NULL;
+	return (3);
 }
 
-void	ft_put_four_uni(wchar_t car)
+int		ft_put_four_uni(wchar_t car, char *str)
 {
 	char	*val[4];
 	char	tmp[22];
-	unsigned char	tmp_value;
 	char	*res;
 
 	res = ft_ntoa_base_un((unsigned int)car, "01");
 	write_res_to_tmp(res, tmp, 21);
 	tmp[21] = '\0';
-	val[0] = (char*)malloc(sizeof(char) * 8);
+	if (!(val[0] = (char*)malloc(sizeof(char) * 8)))
+		return (0);
 	val[0][0] = '1';
 	val[0][1] = '1';
 	val[0][2] = '1';
@@ -177,70 +182,129 @@ void	ft_put_four_uni(wchar_t car)
 	val[0][4] = '0';
 	cpy_n_bits(val[0] + 5, tmp, 3);
 
-	val[1] = (char*)malloc(sizeof(char) * 8);
+	if (!(val[1] = (char*)malloc(sizeof(char) * 8)))
+		return (0);
 	val[1][0] = '1';
 	val[1][1] = '0';
 	cpy_n_bits(val[1] + 2, tmp + 3, 6);
 	
-	val[2] = (char*)malloc(sizeof(char) * 8);
+	if (!(val[2] = (char*)malloc(sizeof(char) * 8)))
+		return (0);
 	val[2][0] = '1';
 	val[2][1] = '0';
 	cpy_n_bits(val[2] + 2, tmp + 9, 6);
 
-	val[3] = (char*)malloc(sizeof(char) * 8);
+	if (!(val[3] = (char*)malloc(sizeof(char) * 8)))
+		return (0);
 	val[3][0] = '1';
 	val[3][1] = '0';
 	cpy_n_bits(val[3] + 2, tmp + 15, 6);
 
-	tmp_value = byte_array_to_uchar(val[0]);
-	write(1, &tmp_value, 1);
-	tmp_value = byte_array_to_uchar(val[1]);
-	write(1, &tmp_value, 1);
-	tmp_value = byte_array_to_uchar(val[2]);
-	write(1, &tmp_value, 1);
-	tmp_value = byte_array_to_uchar(val[3]);
-	write(1, &tmp_value, 1);
+	str[0] = byte_array_to_uchar(val[0]);
+	str[1] = byte_array_to_uchar(val[1]);
+	str[2] = byte_array_to_uchar(val[2]);
+	str[3] = byte_array_to_uchar(val[3]);
+
+	free(val[0]);
+	free(val[1]);
+	free(val[2]);
+	free(val[3]);
+	val[0] = NULL;
+	val[1] = NULL;
+	val[2] = NULL;
+	val[3] = NULL;
+	return (4);
 }
 
-int		ft_put_wchar(wchar_t car)
+int		ft_put_wchar(wchar_t car, char **str)
 {
-	int		length;
-
-	length = 0;
 	if (car < 0x0000007F)
 	{
-		length = 1;
-		ft_put_one_uni(car);
+		if (!(*str = (char*)malloc(sizeof(char) * 2)))
+			return (0);
+		(*str)[1] = '\0';
+		return (ft_put_one_uni(car, *str));
 	}
-	else if (car < 0x000007FF)
+	if (car < 0x000007FF)
 	{
-		length = 2;
-		ft_put_two_uni(car);
+		if (!(*str = (char*)malloc(sizeof(char) * 3)))
+			return (0);
+		(*str)[2] = '\0';
+		return (ft_put_two_uni(car, *str));
 	}
-	else if (car < 0x0000FFFF)
+	if (car < 0x0000FFFF)
 	{
-		length = 3;
-		ft_put_three_uni(car);
+		if (!(*str = (char*)malloc(sizeof(char) * 4)))
+			return (0);
+		(*str)[3] = '\0';
+		return (ft_put_three_uni(car, *str));
 	}
-	else if (car < 0x001FFFFF)
+	if (car < 0x001FFFFF)
 	{
-		length = 4;
-		ft_put_four_uni(car);
+		if (!(*str = (char*)malloc(sizeof(char) * 5)))
+			return (0);
+		(*str)[4] = '\0';
+		return (ft_put_four_uni(car, *str));
 	}
-	return (length);
+	return (0);
 }
 
-int		ft_putunicode(wchar_t *uni)
+void	del_maillon(void *content, size_t content_size)
+{
+	(void)content_size;
+	ft_strdel((char**)&content);
+	content = NULL;
+}
+
+char	*lst_to_str(t_list *strs)
+{
+	t_list	*tmp;
+	int		length;
+	char	*res;
+
+	tmp = strs;
+	length = 0;
+	while (tmp)
+	{
+		length += tmp->content_size - 1;
+		tmp = tmp->next;
+	}
+	if (!(res = (char*)malloc(sizeof(char) * (length + 1))))
+		return (NULL);
+	res[length] = '\0';
+	length = 0;
+	while (strs)
+	{
+		ft_strcpy(res + length, strs->content);
+		length += strs->content_size - 1;
+		strs = strs->next;
+	}
+	ft_lstdel(&strs, del_maillon);
+	return (res);
+}
+
+int		ft_putunicode(wchar_t *uni, char **str)
 {
 	int		i;
 	int		length;
+	char	*tmp;
+	t_list	*strs;
+	t_list	*strs_end;
 
+	strs = NULL;
+	strs_end = NULL;
 	i = 0;
 	length = 0;
+	tmp = NULL;
 	while (uni[i])
 	{
-		length += ft_put_wchar(uni[i]);
+		length += ft_put_wchar(uni[i], &tmp);
+		ft_lstaddend(&strs_end, ft_lstnew(tmp, ft_strlen(tmp) + 1));
+		free(tmp);
+		if (!strs)
+			strs = strs_end;
 		i++;
 	}
+	*str = lst_to_str(strs);
 	return (length);
 }
