@@ -6,241 +6,16 @@
 
 #include <stdio.h>
 
-int		arg_putnbr(va_list ap, char flag, char **str)
-{
-	long long	res;
-	int			length;
-
-	if (flag == L)
-		res = va_arg(ap, long);
-	else if (flag == LL)
-		res = va_arg(ap, long long);
-	else if (flag == H)
-		res = (short)va_arg(ap, int);
-	else if (flag == HH)
-		res = (char)va_arg(ap, int);
-	else if (flag == J)
-		res = va_arg(ap, intmax_t);
-	else if (flag == Z)
-		res = va_arg(ap, size_t);
-	else
-		res = va_arg(ap, int);
-	length = ft_putlonglong(res, str);
-	return (length);
-}
-
-int		arg_putnbr_long(va_list ap, char flag, char **str)
-{
-	long long	res;
-	int			length;
-
-	if (flag == L || flag == LL)
-		res = va_arg(ap, long long);
-	else
-		res = va_arg(ap, long);
-	length = ft_putlonglong(res, str);
-	return (length);
-}
-
-int		arg_putnbr_un(va_list ap, char flag, char **str)
-{
-	unsigned long long	res;
-	int					length;
-
-	if (flag == L)
-		res = va_arg(ap, unsigned long);
-	else if (flag == LL)
-		res = va_arg(ap, unsigned long long);
-	else if (flag == H)
-		res = (unsigned short)va_arg(ap, unsigned int);
-	else if (flag == HH)
-		res = (unsigned char)va_arg(ap, unsigned int);
-	else if (flag == J)
-		res = va_arg(ap, uintmax_t);
-	else if (flag == Z)
-		res = va_arg(ap, size_t);
-	else
-		res = va_arg(ap, unsigned int);
-	length = ft_putlonglong_un(res, str);
-	return (length);
-}
-
-int		arg_putnbr_un_long(va_list ap, char flag, char **str)
-{
-	unsigned long long	res;
-	int					length;
-
-	if (flag == L || flag == LL)
-		res = va_arg(ap, unsigned long long);
-	else
-		res = va_arg(ap, unsigned long);
-	length = ft_putlonglong_un(res, str);
-	return (length);
-}
-
-int		arg_putchar(va_list ap, char flag, char **str)
-{
-	char	res;
-	wchar_t	res2;
-	int		length;
-
-	length = 1;
-	if (flag == L)
-	{
-		res2 = va_arg(ap, wchar_t);
-		length = ft_put_wchar(res2, str);
-	}
-	else
-	{
-		res = va_arg(ap, int);
-		*str = (char*)malloc(sizeof(char) * 2);
-		(*str)[0] = (unsigned char)res;
-		(*str)[1] = '\0';
-	}
-	return (length);
-}
-
-int		arg_putwchar(va_list ap, char flag, char **str)
-{
-	wchar_t	res;
-
-	(void)flag;
-	res = va_arg(ap, wchar_t);
-	return (ft_put_wchar(res, str));
-}
-
-int		arg_putunicode(va_list ap, char flag, char **str)
-{
-	wchar_t	*res;
-	int		length;
-(void)flag;
-	res = va_arg(ap, wchar_t*);
-	if (res)
-		length = ft_putunicode(res, str);
-	else
-	{
-		*str = "(null)";
-		return (6);
-	}
-	return (length);
-}
-
-int		arg_putstr(va_list ap, char flag, char **str)
-{
-	char	*res;
-
-	if (flag == L)
-		return (arg_putunicode(ap, flag, str));
-	res = va_arg(ap, char*);
-	if (res)
-		*str = res;
-	else
-	{
-		*str = "(null)";
-		return (6);
-	}
-	return (ft_strlen(*str));
-}
-
-int		arg_putaddr(va_list ap, char flag, char **str)
-{
-	void	*res;
-	int		length;
-
-	(void)flag;
-	res = va_arg(ap, void*);
-	length = ft_putaddr(res, 1, str);
-	return (length);
-}
-
-int		arg_putoctal(va_list ap, char flag, char **str)
-{
-	unsigned long long	res;
-	int					length;
-
-	if (flag == L)
-		res = va_arg(ap, unsigned long);
-	else if (flag == LL)
-		res = va_arg(ap, unsigned long long);
-	else if (flag == H)
-		res = (unsigned short)va_arg(ap, unsigned int);
-	else if (flag == HH)
-		res = (unsigned char)va_arg(ap, unsigned int);
-	else if (flag == J)
-		res = va_arg(ap, uintmax_t);
-	else if (flag == Z)
-		res = va_arg(ap, size_t);
-	else
-		res = va_arg(ap, unsigned int);
-	length = ft_putoctal_un(res, str);
-	return (length);
-}
-
-int		arg_putoctal_long(va_list ap, char flag, char **str)
-{
-	unsigned long long	res;
-	int					length;
-
-	if (flag == L || flag == LL)
-		res = va_arg(ap, unsigned long long);
-	else
-		res = va_arg(ap, unsigned long);
-	length = ft_putoctal_un(res, str);
-	return (length);
-}
-
-int		arg_puthexa(va_list ap, char flag, char **str)
-{
-	unsigned long long	res;
-	int					length;
-
-	if (flag == L)
-		res = va_arg(ap, unsigned long);
-	else if (flag == LL)
-		res = va_arg(ap, unsigned long long);
-	else if (flag == H)
-		res = (unsigned short)va_arg(ap, unsigned int);
-	else if (flag == HH)
-		res = (unsigned char)va_arg(ap, unsigned int);
-	else if (flag == J)
-		res = va_arg(ap, uintmax_t);
-	else if (flag == Z)
-		res = va_arg(ap, size_t);
-	else
-		res = va_arg(ap, unsigned int);
-	length = ft_puthexa(res, str);
-	return (length);
-}
-
-int		arg_puthexa_maj(va_list ap, char flag, char **str)
-{
-	unsigned long long	res;
-	int					length;
-
-	if (flag == L)
-		res = va_arg(ap, unsigned long);
-	else if (flag == LL)
-		res = va_arg(ap, unsigned long long);
-	else if (flag == H)
-		res = (unsigned short)va_arg(ap, unsigned int);
-	else if (flag == HH)
-		res = (unsigned char)va_arg(ap, unsigned int);
-	else if (flag == J)
-		res = va_arg(ap, uintmax_t);
-	else if (flag == Z)
-		res = va_arg(ap, size_t);
-	else
-		res = va_arg(ap, unsigned int);
-	length = ft_puthexa_maj(res, str);
-	return (length);
-}
-
-int		put_min_width(int min_width, int length, char char_to_fill)
+int		put_min_width(int min_width, int length, char char_to_fill, int precision, char show_sign, char neg)
 {
 	int		nb;
 	int		added;
 
 	nb = (min_width > 0 ? min_width - length : -min_width - length);
+	if (min_width > 0 && precision > length)
+		nb -= precision - length;
+	if (show_sign == 1 || neg)
+		nb--;
 	added = nb;
 	while (nb > 0)
 	{
@@ -267,11 +42,13 @@ void	prepend_sign_if_zeros(char **str, char show_sign, char char_to_fill, int *l
 	}
 }
 
-void	prepend_sign_if_precision(char **str, int precision, char char_to_fill, int *length, char c)
+void	prepend_sign_if_precision(char **str, int precision, char show_sign, int *length, char c)
 {
 	int		str_len;
 
-	str_len = ft_strlen(str);
+	str_len = ft_strlen(*str);
+	if ((*str)[0] == '-')
+		str_len--;
 	if (precision > str_len && (c == 'd' || c == 'D' || c == 'x' || c == 'X' || c == 'i' || c == 'o' || c == 'O' || c == 'u' || c == 'U'))
 	{
 		if ((*str)[0] == '-')
@@ -279,7 +56,17 @@ void	prepend_sign_if_precision(char **str, int precision, char char_to_fill, int
 			(*str)++;
 			ft_putchar('-');
 		}
-
+		else if (show_sign == 1)
+		{
+			(*length)++;
+			ft_putchar('+');
+		}
+		while (precision > str_len)
+		{
+			ft_putchar('0');
+			(*length)++;
+			precision--;
+		}
 	}
 }
 
@@ -299,62 +86,35 @@ void	sharp(int *length, char c)
 	}
 }
 
-int		get_arg(char **str, va_list ap, char flag, char c)
-{
-	int		length;
-
-	length = 0;
-	if (c == 'd' || c == 'i')
-		length = arg_putnbr(ap, flag, str);
-	else if (c == 'c')
-		length = arg_putchar(ap, flag, str);
-	else if (c == 's')
-		length = arg_putstr(ap, flag, str);
-	else if (c == 'u')
-		length = arg_putnbr_un(ap, flag, str);
-	else if (c == 'p')
-		length = arg_putaddr(ap, flag, str);
-	else if (c == 'o')
-		length = arg_putoctal(ap, flag, str);
-	else if (c == 'x')
-		length = arg_puthexa(ap, flag, str);
-	else if (c == 'X')
-		length = arg_puthexa_maj(ap, flag, str);
-	else if (c == 'S')
-		length = arg_putunicode(ap, flag, str);
-	else if (c == 'D')
-		length = arg_putnbr_long(ap, flag, str);
-	else if (c == 'O')
-		length = arg_putoctal_long(ap, flag, str);
-	else if (c == 'U')
-		length = arg_putnbr_un_long(ap, flag, str);
-	else if (c == 'C')
-		length = arg_putwchar(ap, flag, str);
-	return (length);
-}
-
 int		print_arg(char c, va_list ap, int *i, char flag, int min_width, char char_to_fill, char prefix, char show_sign, int precision)
 {
 	int		length;
 	char	*str;
 	int		added_chars;
+	char	neg_nb;
+	char	signed_nb;
 
 	(*i)++;
 	length = 0;
 	added_chars = 0;
 	str = NULL;
 	length = get_arg(&str, ap, flag, c);
-	prepend_sign_if_zeros(&str, show_sign, char_to_fill, &length, c);
-	prepend_sign_if_precision(&str, precision, char_to_fill, &length, c);
-	if (show_sign && str[0] != '-' && char_to_fill != '0' && (c == 'i' || c == 'd' || c == 'D'))
+	signed_nb = (c == 'i' || c == 'd' || c == 'D') ? 1 : 0;
+	neg_nb = (str[0] == '-' && signed_nb) ? 1 : 0;
+	if (precision <= 0)
+		prepend_sign_if_zeros(&str, show_sign, char_to_fill, &length, c);
+	else
+		char_to_fill = ' ';
+	if (show_sign && char_to_fill != '0' && signed_nb && !neg_nb && precision <= (int)ft_strlen(str))
 		length++;
 	if (str && length < min_width)
-		added_chars = put_min_width(min_width, length, char_to_fill);
-	if (show_sign && str[0] != '-' && char_to_fill != '0' && (c == 'i' || c == 'd' || c == 'D'))
+		added_chars = put_min_width(min_width, length, char_to_fill, precision, show_sign, neg_nb);
+	prepend_sign_if_precision(&str, precision, show_sign, &length, c);
+	if (show_sign && char_to_fill != '0' && signed_nb && !neg_nb && precision <= (int)ft_strlen(str))
 	{
 		if (show_sign == -1)
 			ft_putchar(' ');
-		else
+		else if (precision <= (int)ft_strlen(str))
 			ft_putchar('+');
 	}
 	if (str && prefix && (c == 'o' || c == 'O' || c == 'x' || c == 'X') && !(str[0] == '0' && ft_strlen(str) == 1))
@@ -362,7 +122,7 @@ int		print_arg(char c, va_list ap, int *i, char flag, int min_width, char char_t
 	if (str)
 		ft_putstr(str);
 	if (str && min_width < 0 && -min_width > length)
-		added_chars = put_min_width(min_width, length, char_to_fill);
+		added_chars = put_min_width(min_width, length, char_to_fill, precision, show_sign, neg_nb);
 	return (length + added_chars);
 }
 
@@ -413,16 +173,16 @@ int		get_min_width(const char *format, int *i, char *char_to_fill, char *prefix,
 		*prefix = 1;
 		(*i)++;
 	}
-	if (format[*i + 1] == '.')
-	{
-		(*i)++;
-		*precision = ft_atoi(format + *i + 1);
-		(*i) += ft_intlen(precision);
-	}
 	if (format[*i + 1] > '0' && format[*i + 1] <= '9')
 		res = ft_atoi(format + *i + 1);
 	if (res != 0)
 		*i += ft_intlen(res);
+	if (format[*i + 1] == '.')
+	{
+		(*i)++;
+		*precision = ft_atoi(format + *i + 1);
+		(*i) += ft_intlen(*precision);
+	}
 	if (neg == 1)
 		return (-res);
 	return (res);
@@ -496,7 +256,7 @@ int		ft_printf(const char *format, ...)
 	return (length);
 }
 
-int		main(int argc, char **argv)
+/*int		main(int argc, char **argv)
 {
 	unsigned long long			nb;
 	unsigned long long	nb2;
@@ -515,8 +275,8 @@ int		main(int argc, char **argv)
 	long_int = 990000000000000000;
 	lol2 = NULL;
 	(void)lol;
-	printf("%d\n", printf("{%+.4d}", 65));
-	printf("%d\n", ft_printf("{%+.4d}", 65));
+	printf("%d\n", printf("{%15.4d}", -424242));
+	printf("%d\n", ft_printf("{%15.4d}", -424242));
 	//printf("%-18p\n", &i);
 	//ft_printf("%-18p\n", &i);
 	//ft_printf("1 : %S\n", L"saluté");//L"米");
@@ -527,4 +287,4 @@ int		main(int argc, char **argv)
 	//ft_printf(inp, nb, -200, 0, -150, 0, -1, 260, long_int);
 	//printf(inp, nb, -200, 0, -150, 0, -1, 260, long_int);
 	return (0);
-}
+}*/

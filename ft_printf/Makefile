@@ -6,7 +6,7 @@
 #    By: dbousque <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2015/11/26 10:27:09 by dbousque          #+#    #+#              #
-#    Updated: 2015/12/19 16:46:41 by dbousque         ###   ########.fr        #
+#    Updated: 2015/12/22 19:28:13 by dbousque         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -25,7 +25,10 @@ SRC=	ft_printf.c \
 		ft_putlong.c \
 		ft_putnbr_un.c \
 		ft_putoctal.c \
-		ft_putunicode.c
+		ft_putunicode.c \
+		get_arg.c \
+		arg_put.c
+
 
 SRC2=	libft/ft_memset.c libft/ft_bzero.c libft/ft_memcpy.c libft/ft_memccpy.c \
 		libft/ft_memmove.c libft/ft_memchr.c libft/ft_memcmp.c libft/ft_memalloc.c \
