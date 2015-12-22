@@ -250,7 +250,90 @@ int		put_min_width(int min_width, int length, char char_to_fill)
 	return (added);
 }
 
-int		print_arg(char c, va_list ap, int *i, char flag, int min_width, char char_to_fill, char prefix, char show_sign)
+void	prepend_sign_if_zeros(char **str, char show_sign, char char_to_fill, int *length, char c)
+{
+	if ((show_sign || (*str)[0] == '-') && char_to_fill == '0')
+	{
+		if ((*str)[0] == '-' && c != 'c' && c != 'C' && c != 's' && c != 'S')
+		{
+			(*str)++;
+			ft_putchar('-');
+		}
+		else if ((*str)[0] != '-')
+		{
+			ft_putchar('+');
+			(*length)++;
+		}
+	}
+}
+
+void	prepend_sign_if_precision(char **str, int precision, char char_to_fill, int *length, char c)
+{
+	int		str_len;
+
+	str_len = ft_strlen(str);
+	if (precision > str_len && (c == 'd' || c == 'D' || c == 'x' || c == 'X' || c == 'i' || c == 'o' || c == 'O' || c == 'u' || c == 'U'))
+	{
+		if ((*str)[0] == '-')
+		{
+			(*str)++;
+			ft_putchar('-');
+		}
+
+	}
+}
+
+void	sharp(int *length, char c)
+{
+	ft_putchar('0');
+	(*length)++;
+	if (c == 'x')
+	{
+		ft_putchar('x');
+		(*length)++;
+	}
+	else if (c == 'X')
+	{
+		ft_putchar('X');
+		(*length)++;
+	}
+}
+
+int		get_arg(char **str, va_list ap, char flag, char c)
+{
+	int		length;
+
+	length = 0;
+	if (c == 'd' || c == 'i')
+		length = arg_putnbr(ap, flag, str);
+	else if (c == 'c')
+		length = arg_putchar(ap, flag, str);
+	else if (c == 's')
+		length = arg_putstr(ap, flag, str);
+	else if (c == 'u')
+		length = arg_putnbr_un(ap, flag, str);
+	else if (c == 'p')
+		length = arg_putaddr(ap, flag, str);
+	else if (c == 'o')
+		length = arg_putoctal(ap, flag, str);
+	else if (c == 'x')
+		length = arg_puthexa(ap, flag, str);
+	else if (c == 'X')
+		length = arg_puthexa_maj(ap, flag, str);
+	else if (c == 'S')
+		length = arg_putunicode(ap, flag, str);
+	else if (c == 'D')
+		length = arg_putnbr_long(ap, flag, str);
+	else if (c == 'O')
+		length = arg_putoctal_long(ap, flag, str);
+	else if (c == 'U')
+		length = arg_putnbr_un_long(ap, flag, str);
+	else if (c == 'C')
+		length = arg_putwchar(ap, flag, str);
+	return (length);
+}
+
+int		print_arg(char c, va_list ap, int *i, char flag, int min_width, char char_to_fill, char prefix, char show_sign, int precision)
 {
 	int		length;
 	char	*str;
@@ -260,65 +343,22 @@ int		print_arg(char c, va_list ap, int *i, char flag, int min_width, char char_t
 	length = 0;
 	added_chars = 0;
 	str = NULL;
-	if (c == 'd' || c == 'i')
-		length = arg_putnbr(ap, flag, &str);
-	else if (c == 'c')
-		length = arg_putchar(ap, flag, &str);
-	else if (c == 's')
-		length = arg_putstr(ap, flag, &str);
-	else if (c == 'u')
-		length = arg_putnbr_un(ap, flag, &str);
-	else if (c == 'p')
-		length = arg_putaddr(ap, flag, &str);
-	else if (c == 'o')
-		length = arg_putoctal(ap, flag, &str);
-	else if (c == 'x')
-		length = arg_puthexa(ap, flag, &str);
-	else if (c == 'X')
-		length = arg_puthexa_maj(ap, flag, &str);
-	else if (c == 'S')
-		length = arg_putunicode(ap, flag, &str);
-	else if (c == 'D')
-		length = arg_putnbr_long(ap, flag, &str);
-	else if (c == 'O')
-		length = arg_putoctal_long(ap, flag, &str);
-	else if (c == 'U')
-		length = arg_putnbr_un_long(ap, flag, &str);
-	else if (c == 'C')
-		length = arg_putwchar(ap, flag, &str);
-	if (str && ((str[0] == '-' && char_to_fill == '0') || (show_sign && (c == 'd' || c == 'i'))))
-	{
-		if (str[0] == '-')
-		{
-			ft_putchar('-');
-			str++;
-		}
-		else
-		{
-			length++;
-			if (show_sign == -1)
-				ft_putchar(' ');
-			else
-				ft_putchar('+');
-		}
-	}
+	length = get_arg(&str, ap, flag, c);
+	prepend_sign_if_zeros(&str, show_sign, char_to_fill, &length, c);
+	prepend_sign_if_precision(&str, precision, char_to_fill, &length, c);
+	if (show_sign && str[0] != '-' && char_to_fill != '0' && (c == 'i' || c == 'd' || c == 'D'))
+		length++;
 	if (str && length < min_width)
 		added_chars = put_min_width(min_width, length, char_to_fill);
-	if (str && prefix && !(str[0] == '0' && ft_strlen(str) == 1))
+	if (show_sign && str[0] != '-' && char_to_fill != '0' && (c == 'i' || c == 'd' || c == 'D'))
 	{
-		ft_putchar('0');
-		length++;
-		if (c == 'x')
-		{
-			ft_putchar('x');
-			length++;
-		}
-		else if (c == 'X')
-		{
-			ft_putchar('X');
-			length++;
-		}
+		if (show_sign == -1)
+			ft_putchar(' ');
+		else
+			ft_putchar('+');
 	}
+	if (str && prefix && (c == 'o' || c == 'O' || c == 'x' || c == 'X') && !(str[0] == '0' && ft_strlen(str) == 1))
+		sharp(&length, c);
 	if (str)
 		ft_putstr(str);
 	if (str && min_width < 0 && -min_width > length)
@@ -341,28 +381,13 @@ int		ft_intlen(int nb)
 	return (length);
 }
 
-int		get_min_width(const char *format, int *i, char *char_to_fill, char *prefix, char *show_sign)
+int		get_min_width(const char *format, int *i, char *char_to_fill, char *prefix, char *show_sign, int *precision)
 {
 	int		res;
 	int		neg;
 
 	res = 0;
 	neg = 0;
-	if (format[*i + 1] == '-')
-	{
-		neg = 1;
-		(*i)++;
-	}
-	else if (format[*i + 1] == '0')
-	{
-		*char_to_fill = '0';
-		(*i)++;
-	}
-	else if (format[*i + 1] == '#')
-	{
-		*prefix = 1;
-		(*i)++;
-	}
 	if (format[*i + 1] == ' ')
 	{
 		*show_sign = -1;
@@ -373,6 +398,27 @@ int		get_min_width(const char *format, int *i, char *char_to_fill, char *prefix,
 		*show_sign = 1;
 		(*i)++;
 	}
+	if (format[*i + 1] == '-')
+	{
+		neg = 1;
+		(*i)++;
+	}
+	if (format[*i + 1] == '0')
+	{
+		*char_to_fill = '0';
+		(*i)++;
+	}
+	if (format[*i + 1] == '#')
+	{
+		*prefix = 1;
+		(*i)++;
+	}
+	if (format[*i + 1] == '.')
+	{
+		(*i)++;
+		*precision = ft_atoi(format + *i + 1);
+		(*i) += ft_intlen(precision);
+	}
 	if (format[*i + 1] > '0' && format[*i + 1] <= '9')
 		res = ft_atoi(format + *i + 1);
 	if (res != 0)
@@ -382,12 +428,12 @@ int		get_min_width(const char *format, int *i, char *char_to_fill, char *prefix,
 	return (res);
 }
 
-char	get_flag(const char *format, int *i, int *min_width, char *char_to_fill, char *prefix, char *show_sign)
+char	get_flag(const char *format, int *i, int *min_width, char *char_to_fill, char *prefix, char *show_sign, int *precision)
 {
 	char	res;
 
 	res = NO_FLAG;
-	*min_width = get_min_width(format, i, char_to_fill, prefix, show_sign);
+	*min_width = get_min_width(format, i, char_to_fill, prefix, show_sign, precision);
 	if (!format[*i + 1])
 		res = NO_FLAG;
 	else if (format[*i + 1] == 'h' && format[*i + 2] == 'h')
@@ -419,8 +465,10 @@ int		ft_printf(const char *format, ...)
 	char	char_to_fill;
 	char	prefix;
 	char	show_sign;
+	int		precision;
 
 	show_sign = 0;
+	precision = -1;
 	prefix = 0;
 	char_to_fill = ' ';
 	length = 0;
@@ -431,10 +479,10 @@ int		ft_printf(const char *format, ...)
 	{
 		if (format[i] == '%' && format[i + 1] != '%')
 		{
-			if ((flag = get_flag(format, &i, &min_width, &char_to_fill, &prefix, &show_sign)) == NO_FLAG)
-				length += print_arg(format[i + 1], ap, &i, NO_FLAG, min_width, char_to_fill, prefix, show_sign);
+			if ((flag = get_flag(format, &i, &min_width, &char_to_fill, &prefix, &show_sign, &precision)) == NO_FLAG)
+				length += print_arg(format[i + 1], ap, &i, NO_FLAG, min_width, char_to_fill, prefix, show_sign, precision);
 			else
-				length += print_arg(format[i + 1], ap, &i, flag, min_width, char_to_fill, prefix, show_sign);
+				length += print_arg(format[i + 1], ap, &i, flag, min_width, char_to_fill, prefix, show_sign, precision);
 		}
 		else
 		{
@@ -467,8 +515,8 @@ int		main(int argc, char **argv)
 	long_int = 990000000000000000;
 	lol2 = NULL;
 	(void)lol;
-	printf("%d\n", printf("{% 10d}", -42));
-	printf("%d\n", ft_printf("{% 10d}", -42));
+	printf("%d\n", printf("{%+.4d}", 65));
+	printf("%d\n", ft_printf("{%+.4d}", 65));
 	//printf("%-18p\n", &i);
 	//ft_printf("%-18p\n", &i);
 	//ft_printf("1 : %S\n", L"saluté");//L"米");
