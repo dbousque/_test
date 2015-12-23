@@ -18,7 +18,7 @@ CFLAGS=-Wall -Wextra -Werror
 
 RM=rm -f
 
-SRC=	ft_printf.c \
+SRC=		ft_printf2.c \
 		ft_ntoa_base.c \
 		ft_putaddr.c \
 		ft_puthexa.c \

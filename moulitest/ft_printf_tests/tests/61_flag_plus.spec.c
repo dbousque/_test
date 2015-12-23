@@ -41,7 +41,6 @@ static void test_plus_c_up_zero(t_test *test)
 static void test_plus_o_zero(t_test *test)
 {
 	// test->debug = 1;
-	printf("%+o", 0);
 	assert_printf("%+o", 0);
 }
 

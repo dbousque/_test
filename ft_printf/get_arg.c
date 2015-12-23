@@ -12,36 +12,36 @@
 
 #include "ft_printf.h"
 
-int		get_arg(char **str, va_list ap, char flag, char c)
+int		get_arg(char **str, va_list ap, t_format *format_var)
 {
 	int		length;
 
 	length = 0;
-	if (c == 'd' || c == 'i')
-		length = arg_putnbr(ap, flag, str);
-	else if (c == 'c')
-		length = arg_putchar(ap, flag, str);
-	else if (c == 's')
-		length = arg_putstr(ap, flag, str);
-	else if (c == 'u')
-		length = arg_putnbr_un(ap, flag, str);
-	else if (c == 'p')
-		length = arg_putaddr(ap, flag, str);
-	else if (c == 'o')
-		length = arg_putoctal(ap, flag, str);
-	else if (c == 'x')
-		length = arg_puthexa(ap, flag, str);
-	else if (c == 'X')
-		length = arg_puthexa_maj(ap, flag, str);
-	else if (c == 'S')
-		length = arg_putunicode(ap, flag, str);
-	else if (c == 'D')
-		length = arg_putnbr_long(ap, flag, str);
-	else if (c == 'O')
-		length = arg_putoctal_long(ap, flag, str);
-	else if (c == 'U')
-		length = arg_putnbr_un_long(ap, flag, str);
-	else if (c == 'C')
-		length = arg_putwchar(ap, flag, str);
+	if (format_var->specifier == 'd' || format_var->specifier== 'i')
+		length = arg_putnbr(ap, format_var->length, str, format_var);
+	else if (format_var->specifier == 'c')
+		length = arg_putchar(ap, format_var->length, str, format_var);
+	else if (format_var->specifier == 's')
+		length = arg_putstr(ap, format_var->length, str, format_var);
+	else if (format_var->specifier == 'u')
+		length = arg_putnbr_un(ap, format_var->length, str, format_var);
+	else if (format_var->specifier == 'p')
+		length = arg_putaddr(ap, format_var->length, str, format_var);
+	else if (format_var->specifier == 'o')
+		length = arg_putoctal(ap, format_var->length, str, format_var);
+	else if (format_var->specifier == 'x')
+		length = arg_puthexa(ap, format_var->length, str, format_var);
+	else if (format_var->specifier == 'X')
+		length = arg_puthexa_maj(ap, format_var->length, str, format_var);
+	else if (format_var->specifier == 'S')
+		length = arg_putunicode(ap, format_var->length, str, format_var);
+	else if (format_var->specifier == 'D')
+		length = arg_putnbr_long(ap, format_var->length, str, format_var);
+	else if (format_var->specifier == 'O')
+		length = arg_putoctal_long(ap, format_var->length, str, format_var);
+	else if (format_var->specifier == 'U')
+		length = arg_putnbr_un_long(ap, format_var->length, str, format_var);
+	else if (format_var->specifier == 'C')
+		length = arg_putwchar(ap, format_var->length, str, format_var);
 	return (length);
 }
