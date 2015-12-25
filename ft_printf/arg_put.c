@@ -33,6 +33,7 @@ int		arg_putnbr(va_list ap, char flag, char **str, t_format *format_var)
 		res = va_arg(ap, int);
 	if (res < 0)
 		format_var->neg_val = 1;
+	format_var->value = res;
 	length = ft_putlonglong(res, str);
 	return (length);
 }
@@ -48,6 +49,7 @@ int		arg_putnbr_long(va_list ap, char flag, char **str, t_format *format_var)
 		res = va_arg(ap, long);
 	if (res < 0)
 		format_var->neg_val = 1;
+	format_var->value = res;
 	length = ft_putlonglong(res, str);
 	return (length);
 }
@@ -72,6 +74,7 @@ int		arg_putnbr_un(va_list ap, char flag, char **str, t_format *format_var)
 	else
 		res = va_arg(ap, unsigned int);
 	format_var->unsigned_val = 1;
+	format_var->u_value = res;
 	length = ft_putlonglong_un(res, str);
 	return (length);
 }
@@ -86,6 +89,7 @@ int		arg_putnbr_un_long(va_list ap, char flag, char **str, t_format *format_var)
 	else
 		res = va_arg(ap, unsigned long);
 	format_var->unsigned_val = 1;
+	format_var->u_value = res;
 	length = ft_putlonglong_un(res, str);
 	return (length);
 }
@@ -101,6 +105,7 @@ int		arg_putchar(va_list ap, char flag, char **str, t_format *format_var)
 	{
 		res2 = va_arg(ap, wchar_t);
 		length = ft_put_wchar(res2, str);
+		format_var->value = res2;
 	}
 	else
 	{
@@ -108,6 +113,7 @@ int		arg_putchar(va_list ap, char flag, char **str, t_format *format_var)
 		*str = (char*)malloc(sizeof(char) * 2);
 		(*str)[0] = (unsigned char)res;
 		(*str)[1] = '\0';
+		format_var->value = res;
 	}
 	format_var->characters = 1;
 	return (length);
@@ -119,6 +125,7 @@ int		arg_putwchar(va_list ap, char flag, char **str, t_format *format_var)
 
 	(void)flag;
 	res = va_arg(ap, wchar_t);
+	format_var->value = res;
 	format_var->characters = 1;
 	return (ft_put_wchar(res, str));
 }
@@ -133,7 +140,7 @@ int		arg_putunicode(va_list ap, char flag, char **str, t_format *format_var)
 		length = ft_putunicode(res, str);
 	else
 	{
-		*str = "(null)";
+		*str = ft_strdup("(null)");
 		return (6);
 	}
 	format_var->characters = 1;
@@ -148,10 +155,10 @@ int		arg_putstr(va_list ap, char flag, char **str, t_format *format_var)
 		return (arg_putunicode(ap, flag, str, format_var));
 	res = va_arg(ap, char*);
 	if (res)
-		*str = res;
+		*str = ft_strdup(res);
 	else
 	{
-		*str = "(null)";
+		*str = ft_strdup("(null)");
 		return (6);
 	}
 	format_var->characters = 1;
@@ -165,6 +172,7 @@ int		arg_putaddr(va_list ap, char flag, char **str, t_format *format_var)
 
 	(void)flag;
 	res = va_arg(ap, void*);
+	format_var->u_value = (unsigned long)res;
 	format_var->unsigned_val = 1;
 	length = ft_putaddr(res, 1, str);
 	return (length);
@@ -189,6 +197,7 @@ int		arg_putoctal(va_list ap, char flag, char **str, t_format *format_var)
 		res = va_arg(ap, size_t);
 	else
 		res = va_arg(ap, unsigned int);
+	format_var->u_value = res;
 	format_var->unsigned_val = 1;
 	length = ft_putoctal_un(res, str);
 	return (length);
@@ -203,6 +212,7 @@ int		arg_putoctal_long(va_list ap, char flag, char **str, t_format *format_var)
 		res = va_arg(ap, unsigned long long);
 	else
 		res = va_arg(ap, unsigned long);
+	format_var->u_value = res;
 	format_var->unsigned_val = 1;
 	length = ft_putoctal_un(res, str);
 	return (length);
@@ -227,6 +237,7 @@ int		arg_puthexa(va_list ap, char flag, char **str, t_format *format_var)
 		res = va_arg(ap, size_t);
 	else
 		res = va_arg(ap, unsigned int);
+	format_var->u_value = res;
 	format_var->unsigned_val = 1;
 	length = ft_puthexa(res, str);
 	return (length);
@@ -251,6 +262,7 @@ int		arg_puthexa_maj(va_list ap, char flag, char **str, t_format *format_var)
 		res = va_arg(ap, size_t);
 	else
 		res = va_arg(ap, unsigned int);
+	format_var->u_value = res;
 	format_var->unsigned_val = 1;
 	length = ft_puthexa_maj(res, str);
 	return (length);

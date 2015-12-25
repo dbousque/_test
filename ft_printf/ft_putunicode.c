@@ -283,6 +283,15 @@ char	*lst_to_str(t_list *strs)
 	return (res);
 }
 
+int		empty_str(char **str)
+{
+	if ((*str = (char*)malloc(sizeof(char))))
+		(*str)[0] = '\0';
+	else
+		*str = NULL;
+	return (0);
+}
+
 int		ft_putunicode(wchar_t *uni, char **str)
 {
 	int		i;
@@ -299,7 +308,11 @@ int		ft_putunicode(wchar_t *uni, char **str)
 	while (uni[i])
 	{
 		length += ft_put_wchar(uni[i], &tmp);
+		if (!tmp)
+			return (empty_str(str));
+		ft_putendl("LOL2");
 		ft_lstaddend(&strs_end, ft_lstnew(tmp, ft_strlen(tmp) + 1));
+		ft_putendl("LOL3");
 		free(tmp);
 		if (!strs)
 			strs = strs_end;

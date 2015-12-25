@@ -20,8 +20,8 @@
 # include "get_next_line.h"
 
 # define RAD 0.01745329252
-# define WIDTH 1680
-# define HEIGHT 1260
+# define WIDTH 1280
+# define HEIGHT 760
 # define W 13
 # define A 0
 # define S 1
