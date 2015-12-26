@@ -74,9 +74,9 @@ void		append_precision_to_value(char **value, t_format *format_var, int *length)
 				{
 					tmp[res_len] = '\0';
 					i = 0;
-					if (format_var->neg_val == 1)
+					if (format_var->neg_val == 1 || format_var->has_sign)
 					{
-						tmp[0] = '-';
+						tmp[0] = (*value)[0];
 						i = 1;
 					}
 					x = i;
@@ -334,7 +334,7 @@ void		add_prefix_for_addresses_n_sharp(char **value, t_format *format_var, int *
 		else
 			*value = NULL;
 	}
-	else if (format_var->sharp_flag == 1 && format_var->u_value != 0)
+	else if (format_var->sharp_flag == 1 && (format_var->u_value != 0 || format_var->precision != -1))
 		add_sharp_prefix(value, format_var, length);
 }
 
@@ -347,6 +347,27 @@ void		ft_putstr2(char *str, int length)
 	{
 		ft_putchar(str[i]);
 		i++;
+	}
+}
+
+void		prepend_plus_space_flags(char **value, t_format *format_var, int *length)
+{
+	char	*tmp;
+
+	if ((format_var->plus_flag || format_var->space_flag) && !format_var->neg_val)
+	{
+		format_var->has_sign = 1;
+		if ((tmp = (char*)malloc(sizeof(char) * (*length + 2))))
+		{
+			tmp[*length + 1] = '\0';
+			tmp[0] = (format_var->plus_flag ? '+' : ' ');
+			ft_memcpy(tmp + 1, *value, *length);
+			free(*value);
+			*value = tmp;
+			(*length)++;
+		}
+		else
+			*value = NULL;
 	}
 }
 
@@ -375,6 +396,8 @@ int			print_format(t_format *format, va_list ap)
 	length = get_arg(&value, ap, format);
 	if (format->neg_val == 1)
 		format->has_sign = 1;
+	if (format->specifier == 'd' || format->specifier == 'D' || format->specifier == 'i')
+		prepend_plus_space_flags(&value, format, &length);
 	append_precision_to_value(&value, format, &length);
 	if (!format->minus_flag)
 	{
@@ -399,8 +422,8 @@ int			parse_format(const char *format, t_format *format_var, int *i)
 	get_minus_flag(format, format_var, i);
 	get_space_flag(format, format_var, i);
 	get_plus_flag(format, format_var, i);
-	if (format_var->plus_flag == 0)
-		get_space_flag(format, format_var, i);
+	get_space_flag(format, format_var, i);
+	get_plus_flag(format, format_var, i);
 	get_sharp_flag(format, format_var, i);
 	get_zero_flag(format, format_var, i);
 	if (format_var->minus_flag == 0)
@@ -490,7 +513,7 @@ int		ft_printf(const char *format, ...)
 	return (length);
 }
 
-int		main(int argc, char **argv)
+/*int		main(int argc, char **argv)
 {
 	unsigned long long			nb;
 	unsigned long long	nb2;
@@ -509,8 +532,8 @@ int		main(int argc, char **argv)
 	long_int = 990000000000000000;
 	lol2 = NULL;
 	(void)lol;
-	printf("%d\n", printf("{salut : % +d}", 42));
-	printf("%d\n", ft_printf("{salut : % +d}", 42));
+	printf("%d\n", printf("{salut : %#.O}", 0));
+	printf("%d\n", ft_printf("{salut : %#.O}", 0));
 	//printf("%d\n", printf("{%15.4d}", -424242));
 	//printf("%d\n", ft_printf("{%15.4d}", -424242));
 	//printf("%-18p\n", &i);
@@ -523,4 +546,4 @@ int		main(int argc, char **argv)
 	//ft_printf(inp, nb, -200, 0, -150, 0, -1, 260, long_int);
 	//printf(inp, nb, -200, 0, -150, 0, -1, 260, long_int);
 	return (0);
-}
+}*/
