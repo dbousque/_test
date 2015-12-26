@@ -110,6 +110,29 @@ void		append_precision_to_value(char **value, t_format *format_var, int *length)
 	}
 }
 
+void		ajust_value_to_width_minus(char **value, t_format *format_var, int *length)
+{
+	char	*tmp;
+
+	if (format_var->width > *length)
+	{
+		if ((tmp = (char*)malloc(sizeof(char) * (format_var->width + 1))))
+		{
+			tmp[format_var->width] = '\0';
+			ft_memcpy(tmp, *value, *length);
+			while (*length < format_var->width)
+			{
+				tmp[*length] = ' ';
+				(*length)++;
+			}
+			free(*value);
+			*value = tmp;
+		}
+		else
+			*value = NULL;
+	}
+}
+
 void		ajust_value_to_width(char **value, t_format *format_var, int *length, int decal)
 {
 	int		val_len;
@@ -219,7 +242,78 @@ void		get_zero_flag(const char *format, t_format *format_var, int *i)
 	}
 }
 
-void		add_prefix_for_addresses(char **value, t_format *format_var, int *length)
+void		get_minus_flag(const char *format, t_format *format_var, int *i)
+{
+	if (format[*i] == '-')
+	{
+		format_var->minus_flag = 1;
+		(*i)++;
+	}
+}
+
+void		get_sharp_flag(const char *format, t_format *format_var, int *i)
+{
+	if (format[*i] == '#')
+	{
+		format_var->sharp_flag = 1;
+		(*i)++;
+	}
+}
+
+void		get_space_flag(const char *format, t_format *format_var, int *i)
+{
+	if (format[*i] == ' ')
+	{
+		format_var->space_flag = 1;
+		(*i)++;
+	}
+}
+
+void		get_plus_flag(const char *format, t_format *format_var, int *i)
+{
+	if (format[*i] == '+')
+	{
+		format_var->plus_flag = 1;
+		(*i)++;
+	}
+}
+
+void		add_sharp_prefix(char **value, t_format *format_var, int *length)
+{
+	char	*tmp;
+
+	if (format_var->specifier == 'o' || format_var->specifier == 'O')
+	{
+		if ((tmp = (char*)malloc(sizeof(char) * (*length + 2))))
+		{
+			tmp[*length + 1] = '\0';
+			(*length)++;
+			tmp[0] = '0';
+			ft_strcpy(tmp + 1, *value);
+			free(*value);
+			*value = tmp;
+		}
+		else
+			*value = NULL;
+	}
+	else if (format_var->specifier == 'x' || format_var->specifier == 'X')
+	{
+		if ((tmp = (char*)malloc(sizeof(char) * (*length + 3))))
+		{
+			tmp[*length + 2] = '\0';
+			(*length) += 2;
+			tmp[0] = '0';
+			tmp[1] = (format_var->specifier == 'x' ? 'x' : 'X');
+			ft_strcpy(tmp + 2, *value);
+			free(*value);
+			*value = tmp;
+		}
+		else
+			*value = NULL;
+	}
+}
+
+void		add_prefix_for_addresses_n_sharp(char **value, t_format *format_var, int *length)
 {
 	char	*tmp;
 	int		len;
@@ -240,6 +334,8 @@ void		add_prefix_for_addresses(char **value, t_format *format_var, int *length)
 		else
 			*value = NULL;
 	}
+	else if (format_var->sharp_flag == 1 && format_var->u_value != 0)
+		add_sharp_prefix(value, format_var, length);
 }
 
 void		ft_putstr2(char *str, int length)
@@ -254,22 +350,45 @@ void		ft_putstr2(char *str, int length)
 	}
 }
 
+int			get_decal(t_format *format)
+{
+	int		decal;
+
+	decal = (format->specifier == 'p' && format->char_to_fill == '0' ? 2 : 0);
+	/*if (decal == 0 && format->sharp_flag == 1)
+	{
+		if (format->specifier == 'o' || format->specifier == 'O')
+			decal = 1;
+		else if (format->specifier == 'x' || format->specifier == 'X')
+			decal = 2;
+	}*/
+	return (decal);
+}
+
 int			print_format(t_format *format, va_list ap)
 {
 	char	*value;
 	int		length;
 	int		decal;
 
-	decal = (format->specifier == 'p' && format->char_to_fill == '0' ? 2 : 0);
+	decal = get_decal(format);
 	length = get_arg(&value, ap, format);
 	if (format->neg_val == 1)
 		format->has_sign = 1;
 	append_precision_to_value(&value, format, &length);
-	if (format->char_to_fill == ' ')
-		add_prefix_for_addresses(&value, format, &length);
-	ajust_value_to_width(&value, format, &length, decal);
-	if (format->char_to_fill == '0')
-		add_prefix_for_addresses(&value, format, &length);
+	if (!format->minus_flag)
+	{
+		if (format->char_to_fill == ' ')
+			add_prefix_for_addresses_n_sharp(&value, format, &length);
+		ajust_value_to_width(&value, format, &length, decal);
+		if (format->char_to_fill == '0')
+			add_prefix_for_addresses_n_sharp(&value, format, &length);
+	}
+	else
+	{
+		add_prefix_for_addresses_n_sharp(&value, format, &length);
+		ajust_value_to_width_minus(&value, format, &length);
+	}
 	ft_putstr2(value, length);
 	return (length);
 }
@@ -277,7 +396,17 @@ int			print_format(t_format *format, va_list ap)
 int			parse_format(const char *format, t_format *format_var, int *i)
 {
 	(*i)++;
+	get_minus_flag(format, format_var, i);
+	get_space_flag(format, format_var, i);
+	get_plus_flag(format, format_var, i);
+	if (format_var->plus_flag == 0)
+		get_space_flag(format, format_var, i);
+	get_sharp_flag(format, format_var, i);
 	get_zero_flag(format, format_var, i);
+	if (format_var->minus_flag == 0)
+		get_minus_flag(format, format_var, i);
+	if (format_var->sharp_flag == 0)
+		get_sharp_flag(format, format_var, i);
 	get_width(format, format_var, i);
 	get_precision(format, format_var, i);
 	if (format_var->width > format_var->precision && format_var->precision != -1)
@@ -361,7 +490,7 @@ int		ft_printf(const char *format, ...)
 	return (length);
 }
 
-/*int		main(int argc, char **argv)
+int		main(int argc, char **argv)
 {
 	unsigned long long			nb;
 	unsigned long long	nb2;
@@ -380,8 +509,8 @@ int		ft_printf(const char *format, ...)
 	long_int = 990000000000000000;
 	lol2 = NULL;
 	(void)lol;
-	printf("%d\n", printf("{salut : %05p}", 0));
-	printf("%d\n", ft_printf("{salut : %05p}", 0));
+	printf("%d\n", printf("{salut : % +d}", 42));
+	printf("%d\n", ft_printf("{salut : % +d}", 42));
 	//printf("%d\n", printf("{%15.4d}", -424242));
 	//printf("%d\n", ft_printf("{%15.4d}", -424242));
 	//printf("%-18p\n", &i);
@@ -394,4 +523,4 @@ int		ft_printf(const char *format, ...)
 	//ft_printf(inp, nb, -200, 0, -150, 0, -1, 260, long_int);
 	//printf(inp, nb, -200, 0, -150, 0, -1, 260, long_int);
 	return (0);
-}*/
+}
