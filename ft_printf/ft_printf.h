@@ -34,7 +34,7 @@ typedef struct			s_format
 }						t_format;
 
 int						ft_printf(const char *format, ...);
-int						ft_putaddr(void *addr, char long_long, char **str);
+int						ft_putaddr(void *addr, char long_long, char **str, t_format *format);
 char					*ft_ntoa_base(long long n, char *base);
 char					*ft_ntoa_base_un(unsigned long long n, char *base);
 int						ft_putoctal(long long value, char **str);
@@ -42,9 +42,9 @@ int						ft_puthexa(unsigned long long value, char **str);
 int						ft_putlong_un(unsigned long value, char **str);
 int						ft_putlong(long value, char **str);
 int						ft_putoctal_un(unsigned long long value, char **str);
-int						ft_putaddr_un(void *addr, char long_long, char **str);
+//int						ft_putaddr_un(void *addr, char long_long, char **str);
 int						ft_puthexa_maj(unsigned long long value, char **str);
-int						ft_putunicode(wchar_t *uni, char **str);
+int						ft_putunicode(wchar_t *uni, char **str, t_format *format_var);
 int						ft_putlonglong_un(unsigned long long value, char **str);
 int						ft_putlonglong(long long value, char **str);
 int						ft_put_wchar(wchar_t car, char **str);

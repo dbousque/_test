@@ -137,7 +137,7 @@ int		arg_putunicode(va_list ap, char flag, char **str, t_format *format_var)
 (void)flag;
 	res = va_arg(ap, wchar_t*);
 	if (res)
-		length = ft_putunicode(res, str);
+		length = ft_putunicode(res, str, format_var);
 	else
 	{
 		*str = ft_strdup("(null)");
@@ -172,9 +172,8 @@ int		arg_putaddr(va_list ap, char flag, char **str, t_format *format_var)
 
 	(void)flag;
 	res = va_arg(ap, void*);
-	format_var->u_value = (unsigned long)res;
 	format_var->unsigned_val = 1;
-	length = ft_putaddr(res, 1, str);
+	length = ft_putaddr(res, 1, str, format_var);
 	return (length);
 }
 

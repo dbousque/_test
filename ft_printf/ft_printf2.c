@@ -53,7 +53,7 @@ void		append_precision_to_value(char **value, t_format *format_var, int *length)
 
 	if (format_var->specifier == 'd' || format_var->specifier == 'D' || format_var->specifier == 'i'
 		|| format_var->specifier == 'o' || format_var->specifier == 'O' || format_var->specifier == 'u'
-		|| format_var->specifier == 'U' || format_var->specifier == 'x' || format_var->specifier == 'X')
+		|| format_var->specifier == 'U' || format_var->specifier == 'x' || format_var->specifier == 'X' || format_var->specifier == 'p')
 	{
 		if (format_var->precision == 0 && ((format_var->unsigned_val && format_var->u_value == 0) || (format_var->unsigned_val == 0 && format_var->value == 0)))
 		{
@@ -97,7 +97,7 @@ void		append_precision_to_value(char **value, t_format *format_var, int *length)
 			}
 		}
 	}
-	else if (format_var->specifier == 's' && format_var->precision >= 0 && format_var->precision < ft_strlen(*value))
+	else if ((format_var->specifier == 's' || format_var->specifier == 'S') && format_var->precision >= 0 && format_var->precision < (int)ft_strlen(*value))
 	{
 		if ((tmp = (char*)malloc(sizeof(char) * format_var->precision + 1)))
 		{
@@ -107,13 +107,6 @@ void		append_precision_to_value(char **value, t_format *format_var, int *length)
 			*value = tmp;
 			*length = format_var->precision;
 		}
-	}
-	else if (format_var->specifier == 'S' && format_var->precision != -1)
-	{
-		free(*value);
-		*value = (char*)malloc(sizeof(char));
-		(*value)[0] = '\0';
-		*length = 0;
 	}
 }
 
@@ -213,6 +206,29 @@ void		get_zero_flag(const char *format, t_format *format_var, int *i)
 	}
 }
 
+void		add_prefix_for_addresses(char **value, t_format *format_var, int *length)
+{
+	char	*tmp;
+	int		len;
+
+	if (format_var->specifier == 'p')
+	{
+		len = ft_strlen(*value);
+		if ((tmp = (char*)malloc(sizeof(char) * (len + 1))))
+		{
+			tmp[len] = '\0';
+			tmp[0] = '0';
+			tmp[1] = 'x';
+			ft_strcpy(tmp + 2, *value);
+			free(*value);
+			*value = tmp;
+			*length += 2;
+		}
+		else
+			*value = NULL;
+	}
+}
+
 int			print_format(t_format *format, va_list ap)
 {
 	char	*value;
@@ -222,6 +238,7 @@ int			print_format(t_format *format, va_list ap)
 	if (format->neg_val == 1)
 		format->has_sign = 1;
 	append_precision_to_value(&value, format, &length);
+	add_prefix_for_addresses(&value, format, &length);
 	ajust_value_to_width(&value, format, &length);
 	ft_putstr(value);
 	return (length);
@@ -238,9 +255,9 @@ int			parse_format(const char *format, t_format *format_var, int *i)
 	get_length(format, format_var, i);
 	if (format_var->precision == -1)
 		get_precision(format, format_var, i);
+	format_var->specifier = format[*i];
 	if (!is_valid_specifier(format[*i]))
 		return (-1);
-	format_var->specifier = format[*i];
 	return (0);
 }
 
@@ -294,9 +311,13 @@ int		ft_printf(const char *format, ...)
 			if (format_var)
 				free_format(format_var);
 			format_var = new_format();
-			if (parse_format(format, format_var, &i) == -1)
-				return (length);
-			length += print_format(format_var, ap);
+			if (parse_format(format, format_var, &i) != -1)
+				length += print_format(format_var, ap);
+			else if (format_var->specifier == '%')
+			{
+				ft_putchar('%');
+				length++;
+			}
 		}
 		else
 		{
@@ -329,8 +350,8 @@ int		main(int argc, char **argv)
 	long_int = 990000000000000000;
 	lol2 = NULL;
 	(void)lol;
-	printf("%d\n", printf("{salut : %045s}", "42 is the answer."));
-	printf("%d\n", ft_printf("{salut : %045s}", "42 is the answer."));
+	printf("%d\n", printf("{salut : %.3q}"));
+	printf("%d\n", ft_printf("{salut : %.3q"));
 	//printf("%d\n", printf("{%15.4d}", -424242));
 	//printf("%d\n", ft_printf("{%15.4d}", -424242));
 	//printf("%-18p\n", &i);

@@ -292,10 +292,11 @@ int		empty_str(char **str)
 	return (0);
 }
 
-int		ft_putunicode(wchar_t *uni, char **str)
+int		ft_putunicode(wchar_t *uni, char **str, t_format *format_var)
 {
 	int		i;
 	int		length;
+	int		tmp_len;
 	char	*tmp;
 	t_list	*strs;
 	t_list	*strs_end;
@@ -305,14 +306,16 @@ int		ft_putunicode(wchar_t *uni, char **str)
 	i = 0;
 	length = 0;
 	tmp = NULL;
-	while (uni[i])
+	while (uni[i] && (format_var->precision == -1 || length + tmp_len <= format_var->precision))
 	{
-		length += ft_put_wchar(uni[i], &tmp);
+		tmp_len = ft_put_wchar(uni[i], &tmp);
 		if (!tmp)
 			return (empty_str(str));
-		ft_putendl("LOL2");
-		ft_lstaddend(&strs_end, ft_lstnew(tmp, ft_strlen(tmp) + 1));
-		ft_putendl("LOL3");
+		if (format_var->precision == -1 || length + tmp_len <= format_var->precision)
+		{
+			ft_lstaddend(&strs_end, ft_lstnew(tmp, ft_strlen(tmp) + 1));
+			length += tmp_len;
+		}
 		free(tmp);
 		if (!strs)
 			strs = strs_end;
