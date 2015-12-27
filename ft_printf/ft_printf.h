@@ -62,5 +62,6 @@ int						arg_putaddr(va_list ap, char flag, char **str, t_format *format_var);
 int						arg_putoctal(va_list ap, char flag, char **str, t_format *format_var);
 int						arg_putoctal_long(va_list ap, char flag, char **str, t_format *format_var);
 int						get_arg(char **str, va_list ap, t_format *format_var);
+char					is_other_maj(char c);
 
 #endif

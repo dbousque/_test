@@ -12,6 +12,27 @@
 
 #include "ft_printf.h"
 
+int		new_percent(char **str, char c)
+{
+	if ((*str = (char*)malloc(sizeof(char) * 2)))
+	{
+		(*str)[0] = c;
+		(*str)[1] = '\0';
+	}
+	else
+		*str = NULL;
+	return (1);
+}
+
+int		new_void(char **str)
+{
+	if ((*str = (char*)malloc(sizeof(char))))
+		(*str)[0] = '\0';
+	else
+		*str = NULL;
+	return (0);
+}
+
 int		get_arg(char **str, va_list ap, t_format *format_var)
 {
 	int		length;
@@ -43,5 +64,9 @@ int		get_arg(char **str, va_list ap, t_format *format_var)
 		length = arg_putnbr_un_long(ap, format_var->length, str, format_var);
 	else if (format_var->specifier == 'C')
 		length = arg_putwchar(ap, format_var->length, str, format_var);
+	else if (is_other_maj(format_var->specifier))
+		length = new_percent(str, format_var->specifier);
+	else
+		length = new_void(str);
 	return (length);
 }

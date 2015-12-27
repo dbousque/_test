@@ -42,6 +42,22 @@ char		is_valid_specifier(char c)
 	return (0);
 }
 
+char		ft_isupper(char c)
+{
+	if (c >= 'A' && c <= 'Z')
+		return (1);
+	return (0);
+}
+
+char		is_other_maj(char c)
+{
+	if (is_valid_specifier(c))
+		return (0);
+	if (ft_isupper(c) || c == '%')
+		return (1);
+	return (0);
+}
+
 void		append_precision_to_value(char **value, t_format *format_var, int *length)
 {
 	char	*tmp;
@@ -51,11 +67,11 @@ void		append_precision_to_value(char **value, t_format *format_var, int *length)
 	int		i;
 	int		x;
 
-	if (format_var->specifier == 'd' || format_var->specifier == 'D' || format_var->specifier == 'i'
+	if (is_other_maj(format_var->specifier) || format_var->specifier == 'd' || format_var->specifier == 'D' || format_var->specifier == 'i'
 		|| format_var->specifier == 'o' || format_var->specifier == 'O' || format_var->specifier == 'u'
 		|| format_var->specifier == 'U' || format_var->specifier == 'x' || format_var->specifier == 'X' || format_var->specifier == 'p')
 	{
-		if (format_var->precision == 0 && ((format_var->unsigned_val && format_var->u_value == 0) || (format_var->unsigned_val == 0 && format_var->value == 0)))
+		if (!is_other_maj(format_var->specifier) && format_var->precision == 0 && ((format_var->unsigned_val && format_var->u_value == 0) || (format_var->unsigned_val == 0 && format_var->value == 0)))
 		{
 			free(*value);
 			*value = (char*)malloc(sizeof(char));
@@ -334,7 +350,7 @@ void		add_prefix_for_addresses_n_sharp(char **value, t_format *format_var, int *
 		else
 			*value = NULL;
 	}
-	else if (format_var->sharp_flag == 1 && (format_var->u_value != 0 || format_var->precision != -1))
+	else if (format_var->sharp_flag == 1 && (format_var->u_value != 0 || (format_var->precision != -1 && format_var->specifier != 'x')))
 		add_sharp_prefix(value, format_var, length);
 }
 
@@ -391,29 +407,45 @@ int			print_format(t_format *format, va_list ap)
 	char	*value;
 	int		length;
 	int		decal;
+	int		o_done;
 
+	o_done = 0;
 	decal = get_decal(format);
 	length = get_arg(&value, ap, format);
 	if (format->neg_val == 1)
 		format->has_sign = 1;
 	if (format->specifier == 'd' || format->specifier == 'D' || format->specifier == 'i')
 		prepend_plus_space_flags(&value, format, &length);
-	append_precision_to_value(&value, format, &length);
+	if (format->sharp_flag && (format->specifier == 'o' || format->specifier == 'O') && format->precision != 0)
+	{
+		o_done = 1;
+		add_prefix_for_addresses_n_sharp(&value, format, &length);
+	}
+	if (is_valid_specifier(format->specifier))
+		append_precision_to_value(&value, format, &length);
 	if (!format->minus_flag)
 	{
-		if (format->char_to_fill == ' ')
+		if (!o_done && format->char_to_fill == ' ')
 			add_prefix_for_addresses_n_sharp(&value, format, &length);
 		ajust_value_to_width(&value, format, &length, decal);
-		if (format->char_to_fill == '0')
+		if (!o_done && format->char_to_fill == '0')
 			add_prefix_for_addresses_n_sharp(&value, format, &length);
 	}
 	else
 	{
-		add_prefix_for_addresses_n_sharp(&value, format, &length);
+		if (!o_done)
+			add_prefix_for_addresses_n_sharp(&value, format, &length);
 		ajust_value_to_width_minus(&value, format, &length);
 	}
 	ft_putstr2(value, length);
 	return (length);
+}
+
+int			bad_specifier(char specifier)
+{
+	if (specifier != 'c' && specifier != 'C' && specifier != 's' && specifier != 'S' && !is_other_maj(specifier))
+		return (0);
+	return (1);
 }
 
 int			parse_format(const char *format, t_format *format_var, int *i)
@@ -432,14 +464,14 @@ int			parse_format(const char *format, t_format *format_var, int *i)
 		get_sharp_flag(format, format_var, i);
 	get_width(format, format_var, i);
 	get_precision(format, format_var, i);
-	if (format_var->width > format_var->precision && format_var->precision != -1)
-		format_var->char_to_fill = ' ';
 	get_length(format, format_var, i);
 	if (format_var->precision == -1)
 		get_precision(format, format_var, i);
 	format_var->specifier = format[*i];
-	if (!is_valid_specifier(format[*i]))
+	if (!is_valid_specifier(format[*i]) && !is_other_maj(format[*i]))
 		return (-1);
+	if (format_var->width > format_var->precision && format_var->precision != -1 && !bad_specifier(format_var->specifier))
+		format_var->char_to_fill = ' ';
 	return (0);
 }
 
@@ -495,11 +527,8 @@ int		ft_printf(const char *format, ...)
 			format_var = new_format();
 			if (parse_format(format, format_var, &i) != -1)
 				length += print_format(format_var, ap);
-			else if (format_var->specifier == '%')
-			{
-				ft_putchar('%');
-				length++;
-			}
+			else
+				i--;
 		}
 		else
 		{
@@ -532,8 +561,8 @@ int		ft_printf(const char *format, ...)
 	long_int = 990000000000000000;
 	lol2 = NULL;
 	(void)lol;
-	printf("%d\n", printf("{salut : %#.O}", 0));
-	printf("%d\n", ft_printf("{salut : %#.O}", 0));
+	printf("%d\n", printf("{salut : %", 0));
+	printf("%d\n", ft_printf("{salut : %", 0));
 	//printf("%d\n", printf("{%15.4d}", -424242));
 	//printf("%d\n", ft_printf("{%15.4d}", -424242));
 	//printf("%-18p\n", &i);
