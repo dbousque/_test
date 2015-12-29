@@ -366,7 +366,7 @@ int		ft_printf(const char *format, ...)
 	return (length);
 }
 
-int		main(int argc, char **argv)
+/*int		main(int argc, char **argv)
 {
 	unsigned long long			nb;
 	unsigned long long	nb2;
@@ -405,4 +405,4 @@ int		main(int argc, char **argv)
 	//ft_printf(inp, nb, -200, 0, -150, 0, -1, 260, long_int);
 	//printf(inp, nb, -200, 0, -150, 0, -1, 260, long_int);
 	return (0);
-}
+}*/
