@@ -196,7 +196,7 @@ void		ajust_value_to_width(char **value, t_format *format_var, int *length, int 
 	}
 }
 
-void		get_precision(const char *format, t_format *format_var, int *i)
+void		get_precision(const char *format, t_format *format_var, int *i, va_list ap)
 {
 	int		res;
 
@@ -205,6 +205,17 @@ void		get_precision(const char *format, t_format *format_var, int *i)
 		res = ft_atoi(format + *i + 1);
 		*i += ft_intlen(res) + 1;
 		format_var->precision = res;
+	}
+	else if (format[*i] == '.' && format[*i + 1] == '*')
+	{
+		(*i) += 2;
+		format_var->precision = va_arg(ap, int);
+		/*if (format_var->width < 0)
+		{
+			format_var->minus_flag = 1;
+			format_var->width = -format_var->width;
+		}*/
+
 	}
 	else if (format[*i] == '.')
 	{
@@ -215,20 +226,48 @@ void		get_precision(const char *format, t_format *format_var, int *i)
 		format_var->precision = -1;
 }
 
+int			get_size(char c)
+{
+	if (c == HH)
+		return (sizeof(char));
+	if (c == H)
+		return (sizeof(short));
+	if (c == L)
+		return (sizeof(long));
+	if (c == LL)
+		return (sizeof(long long));
+	if (c == Z)
+		return (sizeof(size_t));
+	if (c == J)
+		return (sizeof(intmax_t));
+	return (0);
+}
+
+void		update_length(t_format *format_var, char new_length)
+{
+	int		sizeof_current;
+	int		sizeof_new;
+
+	sizeof_current = get_size(format_var->length);
+	sizeof_new = get_size(new_length);
+	if (sizeof_new > sizeof_current)
+		format_var->length = new_length;
+}
+
 void		get_length(const char *format, t_format *format_var, int *i)
 {
 	if (format[*i] == 'l' && format[*i + 1] == 'l')
-		format_var->length = LL;
+		update_length(format_var, LL);
 	else if (format[*i] == 'l')
-		format_var->length = L;
+		update_length(format_var, L);
 	else if (format[*i] == 'h' && format[*i + 1] == 'h')
-		format_var->length = HH;
+		update_length(format_var, HH);
 	else if (format[*i] == 'h')
-		format_var->length = H;
+		update_length(format_var, H);
 	else if (format[*i] == 'j')
-		format_var->length = J;
+		update_length(format_var, J);
 	else if (format[*i] == 'z')
-		format_var->length = Z;
+		update_length(format_var, Z);
 	else
 		format_var->length = NO_FLAG;
 	if (format_var->length == HH || format_var->length == LL)
@@ -237,7 +276,7 @@ void		get_length(const char *format, t_format *format_var, int *i)
 		(*i)++;
 }
 
-void		get_width(const char *format, t_format *format_var, int *i)
+void		get_width(const char *format, t_format *format_var, int *i, va_list ap)
 {
 	int		res;
 
@@ -246,6 +285,30 @@ void		get_width(const char *format, t_format *format_var, int *i)
 		res = ft_atoi(format + *i);
 		*i += ft_intlen(res);
 		format_var->width = res;
+	}
+	else if (format[*i] == '*')
+	{
+		(*i)++;
+		format_var->width = va_arg(ap, int);
+		if (format_var->width < 0)
+		{
+			format_var->minus_flag = 1;
+			format_var->width = -format_var->width;
+		}
+	}
+}
+
+void		get_star_width(const char *format, t_format *format_var, int *i, va_list ap)
+{
+	if (format[*i] == '*')
+	{
+		(*i)++;
+		format_var->width = va_arg(ap, int);
+		if (format_var->width < 0)
+		{
+			format_var->minus_flag = 1;
+			format_var->width = -format_var->width;
+		}
 	}
 }
 
@@ -392,13 +455,16 @@ int			get_decal(t_format *format)
 	int		decal;
 
 	decal = (format->specifier == 'p' && format->char_to_fill == '0' ? 2 : 0);
-	/*if (decal == 0 && format->sharp_flag == 1)
+
+//LIGNES EN DESSOUS COMMENTEES UNIQUEMENT DANS CERTAINES CONDITIONS !!!
+
+	if (format->char_to_fill == '0' && decal == 0 && format->sharp_flag == 1)
 	{
 		if (format->specifier == 'o' || format->specifier == 'O')
 			decal = 1;
 		else if (format->specifier == 'x' || format->specifier == 'X')
 			decal = 2;
-	}*/
+	}
 	return (decal);
 }
 
@@ -448,29 +514,81 @@ int			bad_specifier(char specifier)
 	return (1);
 }
 
-int			parse_format(const char *format, t_format *format_var, int *i)
+int			invalid_end(char c)
+{
+	if (c == ' ')
+		return (1);
+	if (!c || (!ft_isalpha(c) && !ft_isdigit(c)) || is_valid_specifier(c) || is_other_maj(c))
+		return (0);
+	return (1);
+}
+
+int			parse_format(const char *format, t_format *format_var, int *i, va_list ap)
 {
 	(*i)++;
-	get_minus_flag(format, format_var, i);
-	get_space_flag(format, format_var, i);
-	get_plus_flag(format, format_var, i);
-	get_space_flag(format, format_var, i);
-	get_plus_flag(format, format_var, i);
-	get_sharp_flag(format, format_var, i);
-	get_zero_flag(format, format_var, i);
-	if (format_var->minus_flag == 0)
+	while (format[*i] == '-')
 		get_minus_flag(format, format_var, i);
-	if (format_var->sharp_flag == 0)
+	while (format[*i] == ' ')
+		get_space_flag(format, format_var, i);
+	while (format[*i] == '+')
+		get_plus_flag(format, format_var, i);
+	while (format[*i] == ' ')
+		get_space_flag(format, format_var, i);
+	while (format[*i] == '+')
+		get_plus_flag(format, format_var, i);
+	while (format[*i] == '#')
 		get_sharp_flag(format, format_var, i);
-	get_width(format, format_var, i);
-	get_precision(format, format_var, i);
-	get_length(format, format_var, i);
+	while (format[*i] == '-')
+		get_minus_flag(format, format_var, i);
+	while (format[*i] == '#')
+		get_sharp_flag(format, format_var, i);
+	while (format[*i] == '0')
+		get_zero_flag(format, format_var, i);
+	if (format_var->minus_flag == 0)
+	{
+		while (format[*i] == '-')
+			get_minus_flag(format, format_var, i);
+	}
+	if (format_var->sharp_flag == 0)
+	{
+		while (format[*i] == '#')
+			get_sharp_flag(format, format_var, i);
+	}
+	while (format[*i] == '0')
+		get_zero_flag(format, format_var, i);
+	while (format[*i] == ' ')
+		get_space_flag(format, format_var, i);
+	get_width(format, format_var, i, ap);
+	while (format[*i] == '*')
+		get_star_width(format, format_var, i, ap);
+	get_width(format, format_var, i, ap);
+	while (format[*i] == '.')
+		get_precision(format, format_var, i, ap);
+	while (format[*i] == 'h' || format[*i] == 'l' || format[*i] == 'j' || format[*i] == 'z')
+		get_length(format, format_var, i);
 	if (format_var->precision == -1)
-		get_precision(format, format_var, i);
-	format_var->specifier = format[*i];
+	{
+		while (format[*i] == '.')
+			get_precision(format, format_var, i, ap);
+	}
+	get_width(format, format_var, i, ap);
+	while (format[*i] == ' ')
+		get_space_flag(format, format_var, i);
+	while (format[*i] == '+')
+		get_plus_flag(format, format_var, i);
+	while (format[*i] == '#')
+		get_sharp_flag(format, format_var, i);
+	while (format[*i] == '0')
+		get_zero_flag(format, format_var, i);
+	while (format[*i] == '+')
+		get_plus_flag(format, format_var, i);
+	get_width(format, format_var, i, ap);
+	while (invalid_end(format[*i]))
+		(*i)++;
 	if (!is_valid_specifier(format[*i]) && !is_other_maj(format[*i]))
 		return (-1);
-	if (format_var->width > format_var->precision && format_var->precision != -1 && !bad_specifier(format_var->specifier))
+	format_var->specifier = format[*i];
+	if (format_var->width > format_var->precision && format_var->precision > -1 && !bad_specifier(format_var->specifier))
 		format_var->char_to_fill = ' ';
 	return (0);
 }
@@ -525,7 +643,7 @@ int		ft_printf(const char *format, ...)
 			if (format_var)
 				free_format(format_var);
 			format_var = new_format();
-			if (parse_format(format, format_var, &i) != -1)
+			if (parse_format(format, format_var, &i, ap) != -1)
 				length += print_format(format_var, ap);
 			else
 				i--;
@@ -561,8 +679,8 @@ int		ft_printf(const char *format, ...)
 	long_int = 990000000000000000;
 	lol2 = NULL;
 	(void)lol;
-	printf("%d\n", printf("{salut : %", 0));
-	printf("%d\n", ft_printf("{salut : %", 0));
+	printf("%d\n", printf("@main_ftprintf: %###-#0000 33...12..#0+0d", 256));
+	printf("%d\n", ft_printf("@main_ftprintf: %###-#0000 33...12..#0+0d", 256));
 	//printf("%d\n", printf("{%15.4d}", -424242));
 	//printf("%d\n", ft_printf("{%15.4d}", -424242));
 	//printf("%-18p\n", &i);
