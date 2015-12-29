@@ -64,6 +64,10 @@ int		get_arg(char **str, va_list ap, t_format *format_var)
 		length = arg_putnbr_un_long(ap, format_var->length, str, format_var);
 	else if (format_var->specifier == 'C')
 		length = arg_putwchar(ap, format_var->length, str, format_var);
+	else if (format_var->specifier == 'b')
+		length = arg_putbinary(ap, format_var->length, str, format_var);
+	else if (format_var->specifier == 'r')
+		length = arg_putstr_unprint(ap, format_var->length, str, format_var);
 	else if (is_other_maj(format_var->specifier))
 		length = new_percent(str, format_var->specifier);
 	else

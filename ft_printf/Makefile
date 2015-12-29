@@ -26,8 +26,17 @@ SRC=		ft_printf2.c \
 		ft_putnbr_un.c \
 		ft_putoctal.c \
 		ft_putunicode.c \
+		ft_putbinary.c \
+		ft_putstr_unprint.c \
+		color.c \
 		get_arg.c \
-		arg_put.c
+		parse_format.c \
+		get_flags.c \
+		get_width_n_length.c \
+		arg_put.c \
+		get_precision.c \
+		utils.c \
+		utils2.c
 
 
 SRC2=	libft/ft_memset.c libft/ft_bzero.c libft/ft_memcpy.c libft/ft_memccpy.c \

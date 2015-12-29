@@ -165,6 +165,23 @@ int		arg_putstr(va_list ap, char flag, char **str, t_format *format_var)
 	return (ft_strlen(*str));
 }
 
+int		arg_putstr_unprint(va_list ap, char flag, char **str, t_format *format_var)
+{
+	char	*res;
+
+	(void)flag;
+	res = va_arg(ap, char*);
+	if (res)
+		ft_putstr_unprint(ft_strdup(res), str);
+	else
+	{
+		*str = ft_strdup("(null)");
+		return (6);
+	}
+	format_var->characters = 1;
+	return (ft_strlen(*str));
+}
+
 int		arg_putaddr(va_list ap, char flag, char **str, t_format *format_var)
 {
 	void	*res;
@@ -264,5 +281,29 @@ int		arg_puthexa_maj(va_list ap, char flag, char **str, t_format *format_var)
 	format_var->u_value = res;
 	format_var->unsigned_val = 1;
 	length = ft_puthexa_maj(res, str);
+	return (length);
+}
+
+int		arg_putbinary(va_list ap, char flag, char **str, t_format *format_var)
+{
+	long long	res;
+	int			length;
+
+	if (flag == L)
+		res = va_arg(ap, long);
+	else if (flag == LL)
+		res = va_arg(ap, long long);
+	else if (flag == H)
+		res = (short)va_arg(ap, int);
+	else if (flag == HH)
+		res = (char)va_arg(ap, int);
+	else if (flag == J)
+		res = va_arg(ap, intmax_t);
+	else if (flag == Z)
+		res = va_arg(ap, size_t);
+	else
+		res = va_arg(ap, int);
+	format_var->value = res;
+	length = ft_putbinary(res, str);
 	return (length);
 }

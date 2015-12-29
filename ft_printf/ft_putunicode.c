@@ -82,8 +82,6 @@ void	cpy_n_bits(char *res, char *tmp, int nb)
 
 int		ft_put_one_uni(wchar_t car, char *str)
 {
-	if (!((char*)malloc(sizeof(char) * 2)))
-		return (0);
 	str[0] = (unsigned char)car;
 	str[1] = '\0';
 	return (1);
@@ -97,7 +95,8 @@ int		ft_put_two_uni(wchar_t car, char *str)
 
 	res = ft_ntoa_base_un((unsigned int)car, "01");
 	write_res_to_tmp(res, tmp, 11);
-	free(res);
+	if (res)
+		free(res);
 	res = NULL;
 	tmp[11] = '\0';
 	if (!(val[0] = (char*)malloc(sizeof(char) * 8)))
@@ -130,6 +129,8 @@ int		ft_put_three_uni(wchar_t car, char *str)
 
 	res = ft_ntoa_base_un((unsigned int)car, "01");
 	write_res_to_tmp(res, tmp, 16);
+	if (res)
+		free(res);
 	tmp[16] = '\0';
 	if (!(val[0] = (char*)malloc(sizeof(char) * 8)))
 		return (0);
@@ -172,6 +173,8 @@ int		ft_put_four_uni(wchar_t car, char *str)
 
 	res = ft_ntoa_base_un((unsigned int)car, "01");
 	write_res_to_tmp(res, tmp, 21);
+	if (res)
+		free(res);
 	tmp[21] = '\0';
 	if (!(val[0] = (char*)malloc(sizeof(char) * 8)))
 		return (0);
@@ -252,7 +255,7 @@ int		ft_put_wchar(wchar_t car, char **str)
 void	del_maillon(void *content, size_t content_size)
 {
 	(void)content_size;
-	ft_strdel((char**)&content);
+	free(content);
 	content = NULL;
 }
 
@@ -273,13 +276,14 @@ char	*lst_to_str(t_list *strs)
 		return (NULL);
 	res[length] = '\0';
 	length = 0;
+	tmp = strs;
 	while (strs)
 	{
 		ft_strcpy(res + length, strs->content);
 		length += strs->content_size - 1;
 		strs = strs->next;
 	}
-	ft_lstdel(&strs, del_maillon);
+	ft_lstdel(&tmp, del_maillon);
 	return (res);
 }
 
@@ -306,6 +310,7 @@ int		ft_putunicode(wchar_t *uni, char **str, t_format *format_var)
 	i = 0;
 	length = 0;
 	tmp = NULL;
+	tmp_len = 0;
 	while (uni[i] && (format_var->precision == -1 || length + tmp_len <= format_var->precision))
 	{
 		tmp_len = ft_put_wchar(uni[i], &tmp);
