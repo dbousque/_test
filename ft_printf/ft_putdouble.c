@@ -6,21 +6,11 @@
 /*   By: dbousque <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/12/30 13:28:39 by dbousque          #+#    #+#             */
-/*   Updated: 2015/12/30 14:26:07 by dbousque         ###   ########.fr       */
+/*   Updated: 2015/12/30 16:18:57 by dbousque         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_printf.h"
-
-
-
-
-
-
-
-
-#include <stdio.h>
-
 
 char	*get_second_part(double nb)
 {
@@ -36,10 +26,8 @@ char	*get_second_part(double nb)
 	while (i < 7)
 	{
 		nb *= 10.0;
-		//printf("%f\n", nb);
-		//printf("%d\n", (int)(nb+0.000001));
-		res[i] = ((int)(nb+0.000001)) + '0';
-		nb -= (int)(nb+0.000001);
+		res[i] = ((int)(nb + 0.000001)) + '0';
+		nb -= (int)(nb + 0.000001);
 		i++;
 	}
 	return (res);

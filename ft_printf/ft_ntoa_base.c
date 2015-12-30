@@ -1,4 +1,14 @@
-
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_ntoa_base.c                                     :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: dbousque <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2015/12/30 16:20:05 by dbousque          #+#    #+#             */
+/*   Updated: 2015/12/30 16:21:26 by dbousque         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
 #include "ft_printf.h"
 
@@ -48,8 +58,6 @@ char		*ft_ntoa_base(long long n, char *base)
 	int		limit;
 
 	base_length = ft_strlen(base);
-	if (base_length < 2)
-		return (NULL);
 	res_length = ft_get_res_length(n, base_length);
 	if (!(res = (char*)malloc(sizeof(char) * (res_length + 1))))
 		return (NULL);

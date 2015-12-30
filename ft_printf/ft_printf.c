@@ -1,15 +1,18 @@
-
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_printf.c                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: dbousque <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2015/12/30 16:54:11 by dbousque          #+#    #+#             */
+/*   Updated: 2015/12/30 17:22:35 by dbousque         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
 #include "ft_printf.h"
 
-
-
-
-
-
-#include <stdio.h>
-
-void		cut_digits(char **value, t_format *format_var, int *length)
+void		cut_digits(char **value, t_format *format, int *length)
 {
 	int		ind;
 	char	*tmp;
@@ -19,20 +22,29 @@ void		cut_digits(char **value, t_format *format_var, int *length)
 		ind++;
 	if ((*value)[ind] == '.')
 	{
-		if ((tmp = (char*)malloc(sizeof(char) * (ind + format_var->precision + 2))))
+		if ((tmp = (char*)malloc(sizeof(char) * (ind + format->precision + 2))))
 		{
-			tmp = ft_strncpy(tmp, *value, ind + format_var->precision + 1);
-			tmp[ind + format_var->precision + 1] = '\0';
+			tmp = ft_strncpy(tmp, *value, ind + format->precision + 1);
+			tmp[ind + format->precision + 1] = '\0';
 			free(*value);
 			*value = tmp;
-			*length = ind + 1 + format_var->precision;
+			*length = ind + 1 + format->precision;
 		}
 		else
 			*value = NULL;
 	}
 }
 
-void		append_precision_to_value(char **value, t_format *format_var, int *length, char ori)
+char		is_spec_numb(char c)
+{
+	if (c == 'd' || c == 'D' || c == 'i' || c == 'o' || c == 'O' || c == 'u'
+		|| c == 'U' || c == 'x' || c == 'X' || c == 'p' || c == 'b' || c == 'f'
+		|| c == 'F')
+		return (1);
+	return (0);
+}
+
+void		append_precision_to_value(char **value, t_format *format, int *length, char ori)
 {
 	char	*tmp;
 	int		val_len;
@@ -41,13 +53,11 @@ void		append_precision_to_value(char **value, t_format *format_var, int *length,
 	int		i;
 	int		x;
 
-	if (ori && format_var->precision > 0 && (format_var->specifier == 'f' || format_var->specifier == 'F'))
-		cut_digits(value, format_var, length);
-	else if (is_other_maj(format_var->specifier) || format_var->specifier == 'd' || format_var->specifier == 'D' || format_var->specifier == 'i'
-		|| format_var->specifier == 'o' || format_var->specifier == 'O' || format_var->specifier == 'u'
-		|| format_var->specifier == 'U' || format_var->specifier == 'x' || format_var->specifier == 'X' || format_var->specifier == 'p' || format_var->specifier == 'b' || format_var->specifier == 'f' || format_var->specifier == 'F')
+	if (ori && format->precision > 0 && (format->specifier == 'f' || format->specifier == 'F'))
+		cut_digits(value, format, length);
+	else if (is_other_maj(format->specifier) || is_spec_numb(format->specifier))
 	{
-		if (!is_other_maj(format_var->specifier) && format_var->precision == 0 && ((format_var->unsigned_val && format_var->u_value == 0) || (format_var->unsigned_val == 0 && format_var->value == 0)))
+		if (!is_other_maj(format->specifier) && format->precision == 0 && ((format->unsigned_val && format->u_value == 0) || (format->unsigned_val == 0 && format->value == 0)))
 		{
 			free(*value);
 			*value = (char*)malloc(sizeof(char));
@@ -57,16 +67,16 @@ void		append_precision_to_value(char **value, t_format *format_var, int *length,
 		else
 		{
 			val_len = *length;
-			val_len_without_sign = (format_var->has_sign ? val_len - 1 : val_len);
-			if (format_var->precision > val_len_without_sign)
+			val_len_without_sign = (format->has_sign ? val_len - 1 : val_len);
+			if (format->precision > val_len_without_sign)
 			{
-				res_len = format_var->precision + (val_len - val_len_without_sign);
+				res_len = format->precision + (val_len - val_len_without_sign);
 				*length += res_len - val_len;
-				if ((tmp = (char*)malloc(sizeof(char) * (format_var->precision + res_len + 1))))
+				if ((tmp = (char*)malloc(sizeof(char) * (format->precision + res_len + 1))))
 				{
 					tmp[res_len] = '\0';
 					i = 0;
-					if (format_var->neg_val == 1 || format_var->has_sign)
+					if (format->neg_val == 1 || format->has_sign)
 					{
 						tmp[0] = (*value)[0];
 						i = 1;
@@ -89,15 +99,15 @@ void		append_precision_to_value(char **value, t_format *format_var, int *length,
 			}
 		}
 	}
-	else if ((format_var->specifier == 'r' || format_var->specifier == 's' || format_var->specifier == 'S') && format_var->precision >= 0 && format_var->precision < (int)ft_strlen(*value))
+	else if ((format->specifier == 'r' || format->specifier == 's' || format->specifier == 'S') && format->precision >= 0 && format->precision < (int)ft_strlen(*value))
 	{
-		if ((tmp = (char*)malloc(sizeof(char) * format_var->precision + 1)))
+		if ((tmp = (char*)malloc(sizeof(char) * format->precision + 1)))
 		{
-			tmp[format_var->precision] = '\0';
-			tmp = ft_strncpy(tmp, *value, format_var->precision);
+			tmp[format->precision] = '\0';
+			tmp = ft_strncpy(tmp, *value, format->precision);
 			free(*value);
 			*value = tmp;
-			*length = format_var->precision;
+			*length = format->precision;
 		}
 	}
 }

@@ -1,4 +1,14 @@
-
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   color.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: dbousque <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2015/12/30 16:22:27 by dbousque          #+#    #+#             */
+/*   Updated: 2015/12/30 16:22:43 by dbousque         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
 #include "ft_printf.h"
 
@@ -10,7 +20,8 @@ int		ft_find_color(char *color, const char *format, int *i, char *finished)
 
 	len = ft_strlen(color);
 	remaining_chars = ft_strlen(format + *i);
-	if (len < remaining_chars && (format[*i + len + 1] == '}' || format[*i + len + 1] == ';'))
+	if (len < remaining_chars
+		&& (format[*i + len + 1] == '}' || format[*i + len + 1] == ';'))
 	{
 		tmp = ft_strsub(format, *i + 1, len);
 		if (ft_strcmp(tmp, color) == 0)

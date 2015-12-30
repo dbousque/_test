@@ -1,31 +1,35 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   utils2.c                                           :+:      :+:    :+:   */
+/*   format_var.h                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: dbousque <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2015/12/30 16:16:42 by dbousque          #+#    #+#             */
-/*   Updated: 2015/12/30 16:17:01 by dbousque         ###   ########.fr       */
+/*   Created: 2015/12/30 16:28:03 by dbousque          #+#    #+#             */
+/*   Updated: 2015/12/30 16:28:33 by dbousque         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "ft_printf.h"
+#ifndef FORMAT_VAR_H
+# define FORMAT_VAR_H
 
-int			bad_specifier(char specifier)
+typedef struct			s_format
 {
-	if (specifier != 'c' && specifier != 'C' && specifier != 's'
-		&& specifier != 'S' && !is_other_maj(specifier))
-		return (0);
-	return (1);
-}
+	long long			value;
+	unsigned long long	u_value;
+	char				specifier;
+	char				length;
+	char				plus_flag;
+	char				sharp_flag;
+	char				space_flag;
+	char				minus_flag;
+	int					precision;
+	int					width;
+	char				neg_val;
+	char				unsigned_val;
+	char				has_sign;
+	char				char_to_fill;
+	char				characters;
+}						t_format;
 
-int			invalid_end(char c)
-{
-	if (c == ' ')
-		return (1);
-	if (!c || (!ft_isalpha(c) && !ft_isdigit(c))
-			|| is_valid_specifier(c) || is_other_maj(c))
-		return (0);
-	return (1);
-}
+#endif

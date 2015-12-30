@@ -6,7 +6,7 @@
 #    By: dbousque <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2015/11/26 10:27:09 by dbousque          #+#    #+#              #
-#    Updated: 2015/12/30 14:58:03 by dbousque         ###   ########.fr        #
+#    Updated: 2015/12/30 17:16:16 by dbousque         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -18,7 +18,7 @@ CFLAGS=-Wall -Wextra -Werror
 
 RM=rm -f
 
-SRC=		ft_printf2.c \
+SRC=	ft_printf.c \
 		ft_ntoa_base.c \
 		ft_putaddr.c \
 		ft_puthexa.c \
@@ -26,6 +26,9 @@ SRC=		ft_printf2.c \
 		ft_putnbr_un.c \
 		ft_putoctal.c \
 		ft_putunicode.c \
+		ft_unicode_utils.c \
+		ft_putwchar.c \
+		ft_putwchar2.c \
 		ft_putbinary.c \
 		ft_putstr_unprint.c \
 		color.c \
@@ -35,6 +38,9 @@ SRC=		ft_printf2.c \
 		print_format.c \
 		get_width_n_length.c \
 		arg_put.c \
+		arg_put2.c \
+		arg_put3.c \
+		arg_put4.c \
 		get_precision.c \
 		ft_putdouble.c \
 		utils.c \

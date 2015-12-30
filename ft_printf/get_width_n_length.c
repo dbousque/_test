@@ -1,4 +1,14 @@
-
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   get_width_n_length.c                               :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: dbousque <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2015/12/30 16:06:45 by dbousque          #+#    #+#             */
+/*   Updated: 2015/12/30 16:08:23 by dbousque         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
 #include "ft_printf.h"
 
@@ -52,7 +62,7 @@ void		get_length(const char *format, t_format *format_var, int *i)
 		(*i)++;
 }
 
-void		get_width(const char *format, t_format *format_var, int *i, va_list ap)
+void		get_width(const char *format, t_format *formatv, int *i, va_list ap)
 {
 	int		res;
 
@@ -60,30 +70,30 @@ void		get_width(const char *format, t_format *format_var, int *i, va_list ap)
 	{
 		res = ft_atoi(format + *i);
 		*i += ft_intlen(res);
-		format_var->width = res;
+		formatv->width = res;
 	}
 	else if (format[*i] == '*')
 	{
 		(*i)++;
-		format_var->width = va_arg(ap, int);
-		if (format_var->width < 0)
+		formatv->width = va_arg(ap, int);
+		if (formatv->width < 0)
 		{
-			format_var->minus_flag = 1;
-			format_var->width = -format_var->width;
+			formatv->minus_flag = 1;
+			formatv->width = -formatv->width;
 		}
 	}
 }
 
-void		get_star_width(const char *format, t_format *format_var, int *i, va_list ap)
+void		get_star_width(const char *fo, t_format *format, int *i, va_list ap)
 {
-	if (format[*i] == '*')
+	if (fo[*i] == '*')
 	{
 		(*i)++;
-		format_var->width = va_arg(ap, int);
-		if (format_var->width < 0)
+		format->width = va_arg(ap, int);
+		if (format->width < 0)
 		{
-			format_var->minus_flag = 1;
-			format_var->width = -format_var->width;
+			format->minus_flag = 1;
+			format->width = -format->width;
 		}
 	}
 }

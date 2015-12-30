@@ -1,4 +1,14 @@
-
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   utils.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: dbousque <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2015/12/30 16:16:17 by dbousque          #+#    #+#             */
+/*   Updated: 2015/12/30 16:16:29 by dbousque         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
 #include "ft_printf.h"
 
@@ -19,7 +29,7 @@ int		ft_intlen(int nb)
 	return (length);
 }
 
-char		is_valid_specifier(char c)
+char	is_valid_specifier(char c)
 {
 	char	*valid;
 	int		i;
@@ -35,14 +45,14 @@ char		is_valid_specifier(char c)
 	return (0);
 }
 
-char		ft_isupper(char c)
+char	ft_isupper(char c)
 {
 	if (c >= 'A' && c <= 'Z')
 		return (1);
 	return (0);
 }
 
-char		is_other_maj(char c)
+char	is_other_maj(char c)
 {
 	if (is_valid_specifier(c))
 		return (0);

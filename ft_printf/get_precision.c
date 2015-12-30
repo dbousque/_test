@@ -1,28 +1,37 @@
-
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   get_precision.c                                    :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: dbousque <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2015/12/30 16:04:58 by dbousque          #+#    #+#             */
+/*   Updated: 2015/12/30 16:06:15 by dbousque         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
 #include "ft_printf.h"
 
-void		get_precision(const char *format, t_format *format_var, int *i, va_list ap)
+void		get_precision(const char *fo, t_format *format, int *i, va_list ap)
 {
 	int		res;
 
-	if (format[*i] == '.' && format[*i + 1] >= '0' && format[*i + 1] <= '9')
+	if (fo[*i] == '.' && fo[*i + 1] >= '0' && fo[*i + 1] <= '9')
 	{
-		res = ft_atoi(format + *i + 1);
+		res = ft_atoi(fo + *i + 1);
 		*i += ft_intlen(res) + 1;
-		format_var->precision = res;
+		format->precision = res;
 	}
-	else if (format[*i] == '.' && format[*i + 1] == '*')
+	else if (fo[*i] == '.' && fo[*i + 1] == '*')
 	{
 		(*i) += 2;
-		format_var->precision = va_arg(ap, int);
-
+		format->precision = va_arg(ap, int);
 	}
-	else if (format[*i] == '.')
+	else if (fo[*i] == '.')
 	{
 		(*i)++;
-		format_var->precision = 0;
+		format->precision = 0;
 	}
 	else
-		format_var->precision = -1;
+		format->precision = -1;
 }
