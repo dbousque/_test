@@ -6,7 +6,7 @@
 /*   By: dbousque <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/12/30 14:56:36 by dbousque          #+#    #+#             */
-/*   Updated: 2015/12/30 15:55:29 by dbousque         ###   ########.fr       */
+/*   Updated: 2015/12/30 18:11:20 by dbousque         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,15 +70,15 @@ void		width_n_prefix(char **value, t_format *format, int *len, int o_done)
 	if (!format->minus_flag)
 	{
 		if (!o_done && format->char_to_fill == ' ')
-			add_prefix_for_addresses_n_sharp(value, format, len);
+			add_prefix_for_addr_n_sharp(value, format, len);
 		ajust_value_to_width(value, format, len, decal);
 		if (!o_done && format->char_to_fill == '0')
-			add_prefix_for_addresses_n_sharp(value, format, len);
+			add_prefix_for_addr_n_sharp(value, format, len);
 	}
 	else
 	{
 		if (!o_done)
-			add_prefix_for_addresses_n_sharp(value, format, len);
+			add_prefix_for_addr_n_sharp(value, format, len);
 		ajust_value_to_width_minus(value, format, len);
 	}
 }
@@ -103,7 +103,7 @@ int			print_format(t_format *format, va_list ap)
 				|| format->specifier == 'O') && format->precision != 0)
 	{
 		o_done = 1;
-		add_prefix_for_addresses_n_sharp(&value, format, &length);
+		add_prefix_for_addr_n_sharp(&value, format, &length);
 	}
 	width_n_prefix(&value, format, &length, o_done);
 	ft_putstr2(value, length);

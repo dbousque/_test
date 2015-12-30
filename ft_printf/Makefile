@@ -6,7 +6,7 @@
 #    By: dbousque <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2015/11/26 10:27:09 by dbousque          #+#    #+#              #
-#    Updated: 2015/12/30 17:16:16 by dbousque         ###   ########.fr        #
+#    Updated: 2015/12/30 18:50:24 by dbousque         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -18,7 +18,7 @@ CFLAGS=-Wall -Wextra -Werror
 
 RM=rm -f
 
-SRC=	ft_printf.c \
+SRCOBJ=	ft_printf.c \
 		ft_ntoa_base.c \
 		ft_putaddr.c \
 		ft_puthexa.c \
@@ -41,10 +41,48 @@ SRC=	ft_printf.c \
 		arg_put2.c \
 		arg_put3.c \
 		arg_put4.c \
+		format_var.c \
 		get_precision.c \
 		ft_putdouble.c \
+		precision.c \
+		precision2.c \
+		width.c \
+		sharp.c \
 		utils.c \
 		utils2.c
+
+SRC=	./srcs/ft_printf.c \
+		./srcs/ft_ntoa_base.c \
+		./srcs/ft_putaddr.c \
+		./srcs/ft_puthexa.c \
+		./srcs/ft_putlong.c \
+		./srcs/ft_putnbr_un.c \
+		./srcs/ft_putoctal.c \
+		./srcs/ft_putunicode.c \
+		./srcs/ft_unicode_utils.c \
+		./srcs/ft_putwchar.c \
+		./srcs/ft_putwchar2.c \
+		./srcs/ft_putbinary.c \
+		./srcs/ft_putstr_unprint.c \
+		./srcs/color.c \
+		./srcs/get_arg.c \
+		./srcs/parse_format.c \
+		./srcs/get_flags.c \
+		./srcs/print_format.c \
+		./srcs/get_width_n_length.c \
+		./srcs/arg_put.c \
+		./srcs/arg_put2.c \
+		./srcs/arg_put3.c \
+		./srcs/arg_put4.c \
+		./srcs/format_var.c \
+		./srcs/get_precision.c \
+		./srcs/ft_putdouble.c \
+		./srcs/precision.c \
+		./srcs/precision2.c \
+		./srcs/width.c \
+		./srcs/sharp.c \
+		./srcs/utils.c \
+		./srcs/utils2.c
 
 
 SRC2=	libft/ft_memset.c libft/ft_bzero.c libft/ft_memcpy.c libft/ft_memccpy.c \
@@ -81,11 +119,11 @@ SRC3=	ft_memset.c ft_bzero.c ft_memcpy.c ft_memccpy.c \
 
 
 
-OBJ=$(SRC:.c=.o)
+OBJ=$(SRCOBJ:.c=.o)
 
 OBJ2=$(SRC3:.c=.o)
 
-$(NAME): ft_printf.h
+$(NAME): ./srcs/ft_printf.h
 		$(CC) $(CFLAGS) -c $(SRC) $(SRC2)
 		ar rc $(NAME) $(OBJ) $(OBJ2)
 		ranlib $(NAME)

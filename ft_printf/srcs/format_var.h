@@ -6,7 +6,7 @@
 /*   By: dbousque <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/12/30 16:28:03 by dbousque          #+#    #+#             */
-/*   Updated: 2015/12/30 16:28:33 by dbousque         ###   ########.fr       */
+/*   Updated: 2015/12/30 18:35:42 by dbousque         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,5 +31,8 @@ typedef struct			s_format
 	char				char_to_fill;
 	char				characters;
 }						t_format;
+
+void					free_format(t_format *format);
+t_format				*new_format(void);
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: dbousque <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/12/30 16:27:32 by dbousque          #+#    #+#             */
-/*   Updated: 2015/12/30 17:08:26 by dbousque         ###   ########.fr       */
+/*   Updated: 2015/12/30 18:35:48 by dbousque         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,7 +98,7 @@ int		bad_specifier(char specifier);
 int		invalid_end(char c);
 void	ft_change_color_if_asked(const char *format, int *i);
 int		print_format(t_format *format, va_list ap);
-void	add_prefix_for_addresses_n_sharp(char **val, t_format *forma, int *len);
+void	add_prefix_for_addr_n_sharp(char **val, t_format *forma, int *len);
 void	add_sharp_prefix(char **value, t_format *format_var, int *length);
 void	ajust_value_to_width(char **val, t_format *format, int *len, int decal);
 void	ajust_value_to_width_minus(char **val, t_format *format_var, int *len);
@@ -110,5 +110,9 @@ int		ft_put_four_uni(wchar_t car, char *str);
 void	cpy_n_bits(char *res, char *tmp, int nb);
 t_uchar	byte_array_to_uchar(char *byte);
 void	write_res_to_tmp(char *res, char *tmp, int tmp_length);
+void	apply_precision(char **value, t_format *fo, int *length);
+void	cut_digits(char **value, t_format *format, int *length);
+char	is_spec_numb(char c);
+void	void_str(char **value, int *length);
 
 #endif
