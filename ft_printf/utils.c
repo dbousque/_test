@@ -24,7 +24,7 @@ char		is_valid_specifier(char c)
 	char	*valid;
 	int		i;
 
-	valid = "dDioOuUxXpcCsSbr";
+	valid = "dDioOuUxXpcCsSbrfF";
 	i = 0;
 	while (valid[i])
 	{

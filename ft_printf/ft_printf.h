@@ -66,6 +66,7 @@ int						ft_putunicode(wchar_t *uni, char **str, t_format *format_var);
 int						ft_putlonglong_un(unsigned long long value, char **str);
 int						ft_putlonglong(long long value, char **str);
 int						ft_put_wchar(wchar_t car, char **str);
+int						ft_putdouble(double nb, char **str);
 void					ft_putstr_unprint(char *inp, char **str);
 int						arg_puthexa_maj(va_list ap, char flag, char **str, t_format *format_var);
 int						arg_puthexa(va_list ap, char flag, char **str, t_format *format_var);
@@ -82,6 +83,7 @@ int						arg_putchar(va_list ap, char flag, char **str, t_format *format_var);
 int						arg_putaddr(va_list ap, char flag, char **str, t_format *format_var);
 int						arg_putoctal(va_list ap, char flag, char **str, t_format *format_var);
 int						arg_putoctal_long(va_list ap, char flag, char **str, t_format *format_var);
+int						arg_putfloat(va_list ap, char flag, char **str, t_format *format_var);
 int						get_arg(char **str, va_list ap, t_format *format_var);
 char					is_other_maj(char c);
 void					get_zero_flag(const char *format, t_format *format_var, int *i);
@@ -100,5 +102,11 @@ void					get_precision(const char *format, t_format *format_var, int *i, va_list
 int						bad_specifier(char specifier);
 int						invalid_end(char c);
 void					ft_change_color_if_asked(const char *format, int *i);
+int						print_format(t_format *format, va_list ap);
+void					add_prefix_for_addresses_n_sharp(char **value, t_format *format_var, int *length);
+void					add_sharp_prefix(char **value, t_format *format_var, int *length);
+void					ajust_value_to_width(char **value, t_format *format_var, int *length, int decal);
+void					ajust_value_to_width_minus(char **value, t_format *format_var, int *length);
+void					append_precision_to_value(char **value, t_format *format_var, int *length, char ori);
 
 #endif

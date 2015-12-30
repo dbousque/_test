@@ -6,7 +6,7 @@
 /*   By: dbousque <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/12/22 19:06:46 by dbousque          #+#    #+#             */
-/*   Updated: 2015/12/22 19:07:09 by dbousque         ###   ########.fr       */
+/*   Updated: 2015/12/30 14:19:44 by dbousque         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,6 +68,8 @@ int		get_arg(char **str, va_list ap, t_format *format_var)
 		length = arg_putbinary(ap, format_var->length, str, format_var);
 	else if (format_var->specifier == 'r')
 		length = arg_putstr_unprint(ap, format_var->length, str, format_var);
+	else if (format_var->specifier == 'f' || format_var->specifier == 'F')
+		length = arg_putfloat(ap, format_var->length, str, format_var);
 	else if (is_other_maj(format_var->specifier))
 		length = new_percent(str, format_var->specifier);
 	else

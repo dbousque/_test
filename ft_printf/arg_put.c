@@ -6,7 +6,7 @@
 /*   By: dbousque <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/12/22 18:58:28 by dbousque          #+#    #+#             */
-/*   Updated: 2015/12/22 19:03:32 by dbousque         ###   ########.fr       */
+/*   Updated: 2015/12/30 14:30:25 by dbousque         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,6 +51,20 @@ int		arg_putnbr_long(va_list ap, char flag, char **str, t_format *format_var)
 		format_var->neg_val = 1;
 	format_var->value = res;
 	length = ft_putlonglong(res, str);
+	return (length);
+}
+
+int		arg_putfloat(va_list ap, char flag, char **str, t_format *format_var)
+{
+	double	res;
+	int		length;
+
+	(void)flag;
+	res = va_arg(ap, double);
+	if (res < 0)
+		format_var->neg_val = 1;
+	format_var->value = (long long)res;
+	length = ft_putdouble(res, str);
 	return (length);
 }
 

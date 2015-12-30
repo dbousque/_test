@@ -6,7 +6,7 @@
 #    By: dbousque <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2015/11/26 10:27:09 by dbousque          #+#    #+#              #
-#    Updated: 2015/12/22 19:28:13 by dbousque         ###   ########.fr        #
+#    Updated: 2015/12/30 14:58:03 by dbousque         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -32,9 +32,11 @@ SRC=		ft_printf2.c \
 		get_arg.c \
 		parse_format.c \
 		get_flags.c \
+		print_format.c \
 		get_width_n_length.c \
 		arg_put.c \
 		get_precision.c \
+		ft_putdouble.c \
 		utils.c \
 		utils2.c
 
