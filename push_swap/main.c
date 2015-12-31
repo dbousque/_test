@@ -23,28 +23,15 @@ void	put_pile(t_pile *pile)
 {
 	int		i;
 
-	i = pile->top;
-	while (i < pile->length)
+	i = pile->length - 1;
+	while (i >= pile->top)
 	{
-		if (i != pile->top)
+		if (i != pile->length - 1)
 			ft_putstr(", ");
 		ft_putnbr(pile->elts[i]);
-		i++;
+		i--;
 	}
 	ft_putchar('\n');
-}
-
-t_pile	*empty_pile(void)
-{
-	t_pile	*res;
-
-	if (!(res = (t_pile*)malloc(sizeof(t_pile))))
-		return (NULL);
-	res->length = 1;
-	res->top = 1;
-	if (!(res->elts = (int*)malloc(sizeof(int))))
-		return (NULL);
-	return (res);
 }
 
 void	double_pile_length(t_pile *pile)
@@ -79,6 +66,63 @@ char	put_on_pile(t_pile *pile, int nb)
 	pile->top--;
 	pile->elts[pile->top] = nb;
 	return (0);
+}
+
+int		take_from_pile(t_pile *pile)
+{
+	if (pile->length - pile->top > 0)
+	{
+		pile->top++;
+		return (pile->top - 1);
+	}
+	return (0);
+}
+
+void	push_a(t_pile *pile_a, t_pile *pile_b)
+{
+	if (pile_b->length - pile_b->top > 0)
+		put_on_pile(pile_a, take_from_pile(pile_b));
+}
+
+void	push_b(t_pile *pile_a, t_pile *pile_b)
+{
+	push_a(pile_b, pile_a);
+}
+
+void	swap_a(t_pile *pile)
+{
+	int		tmp;
+
+	if (pile->length - pile->top > 1)
+	{
+		tmp = pile->elts[pile->top];
+		pile->elts[pile->top] = pile->elts[pile->top + 1];
+		pile->elts[pile->top + 1] = tmp;
+	}
+}
+
+void	swap_b(t_pile *pile)
+{
+	swap_a(pile);
+}
+
+void	swap_ab(t_pile *pile_a, t_pile *pile_b)
+{
+	swap_a(pile_a);
+	swap_b(pile_b);
+}
+
+t_pile	*empty_pile(void)
+{
+	t_pile	*res;
+
+	if (!(res = (t_pile*)malloc(sizeof(t_pile))))
+		return (NULL);
+	res->length = 1;
+	res->top = 1;
+	if (!(res->elts = (int*)malloc(sizeof(int))))
+		return (NULL);
+	return (res);
 }
 
 t_pile	*pile_from_array(int *nbs, int length)
@@ -205,8 +249,10 @@ int		error(int *nbs)
 
 int		main(int argc, char **argv)
 {
+	int		i;
 	int		*nbs;
 	t_pile	*pile_a;
+	t_pile	*pile_b;
 
 	nbs = get_nbs(argc, argv);
 	if (!nbs || twice_same(argc - 1, nbs))
@@ -215,6 +261,16 @@ int		main(int argc, char **argv)
 		return (error(nbs));
 	free(nbs);
 	nbs = NULL;
-	put_pile(pile_a);
+	pile_b = empty_pile();
+	i = 0;
+	while (i < 7)
+	{
+		put_pile(pile_a);
+		//put_pile(pile_b);
+		//ft_putchar('\n');
+		//push_b(pile_a, pile_b);
+		rotate_a(pile_a);
+		i++;
+	}
 	return (0);
 }
