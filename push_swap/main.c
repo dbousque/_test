@@ -269,6 +269,7 @@ int		main(int argc, char **argv)
 		//put_pile(pile_b);
 		//ft_putchar('\n');
 		//push_b(pile_a, pile_b);
+
 		rotate_a(pile_a);
 		i++;
 	}
