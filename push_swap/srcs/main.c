@@ -6,7 +6,7 @@
 /*   By: dbousque <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/12/30 19:55:41 by dbousque          #+#    #+#             */
-/*   Updated: 2015/12/30 19:55:43 by dbousque         ###   ########.fr       */
+/*   Updated: 2016/01/02 12:33:49 by dbousque         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,7 @@ char	is_sorted(t_pile *pile)
 void	sort_pile(t_pile *pile_a)
 {
 	t_pile	*pile_b;
+
 
 	(void)pile_a;
 	pile_b = empty_pile();
