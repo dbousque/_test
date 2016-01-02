@@ -2,12 +2,13 @@
 
 #include "push_swap.h"
 
-void	rotate_a(t_pile *pile)
+void	rotate_a(t_pile *pile, t_pile *unused)
 {
 	int		tmp;
 	int		tmp2;
 	int		i;
 
+	(void)unused;
 	if (pile->length - pile->top > 1)
 	{
 		tmp = pile->elts[pile->length - 1];
@@ -23,13 +24,13 @@ void	rotate_a(t_pile *pile)
 	}
 }
 
-void	rotate_b(t_pile *pile)
+void	rotate_b(t_pile *unused, t_pile *pile)
 {
-	rotate_a(pile);
+	rotate_a(pile, unused);
 }
 
 void	rotate_ab(t_pile *pile_a, t_pile *pile_b)
 {
-	rotate_a(pile_a);
-	rotate_b(pile_b);
+	rotate_a(pile_a, pile_b);
+	rotate_b(pile_a, pile_b);
 }
