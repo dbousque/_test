@@ -40,6 +40,7 @@ typedef struct	s_node2
 	t_pile		*pile_b;
 	int			nb_moves;
 	char		*previous_moves;
+	int			score;
 	int			priority;
 }				t_node2;
 
@@ -73,6 +74,7 @@ int				*get_nbs(int argc, char **argv);
 int				nb_elts(t_pile *pile);
 void			apply_function(t_pile *a, t_pile *b, int i);
 int				apply_function_and_cancel(t_pile *a, t_pile *b, void (*f1)(t_pile*, t_pile*), void (*f2)(t_pile*, t_pile*));
+void			print_fct_name(int i);
 int				get_current_score(t_pile *pile_a, t_pile *pile_b);
 void			calculate_moves_score(t_pile *a, t_pile *b, int scores[11]);
 void			void_scores(int scores[11]);

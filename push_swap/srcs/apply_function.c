@@ -73,5 +73,4 @@ void	apply_function(t_pile *a, t_pile *b, int i)
 		reverse_rotate_b(a, b);
 	else if (i == 10)
 		reverse_rotate_ab(a, b);
-	print_fct_name(i);
 }
