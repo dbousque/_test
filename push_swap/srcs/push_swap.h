@@ -53,6 +53,7 @@ typedef struct	s_tree
 }				t_tree;
 
 void			put_pile(t_pile *pile);
+void			free_pile(t_pile *pile);
 void			double_pile_length(t_pile *pile);
 char			put_on_pile(t_pile *pile, int nb);
 int				take_from_pile(t_pile *pile);

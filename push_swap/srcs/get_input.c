@@ -22,16 +22,16 @@ char	twice_same(int argc, int *nbs)
 	return (0);
 }
 
-char	invalid_char_in(char *str)
+char	invalid_char(char *st)
 {
 	int		i;
 
 	i = 0;
-	if (str[0] == '-')
-		str++;
-	while (str[i])
+	if (st[0] == '-')
+		st++;
+	while (st[i])
 	{
-		if (str[i] < '0' || str[i] > '9' || (str[0] == '0' && ft_strlen(str) > 1))
+		if (st[i] < '0' || st[i] > '9' || (st[0] == '0' && ft_strlen(st) > 1))
 			return (1);
 		i++;
 	}
@@ -78,6 +78,20 @@ char	too_big_for_int(char *str)
 	return (0);
 }
 
+char	no_nb(char *str)
+{
+	int		i;
+
+	i = 0;
+	while (str[i])
+	{
+		if (str[i] >= '0' && str[i] <= '9')
+			return (0);
+		i++;
+	}
+	return (1);
+}
+
 int		*get_nbs(int argc, char **argv)
 {
 	int		*nbs;
@@ -88,7 +102,7 @@ int		*get_nbs(int argc, char **argv)
 	i = 1;
 	while (i < argc)
 	{
-		if (invalid_char_in(argv[i]) || too_big_for_int(argv[i]))
+		if (invalid_char(argv[i]) || too_big_for_int(argv[i]) || no_nb(argv[i]))
 		{
 			free(nbs);
 			return (NULL);

@@ -2,6 +2,17 @@
 
 #include "push_swap.h"
 
+void	free_pile(t_pile *pile)
+{
+	if (pile)
+	{
+		free(pile->elts);
+		pile->elts = NULL;
+		free(pile);
+		pile = NULL;
+	}
+}
+
 void	put_pile(t_pile *pile)
 {
 	int		i;
