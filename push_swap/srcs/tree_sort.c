@@ -68,15 +68,15 @@ t_node2	*sort_pile_tree(t_pile *pile_a)
 				calculate_moves_score(top->pile_a, top->pile_b, scores);
 				add_new_nodes(tree, top, scores);
 				free_node(top);
-				if (i % 100000 == 0)
-				{
-					free_tree(tree);
-					return (best_so_far);
-				}
 			}
 		}
 		else
 			free_node(top);
+		if (i % 100000 == 0)
+		{
+			free_tree(tree);
+			return (best_so_far);
+		}
 	}
 	free_tree(tree);
 	return (best_so_far);

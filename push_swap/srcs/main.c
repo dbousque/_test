@@ -6,7 +6,7 @@
 /*   By: dbousque <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/12/30 19:55:41 by dbousque          #+#    #+#             */
-/*   Updated: 2016/01/02 20:27:40 by dbousque         ###   ########.fr       */
+/*   Updated: 2016/01/04 12:44:45 by dbousque         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,9 +49,11 @@ int		main(int argc, char **argv)
 		return (error(nbs));
 	free(nbs);
 	nbs = NULL;
-	best = sort_pile_tree(pile_a);
-	if (!best)
-		best = sort_pile_determ(pile_a);
+	//best = sort_pile_tree(pile_a);
+	//if (!best)
+	//	best = sort_pile_determ(pile_a);
+	//if (!best)
+		best = sort_pile_determ2(pile_a);
 	if (best)
 		print_res(pile_a, best, flag);
 	if (best)
