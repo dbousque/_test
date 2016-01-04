@@ -12,31 +12,6 @@
 
 #include "push_swap.h"
 
-/*void		ft_free_tree(t_tree *tree)
-{
-	int		i;
-
-	i = 1;
-	while (i <= tree->last)
-	{
-		if (tree->tree[i])
-		{
-			ft_putendl("TEST0");
-			if (tree->tree[i]->board)
-				ft_delstrstr2(tree->tree[i]->board);
-			ft_putendl("TEST");
-			free(tree->tree[i]);
-			ft_putendl("TEST2");
-			tree->tree[i] = NULL;
-		}
-		i++;
-	}
-	free(tree->tree);
-	tree->tree = NULL;
-	free(tree);
-	tree = NULL;
-}*/
-
 t_tree		*ft_double_tree_size(t_tree *tree)
 {
 	t_node2		**res;

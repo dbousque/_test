@@ -87,5 +87,21 @@ t_node2			*ft_swap(t_tree *tree, int *ind, int ind2, t_node2 *tmp);
 t_node2			*ft_get_res_n_update(t_tree *tree);
 int				ft_right_place(int *ind, t_tree *tree);
 int				ft_first_higher(t_tree *tree, int ind1, int ind2);
+t_node2			*ft_new_node(t_pile *a, t_pile *b, int nb_moves, char *prev);
+char			get_flag(int *argc, char **argv);
+void			print_res(t_pile *pile_a, t_node2 *best, char flag);
+char			last_move(t_node2 *node);
+char			last_move_to_a(t_node2 *node);
+char			last_move_to_b(t_node2 *node);
+char			is_sorted_ab(t_pile *pile, char is_a);
+int				best_score_min_index(int scores[11]);
+int				priority_function(int score, int nb_moves);
+void			free_node(t_node2 *node);
+void			free_tree(t_tree *tree);
+char			looping_nodes(t_node2 *top, int best);
+t_node2			*sort_pile_tree(t_pile *pile_a);
+void			update_node(t_node2 *node, char move, int get_score);
+t_node2			*sort_pile_determ(t_pile *a);
+void			lst_del(void *content, size_t size);
 
 #endif

@@ -1,0 +1,32 @@
+
+
+#include "push_swap.h"
+
+int		main(void)
+{
+	t_tree	*tree;
+	t_node2	*tmp;
+	long	i;
+	t_pile	*pile_a;
+	t_pile	*pile_b;
+	char	*prev;
+
+	tree = ft_empty_tree();
+	prev = (char*)malloc(sizeof(char) * 3);
+	prev[0] = 0;
+	prev[1] = 3;
+	prev[2] = 2;
+	i = 0;
+	pile_a = empty_pile();
+	pile_b = empty_pile();
+	while (i < 200000000)
+	{
+		tmp = ft_new_node(pile_a, pile_b, 3, prev);
+		tmp->priority = 2;
+		tree = ft_add_to_tree2(tree, tmp);
+		i++;
+	}
+	//free_pile(pile_a);
+	//free_pile(pile_b);
+	return (0);
+}

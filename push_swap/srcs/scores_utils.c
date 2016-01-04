@@ -20,9 +20,13 @@ void	calculate_moves_score(t_pile *a, t_pile *b, int scores[11])
 	while (i < 11)
 	{
 		if (i == 0 && nb_elts(a) > 1)
+		{
 			scores[i] = apply_function_and_cancel(a, b, swap_a, swap_a);
+		}
 		else if (i == 1 && nb_elts(b) > 1)
+		{
 			scores[i] = apply_function_and_cancel(a, b, swap_b, swap_b);
+		}
 		else if (i == 2 && nb_elts(a) > 1 && nb_elts(b) > 1)
 			scores[i] = apply_function_and_cancel(a, b, swap_ab, swap_ab);
 		else if (i == 3 && nb_elts(b) > 0)

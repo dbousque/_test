@@ -26,7 +26,7 @@ void	reverse_rotate_a(t_pile *pile, t_pile *unused)
 
 void	reverse_rotate_b(t_pile *unused, t_pile *pile)
 {
-	reverse_rotate_a(unused, pile);
+	reverse_rotate_a(pile, unused);
 }
 
 void	reverse_rotate_ab(t_pile *pile_a, t_pile *pile_b)
