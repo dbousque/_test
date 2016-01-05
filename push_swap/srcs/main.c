@@ -6,7 +6,7 @@
 /*   By: dbousque <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/12/30 19:55:41 by dbousque          #+#    #+#             */
-/*   Updated: 2016/01/04 15:11:00 by dbousque         ###   ########.fr       */
+/*   Updated: 2016/01/05 17:03:47 by dbousque         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,31 @@ void	lst_del(void *content, size_t size)
 	content = NULL;
 }
 
+t_node2	*sort_pile(int argc, t_pile *pile_a)
+{
+	t_node2	*best;
+	t_node2	*best2;
+
+	best = NULL;
+	if (argc < 30)
+		best = sort_pile_tree(pile_a);
+	if (!best)
+	{
+		best = sort_pile_determ2(pile_a);
+		if (best)
+			best = reduce_best(best);
+		if (argc < 300)
+		{
+			best2 = sort_pile_determ3(pile_a);
+			if (best2)
+				best2 = reduce_best(best2);
+			if (best2 && (!best || best->nb_moves > best2->nb_moves))
+				best = best2;
+		}
+	}
+	return (best);
+}
+
 int		main(int argc, char **argv)
 {
 	int		*nbs;
@@ -49,15 +74,16 @@ int		main(int argc, char **argv)
 		return (error(nbs));
 	free(nbs);
 	nbs = NULL;
-	best = NULL;
-	if (argc < 30)
-		best = sort_pile_tree(pile_a);
+	best = sort_pile(argc, pile_a);
 	if (!best)
-		best = sort_pile_determ2(pile_a);
+	{
+		free_pile(pile_a);
+		return (error(nbs));
+	}
 	if (best)
 		print_res(pile_a, best, flag);
 	if (best)
 		free_node(best);
-	//free_pile(pile_a);
+	free_pile(pile_a);
 	return (0);
 }

@@ -1,42 +1,49 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   pile2.c                                            :+:      :+:    :+:   */
+/*   get_input_utils.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: dbousque <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2016/01/05 17:16:03 by dbousque          #+#    #+#             */
-/*   Updated: 2016/01/05 17:16:06 by dbousque         ###   ########.fr       */
+/*   Created: 2016/01/05 17:08:49 by dbousque          #+#    #+#             */
+/*   Updated: 2016/01/05 17:09:00 by dbousque         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "push_swap.h"
 
-t_pile	*empty_pile(void)
+char	twice_same(int argc, int *nbs)
 {
-	t_pile	*res;
+	int		i;
+	int		x;
 
-	if (!(res = (t_pile*)malloc(sizeof(t_pile))))
-		return (NULL);
-	res->length = 1;
-	res->top = 1;
-	if (!(res->elts = (int*)malloc(sizeof(int))))
-		return (NULL);
-	return (res);
+	i = 0;
+	while (i < argc)
+	{
+		x = 0;
+		while (x < argc)
+		{
+			if (i != x && nbs[i] == nbs[x])
+				return (1);
+			x++;
+		}
+		i++;
+	}
+	return (0);
 }
 
-t_pile	*pile_from_array(int *nbs, int length)
+char	invalid_char(char *st)
 {
-	t_pile	*res;
 	int		i;
 
-	i = length - 1;
-	res = empty_pile();
-	while (i >= 0)
+	i = 0;
+	if (st[0] == '-')
+		st++;
+	while (st[i])
 	{
-		if (put_on_pile(res, nbs[i]) == -1)
-			return (NULL);
-		i--;
+		if (st[i] < '0' || st[i] > '9' || (st[0] == '0' && ft_strlen(st) > 1))
+			return (1);
+		i++;
 	}
-	return (res);
+	return (0);
 }

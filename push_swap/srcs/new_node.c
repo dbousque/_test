@@ -1,4 +1,14 @@
-
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   new_node.c                                         :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: dbousque <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2016/01/05 17:15:15 by dbousque          #+#    #+#             */
+/*   Updated: 2016/01/05 17:15:32 by dbousque         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
 #include "push_swap.h"
 
@@ -29,7 +39,7 @@ t_pile	*copy_pile(t_pile *pile)
 	res->top = pile->top;
 	res->length = pile->length;
 	ft_memcpy(res->elts + res->top, pile->elts + res->top,
-		   	nb_elts(res) * sizeof(int));
+			nb_elts(res) * sizeof(int));
 	return (res);
 }
 

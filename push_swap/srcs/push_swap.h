@@ -6,7 +6,7 @@
 /*   By: dbousque <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/02 19:12:30 by dbousque          #+#    #+#             */
-/*   Updated: 2016/01/04 14:29:59 by dbousque         ###   ########.fr       */
+/*   Updated: 2016/01/05 17:09:43 by dbousque         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,9 +103,14 @@ t_node2			*sort_pile_tree(t_pile *pile_a);
 void			update_node(t_node2 *node, char move, int get_score);
 t_node2			*sort_pile_determ(t_pile *a);
 t_node2			*sort_pile_determ2(t_pile *a);
+t_node2			*sort_pile_determ3(t_pile *a);
 void			lst_del(void *content, size_t size);
 t_pile			*copy_pile(t_pile *pile);
 void			quicksort_a(t_pile *a, t_pile *b, t_list **list_end, int nb_to_consider);
 void			quicksort_b(t_pile *a, t_pile *b, t_list **list_end, int nb_to_consider);
+char			looping_moves(char current_move, char last_move);
+t_node2			*reduce_best(t_node2 *node);
+char			twice_same(int argc, int *nbs);
+char			invalid_char(char *str);
 
 #endif
