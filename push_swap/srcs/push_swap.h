@@ -105,5 +105,7 @@ t_node2			*sort_pile_determ(t_pile *a);
 t_node2			*sort_pile_determ2(t_pile *a);
 void			lst_del(void *content, size_t size);
 t_pile			*copy_pile(t_pile *pile);
+void			quicksort_a(t_pile *a, t_pile *b, t_list **list_end, int nb_to_consider);
+void			quicksort_b(t_pile *a, t_pile *b, t_list **list_end, int nb_to_consider);
 
 #endif

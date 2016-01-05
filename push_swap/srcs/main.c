@@ -49,10 +49,10 @@ int		main(int argc, char **argv)
 		return (error(nbs));
 	free(nbs);
 	nbs = NULL;
-	//best = sort_pile_tree(pile_a);
-	//if (!best)
-	//	best = sort_pile_determ(pile_a);
-	//if (!best)
+	best = NULL;
+	if (argc < 30)
+		best = sort_pile_tree(pile_a);
+	if (!best)
 		best = sort_pile_determ2(pile_a);
 	if (best)
 		print_res(pile_a, best, flag);

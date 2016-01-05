@@ -10,5 +10,5 @@ random.shuffle(liste)
 
 command = "./a.out " + ' '.join(liste) + " -n > test"
 os.system(command)
-nb = open("test").read().split("\n")[1].replace(to_replace1, "").replace(to_replace2, "")
+nb = open("test").read().split("\n")[-2].replace(to_replace1, "").replace(to_replace2, "")
 print "NOMBRE : " + str(nb)

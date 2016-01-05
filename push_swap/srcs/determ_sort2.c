@@ -197,22 +197,20 @@ void	sort_b(t_pile *b, t_list **list, t_list **list_end)
 	}
 }
 
-void	make_function(t_pile *a, t_pile *b, t_list **list, t_list **list_end, char func)
+void	make_function(t_pile *a, t_pile *b, t_list **list_end, char func)
 {
 	apply_function(a, b, func);
 	ft_lstaddend(list_end, ft_lstnew(&func, sizeof(char)));
-	if (!(*list))
-		*list = *list_end;
 }
 
-int		last_to_push_into_nb_to_consider(t_pile *a, int nb_to_consider, int pivot)
+int		last_to_push_into_nb_to_consider_a(t_pile *a, int nb_to_consider, int pivot)
 {
 	int		i;
 	int		last;
 
 	i = 1;
 	last = 0;
-	while (i <= nb_to_consider)
+	while (i < nb_to_consider)
 	{
 		if (a->elts[i + a->top] < pivot)
 			last = i;
@@ -221,41 +219,164 @@ int		last_to_push_into_nb_to_consider(t_pile *a, int nb_to_consider, int pivot)
 	return (last);
 }
 
-void	quicksort(t_pile *a, t_pile *b, t_list **list, t_list **list_end, int nb_to_consider)
+int		last_to_push_into_nb_to_consider_b(t_pile *b, int nb_to_consider, int pivot)
+{
+	int		i;
+	int		last;
+
+	i = 1;
+	last = 0;
+	while (i < nb_to_consider)
+	{
+		if (b->elts[i + b->top] > pivot)
+			last = i;
+		i++;
+	}
+	return (last);
+}
+
+int		push_smaller_to_b(t_pile *a, t_pile *b, t_list **list_end, int nb_consider_pivot[2])
+{
+	int		nb_pushed;
+	int		i;
+	int		nb_to_consider;
+	int		pivot;
+
+	pivot = nb_consider_pivot[1];
+	nb_to_consider = nb_consider_pivot[0];
+	i = 0;
+	nb_pushed = 0;
+	while (i < nb_to_consider)
+	{
+		if (a->elts[a->top] < pivot)
+		{
+			nb_pushed++;
+			make_function(a, b, list_end, PB);
+		}
+		else
+			make_function(a, b, list_end, RA);
+		i++;
+	}
+	return (nb_pushed);
+}
+
+int		push_higher_to_a(t_pile *a, t_pile *b, t_list **list_end, int nb_consider_pivot[2])
+{
+	int		nb_pushed;
+	int		i;
+	int		nb_to_consider;
+	int		pivot;
+
+	pivot = nb_consider_pivot[1];
+	nb_to_consider = nb_consider_pivot[0];
+	i = 0;
+	nb_pushed = 0;
+	while (i < nb_to_consider)
+	{
+		if (b->elts[b->top] > pivot)
+		{
+			nb_pushed++;
+			make_function(a, b, list_end, PA);
+		}
+		else
+			make_function(a, b, list_end, RB);
+		i++;
+	}
+	return (nb_pushed);
+}
+
+void	return_to_ori_position_a(t_pile *a, t_list **list_end, int to_ret)
+{
+	int		i;
+
+	i = 0;
+	while (i < to_ret)
+	{
+		make_function(a, NULL, list_end, RRA);
+		i++;
+	}
+}
+
+void	return_to_ori_position_b(t_pile *b, t_list **list_end, int to_ret)
+{
+	int		i;
+
+	i = 0;
+	while (i < to_ret)
+	{
+		make_function(NULL, b, list_end, RRB);
+		i++;
+	}
+}
+
+void	restore_a(t_pile *a, t_pile *b, t_list **list_end, int nb_pushed)
+{
+	while (nb_pushed > 0)
+	{
+		make_function(a, b, list_end, PA);
+		nb_pushed--;
+	}
+}
+
+void	restore_b(t_pile *a, t_pile *b, t_list **list_end, int nb_pushed)
+{
+	while (nb_pushed > 0)
+	{
+		make_function(a, b, list_end, PB);
+		nb_pushed--;
+	}
+}
+
+void	quicksort_a(t_pile *a, t_pile *b, t_list **list_end, int nb_to_consider)
 {
 	int		pivot;
 	int		nb_pushed;
-	int		i;
-	char	pb;
+	int		nb_consider_pivot[2];
 
-	pb = PB;
+	nb_pushed = 0;
 	if (nb_elts(a) > 1 && nb_to_consider > 1)
 	{
-		nb_pushed = 0;
 		pivot = a->elts[a->top];
-		i = 0;
-		nb_to_consider = last_to_push_into_nb_to_consider(a, nb_to_consider, pivot);
-		if (nb_to_consider > 0)
-			make_function(a, b, list, list_end, RA);
-		while (i < nb_to_consider)
-		{
-			ft_printf("TOP : {red}%d{eoc}\n", a->elts[a->top]);
-			if (a->elts[a->top] < pivot)
-			{
-				nb_pushed++;
-				make_function(a, b, list, list_end, PB);
-			}
-			else
-				make_function(a, b, list, list_end, RA);
-			i++;
-		}
-		i = 0;
-		while (i < nb_to_consider - nb_pushed)
-		{
-			make_function(a, b, list, list_end, RRA);
-			i++;
-		}
+		make_function(a, b, list_end, RA);
+		nb_to_consider--;
+		nb_consider_pivot[0] = nb_to_consider;
+		nb_consider_pivot[1] = pivot;
+		nb_pushed = push_smaller_to_b(a, b, list_end, nb_consider_pivot);
+		return_to_ori_position_a(a, list_end, nb_to_consider - nb_pushed);
 	}
+	if (nb_to_consider - nb_pushed > 1)
+		quicksort_a(a, b, list_end, nb_to_consider - nb_pushed);
+	if (nb_elts(a) > 1)
+		make_function(a, b, list_end, RRA);
+	if (nb_pushed > 1)
+		quicksort_b(a, b, list_end, nb_pushed);
+	restore_a(a, b, list_end, nb_pushed);
+}
+
+void	quicksort_b(t_pile *a, t_pile *b, t_list **list_end, int nb_to_consider)
+{
+	int		pivot;
+	int		nb_pushed;
+	int		nb_consider_pivot[2];
+
+	nb_pushed = 0;
+	if (nb_elts(b) > 1 && nb_to_consider > 1)
+	{
+		pivot = b->elts[b->top];
+		make_function(a, b, list_end, RB);
+		nb_to_consider--;
+		nb_consider_pivot[0] = nb_to_consider;
+		nb_consider_pivot[1] = pivot;
+		nb_pushed = push_higher_to_a(a, b, list_end, nb_consider_pivot);
+		return_to_ori_position_b(b, list_end, nb_to_consider - nb_pushed);
+	}
+	if (nb_to_consider - nb_pushed > 1)
+		quicksort_b(a, b, list_end, nb_to_consider - nb_pushed);
+	if (nb_elts(b) > 1)
+		make_function(a, b, list_end, RRB);
+	if (nb_pushed > 1)
+		quicksort_a(a, b, list_end, nb_pushed);
+	restore_b(a, b, list_end, nb_pushed);
 }
 
 t_node2	*sort_pile_determ2(t_pile *pile_a)
@@ -264,13 +385,18 @@ t_node2	*sort_pile_determ2(t_pile *pile_a)
 	t_pile	*a;
 	t_list	*list;
 	t_list	*list_end;
+	char	car;
 
+	car = SA;
 	list = NULL;
 	list_end = NULL;
 	if (!(a = copy_pile(pile_a)))
 		return (NULL);
 	b = empty_pile();
-	quicksort(a, b, &list, &list_end, nb_elts(a));
+	ft_lstaddend(&list_end, ft_lstnew(&car, sizeof(char)));
+	list = list_end;
+	quicksort_a(a, b, &list_end, nb_elts(a));
+	list = list->next;
 	ft_putstr("A : ");
 	put_pile(a);
 	ft_putstr("B : ");

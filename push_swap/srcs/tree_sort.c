@@ -72,7 +72,7 @@ t_node2	*sort_pile_tree(t_pile *pile_a)
 		}
 		else
 			free_node(top);
-		if (i % 100000 == 0)
+		if (i % 20000 == 0)
 		{
 			free_tree(tree);
 			return (best_so_far);
