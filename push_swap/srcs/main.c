@@ -6,7 +6,7 @@
 /*   By: dbousque <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/12/30 19:55:41 by dbousque          #+#    #+#             */
-/*   Updated: 2016/01/05 17:03:47 by dbousque         ###   ########.fr       */
+/*   Updated: 2016/01/05 20:22:32 by dbousque         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,20 +34,23 @@ void	lst_del(void *content, size_t size)
 	content = NULL;
 }
 
-t_node2	*sort_pile(int argc, t_pile *pile_a)
+t_node2	*sort_pile(int argc, t_pile *pile_a, char function)
 {
 	t_node2	*best;
 	t_node2	*best2;
 
 	best = NULL;
-	if (argc < 30)
+	if (argc < 30 && function == 0)
 		best = sort_pile_tree(pile_a);
 	if (!best)
 	{
-		best = sort_pile_determ2(pile_a);
-		if (best)
-			best = reduce_best(best);
-		if (argc < 300)
+		if (function == 0 || function == 1)
+		{
+			best = sort_pile_determ2(pile_a);
+			if (best)
+				best = reduce_best(best);
+		}
+		if ((argc < 300 || function == 2) && function != 1)
 		{
 			best2 = sort_pile_determ3(pile_a);
 			if (best2)
@@ -65,16 +68,16 @@ int		main(int argc, char **argv)
 	t_pile	*pile_a;
 	t_node2	*best;
 	char	flag;
+	char	function;
 
-	flag = get_flag(&argc, argv);
+	flag = get_flag(&argc, argv, &function);
 	nbs = get_nbs(argc, argv);
-	if (!nbs || twice_same(argc - 1, nbs))
-		return (error(nbs));
-	if (!(pile_a = pile_from_array(nbs, argc - 1)))
+	if (!nbs || twice_same(argc - 1, nbs)
+		|| !(pile_a = pile_from_array(nbs, argc - 1)))
 		return (error(nbs));
 	free(nbs);
 	nbs = NULL;
-	best = sort_pile(argc, pile_a);
+	best = sort_pile(argc, pile_a, function);
 	if (!best)
 	{
 		free_pile(pile_a);

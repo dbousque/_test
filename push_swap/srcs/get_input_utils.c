@@ -6,7 +6,7 @@
 /*   By: dbousque <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/05 17:08:49 by dbousque          #+#    #+#             */
-/*   Updated: 2016/01/05 17:09:00 by dbousque         ###   ########.fr       */
+/*   Updated: 2016/01/05 19:53:24 by dbousque         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,4 +46,32 @@ char	invalid_char(char *st)
 		i++;
 	}
 	return (0);
+}
+
+char	get_flag(int *argc, char **argv, char *function)
+{
+	char	flag;
+
+	flag = 0;
+	if (ft_strcmp(argv[*argc - 1], "-n") == 0)
+	{
+		flag = 5;
+		(*argc)--;
+	}
+	if (ft_strcmp(argv[*argc - 1], "-v") == 0)
+		flag += 1;
+	else if (ft_strcmp(argv[*argc - 1], "-c") == 0)
+		flag += 2;
+	else if (ft_strcmp(argv[*argc - 1], "-l") == 0)
+		flag += 3;
+	if (flag != 0 && flag != 5)
+		(*argc)--;
+	*function = 0;
+	if (ft_strcmp(argv[*argc - 1], "quicksort") == 0)
+		*function = 1;
+	else if (ft_strcmp(argv[*argc - 1], "determ") == 0)
+		*function = 2;
+	if (*function != 0)
+		(*argc)--;
+	return (flag);
 }

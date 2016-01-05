@@ -6,7 +6,7 @@
 /*   By: dbousque <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/02 19:12:30 by dbousque          #+#    #+#             */
-/*   Updated: 2016/01/05 17:54:07 by dbousque         ###   ########.fr       */
+/*   Updated: 2016/01/05 19:54:17 by dbousque         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,7 +89,7 @@ t_node2			*ft_get_res_n_update(t_tree *tree);
 int				ft_right_place(int *ind, t_tree *tree);
 int				ft_first_higher(t_tree *tree, int ind1, int ind2);
 t_node2			*ft_new_node(t_pile *a, t_pile *b, int nb_moves, char *prev);
-char			get_flag(int *argc, char **argv);
+char			get_flag(int *argc, char **argv, char *function);
 void			print_res(t_pile *pile_a, t_node2 *best, char flag);
 char			last_move(t_node2 *node);
 char			last_move_to_a(t_node2 *node);

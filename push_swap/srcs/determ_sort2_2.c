@@ -6,7 +6,7 @@
 /*   By: dbousque <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/05 17:41:57 by dbousque          #+#    #+#             */
-/*   Updated: 2016/01/05 17:42:57 by dbousque         ###   ########.fr       */
+/*   Updated: 2016/01/05 20:17:55 by dbousque         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,17 +85,16 @@ int		next_unsorted(t_pile *pile)
 			return (i);
 		i++;
 	}
-	i = min_ind - 1;
-	while (i++ < pile->length - 1)
+	i = min_ind;
+	while (i < pile->length - 1)
 	{
 		if (pile->elts[i] > pile->elts[i + 1])
 			return (i);
+		i++;
 	}
-	if (min_ind > pile->top)
-	{
-		if (pile->elts[pile->top] < pile->elts[pile->length - 1])
-			return (pile->length - 1);
-	}
+	if (min_ind > pile->top
+			&& (pile->elts[pile->top] < pile->elts[pile->length - 1]))
+		return (pile->length - 1);
 	return (-1);
 }
 
@@ -114,16 +113,15 @@ int		next_unsorted_b(t_pile *pile)
 			return (i);
 		i++;
 	}
-	i = min_ind - 1;
-	while (i++ < pile->length - 1)
+	i = min_ind;
+	while (i < pile->length - 1)
 	{
 		if (pile->elts[i] < pile->elts[i + 1])
 			return (i);
+		i++;
 	}
-	if (min_ind > pile->top)
-	{
-		if (pile->elts[pile->top] > pile->elts[pile->length - 1])
-			return (pile->length - 1);
-	}
+	if (min_ind > pile->top
+			&& (pile->elts[pile->top] > pile->elts[pile->length - 1]))
+		return (pile->length - 1);
 	return (-1);
 }

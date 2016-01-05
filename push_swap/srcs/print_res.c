@@ -6,7 +6,7 @@
 /*   By: dbousque <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/05 17:16:27 by dbousque          #+#    #+#             */
-/*   Updated: 2016/01/05 17:16:29 by dbousque         ###   ########.fr       */
+/*   Updated: 2016/01/05 19:25:57 by dbousque         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,29 +80,32 @@ void	print_best_path_color(t_node2 *best)
 		ft_putchar('\n');
 }
 
-char	get_flag(int *argc, char **argv)
+void	print_end_state(t_pile *pile_a, t_node2 *best)
 {
-	char	flag;
+	int		i;
+	t_pile	*pile_b;
 
-	flag = 0;
-	if (ft_strcmp(argv[*argc - 1], "-n") == 0)
+	pile_b = empty_pile();
+	i = 0;
+	while (i < best->nb_moves)
 	{
-		flag = 5;
-		(*argc)--;
+		apply_function(pile_a, pile_b, best->previous_moves[i]);
+		i++;
 	}
-	if (ft_strcmp(argv[*argc - 1], "-v") == 0)
-		flag += 1;
-	else if (ft_strcmp(argv[*argc - 1], "-c") == 0)
-		flag += 2;
-	if (flag != 0 && flag != 5)
-		(*argc)--;
-	return (flag);
+	ft_putstr("A : ");
+	put_pile(pile_a);
+	ft_putstr("B : ");
+	put_pile(pile_b);
+	free_pile(pile_b);
+	print_best_path(best);
 }
 
 void	print_res(t_pile *pile_a, t_node2 *best, char flag)
 {
 	if (flag == 0 || flag == 5)
 		print_best_path(best);
+	if (flag == 3 || flag == 8)
+		print_end_state(pile_a, best);
 	if (flag == 2 || flag == 7)
 		print_best_path_color(best);
 	if (flag == 1 || flag == 6)
