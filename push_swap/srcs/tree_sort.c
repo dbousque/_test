@@ -1,4 +1,14 @@
-
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   tree_sort.c                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: dbousque <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2016/01/05 17:26:45 by dbousque          #+#    #+#             */
+/*   Updated: 2016/01/05 17:32:20 by dbousque         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
 #include "push_swap.h"
 
@@ -42,6 +52,20 @@ char	possible_best(t_node2 *top, t_node2 *best_so_far)
 	return (0);
 }
 
+int		inner_loop(t_node2 *top, t_node2 **best, int scores[11], t_tree *tree)
+{
+	if (nb_elts(top->pile_b) == 0 && is_sorted_ab(top->pile_a, 1))
+		*best = top;
+	else
+	{
+		void_scores(scores);
+		calculate_moves_score(top->pile_a, top->pile_b, scores);
+		add_new_nodes(tree, top, scores);
+		free_node(top);
+	}
+	return (1);
+}
+
 t_node2	*sort_pile_tree(t_pile *pile_a)
 {
 	t_tree	*tree;
@@ -58,18 +82,7 @@ t_node2	*sort_pile_tree(t_pile *pile_a)
 	{
 		top = ft_get_top(tree);
 		if (possible_best(top, best_so_far))
-		{
-			i++;
-			if (nb_elts(top->pile_b) == 0 && is_sorted_ab(top->pile_a, 1))
-				best_so_far = top;
-			else
-			{
-				void_scores(scores);
-				calculate_moves_score(top->pile_a, top->pile_b, scores);
-				add_new_nodes(tree, top, scores);
-				free_node(top);
-			}
-		}
+			i += inner_loop(top, &best_so_far, scores, tree);
 		else
 			free_node(top);
 		if (i % 20000 == 0)

@@ -6,7 +6,7 @@
 /*   By: dbousque <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/02 19:12:30 by dbousque          #+#    #+#             */
-/*   Updated: 2016/01/05 17:09:43 by dbousque         ###   ########.fr       */
+/*   Updated: 2016/01/05 17:54:07 by dbousque         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,7 +74,8 @@ char			twice_same(int argc, int *nbs);
 int				*get_nbs(int argc, char **argv);
 int				nb_elts(t_pile *pile);
 void			apply_function(t_pile *a, t_pile *b, int i);
-int				apply_function_and_cancel(t_pile *a, t_pile *b, void (*f1)(t_pile*, t_pile*), void (*f2)(t_pile*, t_pile*));
+int				apply_function_and_cancel(t_pile *a, t_pile *b,
+					void (*f1)(t_pile*, t_pile*), void (*f2)(t_pile*, t_pile*));
 void			print_fct_name(int i);
 int				get_current_score(t_pile *pile_a, t_pile *pile_b);
 void			calculate_moves_score(t_pile *a, t_pile *b, int scores[11]);
@@ -106,11 +107,24 @@ t_node2			*sort_pile_determ2(t_pile *a);
 t_node2			*sort_pile_determ3(t_pile *a);
 void			lst_del(void *content, size_t size);
 t_pile			*copy_pile(t_pile *pile);
-void			quicksort_a(t_pile *a, t_pile *b, t_list **list_end, int nb_to_consider);
-void			quicksort_b(t_pile *a, t_pile *b, t_list **list_end, int nb_to_consider);
+void			quicksort_a(t_pile *a, t_pile *b, t_list **list_end, int nb_to);
+void			quicksort_b(t_pile *a, t_pile *b, t_list **list_end, int nb_to);
 char			looping_moves(char current_move, char last_move);
 t_node2			*reduce_best(t_node2 *node);
 char			twice_same(int argc, int *nbs);
 char			invalid_char(char *str);
+char			*get_previous_moves(int length, t_list *list);
+t_node2			*list_to_node(t_list *list, t_pile *a, t_pile *b);
+int				min_index(t_pile *pile);
+int				next_unsorted(t_pile *pile);
+int				next_unsorted_b(t_pile *pile);
+void			make_function(t_pile *a, t_pile *b, t_list **list_end, char fu);
+void			sort_a(t_pile *a, t_list **list, t_list **list_end);
+void			return_to_ori_position_a(t_pile *a, t_list **list_end,
+																int to_ret);
+int				push_smaller_to_b(t_pile *a, t_pile *b, t_list **list_end,
+													int nb_consider_pivot[2]);
+int				push_higher_to_a(t_pile *a, t_pile *b, t_list **list_end,
+													int nb_consider_pivot[2]);
 
 #endif
