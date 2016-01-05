@@ -1,28 +1,28 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line.h                                    :+:      :+:    :+:   */
+/*   ft_striteri.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: dbousque <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2015/12/04 13:35:57 by dbousque          #+#    #+#             */
-/*   Updated: 2015/12/08 11:48:34 by dbousque         ###   ########.fr       */
+/*   Created: 2015/11/24 18:40:11 by dbousque          #+#    #+#             */
+/*   Updated: 2016/01/02 12:01:40 by dbousque         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef GET_NEXT_LINE_H
-# define GET_NEXT_LINE_H
+#include "libdodo.h"
 
-# include "libft.h"
-
-# define BUF_SIZE 64
-
-typedef struct		s_file
+void	ft_striteri(char *s, void (*f)(unsigned int, char *))
 {
-	int				fd;
-	char			*content;
-}					t_file;
+	int		i;
 
-int					get_next_line(int const fd, char **line);
-
-#endif
+	if (s != NULL && f != NULL)
+	{
+		i = 0;
+		while (s[i])
+		{
+			f(i, s + i);
+			i++;
+		}
+	}
+}

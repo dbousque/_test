@@ -6,11 +6,11 @@
 /*   By: dbousque <dbousque@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/12/08 11:13:21 by dbousque          #+#    #+#             */
-/*   Updated: 2015/12/09 14:00:13 by dbousque         ###   ########.fr       */
+/*   Updated: 2016/01/02 12:14:32 by dbousque         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "get_next_line.h"
+#include "libdodo.h"
 
 static void		ft_tmp_function(int *len, t_list *list, t_file **f, int *st)
 {
@@ -67,33 +67,32 @@ static t_file	*ft_find_file(t_list **files, int fd, int *line_ther, int i)
 	return (file);
 }
 
-static int		ft_lst_to_array(t_list *list, t_file *file, int return_val)
+static int		ft_lst_to_array(t_list *list, t_file *file, int retur, int len)
 {
 	char	*res;
-	int		length;
 	int		start;
 
 	if (!list)
-		return (return_val);
-	ft_tmp_function(&length, list, &file, &start);
-	if (!(res = (char*)malloc(sizeof(char) * (length + 1))))
+		return (retur);
+	ft_tmp_function(&len, list, &file, &start);
+	if (!(res = (char*)malloc(sizeof(char) * (len + 1))))
 		return (-1);
-	res[length] = '\0';
+	res[len] = '\0';
 	if (start > 0)
 		ft_strncpy(res, file->content, start);
 	while (list)
 	{
-		length = 0;
-		while (((char*)list->content)[length])
+		len = 0;
+		while (((char*)list->content)[len])
 		{
-			res[start + length] = ((char*)list->content)[length];
-			length++;
+			res[start + len] = ((char*)list->content)[len];
+			len++;
 		}
-		start += length;
+		start += len;
 		list = list->next;
 	}
 	file->content = res;
-	return (return_val);
+	return (retur);
 }
 
 static int		ft_read_until_newline(t_file *file, int *ind, int x, t_list *li)
@@ -117,12 +116,12 @@ static int		ft_read_until_newline(t_file *file, int *ind, int x, t_list *li)
 			i++;
 		*ind = x + i + (file->content ? ft_strlen(file->content) : 0);
 		if (buf[i] == '\n')
-			return (ft_lst_to_array(list, file, 1));
+			return (ft_lst_to_array(list, file, 1, 0));
 		x += ret;
 		ret = read(file->fd, buf, BUF_SIZE);
 	}
 	*ind = x + (file->content ? ft_strlen(file->content) : 0);
-	return (ft_lst_to_array(list, file, 0));
+	return (ft_lst_to_array(list, file, 0, 0));
 }
 
 int				get_next_line(int const fd, char **line)
@@ -131,22 +130,24 @@ int				get_next_line(int const fd, char **line)
 	t_file			*file;
 	int				res;
 	int				ind;
+	char			*tmp;
 
 	ind = -1;
 	file = ft_find_file(&files, fd, &ind, 0);
-	if (!file || !line)
-		return (-1);
 	res = 1;
-	if (ind == -1)
-		res = ft_read_until_newline(file, &ind, 0, NULL);
-	if (res == -1)
+	if (!file || !line || (ind == -1
+			&& (res = ft_read_until_newline(file, &ind, 0, NULL)) == -1))
 		return (-1);
 	*line = (char*)malloc(sizeof(char) * (ind + 1));
 	(*line)[ind] = '\0';
 	if (file->content)
 		ft_strncpy(*line, file->content, ind);
 	if (file->content && file->content[ind])
-		file->content += ind + 1;
+	{
+		tmp = ft_strdup(file->content + ind + 1);
+		free(file->content);
+		file->content = tmp;
+	}
 	else
 		file->content = NULL;
 	return (res);
