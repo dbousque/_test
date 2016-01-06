@@ -5,7 +5,9 @@
 typedef struct		s_salle
 {
 	char			*name;
-	t_list			*accessible_salles;
+	struct s_salle	**accessible_salles;
+	t_list			*tmp_accessible_salles;
+	t_list			*tmp_accessible_salles_end;
 	//t_fourmi		*fourmi;
 	int				x_coord;
 	int				y_coord;
@@ -31,6 +33,8 @@ t_salle	*new_salle(char *name, int x_coord, int y_coord)
 	res->x_coord = x_coord;
 	res->y_coord = y_coord;
 	res->accessible_salles = NULL;
+	res->tmp_accessible_salles = NULL;
+	res->tmp_accessible_salles_end = NULL;
 	res->name = ft_strdup(name);
 	res->id = id;
 	id++;
@@ -193,11 +197,24 @@ t_salle	**list_to_salles(t_list *salles)
 char	is_tube_description(char *line)
 {
 	char	**parts;
+	int		i;
 
 	if (ft_strlen(line) < 3)
 		return (0);
 	if (!(parts = ft_strsplit(line, '-')) || strstrlen(parts) != 2)
+	{
+		i = 0;
+		while (parts[i])
+		{
+			free(parts[i]);
+			i++;
+		}
+		free(parts);
 		return (0);
+	}
+	free(parts[0]);
+	free(parts[1]);
+	free(parts);
 	return (1);
 }
 
@@ -254,7 +271,7 @@ t_salle	**parse_salles(t_salle **start_salle, t_salle **end_salle, char **line)
 	}
 	tube_description = is_tube_description(*line);
 	free(*line);
-	if (input_correct == -1 && !tube_description && !is_comment(*line))
+	if (input_correct == -1 || (!tube_description && !is_comment(*line)))
 		return (NULL);
 	return (list_to_salles(salles));
 }
@@ -265,6 +282,68 @@ void	put_salle(t_salle *salle)
 			salle->id, salle->name, salle->x_coord, salle->y_coord);
 }
 
+t_salle	*get_salle_by_name(t_salle **salles, char *name)
+{
+	int		i;
+
+	i = 0;
+	while (salles[i])
+	{
+		if (ft_strcmp(salles[i]->name, name) == 0)
+			return (salles[i]);
+		i++;
+	}
+	return (NULL);
+}
+
+int		add_tube_from_to(t_salle *from, t_salle *to)
+{
+	t_list	*new;
+
+	if (!(new = ft_lstnew(&to, sizeof(t_salle**))))
+		return (0);
+	ft_lstaddend(&(from->tmp_accessible_salles_end), new);
+	if (!(from->tmp_accessible_salles))
+		from->tmp_accessible_salles = from->tmp_accessible_salles_end;
+	return (1);
+}
+
+int		add_tubes(t_salle **salles, char *line)
+{
+	char	**parts;
+	t_salle	*first;
+	t_salle	*second;
+
+	if (!(parts = ft_strsplit(line, '-')))
+		return (0);
+	if (!(first = get_salle_by_name(salles, parts[0])))
+		return (0);
+	if (!(second = get_salle_by_name(salles, parts[1])))
+		return (0);
+	if (!(add_tube_from_to(first, second)))
+		return (0);
+	if (!(add_tube_from_to(second, first)))
+		return (0);
+	return (1);
+}
+
+int		get_tubes(t_salle **salles, char *line)
+{
+	while (is_tube_description(line) || is_comment(line))
+	{
+		if (!is_comment(line))
+		{
+			if (!(add_tubes(salles, line)))
+				return (0);
+		}
+		free(line);
+		if (get_next_line(0, &line) == -1)
+			return (0);
+	}
+	free(line);
+	return (1);
+}
+
 t_fourm	*get_fourmiliere(t_salle **start_salle, t_salle **end_salle)
 {
 	t_fourm	*res;
@@ -272,9 +351,13 @@ t_fourm	*get_fourmiliere(t_salle **start_salle, t_salle **end_salle)
 	char	*line;
 	int		i;
 
-	if (!(line = (char*)malloc(sizeof(char))))
-		return (NULL);
 	salles = parse_salles(start_salle, end_salle, &line);
+	if (!salles)
+		return (NULL);
+	if (!(*start_salle) || !(*end_salle))
+		return (NULL);
+	if (!(get_tubes(salles, line)))
+		return (NULL);
 	if (!salles)
 		return (NULL);
 	i = 0;
