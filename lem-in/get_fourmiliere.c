@@ -270,16 +270,38 @@ t_salle	**parse_salles(t_salle **start_salle, t_salle **end_salle, char **line)
 		input_correct = is_input_correct(*line);
 	}
 	tube_description = is_tube_description(*line);
-	free(*line);
 	if (input_correct == -1 || (!tube_description && !is_comment(*line)))
+	{
+		free(*line);
 		return (NULL);
+	}
 	return (list_to_salles(salles));
 }
 
 void	put_salle(t_salle *salle)
 {
+	int		i;
+
 	ft_printf("SALLE N %d :\n  - NAME : %s\n  - X : %d\n  - Y : %d\n",
 			salle->id, salle->name, salle->x_coord, salle->y_coord);
+	i = 0;
+	while (salle->accessible_salles && salle->accessible_salles[i])
+	{
+		ft_printf("     access : %d\n", salle->accessible_salles[i]->id);
+		i++;
+	}
+}
+
+void	put_salles(t_salle **salles)
+{
+	int		i;
+
+	i = 0;
+	while (salles[i])
+	{
+		put_salle(salles[i]);
+		i++;
+	}
 }
 
 t_salle	*get_salle_by_name(t_salle **salles, char *name)
@@ -344,12 +366,75 @@ int		get_tubes(t_salle **salles, char *line)
 	return (1);
 }
 
+int		listlen(t_list *list)
+{
+	int		length;
+
+	length = 0;
+	while (list)
+	{
+		length++;
+		list = list->next;
+	}
+	return (length);
+}
+
+int		accessible_list_to_array(t_salle **salles)
+{
+	t_list	*tmp;
+	int		i;
+	int		len;
+	int		x;
+
+	i = 0;
+	while (salles[i])
+	{
+		tmp = salles[i]->tmp_accessible_salles;
+		len = listlen(tmp);
+		if (!(salles[i]->accessible_salles = (t_salle**)malloc(sizeof(t_salle*)
+														* (len + 1))))
+			return (0);
+		salles[i]->accessible_salles[len] = NULL;
+		x = 0;
+		while (tmp)
+		{
+			salles[i]->accessible_salles[x] = ((t_salle*)*((t_salle**)tmp->content));
+			tmp = tmp->next;
+			x++;
+		}
+		i++;
+	}
+	return (1);
+}
+
+void	free_tmp_lists(t_salle **salles)
+{
+	int		i;
+	t_list	*tmp;
+	t_list	*tmp2;
+
+	i = 0;
+	while (salles[i])
+	{
+		tmp = salles[i]->tmp_accessible_salles;
+		while (tmp)
+		{
+			tmp2 = tmp->next;
+			free(tmp);
+			tmp = NULL;
+			tmp = tmp2;
+		}
+		salles[i]->tmp_accessible_salles = NULL;
+		salles[i]->tmp_accessible_salles_end = NULL;
+		i++;
+	}
+}
+
 t_fourm	*get_fourmiliere(t_salle **start_salle, t_salle **end_salle)
 {
 	t_fourm	*res;
 	t_salle	**salles;
 	char	*line;
-	int		i;
 
 	salles = parse_salles(start_salle, end_salle, &line);
 	if (!salles)
@@ -358,14 +443,11 @@ t_fourm	*get_fourmiliere(t_salle **start_salle, t_salle **end_salle)
 		return (NULL);
 	if (!(get_tubes(salles, line)))
 		return (NULL);
-	if (!salles)
+	if (!(accessible_list_to_array(salles)))
 		return (NULL);
-	i = 0;
-	while (salles[i])
-	{
-		put_salle(salles[i]);
-		i++;
-	}
+	free_tmp_lists(salles);
+	put_salles(salles);
+	ft_printf("END SALLE   : %d\nSTART SALLE : %d\n", (*end_salle)->id, (*start_salle)->id);
 	res = NULL;
 	return (res);
 }
