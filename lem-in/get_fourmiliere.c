@@ -190,37 +190,79 @@ t_salle	**list_to_salles(t_list *salles)
 	return (res);
 }
 
-t_salle	**parse_salles(t_salle **start_salle, t_salle **end_salle, char *line)
+char	is_tube_description(char *line)
+{
+	char	**parts;
+
+	if (ft_strlen(line) < 3)
+		return (0);
+	if (!(parts = ft_strsplit(line, '-')) || strstrlen(parts) != 2)
+		return (0);
+	return (1);
+}
+
+char	salle_name_already_used(t_list *salles, t_salle *salle)
+{
+	while (salles && salles->next)
+	{
+		if (ft_strcmp(((t_salle*)salles->content)->name, salle->name) == 0)
+			return (1);
+		salles = salles->next;
+	}
+	return (0);
+}
+
+char	is_comment(char *line)
+{
+	if (line[0] != '#')
+		return (0);
+	if (line[1] == '#' && line[2] != '#')
+		return (0);
+	return (1);
+}
+
+t_salle	**parse_salles(t_salle **start_salle, t_salle **end_salle, char **line)
 {
 	char	input_correct;
 	t_list	*salles;
 	t_list	*salles_end;
+	char	tube_description;
 
 	salles = NULL;
 	salles_end = NULL;
-	if (get_next_line(0, &line) == -1)
+	if (get_next_line(0, line) == -1)
 		return (NULL);
-	input_correct = is_input_correct(line);
-	while (input_correct == 1 && line && ft_strlen(line) > 0)
+	input_correct = is_input_correct(*line);
+	while (input_correct == 1 && line && ft_strlen(*line) > 0)
 	{
-		if (!(add_to_salles(&salles_end, &line, start_salle, end_salle)))
+		if (!(add_to_salles(&salles_end, line, start_salle, end_salle)))
 			return (NULL);
 		if (!salles)
 			salles = salles_end;
-		free(line);
-		if (get_next_line(0, &line) == -1)
+		free(*line);
+		if (salle_name_already_used(salles, (t_salle*)salles_end->content))
+		{
+			free(((t_salle*)salles_end->content)->name);
+			free(((t_salle*)salles_end->content));
+			free(salles_end);
+			salles_end = NULL;
 			return (NULL);
-		input_correct = is_input_correct(line);
+		}
+		if (get_next_line(0, line) == -1)
+			return (NULL);
+		input_correct = is_input_correct(*line);
 	}
-	free(line);
-	if (input_correct == -1)
+	tube_description = is_tube_description(*line);
+	free(*line);
+	if (input_correct == -1 && !tube_description && !is_comment(*line))
 		return (NULL);
 	return (list_to_salles(salles));
 }
 
 void	put_salle(t_salle *salle)
 {
-	ft_printf("SALLE N %d :\n  - NAME : %s\n  - X : %d\n  - Y : %d\n", salle->id, salle->name, salle->x_coord, salle->y_coord);
+	ft_printf("SALLE N %d :\n  - NAME : %s\n  - X : %d\n  - Y : %d\n",
+			salle->id, salle->name, salle->x_coord, salle->y_coord);
 }
 
 t_fourm	*get_fourmiliere(t_salle **start_salle, t_salle **end_salle)
@@ -232,7 +274,9 @@ t_fourm	*get_fourmiliere(t_salle **start_salle, t_salle **end_salle)
 
 	if (!(line = (char*)malloc(sizeof(char))))
 		return (NULL);
-	salles = parse_salles(start_salle, end_salle, line);
+	salles = parse_salles(start_salle, end_salle, &line);
+	if (!salles)
+		return (NULL);
 	i = 0;
 	while (salles[i])
 	{
