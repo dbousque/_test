@@ -342,6 +342,8 @@ int		add_tubes(t_salle **salles, char *line)
 		return (0);
 	if (!(second = get_salle_by_name(salles, parts[1])))
 		return (0);
+	if (first == second)
+		return (0);
 	if (!(add_tube_from_to(first, second)))
 		return (0);
 	if (!(add_tube_from_to(second, first)))
@@ -430,12 +432,30 @@ void	free_tmp_lists(t_salle **salles)
 	}
 }
 
-t_fourm	*get_fourmiliere(t_salle **start_salle, t_salle **end_salle)
+t_fourm	*salles_to_fourmiliere(int nb_fourmis, t_salle **salles,
+								t_salle *start_salle, t_salle *end_salle)
 {
 	t_fourm	*res;
+
+	if (!(res = (t_fourm*)malloc(sizeof(t_fourm))))
+		return (NULL);
+	res->nb_fourmis = nb_fourmis;
+	res->salles = salles;
+	res->start = start_salle;
+	res->end = end_salle;
+	return (res);
+}
+
+t_fourm	*get_fourmiliere(t_salle **start_salle, t_salle **end_salle)
+{
 	t_salle	**salles;
 	char	*line;
+	int		nb_fourmis;
 
+	if (get_next_line(0, &line) == -1 || !only_numbers(line) || line[0] == '0')
+		return (NULL);
+	nb_fourmis = ft_atoi(line);
+	free(line);
 	salles = parse_salles(start_salle, end_salle, &line);
 	if (!salles)
 		return (NULL);
@@ -448,8 +468,160 @@ t_fourm	*get_fourmiliere(t_salle **start_salle, t_salle **end_salle)
 	free_tmp_lists(salles);
 	put_salles(salles);
 	ft_printf("END SALLE   : %d\nSTART SALLE : %d\n", (*end_salle)->id, (*start_salle)->id);
-	res = NULL;
+	return (salles_to_fourmiliere(nb_fourmis, salles, *start_salle, *end_salle));
+}
+
+int		min_end_start(t_fourm *fourmiliere)
+{
+	int		len_start;
+	int		len_end;
+
+	len_start = 0;
+	while (fourmiliere->start->accessible_salles[len_start])
+		len_start++;
+	len_end = 0;
+	while (fourmiliere->end->accessible_salles[len_end])
+		len_end++;
+	if (len_end < len_start)
+		return (len_end);
+	return (len_start);
+}
+
+char	no_shared_salle(t_list *tmp, t_list *visited_salles)
+{
+	t_list	*tmp2;
+
+	while (tmp)
+	{
+		tmp2 = visited_salles;
+		while (tmp2)
+		{
+			if (*((int*)tmp->content) == *((int*)tmp2->content))
+				return (0);
+			tmp2 = tmp2->next;
+		}
+		tmp = tmp->next;
+	}
+	return (1);
+}
+
+void	add_salles_to_visited_salles(t_list *path, t_list **visited_salles,
+												t_list **visited_salles_end)
+{
+	t_list	*tmp;
+
+	tmp = path;
+	while (tmp)
+	{
+		ft_lstaddend(visited_salles_end, ft_lstnew((int*)tmp->content, sizeof(int)));
+		if (!*visited_salles)
+			*visited_salles = *visited_salles_end;
+		tmp = tmp->next;
+	}
+}
+
+int		**path_to_int_paths(t_list **best_paths, int nb_paths)
+{
+	int		**res;
+	t_list	*tmp;
+	int		x;
+	int		i;
+
+	if (!(res = (int**)malloc(sizeof(int*) * (nb_paths + 1))))
+		return (NULL);
+	res[nb_paths] = NULL;
+	i = 0;
+	while (i < nb_paths)
+	{
+		if (!(res[i] = (int*)malloc(sizeof(int) * listlen(best_paths[i]))))
+			return (NULL);
+		x = 0;
+		tmp = best_paths[i];
+		while (tmp)
+		{
+			res[i][x] = *((int*)tmp->content);
+			x++;
+			tmp = tmp->next;
+		}
+		i++;
+	}
 	return (res);
+}
+
+int		**find_suitable_paths(t_list *finished_paths, int nb_paths)
+{
+	t_list	*best_paths[nb_paths];
+	int		i;
+	int		x;
+	int		nb;
+	int		len;
+	t_list	*tmp;
+	t_list	*visited_salles;
+	t_list	*visited_salles_end;
+
+	visited_salles = NULL;
+	visited_salles_end = NULL;
+	if (!finished_paths)
+		return (NULL);
+	len = listlen(finished_paths);
+	if (nb_paths == 1)
+		return (path_to_int_paths((t_list**)(finished_paths->content), 1));
+	i = 0;
+	while (i < len - nb_paths)
+	{
+		best_paths[0] = (t_list*)finished_paths->content;
+		visited_salles = NULL;
+		visited_salles_end = NULL;
+		add_salles_to_visited_salles(best_paths[0], &visited_salles, &visited_salles_end);
+		nb = 1;
+		x = i + 1;
+		tmp = finished_paths->next;
+		while (x < len)
+		{
+			if (no_shared_salle(tmp, visited_salles))
+			{
+				best_paths[nb] = (t_list*)tmp->content;
+				add_salles_to_visited_salles(best_paths[nb], &visited_salles, &visited_salles_end);
+				nb++;
+			}
+			if (nb == nb_paths)
+				return (path_to_int_paths(best_paths, nb_paths));
+			tmp = tmp->next;
+			x++;
+		}
+		finished_paths = finished_paths->next;
+		i++;
+	}
+	return (NULL);
+}
+
+void	add_step_to_paths(t_list **paths, t_list **paths_end,
+						t_list **finished_paths, t_list **finished_paths_end)
+{
+	
+}
+
+int		**find_best_paths(t_fourm *fourmiliere, int nb_paths)
+{
+	int		**res;
+	t_list	*paths;
+	t_list	*paths_end;
+	t_list	*finished_paths;
+	t_list	*finished_paths_end;
+
+	paths = NULL;
+	paths_end = NULL;
+	finished_paths = NULL;
+	finished_paths_end = NULL;
+	while (!(res = find_suitable_paths(finished_paths, nb_paths)))
+		add_step_to_paths(&paths, &paths_end, &finished_paths, &finished_paths_end);
+	return (res);
+}
+
+int		ft_error(void)
+{
+	ft_putendl_fd("ERROR", 2);
+	return (0);
 }
 
 int		main(void)
@@ -457,8 +629,17 @@ int		main(void)
 	t_fourm	*fourmiliere;
 	t_salle	*start_salle;
 	t_salle	*end_salle;
+	int		nb_paths_to_find;
+	int		**best_paths;
 
 	start_salle = NULL;
 	end_salle = NULL;
-	fourmiliere = get_fourmiliere(&start_salle, &end_salle);
+	if (!(fourmiliere = get_fourmiliere(&start_salle, &end_salle)))
+		return (ft_error());
+	if (!(nb_paths_to_find = min_end_start(fourmiliere)))
+		return (ft_error());
+	if (!(best_paths = find_best_paths(fourmiliere, nb_paths_to_find)))
+		return (ft_error());
+	ft_printf("%p\n", fourmiliere->end);
+	return (0);
 }
