@@ -604,17 +604,21 @@ t_list	*copy_list(t_list *path)
 
 	ints = NULL;
 	ints_end = NULL;
-	tmp = (t_list*)path->content;
+	tmp = path;
 	while (tmp)
 	{
+		ft_putendl("TOUR");
 		ft_lstaddend(&ints_end, ft_lstnew((int*)tmp->content, sizeof(int)));
+		ft_putendl("AFTER TOUR");
 		if (!ints)
 			ints = ints_end;
 		tmp = tmp->next;
 	}
+	ints_end->next = NULL;
 	if (!(res = ft_lstnew(ints, sizeof(t_list*))))
 		return (NULL);
-	return (res);
+	ft_putendl("SORTIE");
+	return (ints); //return (res);
 }
 
 int		add_paths_from_salle(t_salle *salle, t_list *path, t_list **paths_end, t_list **finished_paths_end, t_fourm *fourmiliere)
@@ -679,7 +683,28 @@ int		add_step_to_paths(t_list **paths, t_list **paths_end, t_list **finished_pat
 		tmp = tmp2;
 		len--;
 	}
+	*paths = tmp;
 	return (1);
+}
+
+void	put_path(t_list *path)
+{
+	while (path)
+	{
+		ft_putnbr(*(int*)path->content);
+		ft_putstr(", ");
+		path = path->next;
+	}
+	ft_putchar('\n');
+}
+
+void	put_paths(t_list *paths)
+{
+	while (paths)
+	{
+		put_path((t_list*)paths->content);
+		paths = paths->next;
+	}
 }
 
 int		**find_best_paths(t_fourm *fourmiliere, int nb_paths)
@@ -694,7 +719,9 @@ int		**find_best_paths(t_fourm *fourmiliere, int nb_paths)
 		return (NULL);
 	if (!(paths->content = (t_list*)malloc(sizeof(t_list))))
 		return (NULL);
+	paths->next = NULL;
 	((t_list*)paths->content)->content = &fourmiliere->start->id;
+	((t_list*)paths->content)->next = NULL;
 	/*if (!(paths_end = ft_lstnew(&fourmiliere->start->id, sizeof(int))))
 		return (NULL);
 	if (!(paths = ft_lstnew(&paths_end, sizeof(t_list*))))
@@ -712,6 +739,7 @@ int		**find_best_paths(t_fourm *fourmiliere, int nb_paths)
 		ft_putendl("LOl2");
 		if (!(add_step_to_paths(&paths, &paths_end, &finished_paths, &finished_paths_end, fourmiliere)))
 			return (NULL);
+		put_paths(paths);
 		ft_putendl("LOL3");
 	}
 	return (res);
