@@ -572,7 +572,16 @@ void	put_paths(t_list *paths)
 	}
 }
 
-int		**find_suitable_paths(t_list *finished_paths, int nb_paths, t_fourm *fourmiliere)
+int		turns_required_for_n_fourmis(t_list *path, int nb_fourmis)
+{
+	int		res;
+
+	put_path(path);
+	res = nb_fourmis - 1 + (listlen(path) - 1);
+	return (res);
+}
+
+int		**find_suitable_paths(t_list *finished_paths, int nb_paths, t_fourm *fourmiliere, int current_path_length)
 {
 	t_list	*best_paths[nb_paths];
 	int		i;
@@ -594,6 +603,7 @@ int		**find_suitable_paths(t_list *finished_paths, int nb_paths, t_fourm *fourmi
 	while (i <= len - nb_paths)
 	{
 		best_paths[0] = (t_list*)finished_paths->content;
+		ft_printf("turns required : %d\n", turns_required_for_n_fourmis(best_paths[0], 3));
 		visited_salles = NULL;
 		visited_salles_end = NULL;
 		add_salles_to_visited_salles(best_paths[0], &visited_salles, &visited_salles_end, fourmiliere);
@@ -709,6 +719,7 @@ int		add_step_to_paths(t_list **paths, t_list **paths_end, t_list **finished_pat
 int		**find_best_paths(t_fourm *fourmiliere, int nb_paths, t_list **finished_paths)
 {
 	int		**res;
+	int		current_path_length;
 	t_list	*paths;
 	t_list	*paths_end;
 	t_list	*finished_paths_end;
@@ -720,16 +731,18 @@ int		**find_best_paths(t_fourm *fourmiliere, int nb_paths, t_list **finished_pat
 	paths->next = NULL;
 	((t_list*)paths->content)->content = &fourmiliere->start->id;
 	((t_list*)paths->content)->next = NULL;
+	current_path_length = 0;
 	ft_printf("last salle : %d\n", *((int*)(((t_list*)paths->content)->content)));
 	//free((int*)paths_end->content);
 	//free(paths_end);
 	paths_end = paths;
 	*finished_paths = NULL;
 	finished_paths_end = NULL;
-	while (!(res = find_suitable_paths(*finished_paths, nb_paths, fourmiliere)) && paths)
+	while (!(res = find_suitable_paths(*finished_paths, nb_paths, fourmiliere, current_path_length)) && paths)
 	{
 		if (!(add_step_to_paths(&paths, &paths_end, finished_paths, &finished_paths_end, fourmiliere)))
 			return (NULL);
+		current_path_length++;
 	}
 	put_paths(*finished_paths);
 	return (res);
@@ -780,7 +793,7 @@ int		main(void)
 	if (!(best_paths = find_best_paths(fourmiliere, nb_paths_to_find, &finished_paths)))
 	{
 		nb_paths_to_find--;
-		while (nb_paths_to_find > 0 && !(best_paths = find_suitable_paths(finished_paths, nb_paths_to_find, fourmiliere)))
+		while (nb_paths_to_find > 0 && !(best_paths = find_suitable_paths(finished_paths, nb_paths_to_find, fourmiliere, -1)))
 			nb_paths_to_find--;
 		if (!best_paths)
 			return (ft_error());
