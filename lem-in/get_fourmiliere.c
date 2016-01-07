@@ -506,16 +506,20 @@ char	no_shared_salle(t_list *tmp, t_list *visited_salles)
 }
 
 void	add_salles_to_visited_salles(t_list *path, t_list **visited_salles,
-												t_list **visited_salles_end)
+							t_list **visited_salles_end, t_fourm *fourmiliere)
 {
 	t_list	*tmp;
 
 	tmp = path;
 	while (tmp)
 	{
-		ft_lstaddend(visited_salles_end, ft_lstnew((int*)tmp->content, sizeof(int)));
-		if (!*visited_salles)
-			*visited_salles = *visited_salles_end;
+		if (*(int*)tmp->content != fourmiliere->end->id
+			&& *(int*)tmp->content != fourmiliere->start->id)
+		{
+			ft_lstaddend(visited_salles_end, ft_lstnew((int*)tmp->content, sizeof(int)));
+			if (!*visited_salles)
+				*visited_salles = *visited_salles_end;
+		}
 		tmp = tmp->next;
 	}
 }
@@ -548,7 +552,27 @@ int		**path_to_int_paths(t_list **best_paths, int nb_paths)
 	return (res);
 }
 
-int		**find_suitable_paths(t_list *finished_paths, int nb_paths)
+void	put_path(t_list *path)
+{
+	while (path)
+	{
+		ft_putnbr(*(int*)path->content);
+		ft_putstr(", ");
+		path = path->next;
+	}
+	ft_putchar('\n');
+}
+
+void	put_paths(t_list *paths)
+{
+	while (paths)
+	{
+		put_path((t_list*)paths->content);
+		paths = paths->next;
+	}
+}
+
+int		**find_suitable_paths(t_list *finished_paths, int nb_paths, t_fourm *fourmiliere)
 {
 	t_list	*best_paths[nb_paths];
 	int		i;
@@ -572,16 +596,20 @@ int		**find_suitable_paths(t_list *finished_paths, int nb_paths)
 		best_paths[0] = (t_list*)finished_paths->content;
 		visited_salles = NULL;
 		visited_salles_end = NULL;
-		add_salles_to_visited_salles(best_paths[0], &visited_salles, &visited_salles_end);
+		add_salles_to_visited_salles(best_paths[0], &visited_salles, &visited_salles_end, fourmiliere);
 		nb = 1;
 		x = i + 1;
 		tmp = finished_paths->next;
 		while (x < len)
 		{
-			if (no_shared_salle(tmp, visited_salles))
+			ft_putstr("tmp : ");
+			put_path((t_list*)tmp->content);
+			ft_putstr("visited : ");
+			put_path(visited_salles);
+			if (no_shared_salle((t_list*)tmp->content, visited_salles))
 			{
 				best_paths[nb] = (t_list*)tmp->content;
-				add_salles_to_visited_salles(best_paths[nb], &visited_salles, &visited_salles_end);
+				add_salles_to_visited_salles(best_paths[nb], &visited_salles, &visited_salles_end, fourmiliere);
 				nb++;
 			}
 			if (nb == nb_paths)
@@ -607,9 +635,7 @@ t_list	*copy_list(t_list *path)
 	tmp = path;
 	while (tmp)
 	{
-		ft_putendl("TOUR");
 		ft_lstaddend(&ints_end, ft_lstnew((int*)tmp->content, sizeof(int)));
-		ft_putendl("AFTER TOUR");
 		if (!ints)
 			ints = ints_end;
 		tmp = tmp->next;
@@ -617,7 +643,6 @@ t_list	*copy_list(t_list *path)
 	ints_end->next = NULL;
 	if (!(res = ft_lstnew(ints, sizeof(t_list*))))
 		return (NULL);
-	ft_putendl("SORTIE");
 	return (ints); //return (res);
 }
 
@@ -629,7 +654,6 @@ int		add_paths_from_salle(t_salle *salle, t_list *path, t_list **paths_end, t_li
 	t_list	*new_list;
 
 	i = 0;
-	ft_putendl("add_paths-1");
 	while (salle->accessible_salles[i])
 	{
 		tmp = path;
@@ -642,15 +666,18 @@ int		add_paths_from_salle(t_salle *salle, t_list *path, t_list **paths_end, t_li
 		}
 		if (not_found)
 		{
-			ft_putendl("add_paths0");
 			if (!(new_list = copy_list(path)))
 				return (0);
-			ft_putendl("add_paths1");
 			ft_lstadd(&new_list, ft_lstnew(&salle->accessible_salles[i]->id, sizeof(int)));
 			if (*((int*)new_list->content) == fourmiliere->end->id)
-				ft_lstaddend(finished_paths_end, new_list);
+			{
+				ft_putendl("ADDDDEEEEDDD !!!");
+				ft_lstaddend(finished_paths_end, ft_lstnew(new_list, sizeof(t_list)));
+				//put_paths(*finished_paths_end);
+			}
 			else
-				ft_lstaddend(paths_end, new_list);
+				ft_lstaddend(paths_end, ft_lstnew(new_list, sizeof(t_list)));
+			//ft_printf("content : %d, content->content : %d, content->next->content : %d\n", (*paths_end)->content, *(int*)((t_list*)((*paths_end)->content))->content, *(int*)((t_list*)((t_list*)(*paths_end)->content)->next)->content);
 		}
 		i++;
 	}
@@ -669,15 +696,11 @@ int		add_step_to_paths(t_list **paths, t_list **paths_end, t_list **finished_pat
 	tmp = *paths;
 	while (tmp && len > 0)
 	{
-		ft_putendl("add0");
-		ft_printf("last salle : %d\n", *(int*)(((t_list*)tmp->content)->content));
 		last_salle = fourmiliere->salles[*(int*)(((t_list*)tmp->content)->content)];
-		ft_putendl("add1");
 		if (!(add_paths_from_salle(last_salle, (t_list*)tmp->content, paths_end, finished_paths_end, fourmiliere)))
 			return (0);
-		ft_putendl("add2");
-		if (!*finished_paths && *finished_paths_end)
-			finished_paths = finished_paths_end;
+		if (!(*finished_paths) && *finished_paths_end)
+			*finished_paths = *finished_paths_end;
 		tmp2 = tmp->next;
 		free(tmp);
 		tmp = tmp2;
@@ -685,26 +708,6 @@ int		add_step_to_paths(t_list **paths, t_list **paths_end, t_list **finished_pat
 	}
 	*paths = tmp;
 	return (1);
-}
-
-void	put_path(t_list *path)
-{
-	while (path)
-	{
-		ft_putnbr(*(int*)path->content);
-		ft_putstr(", ");
-		path = path->next;
-	}
-	ft_putchar('\n');
-}
-
-void	put_paths(t_list *paths)
-{
-	while (paths)
-	{
-		put_path((t_list*)paths->content);
-		paths = paths->next;
-	}
 }
 
 int		**find_best_paths(t_fourm *fourmiliere, int nb_paths)
@@ -722,27 +725,40 @@ int		**find_best_paths(t_fourm *fourmiliere, int nb_paths)
 	paths->next = NULL;
 	((t_list*)paths->content)->content = &fourmiliere->start->id;
 	((t_list*)paths->content)->next = NULL;
-	/*if (!(paths_end = ft_lstnew(&fourmiliere->start->id, sizeof(int))))
-		return (NULL);
-	if (!(paths = ft_lstnew(&paths_end, sizeof(t_list*))))
-		return (NULL);*/
-	//ft_printf("start id : %d\n", *((int*)paths_end->content));
 	ft_printf("last salle : %d\n", *((int*)(((t_list*)paths->content)->content)));
 	//free((int*)paths_end->content);
 	//free(paths_end);
 	paths_end = paths;
 	finished_paths = NULL;
 	finished_paths_end = NULL;
-	ft_putendl("LOL");
-	while (!(res = find_suitable_paths(finished_paths, nb_paths)) && paths)
+	while (!(res = find_suitable_paths(finished_paths, nb_paths, fourmiliere)) && paths)
 	{
-		ft_putendl("LOl2");
 		if (!(add_step_to_paths(&paths, &paths_end, &finished_paths, &finished_paths_end, fourmiliere)))
 			return (NULL);
-		put_paths(paths);
-		ft_putendl("LOL3");
 	}
+	put_paths(finished_paths);
 	return (res);
+}
+
+void	put_best_paths(int **best_paths)
+{
+	int		i;
+	int		x;
+
+	i = 0;
+	ft_putendl("BEST PATHS :");
+	while (best_paths[i])
+	{
+		x = 0;
+		while (best_paths[i][x])
+		{
+			ft_putnbr(best_paths[i][x]);
+			ft_putstr(", ");
+			x++;
+		}
+		i++;
+		ft_putchar('\n');
+	}
 }
 
 int		ft_error(void)
@@ -767,6 +783,7 @@ int		main(void)
 		return (ft_error());
 	if (!(best_paths = find_best_paths(fourmiliere, nb_paths_to_find)))
 		return (ft_error());
+	put_best_paths(best_paths);
 	ft_printf("%p\n", fourmiliere->end);
 	return (0);
 }
