@@ -595,10 +595,91 @@ int		**find_suitable_paths(t_list *finished_paths, int nb_paths)
 	return (NULL);
 }
 
-void	add_step_to_paths(t_list **paths, t_list **paths_end,
-						t_list **finished_paths, t_list **finished_paths_end)
+t_list	*copy_list(t_list *path)
 {
-	
+	t_list	*ints;
+	t_list	*ints_end;
+	t_list	*res;
+	t_list	*tmp;
+
+	ints = NULL;
+	ints_end = NULL;
+	tmp = (t_list*)path->content;
+	while (tmp)
+	{
+		ft_lstaddend(&ints_end, ft_lstnew((int*)tmp->content, sizeof(int)));
+		if (!ints)
+			ints = ints_end;
+		tmp = tmp->next;
+	}
+	if (!(res = ft_lstnew(ints, sizeof(t_list*))))
+		return (NULL);
+	return (res);
+}
+
+int		add_paths_from_salle(t_salle *salle, t_list *path, t_list **paths_end, t_list **finished_paths_end, t_fourm *fourmiliere)
+{
+	int		i;
+	t_list	*tmp;
+	int		not_found;
+	t_list	*new_list;
+
+	i = 0;
+	ft_putendl("add_paths-1");
+	while (salle->accessible_salles[i])
+	{
+		tmp = path;
+		not_found = 1;
+		while (tmp && not_found)
+		{
+			if (*(int*)(tmp->content) == salle->accessible_salles[i]->id)
+				not_found = 0;
+			tmp = tmp->next;
+		}
+		if (not_found)
+		{
+			ft_putendl("add_paths0");
+			if (!(new_list = copy_list(path)))
+				return (0);
+			ft_putendl("add_paths1");
+			ft_lstadd(&new_list, ft_lstnew(&salle->accessible_salles[i]->id, sizeof(int)));
+			if (*((int*)new_list->content) == fourmiliere->end->id)
+				ft_lstaddend(finished_paths_end, new_list);
+			else
+				ft_lstaddend(paths_end, new_list);
+		}
+		i++;
+	}
+	return (1);
+}
+
+int		add_step_to_paths(t_list **paths, t_list **paths_end, t_list **finished_paths,
+						t_list **finished_paths_end, t_fourm *fourmiliere)
+{
+	t_list	*tmp;
+	t_list	*tmp2;
+	t_salle	*last_salle;
+	int		len;
+
+	len = listlen(*paths);
+	tmp = *paths;
+	while (tmp && len > 0)
+	{
+		ft_putendl("add0");
+		ft_printf("last salle : %d\n", *(int*)(((t_list*)tmp->content)->content));
+		last_salle = fourmiliere->salles[*(int*)(((t_list*)tmp->content)->content)];
+		ft_putendl("add1");
+		if (!(add_paths_from_salle(last_salle, (t_list*)tmp->content, paths_end, finished_paths_end, fourmiliere)))
+			return (0);
+		ft_putendl("add2");
+		if (!*finished_paths && *finished_paths_end)
+			finished_paths = finished_paths_end;
+		tmp2 = tmp->next;
+		free(tmp);
+		tmp = tmp2;
+		len--;
+	}
+	return (1);
 }
 
 int		**find_best_paths(t_fourm *fourmiliere, int nb_paths)
@@ -609,12 +690,30 @@ int		**find_best_paths(t_fourm *fourmiliere, int nb_paths)
 	t_list	*finished_paths;
 	t_list	*finished_paths_end;
 
-	paths = NULL;
-	paths_end = NULL;
+	if (!(paths = (t_list*)malloc(sizeof(t_list))))
+		return (NULL);
+	if (!(paths->content = (t_list*)malloc(sizeof(t_list))))
+		return (NULL);
+	((t_list*)paths->content)->content = &fourmiliere->start->id;
+	/*if (!(paths_end = ft_lstnew(&fourmiliere->start->id, sizeof(int))))
+		return (NULL);
+	if (!(paths = ft_lstnew(&paths_end, sizeof(t_list*))))
+		return (NULL);*/
+	//ft_printf("start id : %d\n", *((int*)paths_end->content));
+	ft_printf("last salle : %d\n", *((int*)(((t_list*)paths->content)->content)));
+	//free((int*)paths_end->content);
+	//free(paths_end);
+	paths_end = paths;
 	finished_paths = NULL;
 	finished_paths_end = NULL;
-	while (!(res = find_suitable_paths(finished_paths, nb_paths)))
-		add_step_to_paths(&paths, &paths_end, &finished_paths, &finished_paths_end);
+	ft_putendl("LOL");
+	while (!(res = find_suitable_paths(finished_paths, nb_paths)) && paths)
+	{
+		ft_putendl("LOl2");
+		if (!(add_step_to_paths(&paths, &paths_end, &finished_paths, &finished_paths_end, fourmiliere)))
+			return (NULL);
+		ft_putendl("LOL3");
+	}
 	return (res);
 }
 
