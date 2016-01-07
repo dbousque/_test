@@ -22,6 +22,25 @@ typedef struct	s_fourm
 	t_salle		*end;
 }				t_fourm;
 
+typedef struct	s_fourmi
+{
+	int			*path;
+	int			current_salle;
+	int			id;
+}				t_fourmi;
+
+t_fourmi *new_fourmi(int *path, int path_len)
+{
+	static int	id = 1;
+	t_fourmi	*res;
+
+	if (!(res = (t_fourmi*)malloc(sizeof(t_fourmi))))
+		return (NULL);
+	res->path = path;
+	res->current_salle = path_len - 1;
+	return (res);
+}
+
 t_salle	*new_salle(char *name, int x_coord, int y_coord)
 {
 	static int	id = 0;
@@ -572,16 +591,31 @@ void	put_paths(t_list *paths)
 	}
 }
 
-int		turns_required_for_n_fourmis(t_list *path, int nb_fourmis)
+int		turns_required_for_n_fourmis(int path_len, int nb_fourmis)
 {
 	int		res;
 
-	put_path(path);
-	res = nb_fourmis - 1 + (listlen(path) - 1);
+	res = nb_fourmis - 1 + (path_len - 1);
 	return (res);
 }
 
-int		**find_suitable_paths(t_list *finished_paths, int nb_paths, t_fourm *fourmiliere, int current_path_length)
+char	adding_path_will_make_way_longer(t_list **best_paths, int nb_best, int current_path_len, int nb_fourmis)
+{
+	int		steps_without;
+	int		steps_with;
+
+	//(void)best_paths;
+	//(void)nb_best;
+	//(void)current_path_len;
+	//(void)nb_fourmis;
+	steps_without = turns_required_for_n_fourmis(listlen(best_paths[nb_best - 1]), nb_fourmis / nb_best);
+	steps_with = turns_required_for_n_fourmis(current_path_len, 1);
+	if (steps_without <= steps_with)
+		return (1);
+	return (0);
+}
+
+int		**find_suitable_paths(t_list *finished_paths, int nb_paths, t_fourm *fourmiliere)
 {
 	t_list	*best_paths[nb_paths];
 	int		i;
@@ -603,7 +637,7 @@ int		**find_suitable_paths(t_list *finished_paths, int nb_paths, t_fourm *fourmi
 	while (i <= len - nb_paths)
 	{
 		best_paths[0] = (t_list*)finished_paths->content;
-		ft_printf("turns required : %d\n", turns_required_for_n_fourmis(best_paths[0], 3));
+		ft_printf("turns required : %d\n", turns_required_for_n_fourmis(listlen(best_paths[0]), 3));
 		visited_salles = NULL;
 		visited_salles_end = NULL;
 		add_salles_to_visited_salles(best_paths[0], &visited_salles, &visited_salles_end, fourmiliere);
@@ -612,10 +646,13 @@ int		**find_suitable_paths(t_list *finished_paths, int nb_paths, t_fourm *fourmi
 		tmp = finished_paths->next;
 		while (x < len)
 		{
+			if (adding_path_will_make_way_longer(best_paths, nb, listlen((t_list*)tmp->content), fourmiliere->nb_fourmis))
+				return (path_to_int_paths(best_paths, nb));
 			if (no_shared_salle((t_list*)tmp->content, visited_salles))
 			{
 				best_paths[nb] = (t_list*)tmp->content;
 				add_salles_to_visited_salles(best_paths[nb], &visited_salles, &visited_salles_end, fourmiliere);
+
 				nb++;
 			}
 			if (nb == nb_paths)
@@ -738,7 +775,7 @@ int		**find_best_paths(t_fourm *fourmiliere, int nb_paths, t_list **finished_pat
 	paths_end = paths;
 	*finished_paths = NULL;
 	finished_paths_end = NULL;
-	while (!(res = find_suitable_paths(*finished_paths, nb_paths, fourmiliere, current_path_length)) && paths)
+	while (!(res = find_suitable_paths(*finished_paths, nb_paths, fourmiliere)) && paths)
 	{
 		if (!(add_step_to_paths(&paths, &paths_end, finished_paths, &finished_paths_end, fourmiliere)))
 			return (NULL);
@@ -769,6 +806,62 @@ void	put_best_paths(int **best_paths)
 	}
 }
 
+int		intintlen(int **intint)
+{
+	int		i;
+
+	i = 0;
+	while (intint[i])
+		i++;
+	return (i);
+}
+
+int		int_tab_len(int *tab)
+{
+	int		i;
+
+	i = 0;
+	while (tab[i])
+		i++;
+	return (i);
+}
+
+int		*get_paths_len(int **best_paths, int nb_paths)
+{
+	int		i;
+	int		*res;
+
+	if (!(res = (int*)malloc(sizeof(int) * (nb_paths + 1))))
+		return (NULL);
+	res[nb_paths] = NULL;
+	i = 0;
+	while (i < nb_paths)
+	{
+		res[i] = int_tab_len(best_paths[i]);
+		i++;
+	}
+	return (res);
+}
+
+void	make_fourmis_travel(int **best_paths, t_fourm *fourmiliere)
+{
+	int		i;
+	int		nb_paths;
+	int		*paths_len;
+	t_list	*fourmis;
+	t_list	*fourmis_end;
+
+	nb_paths = intintlen(best_paths);
+	if (!(paths_len = get_paths_len(best_paths, nb_paths)))
+		return (ft_error());
+	fourmis = NULL;
+	while (fourmiliere->nb_fourmis > 0)
+	{
+		
+	}
+	return (0);
+}
+
 int		ft_error(void)
 {
 	ft_putendl_fd("ERROR", 2);
@@ -793,12 +886,11 @@ int		main(void)
 	if (!(best_paths = find_best_paths(fourmiliere, nb_paths_to_find, &finished_paths)))
 	{
 		nb_paths_to_find--;
-		while (nb_paths_to_find > 0 && !(best_paths = find_suitable_paths(finished_paths, nb_paths_to_find, fourmiliere, -1)))
+		while (nb_paths_to_find > 0 && !(best_paths = find_suitable_paths(finished_paths, nb_paths_to_find, fourmiliere)))
 			nb_paths_to_find--;
 		if (!best_paths)
 			return (ft_error());
 	}
 	put_best_paths(best_paths);
-	ft_printf("%p\n", fourmiliere->end);
-	return (0);
+	return (make_fourmis_travel(best_paths, fourmiliere));
 }
