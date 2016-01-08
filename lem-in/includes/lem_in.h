@@ -45,5 +45,11 @@ char			is_start_or_end_salle(char **line, t_salle **start_salle,
 int				strstrlen(char **strstr);
 char			add_to_salles(t_list **salles_end, char **line,
 									t_salle **str_end[2], t_list **lines_end);
+void			put_salle(t_salle *salle);
+void			put_salles(t_salle **salles);
+int				get_tubes(t_salle **salles, char *line, t_list **lines_end);
+t_fourm			*get_fourmiliere(t_salle **start_salle, t_salle **end_salle,
+																t_list **lines);
+int				listlen(t_list *list);
 
 #endif
