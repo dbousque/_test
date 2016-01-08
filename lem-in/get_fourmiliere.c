@@ -6,7 +6,7 @@
 /*   By: dbousque <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/08 12:28:37 by dbousque          #+#    #+#             */
-/*   Updated: 2016/01/08 15:20:38 by dbousque         ###   ########.fr       */
+/*   Updated: 2016/01/08 15:45:14 by dbousque         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -721,7 +721,6 @@ int		add_paths_from_salle(t_list *path, t_list **paths_end,
 {
 	int		i;
 	t_list	*tmp;
-	int		not_found;
 	t_salle	*salle;
 
 	salle = fourm->salles[*((int*)path->content)];
@@ -729,14 +728,9 @@ int		add_paths_from_salle(t_list *path, t_list **paths_end,
 	while (salle->accessible_salles[i])
 	{
 		tmp = path;
-		not_found = 1;
-		while (tmp && not_found)
-		{
-			if (*(int*)(tmp->content) == salle->accessible_salles[i]->id)
-				not_found = 0;
+		while (tmp && *(int*)(tmp->content) != salle->accessible_salles[i]->id)
 			tmp = tmp->next;
-		}
-		if (not_found)
+		if (!tmp)
 		{
 			if (!((salle->accessible_salles[i]->id == fourm->end->id)
 			? new_path(path, &salle->accessible_salles[i]->id, fin_paths_end)
