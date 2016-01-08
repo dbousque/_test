@@ -26,6 +26,8 @@ char	only_numbers(char *str)
 {
 	int		i;
 
+	if (*str == '-')
+		str++;
 	if (ft_strlen(str) < 1)
 		return (0);
 	i = 0;
