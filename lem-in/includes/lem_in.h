@@ -51,5 +51,26 @@ int				get_tubes(t_salle **salles, char *line, t_list **lines_end);
 t_fourm			*get_fourmiliere(t_salle **start_salle, t_salle **end_salle,
 																t_list **lines);
 int				listlen(t_list *list);
+int				**find_suitable_paths(t_list *finished_paths, int nb_paths,
+														t_fourm *fourmiliere);
+void			put_path(t_list *path);
+void			put_paths(t_list *paths);
+char			lon(t_list **best_paths, int nb_best, int current_path_len,
+																int nb_fourmis);
+int				**path_to_int_paths(t_list **best_paths, int nb_paths);
+char			no_shared_salle(t_list *tmp, t_list *visited_salles);
+int				**find_best_paths(t_fourm *fourm, int nb_paths,
+													t_list **finished_paths);
+int				ft_error(void);
+void			put_lines(t_list *lines);
+int				make_fourmi_travel(int **best_paths, t_fourm *fourmiliere,
+											int nb_paths, t_list *fourmis_end);
+int				turns_required_for_n_fourmis(int path_len, int nb_fourmis);
+char			lon(t_list **best_paths, int nb_best, int current_path_len,
+																int nb_fourmis);
+void			put_best_paths(int **best_paths);
+int				intintlen(int **intint);
+int				int_tab_len(int *tab);
+int				*get_paths_len(int **best_paths, int nb_paths);
 
 #endif

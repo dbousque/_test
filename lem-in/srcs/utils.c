@@ -6,7 +6,7 @@
 /*   By: dbousque <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/08 16:55:02 by dbousque          #+#    #+#             */
-/*   Updated: 2016/01/08 16:55:18 by dbousque         ###   ########.fr       */
+/*   Updated: 2016/01/08 18:02:19 by dbousque         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,5 +35,25 @@ void	put_salles(t_salle **salles)
 	{
 		put_salle(salles[i]);
 		i++;
+	}
+}
+
+void	put_path(t_list *path)
+{
+	while (path)
+	{
+		ft_putnbr(*(int*)path->content);
+		ft_putstr(", ");
+		path = path->next;
+	}
+	ft_putchar('\n');
+}
+
+void	put_paths(t_list *paths)
+{
+	while (paths)
+	{
+		put_path((t_list*)paths->content);
+		paths = paths->next;
 	}
 }
