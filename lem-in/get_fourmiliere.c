@@ -1,33 +1,16 @@
-
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   get_fourmiliere.c                                  :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: dbousque <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2016/01/08 12:28:37 by dbousque          #+#    #+#             */
+/*   Updated: 2016/01/08 13:13:19 by dbousque         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
 #include "lem_in.h"
-
-typedef struct		s_salle
-{
-	char			*name;
-	struct s_salle	**accessible_salles;
-	t_list			*tmp_accessible_salles;
-	t_list			*tmp_accessible_salles_end;
-	//t_fourmi		*fourmi;
-	int				x_coord;
-	int				y_coord;
-	int				id;
-}					t_salle;
-
-typedef struct	s_fourm
-{
-	t_salle		**salles;
-	int			nb_fourmis;
-	t_salle		*start;
-	t_salle		*end;
-}				t_fourm;
-
-typedef struct	s_fourmi
-{
-	int			*path;
-	int			current_salle;
-	int			id;
-}				t_fourmi;
 
 t_fourmi *new_fourmi(int *path, int path_len)
 {
@@ -50,7 +33,6 @@ t_salle	*new_salle(char *name, int x_coord, int y_coord)
 
 	if (!(res = (t_salle*)malloc(sizeof(t_salle))))
 		return (NULL);
-	//res->fourmi = NULL;
 	res->x_coord = x_coord;
 	res->y_coord = y_coord;
 	res->accessible_salles = NULL;
@@ -118,12 +100,14 @@ char	is_input_correct(char *line)
 		return (0);
 	if (!(parts = ft_strsplit(line, ' ')))
 		return (-1);
-	if (strstrlen(parts) != 3 || !only_numbers(parts[1]) || !only_numbers(parts[2]))
+	if (strstrlen(parts) != 3 || !only_numbers(parts[1])
+		|| !only_numbers(parts[2]))
 		return (free_parts_n_return(parts, 0));
 	return (free_parts_n_return(parts, 1));
 }
 
-char	is_start_or_end_salle(char **line, t_salle **start_salle, t_salle **end_salle)
+char	is_start_or_end_salle(char **line, t_salle **start_salle,
+									t_salle **end_salle, t_list **lines_end)
 {
 	char	start_end;
 
@@ -138,10 +122,10 @@ char	is_start_or_end_salle(char **line, t_salle **start_salle, t_salle **end_sal
 			start_end = 2;
 		else
 			return (-2);
-		if (*start_salle != NULL && start_end == 1)
+		if ((*start_salle && start_end == 1) || (*end_salle && start_end == 2))
 			return (-1);
-		if (*end_salle != NULL && start_end == 2)
-			return (-1);
+		ft_lstaddend(lines_end,
+					ft_lstnew(*line, sizeof(char) * (ft_strlen(*line) + 1)));
 		free(*line);
 		if (get_next_line(0, line) == -1)
 			return (-1);
@@ -163,13 +147,13 @@ char	free_parts_n_salle(char **parts, t_salle **salle, char return_val)
 }
 
 char	add_to_salles(t_list **salles_end, char **line,
-		t_salle **start_salle, t_salle **end_salle)
+							t_salle **str_end[2], t_list **lines_end)
 {
 	char	**parts;
 	char	start_end;
 	t_salle	*salle;
 
-	start_end = is_start_or_end_salle(line, start_salle, end_salle);
+	start_end = is_start_or_end_salle(line, str_end[0], str_end[1], lines_end);
 	if (start_end == -1)
 		return (0);
 	else if (start_end == -2)
@@ -180,9 +164,9 @@ char	add_to_salles(t_list **salles_end, char **line,
 		return (0);
 	ft_lstaddend(salles_end, ft_lstnew(salle, sizeof(t_salle)));
 	if (start_end == 1)
-		*start_salle = (t_salle*)((*salles_end)->content);
+		*str_end[0] = (t_salle*)((*salles_end)->content);
 	else if (start_end == 2)
-		*end_salle = (t_salle*)((*salles_end)->content);
+		*str_end[1] = (t_salle*)((*salles_end)->content);
 	return (free_parts_n_salle(parts, &salle, 1));
 }
 
@@ -254,49 +238,57 @@ char	is_comment(char *line)
 {
 	if (line[0] != '#')
 		return (0);
-	if (line[1] == '#' && line[2] != '#')
-		return (0);
 	return (1);
 }
 
-t_salle	**parse_salles(t_salle **start_salle, t_salle **end_salle, char **line)
+t_salle	**free_n_return_null(t_list *salles_end)
 {
-	char	input_correct;
-	t_list	*salles;
-	t_list	*salles_end;
-	char	tube_description;
-
-	salles = NULL;
+	free(((t_salle*)salles_end->content)->name);
+	free(((t_salle*)salles_end->content));
+	free(salles_end);
 	salles_end = NULL;
-	if (get_next_line(0, line) == -1)
-		return (NULL);
-	input_correct = is_input_correct(*line);
-	while (input_correct == 1 && line && ft_strlen(*line) > 0)
-	{
-		if (!(add_to_salles(&salles_end, line, start_salle, end_salle)))
-			return (NULL);
-		if (!salles)
-			salles = salles_end;
-		free(*line);
-		if (salle_name_already_used(salles, (t_salle*)salles_end->content))
-		{
-			free(((t_salle*)salles_end->content)->name);
-			free(((t_salle*)salles_end->content));
-			free(salles_end);
-			salles_end = NULL;
-			return (NULL);
-		}
-		if (get_next_line(0, line) == -1)
-			return (NULL);
-		input_correct = is_input_correct(*line);
-	}
-	tube_description = is_tube_description(*line);
-	if (input_correct == -1 || (!tube_description && !is_comment(*line)))
+	return (NULL);
+}
+
+t_salle	**not_valid_or_list_to_salles(char **line, t_list *salles)
+{
+	if (is_input_correct(*line) == -1
+		|| (!is_tube_description(*line) && !is_comment(*line)))
 	{
 		free(*line);
 		return (NULL);
 	}
 	return (list_to_salles(salles));
+}
+
+t_salle	**parse_salles(t_salle **start_salle, t_salle **end_salle,
+												char **line, t_list **lines_end)
+{
+	t_list	*salles;
+	t_list	*salles_end;
+	t_salle	**start_end[2];
+
+	salles = NULL;
+	salles_end = NULL;
+	if (get_next_line(0, line) == -1)
+		return (NULL);
+	start_end[0] = start_salle;
+	start_end[1] = end_salle;
+	while (is_input_correct(*line) == 1 && line && ft_strlen(*line) > 0)
+	{
+		if (!(add_to_salles(&salles_end, line, start_end, lines_end)))
+			return (NULL);
+		if (!salles)
+			salles = salles_end;
+		if (salle_name_already_used(salles, (t_salle*)salles_end->content))
+			return (free_n_return_null(salles_end));
+		ft_lstaddend(lines_end,
+				ft_lstnew(*line, sizeof(char) * (ft_strlen(*line) + 1)));
+		free(*line);
+		if (get_next_line(0, line) == -1)
+			return (NULL);
+	}
+	return (not_valid_or_list_to_salles(line, salles));
 }
 
 void	put_salle(t_salle *salle)
@@ -372,10 +364,12 @@ int		add_tubes(t_salle **salles, char *line)
 	return (1);
 }
 
-int		get_tubes(t_salle **salles, char *line)
+int		get_tubes(t_salle **salles, char *line, t_list **lines_end)
 {
 	while (is_tube_description(line) || is_comment(line))
 	{
+		ft_lstaddend(lines_end,
+				ft_lstnew(line, sizeof(char) * (ft_strlen(line) + 1)));
 		if (!is_comment(line))
 		{
 			if (!(add_tubes(salles, line)))
@@ -421,7 +415,7 @@ int		accessible_list_to_array(t_salle **salles)
 		x = 0;
 		while (tmp)
 		{
-			salles[i]->accessible_salles[x] = ((t_salle*)*((t_salle**)tmp->content));
+			salles[i]->accessible_salles[x] = *((t_salle**)tmp->content);
 			tmp = tmp->next;
 			x++;
 		}
@@ -467,28 +461,34 @@ t_fourm	*salles_to_fourmiliere(int nb_fourmis, t_salle **salles,
 	return (res);
 }
 
-t_fourm	*get_fourmiliere(t_salle **start_salle, t_salle **end_salle)
+t_fourm	*get_fourmiliere(t_salle **start_salle, t_salle **end_salle,
+																t_list **lines)
 {
 	t_salle	**salles;
 	char	*line;
-	int		nb_fourmis;
+	int		nb_fourm;
+	t_list	*lines_end;
 
 	if (get_next_line(0, &line) == -1 || !only_numbers(line) || line[0] == '0')
 		return (NULL);
-	nb_fourmis = ft_atoi(line);
+	nb_fourm = ft_atoi(line);
+	lines_end = NULL;
+	ft_lstaddend(&lines_end,
+			ft_lstnew(line, sizeof(char) * (ft_strlen(line) + 1)));
+	*lines = lines_end;
 	free(line);
-	salles = parse_salles(start_salle, end_salle, &line);
+	salles = parse_salles(start_salle, end_salle, &line, &lines_end);
 	if (!salles)
 		return (NULL);
 	if (!(*start_salle) || !(*end_salle))
 		return (NULL);
-	if (!(get_tubes(salles, line)))
+	if (!(get_tubes(salles, line, &lines_end)))
 		return (NULL);
 	if (!(accessible_list_to_array(salles)))
 		return (NULL);
 	free_tmp_lists(salles);
 	put_salles(salles);
-	return (salles_to_fourmiliere(nb_fourmis, salles, *start_salle, *end_salle));
+	return (salles_to_fourmiliere(nb_fourm, salles, *start_salle, *end_salle));
 }
 
 int		min_end_start(t_fourm *fourmiliere)
@@ -536,7 +536,8 @@ void	add_salles_to_visited_salles(t_list *path, t_list **visited_salles,
 		if (*(int*)tmp->content != fourmiliere->end->id
 			&& *(int*)tmp->content != fourmiliere->start->id)
 		{
-			ft_lstaddend(visited_salles_end, ft_lstnew((int*)tmp->content, sizeof(int)));
+			ft_lstaddend(visited_salles_end,
+									ft_lstnew((int*)tmp->content, sizeof(int)));
 			if (!*visited_salles)
 				*visited_salles = *visited_salles_end;
 		}
@@ -600,18 +601,16 @@ int		turns_required_for_n_fourmis(int path_len, int nb_fourmis)
 	return (res);
 }
 
-char	adding_path_will_make_way_longer(t_list **best_paths, int nb_best, int current_path_len, int nb_fourmis)
+char	adding_path_will_make_way_longer(t_list **best_paths, int nb_best,
+										int current_path_len, int nb_fourmis)
 {
-	int		steps_without;
+	int		steps_witho;
 	int		steps_with;
 
-	//(void)best_paths;
-	//(void)nb_best;
-	//(void)current_path_len;
-	//(void)nb_fourmis;
-	steps_without = turns_required_for_n_fourmis(listlen(best_paths[nb_best - 1]), nb_fourmis / nb_best);
+	steps_witho = turns_required_for_n_fourmis(listlen(best_paths[nb_best - 1]),
+														nb_fourmis / nb_best);
 	steps_with = turns_required_for_n_fourmis(current_path_len, 1);
-	if (steps_without <= steps_with)
+	if (steps_witho <= steps_with)
 		return (1);
 	return (0);
 }
@@ -913,6 +912,7 @@ int		make_fourmis_travel(int **best_paths, t_fourm *fourmiliere)
 	t_list	*fourmis_end;
 	char	go_on;
 
+	ft_putchar('\n');
 	nb_paths = intintlen(best_paths);
 	if (!(paths_len = get_paths_len(best_paths, nb_paths)))
 		return (ft_error());
@@ -949,6 +949,15 @@ int		make_fourmis_travel(int **best_paths, t_fourm *fourmiliere)
 	return (0);
 }
 
+void	put_lines(t_list *lines)
+{
+	while (lines)
+	{
+		ft_putendl((char*)lines->content);
+		lines = lines->next;
+	}
+}
+
 int		main(void)
 {
 	t_fourm	*fourmiliere;
@@ -957,10 +966,11 @@ int		main(void)
 	int		nb_paths_to_find;
 	int		**best_paths;
 	t_list	*finished_paths;
+	t_list	*lines;
 
 	start_salle = NULL;
 	end_salle = NULL;
-	if (!(fourmiliere = get_fourmiliere(&start_salle, &end_salle)))
+	if (!(fourmiliere = get_fourmiliere(&start_salle, &end_salle, &lines)))
 		return (ft_error());
 	if (!(nb_paths_to_find = min_end_start(fourmiliere)))
 		return (ft_error());
@@ -972,6 +982,7 @@ int		main(void)
 		if (!best_paths)
 			return (ft_error());
 	}
+	put_lines(lines);
 	put_best_paths(best_paths);
 	return (make_fourmis_travel(best_paths, fourmiliere));
 }
