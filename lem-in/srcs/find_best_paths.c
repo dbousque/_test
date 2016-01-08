@@ -6,7 +6,7 @@
 /*   By: dbousque <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/08 18:17:29 by dbousque          #+#    #+#             */
-/*   Updated: 2016/01/08 18:18:32 by dbousque         ###   ########.fr       */
+/*   Updated: 2016/01/08 19:11:31 by dbousque         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -126,6 +126,5 @@ int		**find_best_paths(t_fourm *fourm, int nb_paths, t_list **finished_paths)
 			return (NULL);
 		current_path_length++;
 	}
-	put_paths(*finished_paths);
 	return (res);
 }

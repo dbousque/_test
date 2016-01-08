@@ -6,7 +6,7 @@
 /*   By: dbousque <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/08 18:22:28 by dbousque          #+#    #+#             */
-/*   Updated: 2016/01/08 18:27:47 by dbousque         ###   ########.fr       */
+/*   Updated: 2016/01/08 19:39:37 by dbousque         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,21 +53,27 @@ char	lon(t_list **best_paths, int nb_best, int current_path_len,
 	return (0);
 }
 
-void	put_best_paths(int **best_paths)
+void	put_best_paths(int **best_paths, t_fourm *fourm)
 {
 	int		i;
 	int		x;
 
 	i = 0;
-	ft_putendl("BEST PATHS :");
+	ft_printf("\n{cyan}BEST PATHS :{eoc}\n");
 	while (best_paths[i])
 	{
-		x = 0;
-		while (best_paths[i][x])
+		ft_printf("  %d)  ", i + 1);
+		x = int_tab_len(best_paths[i]) - 1;
+		while (x >= 0)
 		{
-			ft_putnbr(best_paths[i][x]);
-			ft_putstr(", ");
-			x++;
+			if (x == 0)
+				ft_printf("{red}");
+			ft_putstr(fourm->salles[best_paths[i][x]]->name);
+			if (x == 0)
+				ft_printf("{eoc}");
+			else
+				ft_putstr(" -> ");
+			x--;
 		}
 		i++;
 		ft_putchar('\n');

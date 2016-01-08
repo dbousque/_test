@@ -6,7 +6,7 @@
 /*   By: dbousque <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/08 16:59:18 by dbousque          #+#    #+#             */
-/*   Updated: 2016/01/08 17:00:15 by dbousque         ###   ########.fr       */
+/*   Updated: 2016/01/08 19:44:47 by dbousque         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,6 +87,7 @@ t_fourm	*salles_to_fourmiliere(int nb_fourmis, t_salle **salles,
 	res->salles = salles;
 	res->start = start_salle;
 	res->end = end_salle;
+	res->flags = NULL;
 	return (res);
 }
 
@@ -116,6 +117,5 @@ t_fourm	*get_fourmiliere(t_salle **start_salle, t_salle **end_salle,
 	if (!(accessible_list_to_array(salles)))
 		return (NULL);
 	free_tmp_lists(salles);
-	put_salles(salles);
 	return (salles_to_fourmiliere(nb_fourm, salles, *start_salle, *end_salle));
 }

@@ -6,38 +6,33 @@
 /*   By: dbousque <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/08 18:20:48 by dbousque          #+#    #+#             */
-/*   Updated: 2016/01/08 18:24:06 by dbousque         ###   ########.fr       */
+/*   Updated: 2016/01/08 20:19:00 by dbousque         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "lem_in.h"
 
-void	make_turn(t_list *fourmis)
+void	make_turn(t_list *fourmis, t_fourm *fourmiliere, int end)
 {
 	t_fourmi	*tmp_fourmi;
+	static int	nb = 0;
 
-	while (fourmis)
+	if (fourmis)
+		nb++;
+	if (end)
 	{
-		tmp_fourmi = ((t_fourmi*)fourmis->content);
-		tmp_fourmi->current_salle--;
-		fourmis = fourmis->next;
+		if (fourmiliere->flags->n)
+			ft_printf("--> {cyan}NB TURNS{eoc} : {red}%d{eoc}\n", nb);
 	}
-}
-
-void	print_fourmis(t_list *fourmis, t_fourm *fourmiliere)
-{
-	t_fourmi	*tmp_fourmi;
-
-	while (fourmis)
+	else
 	{
-		tmp_fourmi = ((t_fourmi*)fourmis->content);
-		ft_printf("L%d-%s", tmp_fourmi->id,
-		fourmiliere->salles[tmp_fourmi->path[tmp_fourmi->current_salle]]->name);
-		if (fourmis->next)
-			ft_putchar(' ');
-		fourmis = fourmis->next;
+		while (fourmis)
+		{
+			tmp_fourmi = ((t_fourmi*)fourmis->content);
+			tmp_fourmi->current_salle--;
+			fourmis = fourmis->next;
+		}
 	}
-	ft_putchar('\n');
 }
 
 void	remove_fourmis_at_end(t_list **fourmis, t_list **fourmis_end,
@@ -105,7 +100,7 @@ int		make_fourmi_travel(int **best_paths, t_fourm *fourmiliere, int nb_paths,
 	fourmis = NULL;
 	while (fourmiliere->nb_fourmis > 0 || fourmis)
 	{
-		make_turn(fourmis);
+		make_turn(fourmis, fourmiliere, 0);
 		if (fourmiliere->nb_fourmis > 0)
 		{
 			ft_lstaddend(&fourmis_end, ft_lstnew(
@@ -119,5 +114,6 @@ int		make_fourmi_travel(int **best_paths, t_fourm *fourmiliere, int nb_paths,
 		if (fourmis)
 			print_fourmis(fourmis, fourmiliere);
 	}
+	make_turn(NULL, fourmiliere, 1);
 	return (0);
 }

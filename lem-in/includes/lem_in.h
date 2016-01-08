@@ -6,7 +6,7 @@
 /*   By: dbousque <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/08 18:35:27 by dbousque          #+#    #+#             */
-/*   Updated: 2016/01/08 18:36:51 by dbousque         ###   ########.fr       */
+/*   Updated: 2016/01/08 20:18:50 by dbousque         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,13 @@
 # define LEM_IN_H
 
 # include "libdodo.h"
+
+typedef struct		s_flag
+{
+	char			n;
+	char			c;
+	char			b;
+}					t_flag;
 
 typedef struct		s_salle
 {
@@ -32,6 +39,7 @@ typedef struct		s_fourm
 	int				nb_fourmis;
 	t_salle			*start;
 	t_salle			*end;
+	t_flag			*flags;
 }					t_fourm;
 
 typedef struct		s_fourmi
@@ -78,9 +86,13 @@ int					make_fourmi_travel(int **best_paths, t_fourm *fourmiliere,
 int					turns_required_for_n_fourmis(int path_len, int nb_fourmis);
 char				lon(t_list **best_paths, int nb_best, int current_path_len,
 																int nb_fourmis);
-void				put_best_paths(int **best_paths);
+void				put_best_paths(int **best_paths, t_fourm *fourm);
 int					intintlen(int **intint);
 int					int_tab_len(int *tab);
 int					*get_paths_len(int **best_paths, int nb_paths);
+int					get_flags(int argc, char **argv, t_flag *flags);
+t_flag				*void_flags(void);
+void				print_fourmis(t_list *fourmis, t_fourm *fourmiliere);
+void				print_fourmi_pos_color(int id, char *name);
 
 #endif

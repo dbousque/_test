@@ -6,7 +6,7 @@
 /*   By: dbousque <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/08 18:31:12 by dbousque          #+#    #+#             */
-/*   Updated: 2016/01/08 18:31:15 by dbousque         ###   ########.fr       */
+/*   Updated: 2016/01/08 19:44:15 by dbousque         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,7 @@ int		**path_to_int_paths(t_list **best_paths, int nb_paths)
 }
 
 int		find_best_paths_and_travel(t_fourm *fourmiliere, t_list *lines,
-																int nb_paths)
+												int nb_paths)
 {
 	int		**best_paths;
 	t_list	*finished_paths;
@@ -72,24 +72,32 @@ int		find_best_paths_and_travel(t_fourm *fourmiliere, t_list *lines,
 			return (ft_error());
 	}
 	put_lines(lines);
-	put_best_paths(best_paths);
+	if (fourmiliere->flags->b)
+		put_best_paths(best_paths, fourmiliere);
 	return (make_fourmi_travel(best_paths, fourmiliere, intintlen(best_paths),
 																		NULL));
 }
 
-int		main(void)
+int		main(int argc, char **argv)
 {
 	t_fourm	*fourmiliere;
-	t_salle	*start_salle;
-	t_salle	*end_salle;
+	t_salle	*start_end_salle[2];
 	int		nb_paths_to_find;
 	t_list	*lines;
+	t_flag	*flags;
 
-	start_salle = NULL;
-	end_salle = NULL;
-	if (!(fourmiliere = get_fourmiliere(&start_salle, &end_salle, &lines)))
+	flags = void_flags();
+	start_end_salle[0] = NULL;
+	start_end_salle[1] = NULL;
+	if (!get_flags(argc, argv, flags))
+		return (0);
+	if (!flags)
+		return (ft_error());
+	if (!(fourmiliere = get_fourmiliere(&start_end_salle[0],
+												&start_end_salle[1], &lines)))
 		return (ft_error());
 	if (!(nb_paths_to_find = min_end_start(fourmiliere)))
 		return (ft_error());
+	fourmiliere->flags = flags;
 	return (find_best_paths_and_travel(fourmiliere, lines, nb_paths_to_find));
 }

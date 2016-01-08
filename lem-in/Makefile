@@ -6,7 +6,7 @@
 #    By: dbousque <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2016/01/02 12:22:16 by dbousque          #+#    #+#              #
-#    Updated: 2016/01/08 18:31:34 by dbousque         ###   ########.fr        #
+#    Updated: 2016/01/08 20:19:12 by dbousque         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -28,7 +28,9 @@ SRC		=	srcs/get_fourmiliere.c \
 			srcs/main.c \
 			srcs/find_suitable_paths.c \
 			srcs/find_best_paths.c \
-			srcs/make_fourmi_travel.c
+			srcs/make_fourmi_travel.c \
+			srcs/get_flags.c \
+			srcs/print_fourmis.c
 
 $(NAME):
 	make -C $(LIB)

@@ -1,0 +1,27 @@
+10
+##start
+salut0 0 0
+salut1 0 0
+salut2 0 0
+salut3 0 0
+salut4 0 0
+salut5 0 0
+salut6 0 0
+salut7 0 0
+salut8 0 0
+salut9 0 0
+##end
+salut10 0 0
+salut0-salut1
+salut1-salut2
+salut2-salut3
+salut3-salut4
+salut4-salut5
+salut5-salut10
+salut0-salut7
+salut7-salut4
+salut4-salut6
+salut6-salut10
+salut7-salut8
+salut8-salut9
+salut9-salut6
