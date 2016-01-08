@@ -931,8 +931,8 @@ int		make_fourmis_travel(int **best_paths, t_fourm *fourmiliere)
 			go_on = 1;
 			while (go_on && best_paths[i] && fourmiliere->nb_fourmis > 0)
 			{
-				if (turns_required_for_n_fourmis(paths_len[i], 1) <= turns_required_for_n_fourmis(paths_len[i - 1], fourmiliere->nb_fourmis / (nb_paths - 1)))
-				//if (turns_required_for_n_fourmis(paths_len[i], 1) <= turns_required_for_n_fourmis(paths_len[i - 1], 2))
+			//	if (turns_required_for_n_fourmis(paths_len[i], 1) <= turns_required_for_n_fourmis(paths_len[i - 1], fourmiliere->nb_fourmis / (nb_paths - 1)))
+			if (turns_required_for_n_fourmis(paths_len[i], 1) <= turns_required_for_n_fourmis(paths_len[i - 1], fourmiliere->nb_fourmis / i))
 				{
 					ft_lstaddend(&fourmis_end, ft_lstnew(new_fourmi(best_paths[i], paths_len[i]), sizeof(t_fourmi)));
 					fourmiliere->nb_fourmis--;
