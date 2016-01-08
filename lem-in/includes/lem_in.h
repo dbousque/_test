@@ -1,9 +1,19 @@
-
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   lem_in.h                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: dbousque <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2016/01/08 18:35:27 by dbousque          #+#    #+#             */
+/*   Updated: 2016/01/08 18:36:51 by dbousque         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
 #ifndef LEM_IN_H
 # define LEM_IN_H
 
-#include "libdodo.h"
+# include "libdodo.h"
 
 typedef struct		s_salle
 {
@@ -16,61 +26,61 @@ typedef struct		s_salle
 	int				id;
 }					t_salle;
 
-typedef struct	s_fourm
+typedef struct		s_fourm
 {
-	t_salle		**salles;
-	int			nb_fourmis;
-	t_salle		*start;
-	t_salle		*end;
-}				t_fourm;
+	t_salle			**salles;
+	int				nb_fourmis;
+	t_salle			*start;
+	t_salle			*end;
+}					t_fourm;
 
-typedef struct	s_fourmi
+typedef struct		s_fourmi
 {
-	int			*path;
-	int			current_salle;
-	int			id;
-}				t_fourmi;
+	int				*path;
+	int				current_salle;
+	int				id;
+}					t_fourmi;
 
-char			is_tube_description(char *line);
-char			is_comment(char *line);
-char			only_numbers(char *str);
-char			is_input_correct(char *line);
-t_salle			**parse_salles(t_salle **start_salle, t_salle **end_salle,
+char				is_tube_description(char *line);
+char				is_comment(char *line);
+char				only_numbers(char *str);
+char				is_input_correct(char *line);
+t_salle				**parse_salles(t_salle **start_salle, t_salle **end_salle,
 											char **line, t_list **lines_end);
-t_fourmi		*new_fourmi(int *path, int path_len);
-t_salle			*new_salle(char *name, int x_coord, int y_coord);
-t_salle			**list_to_salles(t_list *salles);
-char			is_start_or_end_salle(char **line, t_salle **start_salle,
+t_fourmi			*new_fourmi(int *path, int path_len);
+t_salle				*new_salle(char *name, int x_coord, int y_coord);
+t_salle				**list_to_salles(t_list *salles);
+char				is_start_or_end_salle(char **line, t_salle **start_salle,
 									t_salle **end_salle, t_list **lines_end);
-int				strstrlen(char **strstr);
-char			add_to_salles(t_list **salles_end, char **line,
+int					strstrlen(char **strstr);
+char				add_to_salles(t_list **salles_end, char **line,
 									t_salle **str_end[2], t_list **lines_end);
-void			put_salle(t_salle *salle);
-void			put_salles(t_salle **salles);
-int				get_tubes(t_salle **salles, char *line, t_list **lines_end);
-t_fourm			*get_fourmiliere(t_salle **start_salle, t_salle **end_salle,
+void				put_salle(t_salle *salle);
+void				put_salles(t_salle **salles);
+int					get_tubes(t_salle **salles, char *line, t_list **lines_end);
+t_fourm				*get_fourmiliere(t_salle **start_salle, t_salle **end_salle,
 																t_list **lines);
-int				listlen(t_list *list);
-int				**find_suitable_paths(t_list *finished_paths, int nb_paths,
+int					listlen(t_list *list);
+int					**find_suitable_paths(t_list *finished_paths, int nb_paths,
 														t_fourm *fourmiliere);
-void			put_path(t_list *path);
-void			put_paths(t_list *paths);
-char			lon(t_list **best_paths, int nb_best, int current_path_len,
+void				put_path(t_list *path);
+void				put_paths(t_list *paths);
+char				lon(t_list **best_paths, int nb_best, int current_path_len,
 																int nb_fourmis);
-int				**path_to_int_paths(t_list **best_paths, int nb_paths);
-char			no_shared_salle(t_list *tmp, t_list *visited_salles);
-int				**find_best_paths(t_fourm *fourm, int nb_paths,
+int					**path_to_int_paths(t_list **best_paths, int nb_paths);
+char				no_shared_salle(t_list *tmp, t_list *visited_salles);
+int					**find_best_paths(t_fourm *fourm, int nb_paths,
 													t_list **finished_paths);
-int				ft_error(void);
-void			put_lines(t_list *lines);
-int				make_fourmi_travel(int **best_paths, t_fourm *fourmiliere,
+int					ft_error(void);
+void				put_lines(t_list *lines);
+int					make_fourmi_travel(int **best_paths, t_fourm *fourmiliere,
 											int nb_paths, t_list *fourmis_end);
-int				turns_required_for_n_fourmis(int path_len, int nb_fourmis);
-char			lon(t_list **best_paths, int nb_best, int current_path_len,
+int					turns_required_for_n_fourmis(int path_len, int nb_fourmis);
+char				lon(t_list **best_paths, int nb_best, int current_path_len,
 																int nb_fourmis);
-void			put_best_paths(int **best_paths);
-int				intintlen(int **intint);
-int				int_tab_len(int *tab);
-int				*get_paths_len(int **best_paths, int nb_paths);
+void				put_best_paths(int **best_paths);
+int					intintlen(int **intint);
+int					int_tab_len(int *tab);
+int					*get_paths_len(int **best_paths, int nb_paths);
 
 #endif
