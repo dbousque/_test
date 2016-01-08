@@ -6,7 +6,7 @@
 /*   By: dbousque <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/08 12:28:37 by dbousque          #+#    #+#             */
-/*   Updated: 2016/01/08 13:13:19 by dbousque         ###   ########.fr       */
+/*   Updated: 2016/01/08 15:20:38 by dbousque         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -525,7 +525,7 @@ char	no_shared_salle(t_list *tmp, t_list *visited_salles)
 	return (1);
 }
 
-void	add_salles_to_visited_salles(t_list *path, t_list **visited_salles,
+void	add_salles_to_visited(t_list *path, t_list **visited_salles,
 							t_list **visited_salles_end, t_fourm *fourmiliere)
 {
 	t_list	*tmp;
@@ -601,8 +601,12 @@ int		turns_required_for_n_fourmis(int path_len, int nb_fourmis)
 	return (res);
 }
 
-char	adding_path_will_make_way_longer(t_list **best_paths, int nb_best,
-										int current_path_len, int nb_fourmis)
+/*
+** adding_path_will_make_way_longer
+*/
+
+char	lon(t_list **best_paths, int nb_best, int current_path_len,
+																int nb_fourmis)
 {
 	int		steps_witho;
 	int		steps_with;
@@ -615,19 +619,52 @@ char	adding_path_will_make_way_longer(t_list **best_paths, int nb_best,
 	return (0);
 }
 
-int		**find_suitable_paths(t_list *finished_paths, int nb_paths, t_fourm *fourmiliere)
+void	init_vars(t_list *visited[2], t_list **best_paths,
+											t_list *finished_paths, int *len)
 {
-	t_list	*best_paths[nb_paths];
-	int		i;
-	int		x;
-	int		nb;
-	int		len;
-	t_list	*tmp;
-	t_list	*visited_salles;
-	t_list	*visited_salles_end;
+	*len = listlen(finished_paths);
+	best_paths[0] = (t_list*)finished_paths->content;
+	visited[0] = NULL;
+	visited[1] = NULL;
+}
 
-	visited_salles = NULL;
-	visited_salles_end = NULL;
+int		**test_paths_from_i(int x, t_list *finished_paths, t_fourm *four,
+																int nb_paths)
+{
+	t_list	*best_pat[nb_paths];
+	t_list	*visited[2];
+	t_list	*tmp;
+	int		len;
+	int		nb;
+
+	init_vars(visited, best_pat, finished_paths, &len);
+	nb = 1;
+	tmp = finished_paths->next;
+	add_salles_to_visited(best_pat[0], &visited[0], &visited[1], four);
+	while (++x < len)
+	{
+		if (lon(best_pat, nb, listlen((t_list*)tmp->content), four->nb_fourmis))
+			return (path_to_int_paths(best_pat, nb));
+		if (no_shared_salle((t_list*)tmp->content, visited[0]))
+		{
+			best_pat[nb] = (t_list*)tmp->content;
+			add_salles_to_visited(best_pat[nb], &visited[0], &visited[1], four);
+			nb++;
+		}
+		if (nb == nb_paths)
+			return (path_to_int_paths(best_pat, nb_paths));
+		tmp = tmp->next;
+	}
+	return (NULL);
+}
+
+int		**find_suitable_paths(t_list *finished_paths, int nb_paths,
+														t_fourm *fourmiliere)
+{
+	int		i;
+	int		len;
+	int		**res;
+
 	if (!finished_paths)
 		return (NULL);
 	len = listlen(finished_paths);
@@ -636,29 +673,9 @@ int		**find_suitable_paths(t_list *finished_paths, int nb_paths, t_fourm *fourmi
 	i = 0;
 	while (i <= len - nb_paths)
 	{
-		best_paths[0] = (t_list*)finished_paths->content;
-		visited_salles = NULL;
-		visited_salles_end = NULL;
-		add_salles_to_visited_salles(best_paths[0], &visited_salles, &visited_salles_end, fourmiliere);
-		nb = 1;
-		x = i + 1;
-		tmp = finished_paths->next;
-		while (x < len)
-		{
-			if (adding_path_will_make_way_longer(best_paths, nb, listlen((t_list*)tmp->content), fourmiliere->nb_fourmis))
-				return (path_to_int_paths(best_paths, nb));
-			if (no_shared_salle((t_list*)tmp->content, visited_salles))
-			{
-				best_paths[nb] = (t_list*)tmp->content;
-				add_salles_to_visited_salles(best_paths[nb], &visited_salles, &visited_salles_end, fourmiliere);
-
-				nb++;
-			}
-			if (nb == nb_paths)
-				return (path_to_int_paths(best_paths, nb_paths));
-			tmp = tmp->next;
-			x++;
-		}
+		if ((res = test_paths_from_i(i, finished_paths, fourmiliere,
+																	nb_paths)))
+			return (res);
 		finished_paths = finished_paths->next;
 		i++;
 	}
@@ -688,13 +705,26 @@ t_list	*copy_list(t_list *path)
 	return (ints);
 }
 
-int		add_paths_from_salle(t_salle *salle, t_list *path, t_list **paths_end, t_list **finished_paths_end, t_fourm *fourmiliere)
+int		new_path(t_list *path, int *new_salle_id, t_list **paths_list_end)
+{
+	t_list	*new_list;
+
+	if (!(new_list = copy_list(path)))
+		return (0);
+	ft_lstadd(&new_list, ft_lstnew(new_salle_id, sizeof(int)));
+	ft_lstaddend(paths_list_end, ft_lstnew(new_list, sizeof(t_list)));
+	return (1);
+}
+
+int		add_paths_from_salle(t_list *path, t_list **paths_end,
+							t_list **fin_paths_end, t_fourm *fourm)
 {
 	int		i;
 	t_list	*tmp;
 	int		not_found;
-	t_list	*new_list;
+	t_salle	*salle;
 
+	salle = fourm->salles[*((int*)path->content)];
 	i = 0;
 	while (salle->accessible_salles[i])
 	{
@@ -708,37 +738,29 @@ int		add_paths_from_salle(t_salle *salle, t_list *path, t_list **paths_end, t_li
 		}
 		if (not_found)
 		{
-			if (!(new_list = copy_list(path)))
+			if (!((salle->accessible_salles[i]->id == fourm->end->id)
+			? new_path(path, &salle->accessible_salles[i]->id, fin_paths_end)
+			: new_path(path, &salle->accessible_salles[i]->id, paths_end)))
 				return (0);
-			ft_lstadd(&new_list, ft_lstnew(&salle->accessible_salles[i]->id, sizeof(int)));
-			if (*((int*)new_list->content) == fourmiliere->end->id)
-			{
-				ft_lstaddend(finished_paths_end, ft_lstnew(new_list, sizeof(t_list)));
-				//put_paths(*finished_paths_end);
-			}
-			else
-				ft_lstaddend(paths_end, ft_lstnew(new_list, sizeof(t_list)));
-			//ft_printf("content : %d, content->content : %d, content->next->content : %d\n", (*paths_end)->content, *(int*)((t_list*)((*paths_end)->content))->content, *(int*)((t_list*)((t_list*)(*paths_end)->content)->next)->content);
 		}
 		i++;
 	}
 	return (1);
 }
 
-int		add_step_to_paths(t_list **paths, t_list **paths_end, t_list **finished_paths,
-						t_list **finished_paths_end, t_fourm *fourmiliere)
+int		add_step_to_paths(t_list **paths, t_list **paths_end,
+	t_list **finished_paths, t_list **finished_paths_end, t_fourm *fourmiliere)
 {
 	t_list	*tmp;
 	t_list	*tmp2;
-	t_salle	*last_salle;
 	int		len;
 
 	len = listlen(*paths);
 	tmp = *paths;
 	while (tmp && len > 0)
 	{
-		last_salle = fourmiliere->salles[*(int*)(((t_list*)tmp->content)->content)];
-		if (!(add_paths_from_salle(last_salle, (t_list*)tmp->content, paths_end, finished_paths_end, fourmiliere)))
+		if (!(add_paths_from_salle((t_list*)tmp->content, paths_end,
+											finished_paths_end, fourmiliere)))
 			return (0);
 		if (!(*finished_paths) && *finished_paths_end)
 			*finished_paths = *finished_paths_end;
