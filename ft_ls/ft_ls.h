@@ -6,7 +6,7 @@
 /*   By: dbousque <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/09 13:59:55 by dbousque          #+#    #+#             */
-/*   Updated: 2016/01/09 14:41:12 by dbousque         ###   ########.fr       */
+/*   Updated: 2016/01/09 17:16:46 by dbousque         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 # include "libdodo.h"
 # include <dirent.h>
 # include <sys/stat.h>
+# include <sys/ioctl.h>
 
 typedef struct	s_flags
 {
