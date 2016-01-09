@@ -17,6 +17,7 @@
 # include <dirent.h>
 # include <sys/stat.h>
 # include <sys/ioctl.h>
+# include <errno.h>
 
 typedef struct	s_flags
 {
@@ -25,7 +26,9 @@ typedef struct	s_flags
 	char		r;
 	char		r_maj;
 	char		t;
-	DIR			*dir;
+	char		minus;
 }				t_flags;
+
+t_flags			*get_flags(int argc, char **argv, int *i);
 
 #endif
