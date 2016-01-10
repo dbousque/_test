@@ -140,14 +140,46 @@ int		print_children_regular_std(struct dirent **children, int nb)
 	return (1);
 }
 
-void	sort_by_date(struct dirent **children)
+int		ft_strcmp_child_name(void *elt1, void *elt2, void *elt3)
 {
-	(void)children;
+	(void)elt3;
+	return (-ft_strcmp(((struct dirent*)elt1)->d_name,
+											((struct dirent*)elt2)->d_name));
 }
 
-void	sort_by_name(struct dirent **children)
+char	*make_path(char *filename, char *dir_name)
 {
-	(void)children;
+	int		len;
+
+	len = ft_strlen(dir_name);
+	if (dir_name[len - 1] != '/')
+		dir_name = ft_strjoin(dir_name, "/");
+	return (ft_strjoin(dir_name, filename));
+}
+
+int		compare_by_date(void *elt1, void *elt2, void *elt3)
+{
+	static struct stat		*stat1 = NULL;
+	long					date1;
+
+	if (!stat1)
+		stat1 = (struct stat*)malloc(sizeof(struct stat));
+	stat(make_path(((struct dirent*)elt1)->d_name, (char*)elt3), stat1);
+	date1 = (long)stat1->st_mtimespec.tv_sec;
+	stat(make_path(((struct dirent*)elt2)->d_name, (char*)elt3), stat1);
+	if (date1 != (long)stat1->st_mtimespec.tv_sec)
+		return (date1 - (long)stat1->st_mtimespec.tv_sec);
+	return (ft_strcmp_child_name(elt1, elt2, NULL));
+}
+
+void	sort_by_name(struct dirent **children, int nb)
+{
+	quicksort((void**)children, nb, ft_strcmp_child_name, NULL);
+}
+
+void	sort_by_date(struct dirent **children, int nb, char *dir_name)
+{
+	quicksort((void**)children, nb, compare_by_date, (void*)dir_name);
 }
 
 void	reverse_children(struct dirent **children, int len)
@@ -168,12 +200,13 @@ void	reverse_children(struct dirent **children, int len)
 	}
 }
 
-void	print_children(struct dirent **children, t_flags *flags, int nb_child)
+void	print_children(struct dirent **children, t_flags *flags, int nb_child,
+																char *dir_name)
 {
 	if (flags->t)
-		sort_by_date(children);
+		sort_by_date(children, nb_child, dir_name);
 	else
-		sort_by_name(children);
+		sort_by_name(children, nb_child);
 	if (flags->r)
 		reverse_children(children, nb_child);
 	if (flags->l)
@@ -184,7 +217,7 @@ void	print_children(struct dirent **children, t_flags *flags, int nb_child)
 		print_children_regular(children, nb_child);
 }
 
-int		listdir(DIR *dir, t_flags *flags)
+int		listdir(DIR *dir, t_flags *flags, char *dir_name)
 {
 	struct dirent	*tmp_child;
 	t_list			*children_list;
@@ -207,7 +240,7 @@ int		listdir(DIR *dir, t_flags *flags)
 	}
 	if (!(children = children_list_to_array(children_list, length)))
 		return (unexpected_error());
-	print_children(children, flags, length);
+	print_children(children, flags, length, dir_name);
 	return (1);
 }
 
@@ -249,15 +282,9 @@ char	**list_to_string_array(t_list *params)
 void	print_errno(int error, char *filename)
 {
 	ft_putstr_fd("ft_ls: ", 2);
-	if (error == ENOENT)
-	{
-		ft_putstr_fd(filename, 2);
-		ft_putendl_fd(": No such file or directory", 2);
-	}
-	else
-	{
-		ft_putnbr(error);
-	}
+	ft_putstr_fd(filename, 2);
+	ft_putstr_fd(": ", 2);
+	ft_putendl_fd(strerror(error), 2);
 }
 
 void	add_to_lists(int error, t_list **params, t_list **other_params,
@@ -357,15 +384,16 @@ int		print_params(char **dir_params, char **other_params, t_flags *flags)
 			ft_putendl(":");
 		}
 		tmp_dir = opendir(dir_params[i]);
-		listdir(tmp_dir, flags);
+		listdir(tmp_dir, flags, dir_params[i]);
 		closedir(tmp_dir);
 		i++;
 	}
 	return (0);
 }
 
-int		ft_strcmp_void(void *elt1, void *elt2)
+int		ft_strcmp_void(void *elt1, void *elt2, void *elt3)
 {
+	(void)elt3;
 	return (ft_strcmp((char*)elt1, (char*)elt2));
 }
 
@@ -373,7 +401,7 @@ void	sort_args(int argc, char **argv, int i)
 {
 	if (argc - i <= 1)
 		return ;
-	quicksort((void**)(argv + i), argc - i, ft_strcmp_void);
+	quicksort((void**)(argv + i), argc - i, ft_strcmp_void, NULL);
 }
 
 int		main(int argc, char **argv)
