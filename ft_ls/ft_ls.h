@@ -33,5 +33,6 @@ typedef struct	s_flags
 t_flags			*get_flags(int argc, char **argv, int *i);
 void			quicksort(void **to_sort, int nb,
 			int (*compare_fct)(void *elt1, void *elt2, void *elt3), void *elt3);
+int				print_string_array_columns(char **strings, int nb);
 
 #endif
