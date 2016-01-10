@@ -168,7 +168,29 @@ void	print_children(struct dirent **children, t_flags *flags, int nb_child,
 		print_children_regular(children, nb_child);
 }
 
-int		listdir(DIR *dir, t_flags *flags, char *dir_name)
+char	*add_dir_name(char *filename, char *dir_name)
+{
+	return (ft_strjoin(ft_strjoin(dir_name, "/"), filename));
+}
+
+void	add_file_to_dir_children(struct dirent *tmp_child,
+										t_list **dir_children, char *dir_name)
+{
+	t_list	*new_elt;
+	char	*dir_name_added;
+
+	if (tmp_child->d_type == DT_DIR
+		&& ft_strcmp(tmp_child->d_name, ".") != 0
+		&& ft_strcmp(tmp_child->d_name, "..") != 0)
+	{
+		dir_name_added = add_dir_name(tmp_child->d_name, dir_name);
+		new_elt = ft_lstnew(dir_name_added,
+						sizeof(char) * (ft_strlen(dir_name_added) + 1));
+		ft_lstaddend(dir_children, new_elt);
+	}
+}
+
+int		listdir(DIR *dir, t_flags *flags, char *dir_name, t_list *dir_children)
 {
 	struct dirent	*tmp_child;
 	t_list			*children_list;
@@ -188,6 +210,7 @@ int		listdir(DIR *dir, t_flags *flags, char *dir_name)
 				children_list = child_lst_n;
 			length++;
 		}
+		add_file_to_dir_children(tmp_child, &dir_children, dir_name);
 	}
 	if (!(children = children_list_to_array(children_list, length)))
 		return (unexpected_error());
@@ -349,12 +372,14 @@ void	order_dirs(struct dirent **dirs, t_flags *flags, int l)
 		reverse_children(dirs, l);
 }
 
-int		print_dir_params(char **dir_params, t_flags *flags, char **other_params)
+int		print_dir_params(char **dir_params, t_flags *flags,
+										char **other_params, char print_name)
 {
 	DIR				*tmp_dir;
 	struct dirent	**dirs;
 	int				i;
 	int				l;
+	t_list			*dir_children;
 
 	if (!(dirs = strstr_to_dirent_array(dir_params, &l)))
 		return (0);
@@ -364,14 +389,20 @@ int		print_dir_params(char **dir_params, t_flags *flags, char **other_params)
 	{
 		if (i != 0)
 			ft_putchar('\n');
-		if (i != 0 || other_params[0] || i + 1 < l)
+		if (i != 0 || (other_params && other_params[0]) || i + 1 < l || print_name)
 		{
 			ft_putstr(dirs[i]->d_name);
 			ft_putendl(":");
 		}
 		tmp_dir = opendir(dirs[i]->d_name);
-		listdir(tmp_dir, flags, dirs[i]->d_name);
+		dir_children = ft_lstnew(NULL, 0);
+		listdir(tmp_dir, flags, dirs[i]->d_name, dir_children);
 		closedir(tmp_dir);
+		if (flags->r_maj && dir_children->next)
+		{
+			ft_putchar('\n');
+			print_dir_params(list_to_string_array(dir_children->next), flags, NULL, 1);
+		}
 		i++;
 	}
 	return (1);
@@ -384,7 +415,7 @@ int		print_params(char **dir_params, char **other_params, t_flags *flags)
 	res = print_other_params(other_params, flags);
 	if (res == 2 && dir_params[0])
 		ft_putchar('\n');
-	print_dir_params(dir_params, flags, other_params);
+	print_dir_params(dir_params, flags, other_params, 0);
 	return (0);
 }
 
@@ -415,7 +446,6 @@ int		main(int argc, char **argv)
 	other_params = NULL;
 	if (!(flags = get_flags(argc, argv, &i)))
 		return (0);
-	//sort_args(argc, argv, i);
 	dir_params = get_params(argc, argv, i, other_params_list);
 	if (other_params_list)
 		other_params = list_to_string_array(*other_params_list);
