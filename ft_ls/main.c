@@ -18,6 +18,12 @@ int		unexpected_error(void)
 	return (0);
 }
 
+void	*unexpected_error_null(void)
+{
+	ft_putendl_fd("ft_ls: unexpected error", 2);
+	return (NULL);
+}
+
 struct dirent	**children_list_to_array(t_list *children_list, int length)
 {
 	struct dirent	**res;
@@ -151,6 +157,8 @@ char	*make_path(char *filename, char *dir_name)
 {
 	int		len;
 
+	if (!dir_name)
+		return (filename);
 	len = ft_strlen(dir_name);
 	if (dir_name[len - 1] != '/')
 		dir_name = ft_strjoin(dir_name, "/");
@@ -164,9 +172,15 @@ int		compare_by_date(void *elt1, void *elt2, void *elt3)
 
 	if (!stat1)
 		stat1 = (struct stat*)malloc(sizeof(struct stat));
-	stat(make_path(((struct dirent*)elt1)->d_name, (char*)elt3), stat1);
+	if (((struct dirent*)elt1)->d_type == DT_LNK)
+		lstat(make_path(((struct dirent*)elt1)->d_name, (char*)elt3), stat1);
+	else
+		stat(make_path(((struct dirent*)elt1)->d_name, (char*)elt3), stat1);
 	date1 = (long)stat1->st_mtimespec.tv_sec;
-	stat(make_path(((struct dirent*)elt2)->d_name, (char*)elt3), stat1);
+	if (((struct dirent*)elt2)->d_type == DT_LNK)
+		lstat(make_path(((struct dirent*)elt2)->d_name, (char*)elt3), stat1);
+	else
+		stat(make_path(((struct dirent*)elt2)->d_name, (char*)elt3), stat1);
 	if (date1 != (long)stat1->st_mtimespec.tv_sec)
 		return (date1 - (long)stat1->st_mtimespec.tv_sec);
 	return (ft_strcmp_child_name(elt1, elt2, NULL));
@@ -354,40 +368,86 @@ int		strstrlen(char **strstr)
 	return (i);
 }
 
-int		print_params(char **dir_params, char **other_params, t_flags *flags)
+struct dirent	**strstr_to_dirent_array(char **params, int *l)
 {
-	DIR		*tmp_dir;
-	int		i;
+	struct dirent	**children;
+	int				i;
 
-	if (other_params[0] && !flags->minus
-		&& !(print_string_array_columns(other_params, strstrlen(other_params))))
-		return (0);
-	else if (other_params && flags->minus)
-	{
-		i = 0;
-		while (other_params[i])
-		{
-			ft_putendl(other_params[i]);
-			i++;
-		}
-		if (other_params[0] && dir_params[0])
-			ft_putchar('\n');
-	}
+	*l = 0;
+	while (params[*l])
+		(*l)++;
+	if (*l <= 0)
+		return (NULL);
+	if (!(children = (struct dirent**)malloc(sizeof(struct dirent*) * (*l + 1))))
+		return (unexpected_error_null());
 	i = 0;
-	while (dir_params && dir_params[i])
+	while (i < *l)
+	{
+		if (!(children[i] = (struct dirent*)malloc(sizeof(struct dirent))))
+			return (unexpected_error_null());
+		ft_strcpy(children[i]->d_name, params[i]);
+		i++;
+	}
+	return (children);
+}
+
+int		print_other_params(char **other_params, t_flags *flags)
+{
+	struct dirent	**children;
+	int				l;
+
+	if (!(children = strstr_to_dirent_array(other_params, &l)))
+		return (0);
+	print_children(children, flags, l, NULL);
+	return (2);
+}
+
+void	order_dirs(struct dirent **dirs, t_flags *flags, int l)
+{
+	if (flags->t)
+		sort_by_date(dirs, l, NULL);
+	else
+		sort_by_name(dirs, l);
+	if (flags->r)
+		reverse_children(dirs, l);
+}
+
+int		print_dir_params(char **dir_params, t_flags *flags, char **other_params)
+{
+	DIR				*tmp_dir;
+	struct dirent	**dirs;
+	int				i;
+	int				l;
+
+	if (!(dirs = strstr_to_dirent_array(dir_params, &l)))
+		return (0);
+	order_dirs(dirs, flags, l);
+	i = 0;
+	while (i < l)
 	{
 		if (i != 0)
 			ft_putchar('\n');
-		if (i != 0 || other_params[0] || dir_params[i + 1])
+		if (i != 0 || other_params[0] || i + 1 < l)
 		{
-			ft_putstr(dir_params[i]);
+			ft_putstr(dirs[i]->d_name);
 			ft_putendl(":");
 		}
-		tmp_dir = opendir(dir_params[i]);
-		listdir(tmp_dir, flags, dir_params[i]);
+		tmp_dir = opendir(dirs[i]->d_name);
+		listdir(tmp_dir, flags, dirs[i]->d_name);
 		closedir(tmp_dir);
 		i++;
 	}
+	return (1);
+}
+
+int		print_params(char **dir_params, char **other_params, t_flags *flags)
+{
+	int		res;
+
+	res = print_other_params(other_params, flags);
+	if (res == 2 && dir_params[0])
+		ft_putchar('\n');
+	print_dir_params(dir_params, flags, other_params);
 	return (0);
 }
 
@@ -418,7 +478,7 @@ int		main(int argc, char **argv)
 	other_params = NULL;
 	if (!(flags = get_flags(argc, argv, &i)))
 		return (0);
-	sort_args(argc, argv, i);
+	//sort_args(argc, argv, i);
 	dir_params = get_params(argc, argv, i, other_params_list);
 	if (other_params_list)
 		other_params = list_to_string_array(*other_params_list);
