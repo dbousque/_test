@@ -72,6 +72,7 @@ void	print_n_tabs(int n)
 	{
 		ft_putstr("\t");
 		n--;
+
 	}
 }
 
@@ -316,13 +317,6 @@ char	**get_params(int argc, char **argv, int i, t_list **other_params)
 	return (list_to_string_array(params));
 }
 
-void	sort_args(int argc, char **argv, int i)
-{
-	(void)i;
-	(void)argv;
-	(void)argc;
-}
-
 int		strstrlen(char **strstr)
 {
 	int		i;
@@ -364,10 +358,22 @@ int		print_params(char **dir_params, char **other_params, t_flags *flags)
 		}
 		tmp_dir = opendir(dir_params[i]);
 		listdir(tmp_dir, flags);
-		//closedir(tmp_dir);
+		closedir(tmp_dir);
 		i++;
 	}
 	return (0);
+}
+
+int		ft_strcmp_void(void *elt1, void *elt2)
+{
+	return (ft_strcmp((char*)elt1, (char*)elt2));
+}
+
+void	sort_args(int argc, char **argv, int i)
+{
+	if (argc - i <= 1)
+		return ;
+	quicksort((void**)(argv + i), argc - i, ft_strcmp_void);
 }
 
 int		main(int argc, char **argv)
