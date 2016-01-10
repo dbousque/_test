@@ -173,7 +173,7 @@ char	*add_dir_name(char *filename, char *dir_name)
 	return (ft_strjoin(ft_strjoin(dir_name, "/"), filename));
 }
 
-void	add_file_to_dir_children(struct dirent *tmp_child,
+void	add_file_to_dir_children(struct dirent *tmp_child, t_flags *flags,
 										t_list **dir_children, char *dir_name)
 {
 	t_list	*new_elt;
@@ -181,7 +181,8 @@ void	add_file_to_dir_children(struct dirent *tmp_child,
 
 	if (tmp_child->d_type == DT_DIR
 		&& ft_strcmp(tmp_child->d_name, ".") != 0
-		&& ft_strcmp(tmp_child->d_name, "..") != 0)
+		&& ft_strcmp(tmp_child->d_name, "..") != 0
+		&& (flags->a || tmp_child->d_name[0] != '.'))
 	{
 		dir_name_added = add_dir_name(tmp_child->d_name, dir_name);
 		new_elt = ft_lstnew(dir_name_added,
@@ -210,7 +211,7 @@ int		listdir(DIR *dir, t_flags *flags, char *dir_name, t_list *dir_children)
 				children_list = child_lst_n;
 			length++;
 		}
-		add_file_to_dir_children(tmp_child, &dir_children, dir_name);
+		add_file_to_dir_children(tmp_child, flags, &dir_children, dir_name);
 	}
 	if (!(children = children_list_to_array(children_list, length)))
 		return (unexpected_error());
@@ -394,15 +395,19 @@ int		print_dir_params(char **dir_params, t_flags *flags,
 			ft_putstr(dirs[i]->d_name);
 			ft_putendl(":");
 		}
-		tmp_dir = opendir(dirs[i]->d_name);
-		dir_children = ft_lstnew(NULL, 0);
-		listdir(tmp_dir, flags, dirs[i]->d_name, dir_children);
-		closedir(tmp_dir);
-		if (flags->r_maj && dir_children->next)
+		if ((tmp_dir = opendir(dirs[i]->d_name)))
 		{
-			ft_putchar('\n');
-			print_dir_params(list_to_string_array(dir_children->next), flags, NULL, 1);
+			dir_children = ft_lstnew(NULL, 0);
+			listdir(tmp_dir, flags, dirs[i]->d_name, dir_children);
+			closedir(tmp_dir);
+			if (flags->r_maj && dir_children->next)
+			{
+				ft_putchar('\n');
+				print_dir_params(list_to_string_array(dir_children->next), flags, NULL, 1);
+			}
 		}
+		else
+			print_errno(errno, dirs[i]->d_name);
 		i++;
 	}
 	return (1);
