@@ -6,7 +6,7 @@
 /*   By: dbousque <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/09 13:59:24 by dbousque          #+#    #+#             */
-/*   Updated: 2016/01/11 13:08:13 by dbousque         ###   ########.fr       */
+/*   Updated: 2016/01/11 15:07:44 by dbousque         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,14 @@ void	*unexpected_error_null(void)
 {
 	ft_putendl_fd("ft_ls: unexpected error", 2);
 	return (NULL);
+}
+
+void	print_errno(int error, char *filename)
+{
+	ft_putstr_fd("ft_ls: ", 2);
+	ft_putstr_fd(filename, 2);
+	ft_putstr_fd(": ", 2);
+	ft_putendl_fd(strerror(error), 2);
 }
 
 struct dirent	**children_list_to_array(t_list *children_list, int length)
@@ -119,7 +127,7 @@ struct stat	**get_file_stats(struct dirent **children, char *dir_name,
 		return (unexpected_error_null());
 	res[nb] = NULL;
 	i = 0;
-	while (i < 6)
+	while (i < 4)
 	{
 		largest[i] = 0;
 		i++;
@@ -188,17 +196,148 @@ void	print_group_name(struct stat *file_stats, int largest)
 	ft_putstr(group);
 }
 
+int		month_to_int(char *month)
+{
+	if (ft_strcmp(month, "Jan") == 0)
+		return (1);
+	if (ft_strcmp(month, "Feb") == 0)
+		return (2);
+	if (ft_strcmp(month, "Mar") == 0)
+		return (3);
+	if (ft_strcmp(month, "Apr") == 0)
+		return (4);
+	if (ft_strcmp(month, "Mai") == 0)
+		return (5);
+	if (ft_strcmp(month, "Jun") == 0)
+		return (6);
+	if (ft_strcmp(month, "Jul") == 0)
+		return (7);
+	if (ft_strcmp(month, "Aug") == 0)
+		return (8);
+	if (ft_strcmp(month, "Sep") == 0)
+		return (9);
+	if (ft_strcmp(month, "Oct") == 0)
+		return (10);
+	if (ft_strcmp(month, "Nov") == 0)
+		return (11);
+	if (ft_strcmp(month, "Dec") == 0)
+		return (12);
+	return (-1);
+}
+
+int		more_or_less_than_six_months(char **date)
+{
+	char	**current_date;
+	int		dat[3];
+	int		current_dat[3];
+	long	crt;
+
+	crt = time(NULL);
+	current_date = ft_strsplit(ctime(&crt), ' ');
+	current_dat[0] = ft_atoi(current_date[4]);
+	current_dat[1] = month_to_int(current_date[1]);
+	current_dat[2] = ft_atoi(current_date[2]); 
+	dat[0] = ft_atoi(date[4]);
+	dat[1] = month_to_int(date[1]);
+	dat[2] = ft_atoi(date[2]);
+	if (current_dat[0] - dat[0] < -1 || current_dat[0] - dat[0] > 1)
+		return (1);
+	if (current_dat[0] > dat[0])
+		current_dat[1] += 12;
+	else if (current_dat[0] < dat[0])
+		dat[1] += 12;
+	if (current_dat[1] - dat[1] < -6 || current_dat[1] - dat[1] > 6)
+		return (1);
+	if (current_dat[1] - dat[1] == 6 && current_dat[2] - dat[2] >= 0)
+		return (1);
+	if (current_dat[1] - dat[1] == -6 && current_dat[2] - dat[2] <= 0)
+		return (1);
+	return (0);
+}
+
+void	print_until_newline(char *str)
+{
+	int		i;
+
+	i = 0;
+	while (str[i] && str[i] != '\n')
+		i++;
+	str[i] = '\0';
+	ft_putstr(str);
+}
+
+void	print_date(struct stat *file_stats)
+{
+	char	**date;
+	char	**hour;
+
+	date = ft_strsplit(ctime(&file_stats->st_mtimespec.tv_sec), ' ');
+	ft_putchar(' ');
+	ft_putstr(date[1]);
+	ft_putchar(' ');
+	if (ft_strlen(date[2]) == 1)
+		ft_putchar(' ');
+	ft_putstr(date[2]);
+	if (more_or_less_than_six_months(date))
+	{
+		ft_putstr("  ");
+		print_until_newline(date[4]);
+	}
+	else
+	{
+		hour = ft_strsplit(date[3], ':');
+		ft_putchar(' ');
+		ft_putstr(hour[0]);
+		ft_putchar(':');
+		ft_putstr(hour[1]);
+	}
+}
+
+void	print_links_to(struct dirent *child, char *dir_name)
+{
+	char	buf[1025];
+	int		ret;
+
+	ret = readlink(make_path(child->d_name, dir_name), buf, 1024);
+	if (ret == -1)
+		print_errno(errno, make_path(child->d_name, dir_name));
+	ft_putstr(" -> ");
+	buf[ret] = '\0';
+	ft_putstr(buf);
+}
+
+void	print_total(struct stat **file_stats, int nb, char *dir_name)
+{
+	long	res;
+	int		i;
+
+	if (dir_name && nb > 0)
+	{
+		res = 0;
+		i = 0;
+		while (i < nb)
+		{
+			res += file_stats[i]->st_blocks;
+			i++;
+		}
+		ft_putstr("total ");
+		ft_putstr(ft_ntoa_base(res, "0123456789"));
+		ft_putchar('\n');
+	}
+}
+
 int		print_children_details(struct dirent **children, t_flags *flags,
 														int nb, char *dir_name)
 {
 	int			i;
 	struct stat	**file_stats;
-	int			largest[6];
+	int			largest[4];
 
 	(void)flags;
 	if (!(file_stats = get_file_stats(children, dir_name, largest, nb)))
 		return (0);
 	i = 0;
+	print_total(file_stats, nb, dir_name);
 	while (i < nb)
 	{
 		print_type_n_rights(children[i], file_stats[i]);
@@ -206,6 +345,11 @@ int		print_children_details(struct dirent **children, t_flags *flags,
 		print_file_owner(file_stats[i], largest[1]);
 		print_group_name(file_stats[i], largest[2]);
 		print_file_size(file_stats[i], largest[3]);
+		print_date(file_stats[i]);
+		ft_putchar(' ');
+		ft_putstr(children[i]->d_name);
+		if (children[i]->d_type == DT_LNK)
+			print_links_to(children[i], dir_name);
 		ft_putchar('\n');
 		i++;
 	}
@@ -401,14 +545,6 @@ char	**list_to_string_array(t_list *params)
 		length++;
 	}
 	return (res);
-}
-
-void	print_errno(int error, char *filename)
-{
-	ft_putstr_fd("ft_ls: ", 2);
-	ft_putstr_fd(filename, 2);
-	ft_putstr_fd(": ", 2);
-	ft_putendl_fd(strerror(error), 2);
 }
 
 void	add_to_lists(int error, t_list **params, t_list **other_params,
