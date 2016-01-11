@@ -45,10 +45,107 @@ struct dirent	**children_list_to_array(t_list *children_list, int length)
 	return (res);
 }
 
-void	print_children_details(struct dirent **children, t_flags *flags)
+char	*make_path(char *filename, char *dir_name)
 {
+	int		len;
+
+	if (!dir_name)
+		return (filename);
+	len = ft_strlen(dir_name);
+	if (dir_name[len - 1] != '/')
+		dir_name = ft_strjoin(dir_name, "/");
+	return (ft_strjoin(dir_name, filename));
+}
+
+void	print_type_n_rights(struct dirent *file, struct stat *file_stats)
+{
+	if (file->d_type == DT_DIR)
+		ft_putchar('d');
+	else if (file->d_type == DT_LNK)
+		ft_putchar('l');
+	else// if (file->d_type == DT_REG)
+		ft_putchar('-');
+	ft_putchar((file_stats->st_mode & S_IRUSR) ? 'r' : '-');
+	ft_putchar((file_stats->st_mode & S_IWUSR) ? 'w' : '-');
+	ft_putchar((file_stats->st_mode & S_IXUSR) ? 'x' : '-');
+	ft_putchar((file_stats->st_mode & S_IRGRP) ? 'r' : '-');
+	ft_putchar((file_stats->st_mode & S_IWGRP) ? 'w' : '-');
+	ft_putchar((file_stats->st_mode & S_IXGRP) ? 'x' : '-');
+	ft_putchar((file_stats->st_mode & S_IROTH) ? 'r' : '-');
+	ft_putchar((file_stats->st_mode & S_IWOTH) ? 'w' : '-');
+	ft_putchar((file_stats->st_mode & S_IXOTH) ? 'x' : '-');
+}
+
+void	print_nb_hlinks(struct stat *file_stats, int largest)
+{
+	int		i;
+	int		len;
+
+	i = 0;
+	len = ft_strlen(ft_ntoa_base(file_stats->st_nlink, "0123456789"));
+	while (i < largest - len + 2)
+	{
+		ft_putchar(' ');
+		i++;
+	}
+	ft_printf("%lld", file_stats->st_nlink);
+}
+
+void	update_largest(int largest[6], struct stat *stats)
+{
+	int		tmp;
+
+	tmp = ft_strlen(ft_ntoa_base(stats->st_nlink, "0123456789"));
+	if (tmp > largest[0])
+		largest[0] = tmp;
+}
+
+struct stat	**get_file_stats(struct dirent **children, char *dir_name,
+														int largest[6], int nb)
+{
+	int			i;
+	struct stat	**res;
+
+	if (!(res = (struct stat**)malloc(sizeof(struct stat*) * (nb + 1))))
+		return (unexpected_error_null());
+	res[nb] = NULL;
+	i = 0;
+	while (i < 6)
+	{
+		largest[i] = 0;
+		i++;
+	}
+	i = 0;
+	while (i < nb)
+	{
+		if (!(res[i] = (struct stat*)malloc(sizeof(struct stat))))
+			return (unexpected_error_null());
+		stat(make_path(children[i]->d_name, dir_name), res[i]);
+		update_largest(largest, res[i]);
+		i++;
+	}
+	return (res);
+}
+
+int		print_children_details(struct dirent **children, t_flags *flags,
+														int nb, char *dir_name)
+{
+	int			i;
+	struct stat	**file_stats;
+	int			largest[6];
+
 	(void)flags;
-	(void)children;
+	if (!(file_stats = get_file_stats(children, dir_name, largest, nb)))
+		return (0);
+	i = 0;
+	while (i < nb)
+	{
+		print_type_n_rights(children[i], file_stats[i]);
+		print_nb_hlinks(file_stats[i], largest[0]);
+		ft_putchar('\n');
+		i++;
+	}
+	return (0);
 }
 
 int		print_children_regular(struct dirent **children, int nb)
@@ -88,18 +185,6 @@ int		ft_strcmp_child_name(void *elt1, void *elt2, void *elt3)
 	(void)elt3;
 	return (-ft_strcmp(((struct dirent*)elt1)->d_name,
 											((struct dirent*)elt2)->d_name));
-}
-
-char	*make_path(char *filename, char *dir_name)
-{
-	int		len;
-
-	if (!dir_name)
-		return (filename);
-	len = ft_strlen(dir_name);
-	if (dir_name[len - 1] != '/')
-		dir_name = ft_strjoin(dir_name, "/");
-	return (ft_strjoin(dir_name, filename));
 }
 
 int		compare_by_date(void *elt1, void *elt2, void *elt3)
@@ -161,7 +246,7 @@ void	print_children(struct dirent **children, t_flags *flags, int nb_child,
 	if (flags->r)
 		reverse_children(children, nb_child);
 	if (flags->l)
-		print_children_details(children, flags);
+		print_children_details(children, flags, nb_child, dir_name);
 	else if (flags->minus)
 		print_children_regular_std(children, nb_child);
 	else
