@@ -6,7 +6,7 @@
 /*   By: dbousque <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/09 13:59:24 by dbousque          #+#    #+#             */
-/*   Updated: 2016/01/11 20:01:12 by dbousque         ###   ########.fr       */
+/*   Updated: 2016/01/11 18:53:17 by dbousque         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -205,13 +205,12 @@ void	print_group_name(struct stat *file_stats, int largest)
 	i = 0;
 	group = getgrgid(file_stats->st_gid)->gr_name;
 	len = ft_strlen(group);
-	ft_putstr("  ");
-	ft_putstr(group);
-	while (i < largest - len)
+	while (i < largest - len + 2)
 	{
 		ft_putchar(' ');
 		i++;
 	}
+	ft_putstr(group);
 }
 
 int		month_to_int(char *month)
@@ -436,7 +435,9 @@ int		compare_by_date(void *elt1, void *elt2, void *elt3)
 
 void	sort_by_name(struct dirent **children, int nb)
 {
+	ft_putendl("AVANT");
 	quicksort((void**)children, nb, ft_strcmp_child_name, NULL);
+	ft_puendl("APRES");
 }
 
 void	sort_by_date(struct dirent **children, int nb, char *dir_name)
@@ -469,6 +470,7 @@ void	print_children(struct dirent **children, t_flags *flags, int nb_child,
 		sort_by_date(children, nb_child, dir_name);
 	else
 		sort_by_name(children, nb_child);
+	ft_putendl("ICI");
 	if (flags->r)
 		reverse_children(children, nb_child);
 	if (flags->l)
@@ -510,11 +512,13 @@ int		listdir(DIR *dir, t_flags *flags, char *dir_name, t_list *dir_children)
 	struct dirent	**children;
 	int				length;
 
+	ft_putendl("ENTREE");
 	length = 0;
 	children_list = NULL;
 	child_lst_n = NULL;
 	while ((tmp_child = readdir(dir)))
 	{
+		ft_putendl("LA");
 		if (tmp_child->d_name[0] != '.' || flags->a)
 		{
 			ft_lstaddend(&child_lst_n, ft_lstnew(tmp_child, sizeof(struct dirent)));
@@ -522,10 +526,14 @@ int		listdir(DIR *dir, t_flags *flags, char *dir_name, t_list *dir_children)
 				children_list = child_lst_n;
 			length++;
 		}
+		ft_putendl("LA APRES");
 		add_file_to_dir_children(tmp_child, flags, &dir_children, dir_name);
+		ft_putendl("LA APRES APRES");
 	}
+	ft_putendl("END");
 	if (!(children = children_list_to_array(children_list, length)))
 		return (unexpected_error());
+	ft_putendl("END AFTER");
 	print_children(children, flags, length, dir_name);
 	return (1);
 }
@@ -696,6 +704,7 @@ int		print_dir_params(char **dir_params, t_flags *flags,
 	i = 0;
 	while (i < l)
 	{
+		ft_putendl("ok");
 		if (i != 0)
 			ft_putchar('\n');
 		if (i != 0 || (other_params && other_params[0]) || i + 1 < l || print_name)
@@ -703,10 +712,13 @@ int		print_dir_params(char **dir_params, t_flags *flags,
 			ft_putstr(dirs[i]->d_name);
 			ft_putendl(":");
 		}
+		ft_putendl("ok2");
 		if ((tmp_dir = opendir(dirs[i]->d_name)))
 		{
+			ft_putendl("ok3");
 			dir_children = ft_lstnew(NULL, 0);
 			listdir(tmp_dir, flags, dirs[i]->d_name, dir_children);
+			ft_putendl("ok4");
 			closedir(tmp_dir);
 			if (flags->r_maj && dir_children->next)
 			{

@@ -23,6 +23,19 @@ void	rebuild_to_sort(void **to_sort, void **part1, void **part2, int nb1, int nb
 	}
 }
 
+char	is_sorted(void **to_sort, int nb,
+			int (*compare_fct)(void *elt1, void *elt2, void *elt3), void *elt3)
+{
+	nb--;
+	while (nb > 0)
+	{
+		if (compare_fct(to_sort[nb], to_sort[nb - 1], elt3) > 0)
+			return (0);
+		nb--;
+	}
+	return (1);
+}
+
 void	quicksort(void **to_sort, int nb,
 			int (*compare_fct)(void *elt1, void *elt2, void *elt3), void *elt3)
 {
@@ -32,7 +45,7 @@ void	quicksort(void **to_sort, int nb,
 	int		nb1;
 	int		nb2;
 
-	if (nb <= 1)
+	if (nb <= 1 || is_sorted(to_sort, nb, compare_fct, elt3))
 		return ;
 	pivot = to_sort[nb - 1];
 	nb -= 2;
