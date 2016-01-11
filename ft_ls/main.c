@@ -6,7 +6,7 @@
 /*   By: dbousque <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/09 13:59:24 by dbousque          #+#    #+#             */
-/*   Updated: 2016/01/11 15:58:49 by dbousque         ###   ########.fr       */
+/*   Updated: 2016/01/11 17:42:17 by dbousque         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,13 +68,16 @@ char	*make_path(char *filename, char *dir_name)
 	return (ft_strjoin(dir_name, filename));
 }
 
-void	print_type_n_rights(struct dirent *file, struct stat *file_stats)
+void	print_type_n_rights(struct dirent *file, struct stat *file_stats,
+																char *dir_name)
 {
+	char	buf[1025];
+
 	if (file->d_type == DT_DIR)
 		ft_putchar('d');
-	else if (file->d_type == DT_LNK)
+	else if (file->d_type == DT_LNK || (file->d_type == 0 && readlink(make_path(file->d_name, dir_name), buf, 1024) && errno == 0))
 		ft_putchar('l');
-	else// if (file->d_type == DT_REG)
+	else
 		ft_putchar('-');
 	ft_putchar((file_stats->st_mode & S_IRUSR) ? 'r' : '-');
 	ft_putchar((file_stats->st_mode & S_IWUSR) ? 'w' : '-');
@@ -125,6 +128,7 @@ struct stat	**get_file_stats(struct dirent **children, char *dir_name,
 {
 	int			i;
 	struct stat	**res;
+	char		buf[1025];
 
 	if (!(res = (struct stat**)malloc(sizeof(struct stat*) * (nb + 1))))
 		return (unexpected_error_null());
@@ -140,7 +144,7 @@ struct stat	**get_file_stats(struct dirent **children, char *dir_name,
 	{
 		if (!(res[i] = (struct stat*)malloc(sizeof(struct stat))))
 			return (unexpected_error_null());
-		if (children[i]->d_type == DT_LNK)
+		if (children[i]->d_type == DT_LNK || (children[i]->d_type == 0 && readlink(make_path(children[i]->d_name, dir_name), buf, 1024) && errno == 2))
 			lstat(make_path(children[i]->d_name, dir_name), res[i]);
 		else
 			stat(make_path(children[i]->d_name, dir_name), res[i]);
@@ -335,6 +339,7 @@ int		print_children_details(struct dirent **children, t_flags *flags,
 	int			i;
 	struct stat	**file_stats;
 	int			largest[4];
+	char		buf[1025];
 
 	(void)flags;
 	if (!(file_stats = get_file_stats(children, dir_name, largest, nb)))
@@ -343,7 +348,7 @@ int		print_children_details(struct dirent **children, t_flags *flags,
 	print_total(file_stats, nb, dir_name);
 	while (i < nb)
 	{
-		print_type_n_rights(children[i], file_stats[i]);
+		print_type_n_rights(children[i], file_stats[i], dir_name);
 		print_nb_hlinks(file_stats[i], largest[0]);
 		print_file_owner(file_stats[i], largest[1]);
 		print_group_name(file_stats[i], largest[2]);
@@ -351,7 +356,7 @@ int		print_children_details(struct dirent **children, t_flags *flags,
 		print_date(file_stats[i]);
 		ft_putchar(' ');
 		ft_putstr(children[i]->d_name);
-		if (children[i]->d_type == DT_LNK)
+		if (children[i]->d_type == DT_LNK || (children[i]->d_type == 0 && readlink(make_path(children[i]->d_name, dir_name), buf, 1024) && errno == 0))
 			print_links_to(children[i], dir_name);
 		ft_putchar('\n');
 		i++;
@@ -576,11 +581,14 @@ void	add_to_lists(int error, t_list **params, t_list **other_params,
 
 char	**get_params(int argc, char **argv, int i, t_list **other_params)
 {
-	t_list	*params;
-	DIR		*tmp;
-	int		error;
+	t_list		*params;
+	DIR			*tmp;
+	int			error;
+	struct stat	*stats;
 
 	params = NULL;
+	if (!(stats = (struct stat*)malloc(sizeof(struct stat))))
+		return (NULL);
 	if (i == argc)
 		ft_lstaddend(&params, ft_lstnew(".", sizeof(char) * 2));
 	else
@@ -591,6 +599,8 @@ char	**get_params(int argc, char **argv, int i, t_list **other_params)
 			if (!(tmp = opendir(argv[i])))
 			{
 				error = errno;
+				if (error == ENOENT && !(lstat(argv[i], stats)))
+					error = ENOTDIR;
 				if (error != ENOTDIR)
 					print_errno(error, argv[i]);
 			}
