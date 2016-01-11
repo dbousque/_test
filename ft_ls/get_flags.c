@@ -5,9 +5,13 @@
 int		illegal_option(char c)
 {
 	char	*str;
+	char	tmp[2];
 
-	str = "ft_ls: illegal option -- %c\nusage: ft_ls [-lRart] [file ...]\n";
-	ft_printf(str, c);
+	tmp[0] = c;
+	tmp[1] = '\0';
+	str = ft_strjoin("ft_ls: illegal option -- ", tmp);
+	str = ft_strjoin(str, "\nusage: ft_ls [-lRart] [file ...]\n");
+	ft_putstr_fd(str, 2);
 	return (0);
 }
 

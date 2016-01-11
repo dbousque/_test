@@ -6,7 +6,7 @@
 /*   By: dbousque <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/09 13:59:24 by dbousque          #+#    #+#             */
-/*   Updated: 2016/01/11 15:07:44 by dbousque         ###   ########.fr       */
+/*   Updated: 2016/01/11 15:58:49 by dbousque         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,10 @@ void	*unexpected_error_null(void)
 void	print_errno(int error, char *filename)
 {
 	ft_putstr_fd("ft_ls: ", 2);
-	ft_putstr_fd(filename, 2);
+	if (filename[0] == '\0')
+		ft_putstr_fd("fts_open", 2);
+	else
+		ft_putstr_fd(filename, 2);
 	ft_putstr_fd(": ", 2);
 	ft_putendl_fd(strerror(error), 2);
 }
@@ -377,9 +380,8 @@ int		print_children_regular_std(struct dirent **children, int nb)
 {
 	int		i;
 
-	(void)nb;
 	i = 0;
-	while (children[i])
+	while (i < nb)
 	{
 		ft_putstr(children[i]->d_name);
 		ft_putchar('\n');
@@ -698,21 +700,25 @@ int		print_dir_params(char **dir_params, t_flags *flags,
 	return (1);
 }
 
-int		print_params(char **dir_params, char **other_params, t_flags *flags)
+int		print_params(char **dir_params, char **other_params, t_flags *flags,
+																int nb_params)
 {
 	int		res;
 
 	res = print_other_params(other_params, flags);
 	if (res == 2 && dir_params[0])
 		ft_putchar('\n');
-	print_dir_params(dir_params, flags, other_params, 0);
+	if (nb_params <= 1)
+		print_dir_params(dir_params, flags, other_params, 0);
+	else
+		print_dir_params(dir_params, flags, other_params, 1);
 	return (0);
 }
 
 int		ft_strcmp_void(void *elt1, void *elt2, void *elt3)
 {
 	(void)elt3;
-	return (ft_strcmp((char*)elt1, (char*)elt2));
+	return (-ft_strcmp((char*)elt1, (char*)elt2));
 }
 
 void	sort_args(int argc, char **argv, int i)
@@ -720,6 +726,17 @@ void	sort_args(int argc, char **argv, int i)
 	if (argc - i <= 1)
 		return ;
 	quicksort((void**)(argv + i), argc - i, ft_strcmp_void, NULL);
+}
+
+int		found_void_param(int argc, char **argv, int i)
+{
+	while (i < argc)
+	{
+		if (ft_strlen(argv[i]) <= 0)
+			return (1);
+		i++;
+	}
+	return (0);
 }
 
 int		main(int argc, char **argv)
@@ -736,8 +753,14 @@ int		main(int argc, char **argv)
 	other_params = NULL;
 	if (!(flags = get_flags(argc, argv, &i)))
 		return (0);
+	if (found_void_param(argc, argv, i))
+	{
+		print_errno(ENOENT, "");
+		return (0);
+	}
+	sort_args(argc, argv, i);
 	dir_params = get_params(argc, argv, i, other_params_list);
 	if (other_params_list)
 		other_params = list_to_string_array(*other_params_list);
-	return (print_params(dir_params, other_params, flags));
+	return (print_params(dir_params, other_params, flags, argc - i));
 }
