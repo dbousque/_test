@@ -6,7 +6,7 @@
 /*   By: dbousque <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/09 13:59:55 by dbousque          #+#    #+#             */
-/*   Updated: 2016/01/11 13:50:39 by dbousque         ###   ########.fr       */
+/*   Updated: 2016/01/11 18:00:54 by dbousque         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@
 # include <dirent.h>
 # include <sys/stat.h>
 # include <sys/ioctl.h>
+# include <sys/xattr.h>
 # include <errno.h>
 # include <stdio.h>
 # include <pwd.h>

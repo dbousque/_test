@@ -6,7 +6,7 @@
 /*   By: dbousque <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/09 13:59:24 by dbousque          #+#    #+#             */
-/*   Updated: 2016/01/11 17:42:17 by dbousque         ###   ########.fr       */
+/*   Updated: 2016/01/11 18:21:31 by dbousque         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,13 +81,22 @@ void	print_type_n_rights(struct dirent *file, struct stat *file_stats,
 		ft_putchar('-');
 	ft_putchar((file_stats->st_mode & S_IRUSR) ? 'r' : '-');
 	ft_putchar((file_stats->st_mode & S_IWUSR) ? 'w' : '-');
-	ft_putchar((file_stats->st_mode & S_IXUSR) ? 'x' : '-');
+	if (file_stats->st_mode & S_ISUID)
+		ft_putchar((file_stats->st_mode & S_IXUSR) ? 's' : 'S');
+	else
+		ft_putchar((file_stats->st_mode & S_IXUSR) ? 'x' : '-');
 	ft_putchar((file_stats->st_mode & S_IRGRP) ? 'r' : '-');
 	ft_putchar((file_stats->st_mode & S_IWGRP) ? 'w' : '-');
-	ft_putchar((file_stats->st_mode & S_IXGRP) ? 'x' : '-');
+	if (file_stats->st_mode & S_ISGID)
+		ft_putchar((file_stats->st_mode & S_IXGRP) ? 's' : 'S');
+	else
+		ft_putchar((file_stats->st_mode & S_IXGRP) ? 'x' : '-');
 	ft_putchar((file_stats->st_mode & S_IROTH) ? 'r' : '-');
 	ft_putchar((file_stats->st_mode & S_IWOTH) ? 'w' : '-');
-	ft_putchar((file_stats->st_mode & S_IXOTH) ? 'x' : '-');
+	if (file_stats->st_mode & S_ISVTX)
+		ft_putchar((file_stats->st_mode & S_IXOTH) ? 't' : 'T');
+	else
+		ft_putchar((file_stats->st_mode & S_IXOTH) ? 'x' : '-');
 }
 
 void	print_nb_hlinks(struct stat *file_stats, int largest)
@@ -163,12 +172,13 @@ void	print_file_owner(struct stat *file_stats, int largest)
 	i = 0;
 	user = getpwuid(file_stats->st_uid)->pw_name;
 	len = ft_strlen(user);
-	while (i < largest - len + 1)
+	ft_putchar(' ');
+	ft_putstr(user);
+	while (i < largest - len)
 	{
 		ft_putchar(' ');
 		i++;
 	}
-	ft_putstr(user);
 }
 
 void	print_file_size(struct stat *file_stats, int largest)
