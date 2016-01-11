@@ -6,7 +6,7 @@
 /*   By: dbousque <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/09 13:59:55 by dbousque          #+#    #+#             */
-/*   Updated: 2016/01/09 17:16:46 by dbousque         ###   ########.fr       */
+/*   Updated: 2016/01/11 12:57:00 by dbousque         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,9 @@
 # include <sys/ioctl.h>
 # include <errno.h>
 # include <stdio.h>
+# include <pwd.h>
+# include <uuid/uuid.h>
+# include <grp.h>
 
 typedef struct	s_flags
 {

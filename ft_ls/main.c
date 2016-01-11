@@ -6,7 +6,7 @@
 /*   By: dbousque <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/09 13:59:24 by dbousque          #+#    #+#             */
-/*   Updated: 2016/01/09 18:44:03 by dbousque         ###   ########.fr       */
+/*   Updated: 2016/01/11 13:08:13 by dbousque         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,11 +93,20 @@ void	print_nb_hlinks(struct stat *file_stats, int largest)
 
 void	update_largest(int largest[6], struct stat *stats)
 {
-	int		tmp;
+	long long	tmp;
 
 	tmp = ft_strlen(ft_ntoa_base(stats->st_nlink, "0123456789"));
 	if (tmp > largest[0])
 		largest[0] = tmp;
+	tmp = ft_strlen(getpwuid(stats->st_uid)->pw_name);
+	if (tmp > largest[1])
+		largest[1] = tmp;
+	tmp = ft_strlen(getgrgid(stats->st_gid)->gr_name);
+	if (tmp > largest[2])
+		largest[2] = tmp;
+	tmp = ft_strlen(ft_ntoa_base(stats->st_size, "0123456789"));
+	if (tmp > largest[3])
+		largest[3] = tmp;
 }
 
 struct stat	**get_file_stats(struct dirent **children, char *dir_name,
@@ -120,11 +129,63 @@ struct stat	**get_file_stats(struct dirent **children, char *dir_name,
 	{
 		if (!(res[i] = (struct stat*)malloc(sizeof(struct stat))))
 			return (unexpected_error_null());
-		stat(make_path(children[i]->d_name, dir_name), res[i]);
+		if (children[i]->d_type == DT_LNK)
+			lstat(make_path(children[i]->d_name, dir_name), res[i]);
+		else
+			stat(make_path(children[i]->d_name, dir_name), res[i]);
 		update_largest(largest, res[i]);
 		i++;
 	}
 	return (res);
+}
+
+void	print_file_owner(struct stat *file_stats, int largest)
+{
+	int		i;
+	int		len;
+	char	*user;
+
+	i = 0;
+	user = getpwuid(file_stats->st_uid)->pw_name;
+	len = ft_strlen(user);
+	while (i < largest - len + 1)
+	{
+		ft_putchar(' ');
+		i++;
+	}
+	ft_putstr(user);
+}
+
+void	print_file_size(struct stat *file_stats, int largest)
+{
+	int		i;
+	int		len;
+
+	i = 0;
+	len = ft_strlen(ft_ntoa_base(file_stats->st_size, "0123456789"));
+	while (i < largest - len + 2)
+	{
+		ft_putchar(' ');
+		i++;
+	}
+	ft_printf("%lld", file_stats->st_size);
+}
+
+void	print_group_name(struct stat *file_stats, int largest)
+{
+	int		i;
+	int		len;
+	char	*group;
+
+	i = 0;
+	group = getgrgid(file_stats->st_gid)->gr_name;
+	len = ft_strlen(group);
+	while (i < largest - len + 2)
+	{
+		ft_putchar(' ');
+		i++;
+	}
+	ft_putstr(group);
 }
 
 int		print_children_details(struct dirent **children, t_flags *flags,
@@ -142,6 +203,9 @@ int		print_children_details(struct dirent **children, t_flags *flags,
 	{
 		print_type_n_rights(children[i], file_stats[i]);
 		print_nb_hlinks(file_stats[i], largest[0]);
+		print_file_owner(file_stats[i], largest[1]);
+		print_group_name(file_stats[i], largest[2]);
+		print_file_size(file_stats[i], largest[3]);
 		ft_putchar('\n');
 		i++;
 	}
