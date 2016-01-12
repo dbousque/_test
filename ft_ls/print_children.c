@@ -6,7 +6,7 @@
 /*   By: dbousque <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/12 16:44:14 by dbousque          #+#    #+#             */
-/*   Updated: 2016/01/12 16:45:06 by dbousque         ###   ########.fr       */
+/*   Updated: 2016/01/12 17:25:12 by dbousque         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,4 +71,39 @@ int		print_children_regular_std(struct dirent **children, int nb)
 		i++;
 	}
 	return (1);
+}
+
+void	reverse_children(struct dirent **children, int len)
+{
+	int				end;
+	int				start;
+	struct dirent	*tmp;
+
+	start = 0;
+	end = len - 1;
+	while (start < end)
+	{
+		tmp = children[start];
+		children[start] = children[end];
+		children[end] = tmp;
+		start++;
+		end--;
+	}
+}
+
+void	print_children(struct dirent **children, t_flags *flags, int nb_child,
+																char *dir_name)
+{
+	if (flags->t)
+		sort_by_date(children, nb_child, dir_name);
+	else
+		sort_by_name(children, nb_child);
+	if (flags->r)
+		reverse_children(children, nb_child);
+	if (flags->l)
+		print_children_details(children, flags, nb_child, dir_name);
+	else if (flags->minus)
+		print_children_regular_std(children, nb_child);
+	else
+		print_children_regular(children, nb_child);
 }

@@ -1,14 +1,24 @@
-
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   quicksort.c                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: dbousque <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2016/01/12 18:17:14 by dbousque          #+#    #+#             */
+/*   Updated: 2016/01/12 18:24:53 by dbousque         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
 #include "ft_ls.h"
 
-void	rebuild_to_sort(void **to_sort, void **part1, void **part2, int nb1, int nb2, void *pivot)
+void	rebuild_to_sort(void **to_sort, void **part1, void **part2, void *pivot)
 {
 	int		i;
 	int		decal;
 
 	i = 0;
-	while (i < nb1)
+	while (part1[i])
 	{
 		to_sort[i] = part1[i];
 		i++;
@@ -16,16 +26,18 @@ void	rebuild_to_sort(void **to_sort, void **part1, void **part2, int nb1, int nb
 	to_sort[i] = pivot;
 	decal = i + 1;
 	i = 0;
-	while (i < nb2)
+	while (part2[i])
 	{
 		to_sort[decal + i] = part2[i];
 		i++;
 	}
 }
 
-char	is_sorted(void **to_sort, int nb,
+char	is_s(void **to_sort, int nb,
 			int (*compare_fct)(void *elt1, void *elt2, void *elt3), void *elt3)
 {
+	if (nb <= 1)
+		return (1);
 	nb--;
 	while (nb > 0)
 	{
@@ -36,38 +48,43 @@ char	is_sorted(void **to_sort, int nb,
 	return (1);
 }
 
+char	in(int nb1_2[2], void **pivot, int *nb, void **to_sort)
+{
+	*pivot = to_sort[*nb - 1];
+	*nb -= 1;
+	nb1_2[0] = 0;
+	nb1_2[1] = 0;
+	return (0);
+}
+
 void	quicksort(void **to_sort, int nb,
 			int (*compare_fct)(void *elt1, void *elt2, void *elt3), void *elt3)
 {
-	void	*part1[nb];
-	void	*part2[nb];
+	void	*part1_2[2][nb];
 	void	*pivot;
-	int		nb1;
-	int		nb2;
+	int		nb1_2[2];
 
-	if (nb <= 1 || is_sorted(to_sort, nb, compare_fct, elt3))
+	pivot = NULL;
+	if (is_s(to_sort, nb, compare_fct, elt3) || in(nb1_2, &pivot, &nb, to_sort))
 		return ;
-	pivot = to_sort[nb - 1];
-	nb -= 2;
-	nb1 = 0;
-	nb2 = 0;
-	while (nb >= 0)
+	while (--nb >= 0)
 	{
 		if (compare_fct(pivot, to_sort[nb], elt3) < 0)
 		{
-			part1[nb1] = to_sort[nb];
-			nb1++;
+			part1_2[0][nb1_2[0]] = to_sort[nb];
+			(nb1_2[0])++;
 		}
 		else
 		{
-			part2[nb2] = to_sort[nb];
-			nb2++;
+			part1_2[1][nb1_2[1]] = to_sort[nb];
+			(nb1_2[1])++;
 		}
-		nb--;
 	}
-	quicksort(part1, nb1, compare_fct, elt3);
-	quicksort(part2, nb2, compare_fct, elt3);
-	rebuild_to_sort(to_sort, part1, part2, nb1, nb2, pivot);
+	part1_2[0][nb1_2[0]] = NULL;
+	part1_2[1][nb1_2[1]] = NULL;
+	quicksort(part1_2[0], nb1_2[0], compare_fct, elt3);
+	quicksort(part1_2[1], nb1_2[1], compare_fct, elt3);
+	rebuild_to_sort(to_sort, part1_2[0], part1_2[1], pivot);
 }
 
 void	insertion_sort(void **to_sort, int nb,

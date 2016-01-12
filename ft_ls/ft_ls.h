@@ -6,7 +6,7 @@
 /*   By: dbousque <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/09 13:59:55 by dbousque          #+#    #+#             */
-/*   Updated: 2016/01/12 17:02:31 by dbousque         ###   ########.fr       */
+/*   Updated: 2016/01/12 18:54:54 by dbousque         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,5 +69,19 @@ struct stat		**get_file_stats(struct dirent **children, char *dir_name,
 														int largest[6], int nb);
 void			sort_by_name(struct dirent **children, int nb);
 void			sort_by_date(struct dirent **children, int nb, char *dir_name);
+void			print_children(struct dirent **children, t_flags *flags,
+												int nb_child, char *dir_name);
+void			reverse_children(struct dirent **children, int len);
+int				listdir(DIR *dir, t_flags *flags, char *dir_name,
+														t_list *dir_children);
+char			**list_to_string_array(t_list *params);
+__uint8_t		get_d_type_from_stat(struct stat *stats);
+int				print_params(char **dir_params, char **other_params,
+												t_flags *flags, int nb_params);
+int				print_dir_params(char **dir_params, t_flags *flags,
+										char **other_params, char print_name);
+int				print_other_params(char **other_params, t_flags *flags);
+struct dirent	**strstr_to_dirent_array(char **params, int *l);
+char			**get_params(int argc, char **argv, int i, t_list **other_params, t_flags *flags);
 
 #endif
