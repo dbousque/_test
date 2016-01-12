@@ -69,3 +69,27 @@ void	quicksort(void **to_sort, int nb,
 	quicksort(part2, nb2, compare_fct, elt3);
 	rebuild_to_sort(to_sort, part1, part2, nb1, nb2, pivot);
 }
+
+void	insertion_sort(void **to_sort, int nb,
+			int (*compare_fct)(void *elt1, void *elt2, void *elt3), void *elt3)
+{
+	int		i;
+	int		j;
+	void	*tmp;
+
+	i = 1;
+	if (nb == 1)
+		return ;
+	while (i < nb)
+	{
+		j = i;
+		while (j > 0 && compare_fct(to_sort[j], to_sort[j - 1], elt3) > 0)
+		{
+			tmp = to_sort[j];
+			to_sort[j] = to_sort[j - 1];
+			to_sort[j - 1] = tmp;
+			j--;
+		}
+		i++;
+	}
+}

@@ -6,7 +6,7 @@
 /*   By: dbousque <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/09 13:59:55 by dbousque          #+#    #+#             */
-/*   Updated: 2016/01/11 18:00:54 by dbousque         ###   ########.fr       */
+/*   Updated: 2016/01/12 14:28:49 by dbousque         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,5 +45,7 @@ t_flags			*get_flags(int argc, char **argv, int *i);
 void			quicksort(void **to_sort, int nb,
 			int (*compare_fct)(void *elt1, void *elt2, void *elt3), void *elt3);
 int				print_string_array_columns(char **strings, int nb);
+void			insertion_sort(void **to_sort, int nb,
+			int (*compare_fct)(void *elt1, void *elt2, void *elt3), void *elt3);
 
 #endif

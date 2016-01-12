@@ -6,7 +6,7 @@
 /*   By: dbousque <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/09 13:59:24 by dbousque          #+#    #+#             */
-/*   Updated: 2016/01/12 12:35:43 by dbousque         ###   ########.fr       */
+/*   Updated: 2016/01/12 15:12:27 by dbousque         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,17 +92,15 @@ char	*make_path(char *filename, char *dir_name)
 void	print_type_n_rights(struct dirent *file, struct stat *file_stats,
 																char *dir_name)
 {
-	char	buf[1025];
-
-	if (file->d_type == DT_LNK || (file->d_type == 0 && get_d_type_from_stat(file_stats) == DT_LNK))
+	if (S_ISLNK(file_stats->st_mode))
 		ft_putchar('l');
-	else if (file->d_type == DT_DIR || (file->d_type == 0 && get_d_type_from_stat(file_stats) == DT_DIR))
+	else if (S_ISDIR(file_stats->st_mode))
 		ft_putchar('d');
-	else if (file->d_type == DT_CHR || (file->d_type == 0 && get_d_type_from_stat(file_stats) == DT_CHR))
+	else if (S_ISCHR(file_stats->st_mode))
 		ft_putchar('c');
-	else if (file->d_type == DT_BLK || (file->d_type == 0 && get_d_type_from_stat(file_stats) == DT_BLK))
+	else if (S_ISBLK(file_stats->st_mode))
 		ft_putchar('b');
-	else if (file->d_type == DT_SOCK || (file->d_type == 0 && get_d_type_from_stat(file_stats) == DT_SOCK))
+	else if (S_ISSOCK(file_stats->st_mode))
 		ft_putchar('s');
 	else
 		ft_putchar('-');
@@ -124,7 +122,7 @@ void	print_type_n_rights(struct dirent *file, struct stat *file_stats,
 		ft_putchar((file_stats->st_mode & S_IXOTH) ? 't' : 'T');
 	else
 		ft_putchar((file_stats->st_mode & S_IXOTH) ? 'x' : '-');
-	if (listxattr(make_path(file->d_name, dir_name), buf, 1024, 0) > 1)
+	if (listxattr(make_path(file->d_name, dir_name), NULL, 0, XATTR_NOFOLLOW) > 0)
 		ft_putchar('@');
 	else
 		ft_putchar(' ');
@@ -145,23 +143,29 @@ void	print_nb_hlinks(struct stat *file_stats, int largest)
 	ft_printf("%lld", file_stats->st_nlink);
 }
 
-void	update_largest(int largest[6], struct stat *stats, struct dirent *file)
+void	update_largest(int largest[6], struct stat *stats)
 {
 	long long	tmp;
 
 	tmp = ft_strlen(ft_ntoa_base(stats->st_nlink, "0123456789"));
 	if (tmp > largest[0])
 		largest[0] = tmp;
-	tmp = ft_strlen(getpwuid(stats->st_uid)->pw_name);
+	if (getpwuid(stats->st_uid))
+		tmp = ft_strlen(getpwuid(stats->st_uid)->pw_name);
+	else
+		tmp = ft_strlen(ft_ntoa_base(stats->st_uid, "0123456789"));
 	if (tmp > largest[1])
 		largest[1] = tmp;
-	tmp = ft_strlen(getgrgid(stats->st_gid)->gr_name);
+	if (getgrgid(stats->st_gid))
+		tmp = ft_strlen(getgrgid(stats->st_gid)->gr_name);
+	else
+		tmp = ft_strlen(ft_ntoa_base(stats->st_uid, "0123456789"));
 	if (tmp > largest[2])
 		largest[2] = tmp;
 	tmp = ft_strlen(ft_ntoa_base(stats->st_size, "0123456789"));
 	if (tmp > largest[3])
 		largest[3] = tmp;
-	if (file->d_type == DT_CHR || file->d_type == DT_BLK)
+	if (S_ISCHR(stats->st_mode) || S_ISBLK(stats->st_mode))
 	{
 		tmp = ft_strlen(ft_ntoa_base(MAJOR(stats->st_rdev) / 16, "0123456789"));
 		if (tmp > largest[4])
@@ -177,7 +181,6 @@ struct stat	**get_file_stats(struct dirent **children, char *dir_name,
 {
 	int			i;
 	struct stat	**res;
-	//char		buf[1025];
 	struct stat	*tmp_stat;
 
 	if (!(res = (struct stat**)malloc(sizeof(struct stat*) * (nb + 1))))
@@ -196,22 +199,10 @@ struct stat	**get_file_stats(struct dirent **children, char *dir_name,
 	{
 		if (!(res[i] = (struct stat*)malloc(sizeof(struct stat))))
 			return (unexpected_error_null());
-		stat(make_path(children[i]->d_name, dir_name), res[i]);
-		lstat(make_path(children[i]->d_name, dir_name), tmp_stat);
-		//if (children[i]->d_type == DT_LINK || get_d_type_from_stat(tmp_stat) == DT_LINK
-		//if (children[i]->d_type == DT_LNK || (children[i]->d_type == 0 && readlink(make_path(children[i]->d_name, dir_name), buf, 1024) && errno == 2))
-		//{
-		//	lstat(make_path(children[i]->d_name, dir_name), res[i]);
-		//ft_putnbr(get_d_type_from_stat(res[i]));
-		if (get_d_type_from_stat(tmp_stat) == DT_LNK || (get_d_type_from_stat(res[i]) != get_d_type_from_stat(tmp_stat) && get_d_type_from_stat(res[i]) != DT_REG))
-		{
-			res[i] = ft_memcpy(res[i], tmp_stat, sizeof(struct stat));
+		lstat(make_path(children[i]->d_name, dir_name), res[i]);
+		if (S_ISLNK(res[i]->st_mode))
 			children[i]->d_type = DT_LNK;
-		}
-		//}
-		//else
-		//	stat(make_path(children[i]->d_name, dir_name), res[i]);
-		update_largest(largest, res[i], children[i]);
+		update_largest(largest, res[i]);
 		i++;
 	}
 	//if (largest[5] != 0 && largest[5] < 3)
@@ -226,7 +217,10 @@ void	print_file_owner(struct stat *file_stats, int largest)
 	char	*user;
 
 	i = 0;
-	user = getpwuid(file_stats->st_uid)->pw_name;
+	if (getpwuid(file_stats->st_uid))
+		user = getpwuid(file_stats->st_uid)->pw_name;
+	else
+		user = ft_ntoa_base(file_stats->st_uid, "0123456789");
 	len = ft_strlen(user);
 	ft_putchar(' ');
 	ft_putstr(user);
@@ -243,7 +237,9 @@ void	print_file_size(struct stat *file_stats, int largest[6],
 	int		i;
 	int		len;
 
-	if (file->d_type != DT_CHR && file->d_type != DT_BLK && get_d_type_from_stat(file_stats) != DT_CHR && get_d_type_from_stat(file_stats) != DT_BLK)
+	(void)file;
+	//if (file->d_type != DT_CHR && file->d_type != DT_BLK && get_d_type_from_stat(file_stats) != DT_CHR && get_d_type_from_stat(file_stats) != DT_BLK)
+	if (!S_ISBLK(file_stats->st_mode) && !S_ISCHR(file_stats->st_mode))
 	{
 		i = 0;
 		len = ft_strlen(ft_ntoa_base(file_stats->st_size, "0123456789"));
@@ -282,7 +278,10 @@ void	print_group_name(struct stat *file_stats, int largest)
 	char	*group;
 
 	i = 0;
-	group = getgrgid(file_stats->st_gid)->gr_name;
+	if (getgrgid(file_stats->st_gid))
+		group = getgrgid(file_stats->st_gid)->gr_name;
+	else
+		group = ft_ntoa_base(file_stats->st_gid, "0123456789");
 	len = ft_strlen(group);
 	ft_putstr("  ");
 	ft_putstr(group);
@@ -429,7 +428,7 @@ int		print_children_details(struct dirent **children, t_flags *flags,
 	int			i;
 	struct stat	**file_stats;
 	int			largest[6];
-	char		buf[1025];
+	//char		buf[1025];
 
 	(void)flags;
 	if (!(file_stats = get_file_stats(children, dir_name, largest, nb)))
@@ -446,7 +445,8 @@ int		print_children_details(struct dirent **children, t_flags *flags,
 		print_date(file_stats[i]);
 		ft_putchar(' ');
 		ft_putstr(children[i]->d_name);
-		if (children[i]->d_type == DT_LNK || (children[i]->d_type == 0 && readlink(make_path(children[i]->d_name, dir_name), buf, 1024) && errno == 2))
+		//if (children[i]->d_type == DT_LNK || (children[i]->d_type == 0 && readlink(make_path(children[i]->d_name, dir_name), buf, 1024) && errno == 2))
+		if (S_ISLNK(file_stats[i]->st_mode))
 			print_links_to(children[i], dir_name);
 		ft_putchar('\n');
 		i++;
@@ -515,12 +515,18 @@ int		compare_by_date(void *elt1, void *elt2, void *elt3)
 
 void	sort_by_name(struct dirent **children, int nb)
 {
-	quicksort((void**)children, nb, ft_strcmp_child_name, NULL);
+	if (nb < 400)
+		quicksort((void**)children, nb, ft_strcmp_child_name, NULL);
+	else
+		insertion_sort((void**)children, nb, ft_strcmp_child_name, NULL);
 }
 
 void	sort_by_date(struct dirent **children, int nb, char *dir_name)
 {
-	quicksort((void**)children, nb, compare_by_date, (void*)dir_name);
+	if (nb < 400)
+		quicksort((void**)children, nb, compare_by_date, (void*)dir_name);
+	else
+		insertion_sort((void**)children, nb, ft_strcmp_child_name, NULL);
 }
 
 void	reverse_children(struct dirent **children, int len)
@@ -608,13 +614,6 @@ int		listdir(DIR *dir, t_flags *flags, char *dir_name, t_list *dir_children)
 	print_children(children, flags, length, dir_name);
 	return (1);
 }
-
-/*void	file_error(char *filename)
-{
-	ft_putstr_fd("ft_ls: ", 2);
-	ft_putstr_fd(filename, 2);
-	ft_putendl_fd(": No such file or directory\n", 2);
-}*/
 
 char	**list_to_string_array(t_list *params)
 {
