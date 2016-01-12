@@ -43,6 +43,7 @@ int		**path_to_int_paths(t_list **best_paths, int nb_paths)
 	{
 		if (!(res[i] = (int*)malloc(sizeof(int) * listlen(best_paths[i]))))
 			return (NULL);
+		//res[i][listlen(best_paths[i]) - 1] = -1;
 		x = 0;
 		tmp = best_paths[i];
 		while (tmp)

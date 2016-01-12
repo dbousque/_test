@@ -27,7 +27,7 @@ int		int_tab_len(int *tab)
 	int		i;
 
 	i = 0;
-	while (tab[i])
+	while (tab[i])// != -1)
 		i++;
 	return (i);
 }
