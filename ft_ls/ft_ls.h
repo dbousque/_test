@@ -6,7 +6,7 @@
 /*   By: dbousque <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/09 13:59:55 by dbousque          #+#    #+#             */
-/*   Updated: 2016/01/12 14:28:49 by dbousque         ###   ########.fr       */
+/*   Updated: 2016/01/12 17:02:31 by dbousque         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,5 +47,27 @@ void			quicksort(void **to_sort, int nb,
 int				print_string_array_columns(char **strings, int nb);
 void			insertion_sort(void **to_sort, int nb,
 			int (*compare_fct)(void *elt1, void *elt2, void *elt3), void *elt3);
+void			print_date(struct stat *file_stats);
+void			print_file_size(struct stat *file_stats, int largest[6]);
+void			print_type_n_rights(struct dirent *file,
+									struct stat *file_stats, char *dir_name);
+void			print_nb_hlinks(struct stat *file_stats, int largest);
+void			print_file_owner(struct stat *file_stats, int largest);
+void			print_group_name(struct stat *file_stats, int largest);
+void			print_date(struct stat *file_stats);
+char			*make_path(char *filename, char *dir_name);
+void			print_errno(int error, char *filename);
+void			*unexpected_error_null(void);
+int				unexpected_error(void);
+void			print_links_to(struct dirent *child, char *dir_name);
+void			print_total(struct stat **file_stats, int nb, char *dir_name);
+int				print_children_details(struct dirent **children,
+										t_flags *flags, int nb, char *dir_name);
+int				print_children_regular(struct dirent **children, int nb);
+int				print_children_regular_std(struct dirent **children, int nb);
+struct stat		**get_file_stats(struct dirent **children, char *dir_name,
+														int largest[6], int nb);
+void			sort_by_name(struct dirent **children, int nb);
+void			sort_by_date(struct dirent **children, int nb, char *dir_name);
 
 #endif
