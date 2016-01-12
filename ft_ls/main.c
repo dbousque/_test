@@ -6,7 +6,7 @@
 /*   By: dbousque <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/09 13:59:24 by dbousque          #+#    #+#             */
-/*   Updated: 2016/01/11 20:01:12 by dbousque         ###   ########.fr       */
+/*   Updated: 2016/01/12 12:35:43 by dbousque         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,27 @@ void	print_errno(int error, char *filename)
 		ft_putstr_fd(filename, 2);
 	ft_putstr_fd(": ", 2);
 	ft_putendl_fd(strerror(error), 2);
+}
+
+__uint8_t	get_d_type_from_stat(struct stat *stats)
+{
+	if (stats->st_mode & S_IFIFO)
+		return (DT_FIFO);
+	if (stats->st_mode & S_IFDIR)
+		return (DT_DIR);
+	if (stats->st_mode & S_IFREG)
+		return (DT_REG);
+	if (stats->st_mode & S_IFLNK)
+		return (DT_LNK);
+	if (stats->st_mode & S_IFCHR)
+		return (DT_CHR);
+	if (stats->st_mode & S_IFBLK)
+		return (DT_BLK);
+	if (stats->st_mode & S_IFSOCK)
+		return (DT_SOCK);
+	if (stats->st_mode & S_IFWHT)
+		return (DT_WHT);
+	return (DT_UNKNOWN);
 }
 
 struct dirent	**children_list_to_array(t_list *children_list, int length)
@@ -73,15 +94,15 @@ void	print_type_n_rights(struct dirent *file, struct stat *file_stats,
 {
 	char	buf[1025];
 
-	if (file->d_type == DT_LNK || (file->d_type == 0 && readlink(make_path(file->d_name, dir_name), buf, 1024) && errno == 0))
+	if (file->d_type == DT_LNK || (file->d_type == 0 && get_d_type_from_stat(file_stats) == DT_LNK))
 		ft_putchar('l');
-	else if (file->d_type == DT_DIR)
+	else if (file->d_type == DT_DIR || (file->d_type == 0 && get_d_type_from_stat(file_stats) == DT_DIR))
 		ft_putchar('d');
-	else if (file->d_type == DT_CHR)
+	else if (file->d_type == DT_CHR || (file->d_type == 0 && get_d_type_from_stat(file_stats) == DT_CHR))
 		ft_putchar('c');
-	else if (file->d_type == DT_BLK)
+	else if (file->d_type == DT_BLK || (file->d_type == 0 && get_d_type_from_stat(file_stats) == DT_BLK))
 		ft_putchar('b');
-	else if (file->d_type == DT_SOCK)
+	else if (file->d_type == DT_SOCK || (file->d_type == 0 && get_d_type_from_stat(file_stats) == DT_SOCK))
 		ft_putchar('s');
 	else
 		ft_putchar('-');
@@ -156,9 +177,12 @@ struct stat	**get_file_stats(struct dirent **children, char *dir_name,
 {
 	int			i;
 	struct stat	**res;
-	char		buf[1025];
+	//char		buf[1025];
+	struct stat	*tmp_stat;
 
 	if (!(res = (struct stat**)malloc(sizeof(struct stat*) * (nb + 1))))
+		return (unexpected_error_null());
+	if (!(tmp_stat = (struct stat*)malloc(sizeof(struct stat))))
 		return (unexpected_error_null());
 	res[nb] = NULL;
 	i = 0;
@@ -172,13 +196,26 @@ struct stat	**get_file_stats(struct dirent **children, char *dir_name,
 	{
 		if (!(res[i] = (struct stat*)malloc(sizeof(struct stat))))
 			return (unexpected_error_null());
-		if (children[i]->d_type == DT_LNK || (children[i]->d_type == 0 && readlink(make_path(children[i]->d_name, dir_name), buf, 1024) && errno == 2))
-			lstat(make_path(children[i]->d_name, dir_name), res[i]);
-		else
-			stat(make_path(children[i]->d_name, dir_name), res[i]);
+		stat(make_path(children[i]->d_name, dir_name), res[i]);
+		lstat(make_path(children[i]->d_name, dir_name), tmp_stat);
+		//if (children[i]->d_type == DT_LINK || get_d_type_from_stat(tmp_stat) == DT_LINK
+		//if (children[i]->d_type == DT_LNK || (children[i]->d_type == 0 && readlink(make_path(children[i]->d_name, dir_name), buf, 1024) && errno == 2))
+		//{
+		//	lstat(make_path(children[i]->d_name, dir_name), res[i]);
+		//ft_putnbr(get_d_type_from_stat(res[i]));
+		if (get_d_type_from_stat(tmp_stat) == DT_LNK || (get_d_type_from_stat(res[i]) != get_d_type_from_stat(tmp_stat) && get_d_type_from_stat(res[i]) != DT_REG))
+		{
+			res[i] = ft_memcpy(res[i], tmp_stat, sizeof(struct stat));
+			children[i]->d_type = DT_LNK;
+		}
+		//}
+		//else
+		//	stat(make_path(children[i]->d_name, dir_name), res[i]);
 		update_largest(largest, res[i], children[i]);
 		i++;
 	}
+	//if (largest[5] != 0 && largest[5] < 3)
+	//	largest[5] = 3;
 	return (res);
 }
 
@@ -206,7 +243,7 @@ void	print_file_size(struct stat *file_stats, int largest[6],
 	int		i;
 	int		len;
 
-	if (file->d_type != DT_CHR && file->d_type != DT_BLK)
+	if (file->d_type != DT_CHR && file->d_type != DT_BLK && get_d_type_from_stat(file_stats) != DT_CHR && get_d_type_from_stat(file_stats) != DT_BLK)
 	{
 		i = 0;
 		len = ft_strlen(ft_ntoa_base(file_stats->st_size, "0123456789"));
@@ -608,8 +645,15 @@ char	**list_to_string_array(t_list *params)
 }
 
 void	add_to_lists(int error, t_list **params, t_list **other_params,
-																	char *str)
+													char *str, t_flags *flags)
 {
+	struct stat	*tmp_stat;
+
+	if (!(tmp_stat = (struct stat*)malloc(sizeof(struct stat))))
+		return ;
+	lstat(str, tmp_stat);
+	if (flags->l && get_d_type_from_stat(tmp_stat) != DT_DIR)
+		error = ENOTDIR;
 	if (error == -1)
 	{
 		if (!*params)
@@ -632,7 +676,7 @@ void	add_to_lists(int error, t_list **params, t_list **other_params,
 		print_errno(error, str);
 }
 
-char	**get_params(int argc, char **argv, int i, t_list **other_params)
+char	**get_params(int argc, char **argv, int i, t_list **other_params, t_flags *flags)
 {
 	t_list		*params;
 	DIR			*tmp;
@@ -661,7 +705,7 @@ char	**get_params(int argc, char **argv, int i, t_list **other_params)
 			{
 				if (error == -1 && closedir(tmp) == -1)
 					error = errno;
-				add_to_lists(error, &params, other_params, argv[i]);
+				add_to_lists(error, &params, other_params, argv[i], flags);
 			}
 			i++;
 		}
@@ -822,7 +866,7 @@ int		main(int argc, char **argv)
 		return (0);
 	}
 	sort_args(argc, argv, i);
-	dir_params = get_params(argc, argv, i, other_params_list);
+	dir_params = get_params(argc, argv, i, other_params_list, flags);
 	if (other_params_list)
 		other_params = list_to_string_array(*other_params_list);
 	return (print_params(dir_params, other_params, flags, argc - i));
