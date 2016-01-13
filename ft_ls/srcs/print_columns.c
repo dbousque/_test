@@ -6,7 +6,7 @@
 /*   By: dbousque <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/13 18:51:09 by dbousque          #+#    #+#             */
-/*   Updated: 2016/01/13 19:14:31 by dbousque         ###   ########.fr       */
+/*   Updated: 2016/01/13 19:59:39 by dbousque         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,11 +42,11 @@ void	print_n_tabs(int n)
 	}
 }
 
-int		init_w(struct winsize *w)
+int		init_w(struct winsize **w)
 {
-	if (!(w = (struct winsize*)malloc(sizeof(struct winsize))))
+	if (!(*w = (struct winsize*)malloc(sizeof(struct winsize))))
 		return (0);
-	ioctl(STDOUT_FILENO, TIOCGWINSZ, w);
+	ioctl(STDOUT_FILENO, TIOCGWINSZ, *w);
 	return (1);
 }
 
@@ -58,7 +58,7 @@ int		print_string_array_columns(char **strings, int nb, int nb_l, int nb_per)
 	struct winsize	*w;
 
 	larg = get_largest_string(strings);
-	if (!(w = NULL) && !init_w(w))
+	if (!(w = NULL) && !init_w(&w))
 		return (0);
 	nb_per = w->ws_col / larg;
 	nb_l = nb / nb_per + 1;
