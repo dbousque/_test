@@ -6,7 +6,7 @@
 /*   By: dbousque <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/09 13:59:55 by dbousque          #+#    #+#             */
-/*   Updated: 2016/01/12 19:35:38 by dbousque         ###   ########.fr       */
+/*   Updated: 2016/01/13 17:09:56 by dbousque         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,10 @@ typedef struct	s_flags
 	char		r;
 	char		r_maj;
 	char		t;
+	char		g;
+	char		d;
+	char		u;
+	char		s;
 	char		minus;
 }				t_flags;
 
@@ -47,14 +51,14 @@ void			quicksort(void **to_sort, int nb,
 int				print_string_array_columns(char **strings, int nb);
 void			insertion_sort(void **to_sort, int nb,
 			int (*compare_fct)(void *elt1, void *elt2, void *elt3), void *elt3);
-void			print_date(struct stat *file_stats);
 void			print_file_size(struct stat *file_stats, int largest[6]);
 void			print_type_n_rights(struct dirent *file,
 									struct stat *file_stats, char *dir_name);
 void			print_nb_hlinks(struct stat *file_stats, int largest);
-void			print_file_owner(struct stat *file_stats, int largest);
+void			print_file_owner(struct stat *file_stats, int largest,
+																t_flags *flags);
 void			print_group_name(struct stat *file_stats, int largest);
-void			print_date(struct stat *file_stats);
+void			print_date(struct stat *file_stat, t_flags *flags);
 char			*make_path(char *filename, char *dir_name);
 void			print_errno(int error, char *filename);
 void			*unexpected_error_null(void);
@@ -68,7 +72,8 @@ int				print_children_regular_std(struct dirent **children, int nb);
 struct stat		**get_file_stats(struct dirent **children, char *dir_name,
 														int largest[6], int nb);
 void			sort_by_name(struct dirent **children, int nb);
-void			sort_by_date(struct dirent **children, int nb, char *dir_name);
+void			sort_by_date(struct dirent **children, int nb, char *dir_name,
+																		char l);
 void			print_children(struct dirent **children, t_flags *flags,
 												int nb_child, char *dir_name);
 void			reverse_children(struct dirent **children, int len);
@@ -84,5 +89,6 @@ int				print_other_params(char **other_params, t_flags *flags);
 struct dirent	**strstr_to_dirent_array(char **params, int *l);
 char			**get_params(int argc, char **argv, t_list **other_params, t_flags *flags);
 int				strstrlen(char **strstr);
+void			sort_by_size(struct dirent **children, int nb, char *dir_name);
 
 #endif

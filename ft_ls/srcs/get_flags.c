@@ -29,11 +29,32 @@ int		set_flag(char c, t_flags *flags)
 	else if (c == 'a')
 		flags->a = 1;
 	else if (c == 't')
-		flags->t = 1;
+	{
+		if (!flags->s)
+		{
+			flags->t = 1;
+			flags->s = 0;
+		}
+	}
 	else if (c == '1')
 	{
 		flags->minus = 1;
 		flags->l = 0;
+	}
+	else if (c == 'g')
+	{
+		flags->l = 1;
+		flags->g = 1;
+		flags->minus = 0;
+	}
+	else if (c == 'd')
+		flags->d = 1;
+	else if (c == 'u')
+		flags->u = 1;
+	else if (c == 'S')
+	{
+		flags->s = 1;
+		flags->t = 0;
 	}
 	else
 		return (0);
@@ -51,6 +72,10 @@ t_flags	*void_flags(void)
 	res->r_maj = 0;
 	res->l = 0;
 	res->t = 0;
+	res->g = 0;
+	res->d = 0;
+	res->u = 0;
+	res->s = 0;
 	res->minus = 0;
 	return (res);
 }

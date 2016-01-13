@@ -6,7 +6,7 @@
 /*   By: dbousque <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/08 18:31:12 by dbousque          #+#    #+#             */
-/*   Updated: 2016/01/08 19:44:15 by dbousque         ###   ########.fr       */
+/*   Updated: 2016/01/13 12:15:08 by dbousque         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,9 +41,9 @@ int		**path_to_int_paths(t_list **best_paths, int nb_paths)
 	i = 0;
 	while (i < nb_paths)
 	{
-		if (!(res[i] = (int*)malloc(sizeof(int) * listlen(best_paths[i]))))
+		if (!(res[i] = (int*)malloc(sizeof(int) * listlen(best_paths[i]) + 1)))
 			return (NULL);
-		//res[i][listlen(best_paths[i]) - 1] = -1;
+		res[i][listlen(best_paths[i])] = -1;
 		x = 0;
 		tmp = best_paths[i];
 		while (tmp)

@@ -6,7 +6,7 @@
 /*   By: dbousque <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/12 18:38:47 by dbousque          #+#    #+#             */
-/*   Updated: 2016/01/12 18:52:35 by dbousque         ###   ########.fr       */
+/*   Updated: 2016/01/13 16:50:51 by dbousque         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ int		print_other_params(char **other_params, t_flags *flags)
 void	order_dirs(struct dirent **dirs, t_flags *flags, int l)
 {
 	if (flags->t)
-		sort_by_date(dirs, l, NULL);
+		sort_by_date(dirs, l, NULL, 1);
 	else
 		sort_by_name(dirs, l);
 	if (flags->r)

@@ -6,7 +6,7 @@
 /*   By: dbousque <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/12 16:44:14 by dbousque          #+#    #+#             */
-/*   Updated: 2016/01/12 17:25:12 by dbousque         ###   ########.fr       */
+/*   Updated: 2016/01/13 17:06:45 by dbousque         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,6 @@ int		print_children_details(struct dirent **children, t_flags *flags,
 	struct stat	**file_stats;
 	int			largest[6];
 
-	(void)flags;
 	if (!(file_stats = get_file_stats(children, dir_name, largest, nb)))
 		return (0);
 	i = 0;
@@ -28,10 +27,10 @@ int		print_children_details(struct dirent **children, t_flags *flags,
 	{
 		print_type_n_rights(children[i], file_stats[i], dir_name);
 		print_nb_hlinks(file_stats[i], largest[0]);
-		print_file_owner(file_stats[i], largest[1]);
+		print_file_owner(file_stats[i], largest[1], flags);
 		print_group_name(file_stats[i], largest[2]);
 		print_file_size(file_stats[i], largest);
-		print_date(file_stats[i]);
+		print_date(file_stats[i], flags);
 		ft_putchar(' ');
 		ft_putstr(children[i]->d_name);
 		if (S_ISLNK(file_stats[i]->st_mode))
@@ -95,7 +94,9 @@ void	print_children(struct dirent **children, t_flags *flags, int nb_child,
 																char *dir_name)
 {
 	if (flags->t)
-		sort_by_date(children, nb_child, dir_name);
+		sort_by_date(children, nb_child, dir_name, (flags->u ? 0 : 1));
+	else if (flags->s)
+		sort_by_size(children, nb_child, dir_name);
 	else
 		sort_by_name(children, nb_child);
 	if (flags->r)

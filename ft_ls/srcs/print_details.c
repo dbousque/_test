@@ -6,7 +6,7 @@
 /*   By: dbousque <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/12 16:07:41 by dbousque          #+#    #+#             */
-/*   Updated: 2016/01/12 16:21:11 by dbousque         ###   ########.fr       */
+/*   Updated: 2016/01/13 16:26:37 by dbousque         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,24 +72,27 @@ void	print_nb_hlinks(struct stat *file_stats, int largest)
 	ft_printf("%lld", file_stats->st_nlink);
 }
 
-void	print_file_owner(struct stat *file_stats, int largest)
+void	print_file_owner(struct stat *file_stats, int largest, t_flags *flags)
 {
 	int		i;
 	int		len;
 	char	*user;
 
-	i = 0;
-	if (getpwuid(file_stats->st_uid))
-		user = getpwuid(file_stats->st_uid)->pw_name;
-	else
-		user = ft_ntoa_base(file_stats->st_uid, "0123456789");
-	len = ft_strlen(user);
-	ft_putchar(' ');
-	ft_putstr(user);
-	while (i < largest - len)
+	if (!flags->g)
 	{
+		i = 0;
+		if (getpwuid(file_stats->st_uid))
+			user = getpwuid(file_stats->st_uid)->pw_name;
+		else
+			user = ft_ntoa_base(file_stats->st_uid, "0123456789");
+		len = ft_strlen(user);
 		ft_putchar(' ');
-		i++;
+		ft_putstr(user);
+		while (i < largest - len + 1)
+		{
+			ft_putchar(' ');
+			i++;
+		}
 	}
 }
 
@@ -105,7 +108,7 @@ void	print_group_name(struct stat *file_stats, int largest)
 	else
 		group = ft_ntoa_base(file_stats->st_gid, "0123456789");
 	len = ft_strlen(group);
-	ft_putstr("  ");
+	ft_putstr(" ");
 	ft_putstr(group);
 	while (i < largest - len)
 	{

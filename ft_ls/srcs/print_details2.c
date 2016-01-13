@@ -6,7 +6,7 @@
 /*   By: dbousque <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/12 16:09:48 by dbousque          #+#    #+#             */
-/*   Updated: 2016/01/12 16:31:29 by dbousque         ###   ########.fr       */
+/*   Updated: 2016/01/13 16:58:31 by dbousque         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,12 +81,13 @@ void	print_until_newline(char *str)
 	ft_putstr(str);
 }
 
-void	print_date(struct stat *file_stats)
+void	print_date(struct stat *file_stat, t_flags *flags)
 {
 	char	**date;
 	char	**hour;
 
-	date = ft_strsplit(ctime(&file_stats->st_mtimespec.tv_sec), ' ');
+	date = (flags->u) ? ft_strsplit(ctime(&file_stat->st_atimespec.tv_sec), ' ')
+				: ft_strsplit(ctime(&file_stat->st_mtimespec.tv_sec), ' ');
 	ft_putchar(' ');
 	ft_putstr(date[1]);
 	ft_putchar(' ');

@@ -6,7 +6,7 @@
 /*   By: dbousque <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/08 18:29:34 by dbousque          #+#    #+#             */
-/*   Updated: 2016/01/08 18:29:42 by dbousque         ###   ########.fr       */
+/*   Updated: 2016/01/13 12:19:08 by dbousque         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,9 +27,9 @@ int		int_tab_len(int *tab)
 	int		i;
 
 	i = 0;
-	while (tab[i])// != -1)
+	while (tab[i] != -1)
 		i++;
-	return (i);
+	return (i - 1);
 }
 
 int		*get_paths_len(int **best_paths, int nb_paths)

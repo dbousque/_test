@@ -6,7 +6,7 @@
 /*   By: dbousque <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/12 18:53:28 by dbousque          #+#    #+#             */
-/*   Updated: 2016/01/12 19:32:41 by dbousque         ###   ########.fr       */
+/*   Updated: 2016/01/13 16:40:17 by dbousque         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,13 +21,13 @@ void	add_to_lists(int error, t_list ***params, char *str, t_flags *flags)
 	lstat(str, tmp_stat);
 	if (flags->l && get_d_type_from_stat(tmp_stat) != DT_DIR)
 		error = ENOTDIR;
-	if (error == -1)
+	if (error == -1 && !flags->d)
 	{
 		(!*params[0]) ? ft_lstaddend(params[0], ft_lstnew(str,
 					sizeof(char) * (ft_strlen(str) + 1))) : ft_lstadd(params[0],
 						ft_lstnew(str, sizeof(char) * (ft_strlen(str) + 1)));
 	}
-	else if (error == ENOTDIR)
+	else if (error == ENOTDIR || (error == -1 && flags->d))
 	{
 		if (!*params[1])
 			ft_lstaddend(params[1],
@@ -83,8 +83,10 @@ char	**get_params(int argc, char **argv, t_list **other_params,
 	params[0] = (t_list**)malloc(sizeof(t_list*));
 	*params[0] = NULL;
 	params[1] = other_params;
-	if (argc == 0)
+	if (argc == 0 && !flags->d)
 		ft_lstaddend(params[0], ft_lstnew(".", sizeof(char) * 2));
+	else if (argc == 0 && flags->d)
+		ft_lstaddend(params[1], ft_lstnew(".", sizeof(char) * 2));
 	else
 	{
 		if (!(multiple_params(argv, argc, params, flags)))
