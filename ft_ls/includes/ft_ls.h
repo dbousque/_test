@@ -6,7 +6,7 @@
 /*   By: dbousque <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/09 13:59:55 by dbousque          #+#    #+#             */
-/*   Updated: 2016/01/13 17:09:56 by dbousque         ###   ########.fr       */
+/*   Updated: 2016/01/13 19:20:59 by dbousque         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,19 +42,22 @@ typedef struct	s_flags
 	char		d;
 	char		u;
 	char		s;
+	char		a_maj;
 	char		minus;
 }				t_flags;
 
 t_flags			*get_flags(int argc, char **argv, int *i);
 void			quicksort(void **to_sort, int nb,
 			int (*compare_fct)(void *elt1, void *elt2, void *elt3), void *elt3);
-int				print_string_array_columns(char **strings, int nb);
+int				print_string_array_columns(char **strings, int nb, int nb_l,
+																	int nb_per);
 void			insertion_sort(void **to_sort, int nb,
 			int (*compare_fct)(void *elt1, void *elt2, void *elt3), void *elt3);
 void			print_file_size(struct stat *file_stats, int largest[6]);
 void			print_type_n_rights(struct dirent *file,
 									struct stat *file_stats, char *dir_name);
 void			print_nb_hlinks(struct stat *file_stats, int largest);
+int				illegal_option(char c);
 void			print_file_owner(struct stat *file_stats, int largest,
 																t_flags *flags);
 void			print_group_name(struct stat *file_stats, int largest);
@@ -87,8 +90,13 @@ int				print_dir_params(char **dir_params, t_flags *flags,
 										char **other_params, char print_name);
 int				print_other_params(char **other_params, t_flags *flags);
 struct dirent	**strstr_to_dirent_array(char **params, int *l);
-char			**get_params(int argc, char **argv, t_list **other_params, t_flags *flags);
+char			**get_params(int argc, char **argv, t_list **other_params,
+																t_flags *flags);
 int				strstrlen(char **strstr);
 void			sort_by_size(struct dirent **children, int nb, char *dir_name);
+int				ft_strcmp_child_name(void *elt1, void *elt2, void *elt3);
+int				compare_by_date(void *elt1, void *elt2, void *elt3);
+int				compare_by_access_date(void *elt1, void *elt2, void *elt3);
+int				compare_sizes(void *elt1, void *elt2, void *elt3);
 
 #endif

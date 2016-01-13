@@ -1,18 +1,41 @@
-
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   get_flags.c                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: dbousque <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2016/01/13 18:50:56 by dbousque          #+#    #+#             */
+/*   Updated: 2016/01/13 19:01:00 by dbousque         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
 #include "ft_ls.h"
 
-int		illegal_option(char c)
+int		set_flag2(char c, t_flags *flags)
 {
-	char	*str;
-	char	tmp[2];
-
-	tmp[0] = c;
-	tmp[1] = '\0';
-	str = ft_strjoin("ft_ls: illegal option -- ", tmp);
-	str = ft_strjoin(str, "\nusage: ft_ls [-lRart] [file ...]\n");
-	ft_putstr_fd(str, 2);
-	return (0);
+	if (c == 'g')
+	{
+		flags->l = 1;
+		flags->g = 1;
+		flags->minus = 0;
+	}
+	else if (c == 'd')
+		flags->d = 1;
+	else if (c == 'u')
+		flags->u = 1;
+	else if (c == 'S')
+	{
+		flags->s = 1;
+		flags->t = 0;
+	}
+	else if (c == 'A')
+		flags->a_maj = 1;
+	else if (c == 'R')
+		flags->r_maj = 1;
+	else
+		return (0);
+	return (1);
 }
 
 int		set_flag(char c, t_flags *flags)
@@ -22,8 +45,6 @@ int		set_flag(char c, t_flags *flags)
 		flags->l = 1;
 		flags->minus = 0;
 	}
-	else if (c == 'R')
-		flags->r_maj = 1;
 	else if (c == 'r')
 		flags->r = 1;
 	else if (c == 'a')
@@ -41,23 +62,8 @@ int		set_flag(char c, t_flags *flags)
 		flags->minus = 1;
 		flags->l = 0;
 	}
-	else if (c == 'g')
-	{
-		flags->l = 1;
-		flags->g = 1;
-		flags->minus = 0;
-	}
-	else if (c == 'd')
-		flags->d = 1;
-	else if (c == 'u')
-		flags->u = 1;
-	else if (c == 'S')
-	{
-		flags->s = 1;
-		flags->t = 0;
-	}
 	else
-		return (0);
+		return (set_flag2(c, flags));
 	return (1);
 }
 
@@ -76,6 +82,7 @@ t_flags	*void_flags(void)
 	res->d = 0;
 	res->u = 0;
 	res->s = 0;
+	res->a_maj = 0;
 	res->minus = 0;
 	return (res);
 }

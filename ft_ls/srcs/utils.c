@@ -6,7 +6,7 @@
 /*   By: dbousque <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/12 18:32:53 by dbousque          #+#    #+#             */
-/*   Updated: 2016/01/12 19:35:15 by dbousque         ###   ########.fr       */
+/*   Updated: 2016/01/13 18:51:45 by dbousque         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,7 +73,7 @@ char		**list_to_string_array(t_list *params)
 	return (res);
 }
 
-int		strstrlen(char **strstr)
+int			strstrlen(char **strstr)
 {
 	int		i;
 

@@ -6,7 +6,7 @@
 /*   By: dbousque <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/12 16:39:10 by dbousque          #+#    #+#             */
-/*   Updated: 2016/01/12 16:39:21 by dbousque         ###   ########.fr       */
+/*   Updated: 2016/01/13 19:01:16 by dbousque         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,4 +50,17 @@ void	print_errno(int error, char *filename)
 		ft_putstr_fd(cut_filename(filename), 2);
 	ft_putstr_fd(": ", 2);
 	ft_putendl_fd(strerror(error), 2);
+}
+
+int		illegal_option(char c)
+{
+	char	*str;
+	char	tmp[2];
+
+	tmp[0] = c;
+	tmp[1] = '\0';
+	str = ft_strjoin("ft_ls: illegal option -- ", tmp);
+	str = ft_strjoin(str, "\nusage: ft_ls [-lRart] [file ...]\n");
+	ft_putstr_fd(str, 2);
+	return (0);
 }

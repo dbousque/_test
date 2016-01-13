@@ -6,7 +6,7 @@
 #    By: dbousque <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2016/01/12 18:40:30 by dbousque          #+#    #+#              #
-#    Updated: 2016/01/12 19:42:18 by dbousque         ###   ########.fr        #
+#    Updated: 2016/01/13 19:15:51 by dbousque         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -28,6 +28,7 @@ SOURCES		=	srcs/error.c \
 				srcs/print_params.c \
 				srcs/quicksort.c \
 				srcs/sort_children.c \
+				srcs/sort_children2.c \
 				srcs/utils.c
 
 HEADERS	=	-I./includes/

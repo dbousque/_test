@@ -6,7 +6,7 @@
 /*   By: dbousque <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/12 18:26:10 by dbousque          #+#    #+#             */
-/*   Updated: 2016/01/12 18:29:52 by dbousque         ###   ########.fr       */
+/*   Updated: 2016/01/13 18:49:11 by dbousque         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,6 +56,15 @@ void			add_file_to_dir_children(struct dirent *tmp_child,
 	}
 }
 
+char			take_file(struct dirent *tmp_child, t_flags *flags)
+{
+	if (tmp_child->d_name[0] != '.' || flags->a
+		|| (flags->a_maj && (ft_strlen(tmp_child->d_name) != 1
+		&& (tmp_child->d_name[1] != '.' && ft_strlen(tmp_child->d_name) != 2))))
+		return (1);
+	return (0);
+}
+
 int				listdir(DIR *dir, t_flags *flags, char *dir_name,
 														t_list *dir_children)
 {
@@ -70,7 +79,7 @@ int				listdir(DIR *dir, t_flags *flags, char *dir_name,
 	child_lst_n = NULL;
 	while ((tmp_child = readdir(dir)))
 	{
-		if (tmp_child->d_name[0] != '.' || flags->a)
+		if (take_file(tmp_child, flags))
 		{
 			ft_lstaddend(&child_lst_n,
 								ft_lstnew(tmp_child, sizeof(struct dirent)));

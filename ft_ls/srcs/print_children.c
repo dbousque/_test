@@ -6,7 +6,7 @@
 /*   By: dbousque <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/12 16:44:14 by dbousque          #+#    #+#             */
-/*   Updated: 2016/01/13 17:06:45 by dbousque         ###   ########.fr       */
+/*   Updated: 2016/01/13 18:56:03 by dbousque         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,7 @@ int		print_children_regular(struct dirent **children, int nb)
 		strings[i] = children[i]->d_name;
 		i++;
 	}
-	return (print_string_array_columns(strings, nb));
+	return (print_string_array_columns(strings, nb, 0, 0));
 }
 
 int		print_children_regular_std(struct dirent **children, int nb)
