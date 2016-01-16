@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "ft_printf.h"
+#include "libdodo.h"
 
 void		get_precision(const char *fo, t_format *format, int *i, va_list ap)
 {

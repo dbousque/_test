@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "ft_printf.h"
+#include "libdodo.h"
 
 static int	ft_get_res_length(long long n, int base_length)
 {

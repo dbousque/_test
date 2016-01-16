@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "ft_printf.h"
+#include "libdodo.h"
 
 int		ft_find_color(char *color, const char *format, int *i, char *finished)
 {

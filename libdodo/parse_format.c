@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "ft_printf.h"
+#include "libdodo.h"
 
 void		get_start_flags(const char *format, t_format *format_var, int *i)
 {

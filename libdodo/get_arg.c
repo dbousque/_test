@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "ft_printf.h"
+#include "libdodo.h"
 
 int		new_percent(char **str, char c)
 {
