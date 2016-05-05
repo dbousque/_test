@@ -25,11 +25,22 @@ void	get_files_in_dir(char *path, t_linked_list *files)
 {
 	DIR				*dir;
 	struct dirent	*file;
+	char			*tmp_full_path;
+	struct stat		file_stat;
 
 	if (!(dir = opendir(path)))
 		return ;
 	while ((file = readdir(dir)))
-		add_to_list(files, ft_strdup(file->d_name));
+	{
+		tmp_full_path = build_file_path(path, file->d_name);
+		if (stat(tmp_full_path, &file_stat) != -1)
+		{
+			if (!S_ISDIR(file_stat.st_mode) && access(tmp_full_path, X_OK) != -1)
+				add_to_list(files, ft_strdup(file->d_name));
+		}
+		free(tmp_full_path);
+	}
+	closedir(dir);
 }
 
 char	*get_path(char **env)
@@ -217,7 +228,7 @@ char	*find_executable(char *prog, char **env)
 		{
 			// bonus : add recommendation for the right command (mistyping)
 			command_not_found(prog);
-			return ;
+			return (NULL);
 		}
 	}
 	return (exec);

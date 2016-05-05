@@ -4,15 +4,75 @@
 
 extern char	**environ;
 
-void	print_prompt(void)
-{
-	ft_putstr("$> ");
-}
-
 void	malloc_error(void)
 {
 	ft_putstr("Could not allocate memory.\n");
 	exit(1);
+}
+
+char	*get_env_var(char *key, char **env)
+{
+	size_t	i;
+
+	i = 0;
+	while (env[i])
+	{
+		if (startswith(key, env[i]))
+			return (env[i] + ft_strlen(key) + 1);
+		i++;
+	}
+	return (NULL);
+}
+
+char	*get_logname(char **env)
+{
+	char	*tmp;
+
+	tmp = get_env_var("LOGNAME", env);
+	if (!tmp)
+		tmp = get_env_var("USER", env);
+	return (tmp);
+}
+
+char	*get_current_dir(void)
+{
+	char	*path;
+	size_t	size;
+	char	*res;
+	size_t	i;
+
+	size = 1024;
+	while (1)
+	{
+		if (!(path = (char*)malloc(sizeof(char) * size)))
+			malloc_error();
+		getcwd(path, size);
+		if (path)
+			break ;
+		free(path);
+		size *= 2;
+	}
+	i = 0;
+	while (path[i])
+		i++;
+	i--;
+	while (i > 0 && path[i - 1] != '/')
+		i--;
+	res = ft_strdup(path + i);
+	free(path);
+	return (res);
+}
+
+void	print_prompt(char **env)
+{
+	char	*current_dir;
+
+	ft_putstr(get_logname(env));
+	ft_putstr(":");
+	current_dir = get_current_dir();
+	ft_putstr(current_dir);
+	free(current_dir);
+	ft_putstr("$> ");
 }
 
 char	*get_input(void)
@@ -247,21 +307,245 @@ char	**split_command_in_args(char *command)
 	return (list_to_args(args));
 }
 
+size_t	strstrlen(char **env)
+{
+	size_t	i;
+
+	i = 0;
+	while (env[i])
+		i++;
+	return (i);
+}
+
+char	startswith(char *str, char *env)
+{
+	size_t	i;
+
+	i = 0;
+	while (str[i] && env[i])
+	{
+		if (str[i] != env[i])
+			return (0);
+		i++;
+	}
+	if (env[i] == '=')
+		return (1);
+	return (0);
+}
+
+char	*build_env_var(char *part1, char *part2)
+{
+	size_t	len1;
+	size_t	len2;
+	char	*res;
+
+	len1 = ft_strlen(part1);
+	len2 = ft_strlen(part2);
+	if (!(res = (char*)malloc(sizeof(char) * (len1 + len2 + 2))))
+		malloc_error();
+	res[len1 + len2 + 1] = '\0';
+	len1 = 0;
+	while (part1[len1])
+	{
+		res[len1] = part1[len1];
+		len1++;
+	}
+	res[len1] = '=';
+	len2 = 0;
+	while (part2[len2])
+	{
+		res[len1 + 1 + len2] = part2[len2];
+		len2++;
+	}
+	return (res);
+}
+
+void	set_env(char **line, char ***env)
+{
+	char	**new_env;
+	size_t	len;
+	size_t	i;
+	char 	done;
+
+	done = 0;
+	len = strstrlen(*env);
+	if (!(new_env = (char**)malloc(sizeof(char*) * (len + 2))))
+		malloc_error();
+	new_env[len + 1] = NULL;
+	i = 0;
+	while ((*env)[i])
+	{
+		if (startswith(line[1], (*env)[i]))
+		{
+			new_env[i] = build_env_var(line[1], line[2]);
+			done = 1;
+		}
+		else
+			new_env[i] = (*env)[i];
+		i++;
+	}
+	new_env[i] = NULL;
+	if (!done)
+		new_env[i] = build_env_var(line[1], line[2]);
+	free(*env);
+	*env = new_env;
+}
+
+char	get_found(char **line, char ***env, size_t *i)
+{
+	char	found;
+
+	found = 0;
+	*i = 0;
+	while ((*env)[*i])
+	{
+		if (startswith(line[1], (*env)[*i]))
+			found = 1;
+		(*i)++;
+	}
+	return (found);
+}
+
+void	unset_env(char **line, char ***env)
+{
+	size_t	i;
+	char	found;
+	char	**new_env;
+
+	found = get_found(line, env, &i);
+	if (!found)
+		return ;
+	if (!(new_env = (char**)malloc(sizeof(char*) * i)))
+		malloc_error();
+	new_env[i - 1] = NULL;
+	i = 0;
+	found = 0;
+	while ((*env)[i])
+	{
+		if (!(startswith(line[1], (*env)[i])))
+			new_env[i - found] = (*env)[i];
+		else
+			found = 1;
+		i++;
+	}
+	free(*env);
+	*env = new_env;
+}
+
+char	*get_home(char **env)
+{
+	size_t	i;
+
+	i = 0;
+	while (env[i])
+	{
+		if (env[i][0] == 'H' && env[i][1] == 'O' && env[i][2] == 'M'
+			&& env[i][3] == 'E' && env[i][4] == '=')
+			return (ft_strdup(env[i] + 5));
+		i++;
+	}
+	return (ft_strdup("/"));
+}
+
+void	change_dir(char *dir_path)
+{
+	struct stat	file;
+
+	if (stat(dir_path, &file) == -1)
+	{
+		ft_putstr("minishell: ");
+		ft_putstr(dir_path);
+		ft_putstr(": No such file or directory\n");
+	}
+	else if (S_ISDIR(file.st_mode))
+		chdir(dir_path);
+	else
+	{
+		ft_putstr("minishell: ");
+		ft_putstr(dir_path);
+		ft_putstr(": Not a directory\n");
+	}
+}
+
 void	handle_builtin(char **line, char ***env)
 {
 	if (ft_strcmp(line[0], "env") == 0)
 		print_strstr(*env);
-	else if (ft_strcmp(line[0], "setenv") == 0)
+	else if (ft_strcmp(line[0], "setenv") == 0 && line[1]
+		&& line[2] && !char_in_str(line[1], '='))
 		set_env(line, env);
-	else if (ft_strcmp(line[0], "unsetenv") == 0)
+	else if (ft_strcmp(line[0], "unsetenv") == 0 && line[1]
+		&& !char_in_str(line[1], '='))
 		unset_env(line, env);
 	else if (ft_strcmp(line[0], "exit") == 0)
 		exit(0);
 	else if (ft_strcmp(line[0], "cd") == 0)
-		change_dir(line, )
+	{
+		if (!line[1])
+			change_dir(get_home(*env));
+		else
+			change_dir(line[1]);
+	}
 }
 
-void	treat_command(char *command, char **env)
+char	*replace_tilde_str(char *home, size_t home_len, char *line)
+{
+	size_t	line_len;
+	size_t	i;
+	char	*res;
+
+	line_len = ft_strlen(line) - 1;
+	if (!(res = (char*)malloc(sizeof(char) * (home_len + line_len + 1))))
+		malloc_error();
+	res[home_len + line_len] = '\0';
+	i = 0;
+	while (home[i])
+	{
+		res[i] = home[i];
+		i++;
+	}
+	line_len = 1;
+	while (line[line_len])
+	{
+		res[i + line_len - 1] = line[line_len];
+		line_len++;
+	}
+	return (res);
+}
+
+void	replace_tilde(char **line, char **env)
+{
+	size_t	i;
+	char	*tmp;
+	char	*home;
+	size_t	len;
+
+	home = get_env_var("HOME", env);
+	if (!home)
+		return ;
+	len = ft_strlen(home);
+	if (home[len - 1] == '/')
+		home[len - 1] = '\0';
+	i = 0;
+	while (line[i])
+	{
+		if (line[i][0] == '~' && (!line[i][1] || line[i][1] == '/'))
+		{
+			tmp = replace_tilde_str(home, len, line[i]);
+			free(line[i]);
+			line[i] = tmp;
+		}
+		i++;
+	}
+}
+
+void	ctrl_c(int id)
+{
+	(void)id;
+	ft_putstr("\n");
+}
+
+void	treat_command(char *command, char ***env)
 {
 	pid_t	id;
 	char	**line;
@@ -270,21 +554,22 @@ void	treat_command(char *command, char **env)
 	line = split_command_in_args(command);
 	if (!line)
 		return ;
+	replace_tilde(line, *env);
 	if (ft_strcmp(line[0], "env") == 0 || ft_strcmp(line[0], "setenv") == 0
 		|| ft_strcmp(line[0], "cd") == 0 || ft_strcmp(line[0], "unsetenv") == 0
 		|| ft_strcmp(line[0], "exit") == 0)
 	{
-		handle_builtin(line, &env);
+		handle_builtin(line, env);
 		return ;
 	}
-	executable = find_executable(line[0], env);
+	executable = find_executable(line[0], *env);
 	if (!executable)
 		return ;
 	id = fork();
 	if (id > 0)
 		wait();
 	if (id == 0)
-		execve(executable, line, env);
+		execve(executable, line, *env);
 	free(command);
 }
 
@@ -294,13 +579,14 @@ void	launch_shell(void)
 
 	//env = NULL;
 	//reload_env(&env);
+	signal(SIGINT, ctrl_c);
 	env = copy_environ();
 	while (1)
 	{
-		print_prompt();
-		treat_command(get_input(), env);
+		print_prompt(env);
+		treat_command(get_input(), &env);
 	}
-	free_ptrptr((void**)env);
+	free_ptrptr((void**)*env);
 }
 
 int		main(void)
