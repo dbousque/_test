@@ -4,7 +4,7 @@
 
 static void		malloc_error(void)
 {
-	printf("Could not allocate memory\n");
+	ft_putstr("Could not allocate memory\n");
 	exit(1);
 }
 

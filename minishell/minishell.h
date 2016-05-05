@@ -5,7 +5,7 @@
 
 # include "libdodo/libdodo.h"
 # include <unistd.h>
-# include <stdio.h>
+# include <dirent.h>
 
 typedef struct	s_linked_list
 {
@@ -16,5 +16,6 @@ typedef struct	s_linked_list
 
 t_linked_list	*new_list(void);
 void			add_to_list(t_linked_list *list, void *elt);
+char			*find_executable(char *prog, char **env);
 
 #endif

@@ -108,7 +108,9 @@ void	add_string_to_args(t_linked_list *args, char *command, size_t start, size_t
 	char	*to_add;
 	size_t	i;
 	size_t	x;
+	char	in_str;
 
+	in_str = 0;
 	if (!(to_add = (char*)malloc(sizeof(char) * (end - start + 1))))
 		malloc_error();
 	i = 0;
@@ -127,13 +129,28 @@ void	add_string_to_args(t_linked_list *args, char *command, size_t start, size_t
 			to_add[i] = command[start + x];
 			i++;
 		}
+		else
+		{
+			if (!in_str)
+				in_str = command[start + x];
+			else
+			{
+				if (command[start + x] == in_str)
+					in_str = 0;
+				else
+				{
+					to_add[i] = command[start + x];
+					i++;
+				}
+			}
+		}
 		x++;
 	}
 	to_add[i] = '\0';
 	add_to_list(args, to_add);
 }
 
-char	escaped_char(char *str, size_t i)
+char	escaped_char(char *str, int i)
 {
 	int		nb;
 
@@ -182,7 +199,7 @@ void	handle_quote(t_linked_list *args, char *command, t_ind *ind, char *in_str)
 char	**list_to_args(t_linked_list *args)
 {
 	char	**res;
-	size_t	i;
+	int		i;
 
 	if (!(res = (char**)malloc(sizeof(char*) * (args->len + 1))))
 		malloc_error();
@@ -230,13 +247,6 @@ char	**split_command_in_args(char *command)
 	return (list_to_args(args));
 }
 
-char	*find_executable(char *prog, char **env)
-{
-	(void)prog;
-	(void)env;
-	return (ft_strdup("/bin/ls"));
-}
-
 void	command_not_found(char *command)
 {
 	ft_putstr(command);
@@ -252,7 +262,7 @@ void	treat_command(char *command, char **env)
 	line = split_command_in_args(command);
 	if (!line)
 		return ;
-	print_strstr(line);
+	//print_strstr(line);
 	executable = find_executable(line[0], env);
 	if (!executable)
 	{
@@ -264,7 +274,7 @@ void	treat_command(char *command, char **env)
 	if (id > 0)
 		wait();
 	if (id == 0)
-		execve(executable, line, NULL);
+		execve(executable, line, env);
 	free(command);
 }
 
