@@ -247,10 +247,18 @@ char	**split_command_in_args(char *command)
 	return (list_to_args(args));
 }
 
-void	command_not_found(char *command)
+void	handle_builtin(char **line, char ***env)
 {
-	ft_putstr(command);
-	ft_putstr(": command not found\n");
+	if (ft_strcmp(line[0], "env") == 0)
+		print_strstr(*env);
+	else if (ft_strcmp(line[0], "setenv") == 0)
+		set_env(line, env);
+	else if (ft_strcmp(line[0], "unsetenv") == 0)
+		unset_env(line, env);
+	else if (ft_strcmp(line[0], "exit") == 0)
+		exit(0);
+	else if (ft_strcmp(line[0], "cd") == 0)
+		change_dir(line, )
 }
 
 void	treat_command(char *command, char **env)
@@ -262,14 +270,16 @@ void	treat_command(char *command, char **env)
 	line = split_command_in_args(command);
 	if (!line)
 		return ;
-	//print_strstr(line);
-	executable = find_executable(line[0], env);
-	if (!executable)
+	if (ft_strcmp(line[0], "env") == 0 || ft_strcmp(line[0], "setenv") == 0
+		|| ft_strcmp(line[0], "cd") == 0 || ft_strcmp(line[0], "unsetenv") == 0
+		|| ft_strcmp(line[0], "exit") == 0)
 	{
-		// bonus : add recommendation for the right command (mistyping)
-		command_not_found(line[0]);
+		handle_builtin(line, &env);
 		return ;
 	}
+	executable = find_executable(line[0], env);
+	if (!executable)
+		return ;
 	id = fork();
 	if (id > 0)
 		wait();

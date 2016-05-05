@@ -6,6 +6,7 @@
 # include "libdodo/libdodo.h"
 # include <unistd.h>
 # include <dirent.h>
+# include <sys/stat.h>
 
 typedef struct	s_linked_list
 {

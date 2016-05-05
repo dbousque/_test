@@ -143,19 +143,82 @@ char	*find_exec_current_dir(char *prog)
 	return (prog);
 }
 
+void	command_not_found(char *command)
+{
+	ft_putstr(command);
+	ft_putstr(": command not found\n");
+}
+
+char	char_in_str(char *str, char c)
+{
+	size_t	i;
+
+	i = 0;
+	while (str[i])
+	{
+		if (str[i] == c)
+			return (1);
+		i++;
+	}
+	return (0);
+}
+
+char	*no_such_file_or_dir(char *prog)
+{
+	ft_putstr("minishell: ");
+	ft_putstr(prog);
+	ft_putstr(": No such file or directory\n");
+	return (NULL);
+}
+
+char	*is_a_dir(char *prog)
+{
+	ft_putstr("minishell: ");
+	ft_putstr(prog);
+	ft_putstr(": Is a directory\n");
+	return (NULL);
+}
+
+char	*permission_denied(char *prog)
+{
+	ft_putstr("minishell: ");
+	ft_putstr(prog);
+	ft_putstr(": Permission denied\n");
+	return (NULL);
+}
+
+char	*find_exec_with_path(char *prog)
+{
+	struct stat	file;
+
+	if (stat(prog, &file) == -1)
+		return (no_such_file_or_dir(prog));
+	if (S_ISDIR(file.st_mode))
+		return (is_a_dir(prog));
+	if (access(prog, X_OK) == -1)
+		return (permission_denied(prog));
+	return (prog);
+}
+
 char	*find_executable(char *prog, char **env)
 {
 	t_linked_list	*files;
 	char			*exec;
 
 	exec = NULL;
-	if (prog[0] == '.' && prog[1] == '/')
-		exec = find_exec_current_dir(prog);
+	if (char_in_str(prog, '/'))
+		exec = find_exec_with_path(prog);
 	else
 	{
 		files = get_files_from_path(env);
 		if (files)
 			exec = find_exec_from_path(prog, files);
+		if (!exec)
+		{
+			// bonus : add recommendation for the right command (mistyping)
+			command_not_found(prog);
+			return ;
+		}
 	}
 	return (exec);
 }
