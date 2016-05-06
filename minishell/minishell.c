@@ -177,8 +177,7 @@ void	add_string_to_args(t_linked_list *args, char *command, size_t start, size_t
 	x = 0;
 	while (x < end - start)
 	{
-		if (command[start + x] == '\\' && (command[start + x + 1] == '"'
-			|| command[start + x + 1] == '\'' || command[start + x + 1] == '\\'))
+		if (command[start + x] == '\\')
 		{
 			to_add[i] = command[start + x + 1];
 			x++;
@@ -275,7 +274,6 @@ char	**list_to_args(t_linked_list *args)
 	return (res);
 }
 
-// "ls"cat  is reduced to -> lscat
 char	**split_command_in_args(char *command)
 {
 	t_linked_list	*args;
@@ -567,9 +565,12 @@ void	treat_command(char *command, char ***env)
 		return ;
 	id = fork();
 	if (id > 0)
-		wait();
+		wait(NULL);
 	if (id == 0)
+	{
 		execve(executable, line, *env);
+		exit(0);
+	}
 	free(command);
 }
 

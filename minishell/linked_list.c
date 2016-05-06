@@ -2,12 +2,6 @@
 
 #include "minishell.h"
 
-static void		malloc_error(void)
-{
-	ft_putstr("Could not allocate memory\n");
-	exit(1);
-}
-
 t_linked_list	*new_list(void)
 {
 	t_linked_list	*res;
