@@ -447,6 +447,8 @@ char	*get_home(char **env)
 
 void	change_dir(char *dir_path)
 {
+
+	UPDATE OLDPWD ET PWD EN FAISANT CD
 	struct stat	file;
 
 	if (stat(dir_path, &file) == -1)
@@ -568,7 +570,12 @@ void	treat_command(char *command, char ***env)
 		wait(NULL);
 	if (id == 0)
 	{
-		execve(executable, line, *env);
+		if (execve(executable, line, *env) == -1)
+		{
+			ft_putstr("minishell: ");
+			ft_putstr(line[0]);
+			ft_putstr(": can't be executed.\n");
+		}
 		exit(0);
 	}
 	free(command);
