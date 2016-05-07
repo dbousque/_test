@@ -465,9 +465,9 @@ char	*replace_end(char **parts, char *replace, int nb_removed)
 
 char	free_n_return_autocomplete(char **args, t_linked_list *candidates)
 {
-	free_ptrptr((void**)args);
-	free(candidates->elts);
-	free(candidates);
+	//free_ptrptr((void**)args);
+	//free(candidates->elts);
+	//free(candidates);
 	return (0);	
 }
 
@@ -501,7 +501,7 @@ char	autocomplete(char **line, size_t *current, size_t *len, char **env)
 		return (free_n_return_autocomplete(args, candidates));
 	res = replace_end(args, res, nb_removed);
 	free_n_return_autocomplete(args, candidates);
-	free(*line);
+	//free(*line);
 	*line = res;
 	write_completed_version(current, len, res);
 	*len = ft_strlen(res);
