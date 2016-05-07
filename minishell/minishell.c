@@ -100,7 +100,7 @@ int		getch(void)
 	return (ch);
 }
 
-char	*double_size(char *line, size_t len, size_t *size)
+char	*double_size(char *line, size_t *size)
 {
 	char	*new_line;
 	size_t	i;
@@ -222,7 +222,7 @@ char	*get_last_history(t_linked_list *history, char *line, size_t *len, int *his
 	return (ft_strdup(history->elts[*history_ind - 1]));
 }
 
-char	*get_next_history(t_linked_list *history, char *line, size_t *len, int *history_ind)
+char	*get_next_history(t_linked_list *history, size_t *len, int *history_ind)
 {
 	(*history_ind)++;
 	*len = ft_strlen(history->elts[*history_ind - 1]);
@@ -253,9 +253,9 @@ size_t	strstrlen(char **strstr)
 
 char	*get_dir_name(char *start)
 {
-	size_t	i;
+	int		i;
 	char	*res;
-	size_t	x;
+	int		x;
 
 	i = ft_strlen(start);
 	i--;
@@ -303,7 +303,7 @@ void	look_for_matching_dir(char *start, t_linked_list *candidates)
 
 char	*match(char *start, t_linked_list *candidates)
 {
-	size_t	i;
+	int		i;
 	size_t	x;
 	char	*cand;
 	int		count;
@@ -330,7 +330,7 @@ char	*match(char *start, t_linked_list *candidates)
 
 char	*get_end(char *start, int *nb_removed)
 {
-	size_t	i;
+	int		i;
 
 	if (!char_in_str(start, '/'))
 	{
@@ -355,7 +355,7 @@ char	*get_end(char *start, int *nb_removed)
 char	*rebuild_res(char *res, char *line, int nb_removed)
 {
 	size_t	len;
-	size_t	i;
+	int		i;
 	char	*final;
 
 	len = ft_strlen(res) + nb_removed;
@@ -422,7 +422,7 @@ char	*append_replace(char *res, size_t len, char *replace)
 
 void	add_removed(char *res, char *last, int nb_removed, size_t len)
 {
-	size_t	i;
+	int		i;
 
 	i = 0;
 	while (i < nb_removed)
@@ -556,7 +556,7 @@ void	navigate_history(char tmp_char, char **line, t_linked_list *history,
 		if ((tmp_char == 3 && history->len > 1 && *history_ind > 1))
 			*line = get_last_history(history, *line, len, history_ind);
 		else
-			*line = get_next_history(history, *line, len, history_ind);
+			*line = get_next_history(history, len, history_ind);
 		ft_putstr(*line);
 		*size = *len;
 		*current = *len;
@@ -566,16 +566,12 @@ void	navigate_history(char tmp_char, char **line, t_linked_list *history,
 void	arrows_management(char **line, t_linked_list *history,
 											size_t len_current_size[])
 {
-	int			*history_ind;
 	char		tmp_char;
 	size_t		*len;
 	size_t		*current;
-	size_t		*size;
 
-	history_ind = (int*)&(len_current_size[3]);
 	len = &(len_current_size[0]);
 	current = &(len_current_size[1]);
-	size = &(len_current_size[2]);
 	tmp_char = arrow(27);
 	if (tmp_char == 1 && *current > 0)
 	{
@@ -627,7 +623,7 @@ void	read_chars(char **env, t_linked_list *history, char **line,
 			else
 			{
 				if (*len == *size)
-					*line = double_size(*line, *len, size);
+					*line = double_size(*line, size);
 				add_char_at_pos(*line, *current, *len, tmp_char);
 				(*len)++;
 				(*current)++;
@@ -639,7 +635,6 @@ void	read_chars(char **env, t_linked_list *history, char **line,
 char	*get_input(char **env, t_linked_list *history)
 {
 	char	*line;
-	size_t	size;
 	size_t	len_current_size[4];
 
 	if (!(line = (char*)malloc(sizeof(char) * 6)))
@@ -651,7 +646,7 @@ char	*get_input(char **env, t_linked_list *history)
 	len_current_size[3] = history->len;
 	read_chars(env, history, &line, len_current_size);
 	if (len_current_size[0] == len_current_size[2])
-		line = double_size(line, len_current_size[0], &(len_current_size[2]));
+		line = double_size(line, &(len_current_size[2]));
 	line[len_current_size[0]] = '\0';
 	free(history->elts[history->len - 1]);
 	if (history->len == 1 || ft_strcmp(history->elts[history->len - 2], line) != 0)
@@ -1145,7 +1140,6 @@ char	*replace_tilde_str(char *home, size_t home_len, char *line)
 void	handle_dollar(char **line, size_t i, char **env)
 {
 	char	*value;
-	char	*new_line;
 
 	value = get_env_var(line[i] + 1, env);
 	if (!value)
@@ -1202,7 +1196,7 @@ char	***split_in_commands2(char ***commands, char **line, size_t count, size_t i
 {
 	size_t	ind;
 	size_t	x;
-	int		count2;
+	size_t	count2;
 
 	ind = 0;
 	x = 0;

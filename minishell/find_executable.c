@@ -31,7 +31,7 @@ void	get_files_in_dir(char *path, t_linked_list *files, char dirs, char not_exec
 		{
 			if (dirs || !S_ISDIR(file_stat.st_mode))
 			{
-				if (not_exec || (access(tmp_full_path, X_OK) != -1) && dirs != 2)
+				if (not_exec || (access(tmp_full_path, X_OK) != -1 && dirs != 2))
 					add_to_list(files, ft_strdup(file->d_name));
 			}
 		}
@@ -139,7 +139,7 @@ char	*build_file_path(char *dir_path, char *file_name)
 
 char	file_in_list(char *file, t_linked_list *files)
 {
-	size_t	i;
+	int		i;
 
 	i = 0;
 	while (i < files->len)
@@ -153,7 +153,7 @@ char	file_in_list(char *file, t_linked_list *files)
 
 char	*find_exec_from_path(char *prog, t_linked_list *dirs)
 {
-	size_t	i;
+	int		i;
 
 	i = 0;
 	while (i < dirs->len)
