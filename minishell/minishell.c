@@ -192,62 +192,472 @@ char	arrow(char tmp_char)
 				return (1);
 			if (tmp_char == 67)
 				return (2);
+			if (tmp_char == 65)
+				return (3);
+			if (tmp_char == 66)
+				return (4);
 		}
 	}
 	return (0);
 }
 
-char	*get_input(char **env)
+void	place_cursor_start_of_line(size_t *current)
+{
+	while (*current > 0)
+	{
+		write(1, "\b", 1);
+		(*current)--;
+	}
+}
+
+char	*get_last_history(t_linked_list *history, char *line, size_t *len, int *history_ind)
+{
+	if (*history_ind == history->len)
+	{
+		free(history->elts[history->len - 1]);
+		history->elts[history->len - 1] = ft_strdup(line);
+	}
+	(*history_ind)--;
+	*len = ft_strlen(history->elts[*history_ind - 1]);
+	return (ft_strdup(history->elts[*history_ind - 1]));
+}
+
+char	*get_next_history(t_linked_list *history, char *line, size_t *len, int *history_ind)
+{
+	(*history_ind)++;
+	*len = ft_strlen(history->elts[*history_ind - 1]);
+	return (ft_strdup(history->elts[*history_ind - 1]));
+}
+
+void	write_n_char(size_t n, char c)
+{
+	size_t	i;
+
+	i = 0;
+	while (i < n)
+	{
+		write(1, &c, 1);
+		i++;
+	}
+}
+
+size_t	strstrlen(char **strstr)
+{
+	size_t	i;
+
+	i = 0;
+	while (strstr[i])
+		i++;
+	return (i);
+}
+
+char	*get_dir_name(char *start)
+{
+	size_t	i;
+	char	*res;
+	size_t	x;
+
+	i = ft_strlen(start);
+	i--;
+	while (i >= 0 && start[i] != '/')
+		i--;
+	if (!(res = (char*)malloc(sizeof(char) * (i + 2))))
+		malloc_error();
+	res[i + 1] = '\0';
+	x = 0;
+	while (x <= i)
+	{
+		res[x] = start[x];
+		x++;
+	}
+	return (res);
+}
+
+void	look_for_matching_exec(char *start, t_linked_list *candidates, char **env)
+{
+	char	*tmp_dir;
+
+	if (char_in_str(start, '/'))
+	{
+		tmp_dir = get_dir_name(start);
+		get_files_in_dir(tmp_dir, candidates, 1, 0);
+		free(tmp_dir);
+	}
+	else
+		get_files_from_path2(env, candidates);
+}
+
+void	look_for_matching_dir(char *start, t_linked_list *candidates)
+{
+	char	*tmp_dir;
+
+	if (char_in_str(start, '/'))
+	{
+		tmp_dir = get_dir_name(start);
+		get_files_in_dir(tmp_dir, candidates, 2, 1);
+		free(tmp_dir);
+	}
+	else
+		get_files_in_dir("./", candidates, 2, 1);
+}
+
+char	*match(char *start, t_linked_list *candidates)
+{
+	size_t	i;
+	size_t	x;
+	char	*cand;
+	int		count;
+
+	count = 0;
+	i = 0;
+	while (i < candidates->len)
+	{
+		x = 0;
+		while (start[x] && ((char*)candidates->elts[i])[x]
+			&& start[x] == ((char*)candidates->elts[i])[x])
+			x++;
+		if (!start[x])
+		{
+			cand = candidates->elts[i];
+			count++;
+		}
+		i++;
+	}
+	if (count != 1)
+		return (NULL);
+	return (ft_strdup(cand));
+}
+
+char	*get_end(char *start, int *nb_removed)
+{
+	size_t	i;
+
+	if (!char_in_str(start, '/'))
+	{
+		*nb_removed = 0;
+		return (start);
+	}
+	i = ft_strlen(start);
+	i--;
+	while (i >= 0)
+	{
+		if (start[i] == '/')
+		{
+			*nb_removed = i + 1;
+			return (start + i + 1);
+		}
+		i--;
+	}
+	*nb_removed = 0;
+	return (start);
+}
+
+char	*rebuild_res(char *res, char *line, int nb_removed)
+{
+	size_t	len;
+	size_t	i;
+	char	*final;
+
+	len = ft_strlen(res) + nb_removed;
+	if (!(final = (char*)malloc(sizeof(char) * (len + 1))))
+		malloc_error();
+	final[len] = '\0';
+	i = 0;
+	while (i < nb_removed)
+	{
+		final[i] = line[i];
+		i++;
+	}
+	while (res[i - nb_removed])
+	{
+		final[i] = res[i - nb_removed];
+		i++;
+	}
+	return (final);
+}
+
+void	look_for_matching_file(char *start, t_linked_list *candidates)
+{
+	char	*tmp_dir;
+
+	if (char_in_str(start, '/'))
+	{
+		tmp_dir = get_dir_name(start);
+		get_files_in_dir(tmp_dir, candidates, 1, 1);
+		free(tmp_dir);
+	}
+	else
+		get_files_in_dir("./", candidates, 1, 1);
+}
+
+size_t	get_len(char **parts)
+{
+	size_t	len;
+	size_t	i;
+
+	len = 0;
+	i = 0;
+	while (parts[i] && parts[i + 1])
+	{
+		len += ft_strlen(parts[i]) + 1;
+		i++;
+	}
+	return (len);
+}
+
+char	*append_replace(char *res, size_t len, char *replace)
+{
+	size_t	i;
+
+	i = 0;
+	while (replace[i])
+	{
+		res[len] = replace[i];
+		len++;
+		i++;
+	}
+	res[len] = ' ';
+	return (res);
+}
+
+void	add_removed(char *res, char *last, int nb_removed, size_t len)
+{
+	size_t	i;
+
+	i = 0;
+	while (i < nb_removed)
+	{
+		res[len] = last[i];
+		len++;
+		i++;
+	}
+}
+
+char	*replace_end(char **parts, char *replace, int nb_removed)
+{
+	size_t	len;
+	size_t	i;
+	size_t	x;
+	char	*res;
+
+	len = get_len(parts);
+	if (!(res = (char*)malloc(sizeof(char) * (len + ft_strlen(replace) + nb_removed + 2))))
+		malloc_error();
+	res[len + ft_strlen(replace) + nb_removed + 1] = '\0';
+	i = 0;
+	len = 0;
+	while (parts[i] && parts[i + 1])
+	{
+		x = 0;
+		while (parts[i][x])
+		{
+			res[len] = parts[i][x];
+			len++;
+			x++;
+		}
+		res[len] = ' ';
+		len++;
+		i++;
+	}
+	add_removed(res, parts[i], nb_removed, len);
+	return (append_replace(res, len + nb_removed, replace));
+}
+
+char	free_n_return_autocomplete(char **args, t_linked_list *candidates)
+{
+	free_ptrptr((void**)args);
+	free(candidates->elts);
+	free(candidates);
+	return (0);	
+}
+
+void	write_completed_version(size_t *current, size_t *len, char *res)
+{
+	write_n_char(*current, '\b');
+	write_n_char(*len, ' ');
+	write_n_char(*len, '\b');
+	ft_putstr(res);
+}
+
+char	autocomplete(char **line, size_t *current, size_t *len, char **env)
+{
+	t_linked_list	*candidates;
+	char			**args;
+	char			*res;
+	int				nb_removed;
+
+	candidates = new_list();
+	args = split_command_in_args(*line);
+	if (!args || strstrlen(args) == 0)
+		return (0);
+	if (strstrlen(args) == 1)
+		look_for_matching_exec(args[0], candidates, env);
+	else if (strstrlen(args) == 2 && ft_strcmp(args[0], "cd") == 0)
+		look_for_matching_dir(args[1], candidates);
+	else
+		look_for_matching_file(args[strstrlen(args) - 1], candidates);
+	res = match(get_end(args[strstrlen(args) - 1], &nb_removed), candidates);
+	if (!res)
+		return (free_n_return_autocomplete(args, candidates));
+	res = replace_end(args, res, nb_removed);
+	free_n_return_autocomplete(args, candidates);
+	free(*line);
+	*line = res;
+	write_completed_version(current, len, res);
+	*len = ft_strlen(res);
+	*current = *len;
+	return (0);
+}
+
+char	cursor_stuff_one(char tmp_char, char **line, size_t len_current_size[], char **env)
+{
+	size_t		*len;
+	size_t		*current;
+	size_t		*size;
+
+	len = &(len_current_size[0]);
+	current = &(len_current_size[1]);
+	size = &(len_current_size[2]);
+	if (tmp_char == 1)
+		place_cursor_start_of_line(current);
+	else if (tmp_char == '\t')
+	{
+		if (autocomplete(line, current, len, env))
+			*size = *len;
+	}
+	else if (tmp_char == 5)
+	{
+		ft_putstr(*line + *current);
+		*current = *len;
+	}
+	else
+		return (0);
+	return (1);
+}
+
+void	navigate_history(char tmp_char, char **line, t_linked_list *history,
+												size_t len_current_size[])
+{
+	int			*history_ind;
+	size_t		*len;
+	size_t		*current;
+	size_t		*size;
+
+	history_ind = (int*)&(len_current_size[3]);
+	len = &(len_current_size[0]);
+	current = &(len_current_size[1]);
+	size = &(len_current_size[2]);
+	if ((tmp_char == 3 && history->len > 1 && *history_ind > 1)
+		|| (tmp_char == 4 && history->len > 1 && *history_ind < history->len))
+	{
+		write_n_char(*current, '\b');
+		write_n_char(*len, ' ');
+		write_n_char(*len, '\b');
+		if ((tmp_char == 3 && history->len > 1 && *history_ind > 1))
+			*line = get_last_history(history, *line, len, history_ind);
+		else
+			*line = get_next_history(history, *line, len, history_ind);
+		ft_putstr(*line);
+		*size = *len;
+		*current = *len;
+	}
+}
+
+void	arrows_management(char **line, t_linked_list *history,
+											size_t len_current_size[])
+{
+	int			*history_ind;
+	char		tmp_char;
+	size_t		*len;
+	size_t		*current;
+	size_t		*size;
+
+	history_ind = (int*)&(len_current_size[3]);
+	len = &(len_current_size[0]);
+	current = &(len_current_size[1]);
+	size = &(len_current_size[2]);
+	tmp_char = arrow(27);
+	if (tmp_char == 1 && *current > 0)
+	{
+		write(1, "\b", 1);
+		(*current)--;
+	}
+	else if (tmp_char == 2 && *current < *len)
+	{
+		write(1, *line + *current, 1);
+		(*current)++;
+	}
+	else
+		navigate_history(tmp_char, line, history, len_current_size);
+}
+
+char	remove_char(char tmp_char, char **line, size_t *current, size_t *len)
+{
+	if (tmp_char == 127)
+	{
+		if (*current > 0)
+		{
+			remove_char_at_pos(*line, *current, *len);
+			(*len)--;
+			(*current)--;
+		}
+		return (1);
+	}
+	return (0);
+}
+
+void	read_chars(char **env, t_linked_list *history, char **line,
+											size_t len_current_size[])
+{
+	char		tmp_char;
+	size_t		*len;
+	size_t		*current;
+	size_t		*size;
+
+	len = &(len_current_size[0]);
+	current = &(len_current_size[1]);
+	size = &(len_current_size[2]);
+	while ((tmp_char = (char)getch()) != '\n')
+	{
+		if (!cursor_stuff_one(tmp_char, line, len_current_size, env)
+			&& !remove_char(tmp_char, line, current, len))
+		{
+			if (tmp_char == 27)
+				arrows_management(line, history, len_current_size);
+			else
+			{
+				if (*len == *size)
+					*line = double_size(*line, *len, size);
+				add_char_at_pos(*line, *current, *len, tmp_char);
+				(*len)++;
+				(*current)++;
+			}
+		}
+	}
+}
+
+char	*get_input(char **env, t_linked_list *history)
 {
 	char	*line;
 	size_t	size;
-	size_t	len;
-	size_t	current;
-	char	tmp_char;
+	size_t	len_current_size[4];
 
 	if (!(line = (char*)malloc(sizeof(char) * 6)))
 		malloc_error();
 	line[0] = '\0';
-	len = 0;
-	current = 0;
-	size = 5;
-	while ((tmp_char = (char)getch()) != '\n')
-	{
-		if (tmp_char == 127)
-		{
-			if (current > 0)
-			{
-				remove_char_at_pos(line, current, len);
-				len--;
-				current--;
-			}
-		}
-		else if (tmp_char == 27)
-		{
-			tmp_char = arrow(tmp_char);
-			if (tmp_char == 1 && current > 0)
-			{
-				write(1, "\b", 1);
-				current--;
-			}
-			else if (tmp_char == 2 && current < len)
-			{
-				write(1, line + current, 1);
-				current++;
-			}
-		}
-		else
-		{
-			if (len == size)
-				line = double_size(line, len, &size);
-			add_char_at_pos(line, current, len, tmp_char);
-			len++;
-			current++;
-		}
-	}
-	if (len == size)
-		line = double_size(line, len, &size);
-	line[len] = '\0';
+	len_current_size[0] = 0;
+	len_current_size[1] = 0;
+	len_current_size[2] = 5;
+	len_current_size[3] = history->len;
+	read_chars(env, history, &line, len_current_size);
+	if (len_current_size[0] == len_current_size[2])
+		line = double_size(line, len_current_size[0], &(len_current_size[2]));
+	line[len_current_size[0]] = '\0';
+	free(history->elts[history->len - 1]);
+	if (history->len == 1 || ft_strcmp(history->elts[history->len - 2], line) != 0)
+		history->elts[history->len - 1] = ft_strdup(line);
+	else
+		history->len--;
 	write(1, "\n", 1);
 	return (line);
 }
@@ -332,49 +742,55 @@ char	ignore_char(char c)
 	return (0);
 }
 
+void	add_string_to_args2(char *command, char *to_add, t_vars *vars, char *in_str)
+{
+	if (!(command[vars->start + vars->x] == '"' || command[vars->start + vars->x] == '\''))
+	{
+		to_add[vars->i] = command[vars->start + vars->x];
+		vars->i++;
+	}
+	else
+	{
+		if (!*in_str)
+			*in_str = command[vars->start + vars->x];
+		else
+		{
+			if (command[vars->start + vars->x] == *in_str)
+				*in_str = 0;
+			else
+			{
+				to_add[vars->i] = command[vars->start + vars->x];
+				vars->i++;
+			}
+		}
+	}
+}
+
 void	add_string_to_args(t_linked_list *args, char *command, size_t start, size_t end)
 {
 	char	*to_add;
-	size_t	i;
-	size_t	x;
+	t_vars	vars;
 	char	in_str;
 
+	vars.start = start;
 	in_str = 0;
-	if (!(to_add = (char*)malloc(sizeof(char) * (end - start + 1))))
+	if (!(to_add = (char*)malloc(sizeof(char) * (end - vars.start + 1))))
 		malloc_error();
-	i = 0;
-	x = 0;
-	while (x < end - start)
+	vars.i = 0;
+	vars.x = 0;
+	while (vars.x < end - vars.start)
 	{
-		if (command[start + x] == '\\')
+		if (command[vars.start + vars.x] == '\\')
 		{
-			to_add[i] = command[start + x + 1];
-			x++;
-			i++;
-		}
-		else if (!(command[start + x] == '"' || command[start + x] == '\''))
-		{
-			to_add[i] = command[start + x];
-			i++;
+			to_add[vars.i] = command[vars.start + vars.x + 1];
+			vars.x++;
+			vars.i++;
 		}
 		else
-		{
-			if (!in_str)
-				in_str = command[start + x];
-			else
-			{
-				if (command[start + x] == in_str)
-					in_str = 0;
-				else
-				{
-					to_add[i] = command[start + x];
-					i++;
-				}
-			}
-		}
-		x++;
+			add_string_to_args2(command, to_add, &vars, &in_str);
+		vars.x++;
 	}
-	to_add[i] = '\0';
+	to_add[vars.i] = '\0';
 	add_to_list(args, to_add);
 }
 
@@ -396,12 +812,6 @@ char	escaped_char(char *str, int i)
 		return (1);
 	return (0);
 }
-
-typedef struct	s_ind
-{
-	size_t		start;
-	size_t		i;
-}				t_ind;
 
 void	handle_quote(t_linked_list *args, char *command, t_ind *ind, char *in_str)
 {
@@ -443,6 +853,20 @@ char	**list_to_args(t_linked_list *args)
 	return (res);
 }
 
+void	split_command_in_args2(char *command, t_linked_list *args, t_ind *ind, char *in_str)
+{
+	if (!*in_str && (ignore_char(command[ind->i]) || command[ind->i] == ';'))
+	{
+		if (ind->start != ind->i)
+			add_string_to_args(args, command, ind->start, ind->i);
+		if (command[ind->i] == ';')
+			add_to_list(args, ft_strdup(";"));
+		ind->start = ind->i + 1;
+	}
+	else if (command[ind->i] == '"' || command[ind->i] == '\'')
+		handle_quote(args, command, ind, in_str);
+}
+
 char	**split_command_in_args(char *command)
 {
 	t_linked_list	*args;
@@ -459,29 +883,12 @@ char	**split_command_in_args(char *command)
 	in_str = 0;
 	while (command[ind.i])
 	{
-		if (!in_str && ignore_char(command[ind.i]))
-		{
-			if (ind.start != ind.i)
-				add_string_to_args(args, command, ind.start, ind.i);
-			ind.start = ind.i + 1;
-		}
-		else if (command[ind.i] == '"' || command[ind.i] == '\'')
-			handle_quote(args, command, &ind, &in_str);
+		split_command_in_args2(command, args, &ind, &in_str);
 		ind.i++;
 	}
 	if (ind.start != ind.i)
 		add_string_to_args(args, command, ind.start, ind.i);
 	return (list_to_args(args));
-}
-
-size_t	strstrlen(char **env)
-{
-	size_t	i;
-
-	i = 0;
-	while (env[i])
-		i++;
-	return (i);
 }
 
 char	startswith(char *str, char *env)
@@ -527,6 +934,21 @@ char	*build_env_var(char *part1, char *part2)
 	return (res);
 }
 
+char	set_env2(char **new_env, char **line, char ***env, size_t i)
+{
+	char	done;
+
+	done = 0;
+	if (startswith(line[1], (*env)[i]))
+	{
+		new_env[i] = build_env_var(line[1], line[2]);
+		done = 1;
+	}
+	else
+		new_env[i] = (*env)[i];
+	return (done);
+}
+
 void	set_env(char **line, char ***env)
 {
 	char	**new_env;
@@ -542,13 +964,8 @@ void	set_env(char **line, char ***env)
 	i = 0;
 	while ((*env)[i])
 	{
-		if (startswith(line[1], (*env)[i]))
-		{
-			new_env[i] = build_env_var(line[1], line[2]);
+		if (set_env2(new_env, line, env, i))
 			done = 1;
-		}
-		else
-			new_env[i] = (*env)[i];
 		i++;
 	}
 	new_env[i] = NULL;
@@ -771,16 +1188,85 @@ void	ctrl_c(int id)
 	ft_putstr("\n");
 }
 
-void	treat_command(char *command, char ***env)
+size_t	count_elts(char **elts)
 {
-	pid_t	id;
-	char	**line;
-	char	*executable;
+	size_t	i;
 
-	line = split_command_in_args(command);
-	if (!line)
-		return ;
-	replace_tilde(line, *env);
+	i = 0;
+	while (elts[i] && ft_strcmp(elts[i], ";") != 0)
+		i++;
+	return (i);
+}
+
+char	***split_in_commands2(char ***commands, char **line, size_t count, size_t i)
+{
+	size_t	ind;
+	size_t	x;
+	int		count2;
+
+	ind = 0;
+	x = 0;
+	while (ind < count + 1)
+	{
+		count2 = count_elts(line + x);
+		if (!(commands[ind] = (char**)malloc(sizeof(char*) * (count2 + 1))))
+			malloc_error();
+		commands[ind][count2] = NULL;
+		i = 0;
+		while (i < count2)
+		{
+			commands[ind][i] = line[x];
+			x++;
+			i++;
+		}
+		x++;
+		ind++;
+	}
+	return (commands);
+}
+
+char	***split_in_commands(char **line)
+{
+	size_t	i;
+	int		count;
+	char	***commands;
+
+	i = 0;
+	count = 0;
+	while (line[i])
+	{
+		if (ft_strcmp(line[i], ";") == 0)
+			count++;
+		i++;
+	}
+	if (!(commands = (char***)malloc(sizeof(char**) * (count + 2))))
+		malloc_error();
+	commands[count + 1] = NULL;
+	return (split_in_commands2(commands, line, count, 0));
+}
+
+void	print_commands(char ***commands)
+{
+	size_t	x;
+	size_t	y;
+
+	y = 0;
+	while (commands[y])
+	{
+		ft_putstr("NEW INSTR\n\n");
+		x = 0;
+		while (commands[y][x])
+		{
+			ft_putstr(commands[y][x]);
+			ft_putstr("|\n");
+			x++;
+		}
+		y++;
+	}
+}
+
+void	launch_command(char **line, char ***env, char *executable, pid_t id)
+{
 	if (ft_strcmp(line[0], "env") == 0 || ft_strcmp(line[0], "setenv") == 0
 		|| ft_strcmp(line[0], "cd") == 0 || ft_strcmp(line[0], "unsetenv") == 0
 		|| ft_strcmp(line[0], "exit") == 0)
@@ -804,42 +1290,66 @@ void	treat_command(char *command, char ***env)
 		}
 		exit(0);
 	}
+}
+
+void	treat_command(char *command, char ***env)
+{
+	char	**line;
+	char	***commands;
+	size_t	i;
+
+	line = split_command_in_args(command);
+	if (!line)
+		return ;
+	commands = split_in_commands(line);
+	i = 0;
+	while ((line = commands[i]))
+	{
+		if (line && line[0])
+		{
+			replace_tilde(line, *env);
+			launch_command(line, env, NULL, 0);	
+		}
+		i++;
+	}
 	free(command);
 }
 
 void	launch_shell(void)
 {
-	char	**env;
+	char			**env;
+	t_linked_list	*history;
 
-	//env = NULL;
-	//reload_env(&env);
+	history = new_list();
 	signal(SIGINT, ctrl_c);
 	env = copy_environ();
 	while (1)
 	{
 		print_prompt(env);
-		treat_command(get_input(env), &env);
+		add_to_list(history, ft_strdup(""));
+		treat_command(get_input(env, history), &env);
 	}
 	free_ptrptr((void**)*env);
 }
 
 void	display_help(void)
 {
-	ft_putstr("  __ Welcome to the minishell __\n");
-	ft_putstr("builtins :\n");
-	ft_putstr("  env\n");
-	ft_putstr("  setenv\n");
-	ft_putstr("  unsetenv\n");
-	ft_putstr("  cd\n");
-	ft_putstr("  exit\n");
-	ft_putstr("  $<ENV_VAR>\n\n");
-	ft_putstr("special features :\n");
-	ft_putstr("  autocompletion\n");
-	ft_putstr("  line edition\n");
-	ft_putstr("  command history\n");
-	ft_putstr("  tilde\n");
-	ft_putstr("  complex strings support\n");
-	ft_putstr("  ...some more stuff...\n");
+	ft_putstr("  __ Welcome to the minishell __\n\n");
+	ft_putstr("  builtins :\n");
+	ft_putstr("    - env\n");
+	ft_putstr("    - setenv\n");
+	ft_putstr("    - unsetenv\n");
+	ft_putstr("    - cd\n");
+	ft_putstr("    - exit\n");
+	ft_putstr("    - $<ENV_VAR>\n\n");
+	ft_putstr("  special features :\n");
+	ft_putstr("    - autocompletion\n");
+	ft_putstr("    - line edition\n");
+	ft_putstr("    - command history\n");
+	ft_putstr("    - tilde\n");
+	ft_putstr("    - go to start/end of line\n");
+	ft_putstr("    - complex strings support\n");
+	ft_putstr("    ...some more stuff...\n");
 }
 
 int		main(int argc, char **argv)

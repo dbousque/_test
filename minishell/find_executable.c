@@ -2,12 +2,6 @@
 
 #include "minishell.h"
 
-typedef struct		s_dir
-{
-	char			*path;
-	t_linked_list	*files;
-}					t_dir;
-
 void	print_list(t_linked_list *list)
 {
 	int		i;
@@ -21,7 +15,7 @@ void	print_list(t_linked_list *list)
 	}
 }
 
-void	get_files_in_dir(char *path, t_linked_list *files)
+void	get_files_in_dir(char *path, t_linked_list *files, char dirs, char not_exec)
 {
 	DIR				*dir;
 	struct dirent	*file;
@@ -35,8 +29,11 @@ void	get_files_in_dir(char *path, t_linked_list *files)
 		tmp_full_path = build_file_path(path, file->d_name);
 		if (stat(tmp_full_path, &file_stat) != -1)
 		{
-			if (!S_ISDIR(file_stat.st_mode) && access(tmp_full_path, X_OK) != -1)
-				add_to_list(files, ft_strdup(file->d_name));
+			if (dirs || !S_ISDIR(file_stat.st_mode))
+			{
+				if (not_exec || (access(tmp_full_path, X_OK) != -1) && dirs != 2)
+					add_to_list(files, ft_strdup(file->d_name));
+			}
 		}
 		free(tmp_full_path);
 	}
@@ -78,12 +75,31 @@ t_linked_list	*get_files_from_path(char **env)
 			malloc_error();
 		tmp_dir->files = new_list();
 		tmp_dir->path = ft_strdup(paths[i]);
-		get_files_in_dir(paths[i], tmp_dir->files);
+		get_files_in_dir(paths[i], tmp_dir->files, 0, 0);
 		add_to_list(dirs, tmp_dir);
 		i++;
 	}
 	free_ptrptr((void**)paths);
 	return (dirs);
+}
+
+void	get_files_from_path2(char **env, t_linked_list *files)
+{
+	char			**paths;
+	char			*path;
+	size_t			i;
+
+	path = get_path(env);
+	if (!path)
+		return ;
+	paths = ft_strsplit(path, ':');
+	i = 0;
+	while (paths[i])
+	{
+		get_files_in_dir(paths[i], files, 0, 0);
+		i++;
+	}
+	free_ptrptr((void**)paths);
 }
 
 char	*build_file_path(char *dir_path, char *file_name)
