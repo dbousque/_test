@@ -8,6 +8,8 @@
 # include <dirent.h>
 # include <sys/stat.h>
 # include <signal.h>
+# include <stdio.h>
+# include <termios.h>
 
 typedef struct	s_linked_list
 {
@@ -23,7 +25,7 @@ char			char_in_str(char *str, char c);
 char			*build_file_path(char *dir_path, char *file_name);
 char			startswith(char *str, char *env);
 void			launch_shell(void);
-void      free_ptrptr(void **ptrptr);
-void      malloc_error(void);
+void			free_ptrptr(void **ptrptr);
+void			malloc_error(void);
 
 #endif

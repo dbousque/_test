@@ -34,12 +34,10 @@ char	*get_logname(char **env)
 	return (tmp);
 }
 
-char	*get_current_dir(void)
+char	*get_current_path(void)
 {
 	char	*path;
 	size_t	size;
-	char	*res;
-	size_t	i;
 
 	size = 1024;
 	while (1)
@@ -52,6 +50,16 @@ char	*get_current_dir(void)
 		free(path);
 		size *= 2;
 	}
+	return (path);
+}
+
+char	*get_current_dir(void)
+{
+	char	*path;
+	char	*res;
+	size_t	i;
+
+	path = get_current_path();
 	i = 0;
 	while (path[i])
 		i++;
@@ -70,16 +78,177 @@ void	print_prompt(char **env)
 	ft_putstr(get_logname(env));
 	ft_putstr(":");
 	current_dir = get_current_dir();
+	ft_putstr("[0;36;40m");
 	ft_putstr(current_dir);
+	ft_putstr("[0m");
 	free(current_dir);
 	ft_putstr("$> ");
 }
 
-char	*get_input(void)
+int		getch(void)
+{
+	struct termios	oldtc;
+	struct termios	newtc;
+	int				ch;
+
+	tcgetattr(STDIN_FILENO, &oldtc);
+	newtc = oldtc;
+	newtc.c_lflag &= ~(ICANON | ECHO);
+	tcsetattr(STDIN_FILENO, TCSANOW, &newtc);
+	ch = getchar();
+	tcsetattr(STDIN_FILENO, TCSANOW, &oldtc);
+	return (ch);
+}
+
+char	*double_size(char *line, size_t len, size_t *size)
+{
+	char	*new_line;
+	size_t	i;
+
+	*size *= 2;
+	if (!(new_line = (char*)malloc(sizeof(char) * (*size + 1))))
+		malloc_error();
+	i = 0;
+	while (line[i])
+	{
+		new_line[i] = line[i];
+		i++;
+	}
+	new_line[i] = '\0';
+	free(line);
+	return (new_line);
+}
+
+void	add_char_at_pos(char *line, size_t current, size_t len, char c)
+{
+	size_t	i;
+
+	i = len;
+	while (i > current)
+	{
+		line[i] = line[i - 1];
+		i--;
+	}
+	line[current] = c;
+	line[len + 1] = '\0';
+	ft_putstr(line + current);
+	i = current;
+	while (i < len)
+	{
+		write(1, "\b", 1);
+		i++;
+	}
+}
+
+void	clear_line(int nb)
+{
+	int		i;
+
+	i = 0;
+	while (i < nb)
+	{
+		write(1, " ", 1);
+		i++;
+	}
+	i = 0;
+	while (i < nb)
+	{
+		write(1, "\b", 1);
+		i++;
+	}
+}
+
+void	remove_char_at_pos(char *line, size_t current, size_t len)
+{
+	size_t	i;
+
+	i = current;
+	while (i < len)
+	{
+		line[i - 1] = line[i];
+		i++;
+	}
+	line[i - 1] = '\0';
+	clear_line((int)(len - current));
+	write(1, "\b \b", 3);
+	ft_putstr(line + current - 1);
+	i = current;
+	while (i < len)
+	{
+		write(1, "\b", 1);
+		i++;
+	}
+}
+
+char	arrow(char tmp_char)
+{
+	if (tmp_char == 27)
+	{
+		tmp_char = (char)getch();
+		if (tmp_char == 91)
+		{
+			tmp_char = (char)getch();
+			if (tmp_char == 68)
+				return (1);
+			if (tmp_char == 67)
+				return (2);
+		}
+	}
+	return (0);
+}
+
+char	*get_input(char **env)
 {
 	char	*line;
+	size_t	size;
+	size_t	len;
+	size_t	current;
+	char	tmp_char;
 
-	get_next_line(0, &line);
+	if (!(line = (char*)malloc(sizeof(char) * 6)))
+		malloc_error();
+	line[0] = '\0';
+	len = 0;
+	current = 0;
+	size = 5;
+	while ((tmp_char = (char)getch()) != '\n')
+	{
+		if (tmp_char == 127)
+		{
+			if (current > 0)
+			{
+				remove_char_at_pos(line, current, len);
+				len--;
+				current--;
+			}
+		}
+		else if (tmp_char == 27)
+		{
+			tmp_char = arrow(tmp_char);
+			if (tmp_char == 1 && current > 0)
+			{
+				write(1, "\b", 1);
+				current--;
+			}
+			else if (tmp_char == 2 && current < len)
+			{
+				write(1, line + current, 1);
+				current++;
+			}
+		}
+		else
+		{
+			if (len == size)
+				line = double_size(line, len, &size);
+			add_char_at_pos(line, current, len, tmp_char);
+			len++;
+			current++;
+		}
+	}
+	if (len == size)
+		line = double_size(line, len, &size);
+	line[len] = '\0';
+	write(1, "\n", 1);
 	return (line);
 }
 
@@ -158,7 +327,7 @@ void	print_strstr(char **strstr)
 
 char	ignore_char(char c)
 {
-	if (c == ' ' || c <= 31 || c >= 127)
+	if (c == ' ' || (c <= 31 && c >= 0) || c >= 127)
 		return (1);
 	return (0);
 }
@@ -445,10 +614,46 @@ char	*get_home(char **env)
 	return (ft_strdup("/"));
 }
 
-void	change_dir(char *dir_path)
+void	set_old_pwd(char ***env)
 {
+	char	*path;
+	char	**line;
 
-	UPDATE OLDPWD ET PWD EN FAISANT CD
+	path = get_current_path();
+	if (!(line = (char**)malloc(sizeof(char*) * 4)))
+		malloc_error();
+	line[3] = NULL;
+	line[0] = ft_strdup("env");
+	line[1] = ft_strdup("OLDPWD");
+	line[2] = path;
+	set_env(line, env);
+	free(line[0]);
+	free(line[1]);
+	free(line[2]);
+	free(line);
+}
+
+void	set_new_pwd(char ***env)
+{
+	char	*path;
+	char	**line;
+
+	path = get_current_path();
+	if (!(line = (char**)malloc(sizeof(char*) * 4)))
+		malloc_error();
+	line[3] = NULL;
+	line[0] = ft_strdup("env");
+	line[1] = ft_strdup("PWD");
+	line[2] = path;
+	set_env(line, env);
+	free(line[0]);
+	free(line[1]);
+	free(line[2]);
+	free(line);
+}
+
+void	change_dir(char *dir_path, char ***env)
+{
 	struct stat	file;
 
 	if (stat(dir_path, &file) == -1)
@@ -458,7 +663,11 @@ void	change_dir(char *dir_path)
 		ft_putstr(": No such file or directory\n");
 	}
 	else if (S_ISDIR(file.st_mode))
+	{
+		set_old_pwd(env);
 		chdir(dir_path);
+		set_new_pwd(env);
+	}
 	else
 	{
 		ft_putstr("minishell: ");
@@ -478,13 +687,16 @@ void	handle_builtin(char **line, char ***env)
 		&& !char_in_str(line[1], '='))
 		unset_env(line, env);
 	else if (ft_strcmp(line[0], "exit") == 0)
+	{
+		ft_putstr("bye\n");
 		exit(0);
+	}
 	else if (ft_strcmp(line[0], "cd") == 0)
 	{
 		if (!line[1])
-			change_dir(get_home(*env));
+			change_dir(get_home(*env), env);
 		else
-			change_dir(line[1]);
+			change_dir(line[1], env);
 	}
 }
 
@@ -513,6 +725,18 @@ char	*replace_tilde_str(char *home, size_t home_len, char *line)
 	return (res);
 }
 
+void	handle_dollar(char **line, size_t i, char **env)
+{
+	char	*value;
+	char	*new_line;
+
+	value = get_env_var(line[i] + 1, env);
+	if (!value)
+		return ;
+	free(line[i]);
+	line[i] = value;
+}
+
 void	replace_tilde(char **line, char **env)
 {
 	size_t	i;
@@ -535,6 +759,8 @@ void	replace_tilde(char **line, char **env)
 			free(line[i]);
 			line[i] = tmp;
 		}
+		else if (line[i][0] == '$')
+			handle_dollar(line, i, env);
 		i++;
 	}
 }
@@ -592,13 +818,35 @@ void	launch_shell(void)
 	while (1)
 	{
 		print_prompt(env);
-		treat_command(get_input(), &env);
+		treat_command(get_input(env), &env);
 	}
 	free_ptrptr((void**)*env);
 }
 
-int		main(void)
+void	display_help(void)
 {
-	launch_shell();
+	ft_putstr("  __ Welcome to the minishell __\n");
+	ft_putstr("builtins :\n");
+	ft_putstr("  env\n");
+	ft_putstr("  setenv\n");
+	ft_putstr("  unsetenv\n");
+	ft_putstr("  cd\n");
+	ft_putstr("  exit\n");
+	ft_putstr("  $<ENV_VAR>\n\n");
+	ft_putstr("special features :\n");
+	ft_putstr("  autocompletion\n");
+	ft_putstr("  line edition\n");
+	ft_putstr("  command history\n");
+	ft_putstr("  tilde\n");
+	ft_putstr("  complex strings support\n");
+	ft_putstr("  ...some more stuff...\n");
+}
+
+int		main(int argc, char **argv)
+{
+	if (argc == 2 && ft_strcmp(argv[1], "-h") == 0)
+		display_help();
+	else
+		launch_shell();
 	return (0);
 }
