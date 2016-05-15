@@ -7,8 +7,8 @@ t_linked_list	*new_linked_list(void)
 	t_linked_list	*list;
 
 	list = my_mmap(sizeof(t_linked_list));
-	list->elts = my_mmap(sizeof(void*) * 16);
-	list->size = 16;
+	list->elts = my_mmap(sizeof(void*) * 128);
+	list->size = 128;
 	list->len = 0;
 	return (list);
 }

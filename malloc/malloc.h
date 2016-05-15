@@ -8,7 +8,8 @@
 # include <unistd.h>
 
 # define ALLOC 1
-# define GET_MEM 2
+# define FREE 2
+# define GET_MEM 3
 # define NB_PAGES_PER_SMALL_ZONE 4
 # define NB_PAGES_PER_TINY_ZONE 2
 # define TINY 1
@@ -25,6 +26,7 @@ typedef struct		s_linked_list
 typedef struct		s_malloc_data
 {
 	t_linked_list	*zones;
+	t_linked_list	*free_small_blocks;
 	size_t			page_size;
 }					t_malloc_data;
 
