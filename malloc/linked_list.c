@@ -6,13 +6,13 @@ t_linked_list	*new_linked_list(void)
 {
 	t_linked_list	*list;
 
-	list = my_mmap(sizeof(t_linked_list));
-	list->elts = my_mmap(sizeof(void*) * 128);
+	list = (t_linked_list*)my_mmap(sizeof(t_linked_list));
+	list->elts = (void**)my_mmap(sizeof(void*) * 128);
 	list->size = 128;
 	list->len = 0;
 	return (list);
 }
-
+#include <stdio.h>
 static void	double_list_size(t_linked_list *list)
 {
 	void	**new_elts;
@@ -25,7 +25,9 @@ static void	double_list_size(t_linked_list *list)
 		new_elts[i] = list->elts[i];
 		i++;
 	}
-	my_munmap(list->elts, (sizeof(void*) * list->size));
+	//printf("LA\n");
+	my_munmap(*list->elts, (sizeof(void*) * list->size));
+	//printf("LA AUSSI\n");
 	list->elts = new_elts;
 	list->size *= 2;
 }
@@ -38,7 +40,7 @@ void	add_to_list(t_linked_list *list, void *elt)
 	list->len++;
 }
 
-void	print_zone(t_zone *zone)
+/*void	print_zone(t_zone *zone)
 {
 	char	*tmp_str;
 
@@ -75,4 +77,4 @@ void	print_zones(t_linked_list *zones)
 		print_zone(zones->elts[i]);
 		i++;
 	}
-}
+}*/

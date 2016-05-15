@@ -5,7 +5,8 @@
 
 #include <stdlib.h>
 #include <stdio.h>
-
+#include <errno.h>
+#include <string.h>
 
 size_t	ft_strlen(char *str)
 {
@@ -32,6 +33,8 @@ void	munmap_failed(void)
 
 	str = "deallocation failed\n";
 	write(2, str, ft_strlen(str));
+	fflush(stdout);
+	printf("%s\n", strerror(errno));
 	exit(1);
 }
 
@@ -41,7 +44,7 @@ void	*my_mmap(size_t size)
 
 	res = mmap(NULL, size, PROT_READ | PROT_WRITE, MAP_PRIVATE | MAP_ANON,
 			-1, 0);
-	if (res == (void*)-1)
+	if (res == (void*)-1 || res == MAP_FAILED)
 		mmap_failed();
 	return (res);
 }
@@ -70,7 +73,7 @@ void	add_new_small_zone(t_malloc_data *data)
 	new_zone->nb_used_blocks = 0;
 	new_zone->type = SMALL;
 	add_to_list(data->zones, new_zone);
-	add_new_free_small_block(data, new_zone + sizeof(t_zone),
+	add_new_free_small_block(data, (void*)new_zone + sizeof(t_zone),
 		NB_PAGES_PER_SMALL_ZONE * data->page_size
 		- sizeof(t_zone) - sizeof(t_small_block));
 }
@@ -96,9 +99,9 @@ void	print_small_block(t_small_block *block)
 	tmp_str = "  - free : ";
 	write(1, tmp_str, ft_strlen(tmp_str));
 	if (block->free)
-		tmp_str = "Yes";
+		tmp_str = "Yes\n";
 	else
-		tmp_str = "No";
+		tmp_str = "No\n";
 	write(1, tmp_str, ft_strlen(tmp_str));
 }
 
@@ -112,6 +115,8 @@ void	print_free_blocks(t_linked_list *free_blocks)
 	i = 0;
 	while (i < free_blocks->len)
 	{
+		print_number(i + 1);
+		write(1, " :\n", 3);
 		print_small_block(free_blocks->elts[i]);
 		i++;
 	}
@@ -131,96 +136,72 @@ t_malloc_data	*build_void_data(void)
 	return (data);
 }
 
-t_small_block	**select_small_block(t_malloc_data *data, size_t size)
+size_t	select_free_block(t_malloc_data *data, size_t size)
 {
 	size_t			i;
-	t_small_block	*tmp_block;
 
-	i = 0;
-	while (i < data->free_small_blocks->len)
+	if (data->free_small_blocks->len > 0)
 	{
-		tmp_block = (t_small_block*)data->free_small_blocks->elts[i];
-		if (tmp_block->size >= size)
-			return ((t_small_block**)&(data->free_small_blocks->elts[i]));
-		i++;
+		i = data->free_small_blocks->len - 1;
+		while (1)
+		{
+			if (((t_small_block*)data->free_small_blocks->elts[i])->size >= size + sizeof(t_small_block))
+				return (i);
+			if (i == 0)
+				break ;
+			i--;
+		}
 	}
 	add_new_small_zone(data);
-	return ((t_small_block**)&(data->free_small_blocks->elts[data->free_small_blocks->len - 1]));
+	return (data->free_small_blocks->len - 1);
 }
 
-void	remove_free_block(t_malloc_data *data, t_small_block **free_block)
+void	remove_free_block(t_malloc_data *data, size_t ind)
 {
 	size_t	i;
-	size_t	x;
 
-	char *tmp_str = "removing\n";
-	write(1, tmp_str, ft_strlen(tmp_str));
-	fflush(stdout);
-	i = data->free_small_blocks->len - 1;
-	while (1)
+	i = ind + 1;
+	while (i < data->free_small_blocks->len)
 	{
-		if (data->free_small_blocks->elts[i] == *free_block)
-		{
-			x = i + 1;
-			while (x < data->free_small_blocks->len)
-			{
-				data->free_small_blocks->elts[x - 1] = data->free_small_blocks->elts[x];
-				x++;
-			}
-			data->free_small_blocks->len--;
-			return ;
-		}
-		if (i == 0)
-			break ;
-		i--;
+		data->free_small_blocks->elts[i - 1] = data->free_small_blocks->elts[i];
+		i++;
 	}
-	tmp_str = "Error, free_block not found\n";
-	write(1, tmp_str, ft_strlen(tmp_str));
+	data->free_small_blocks->len--;
 }
 
-void	reserve_small_block(t_malloc_data *data, t_small_block **free_block,
-																size_t size)
+t_small_block	*alloc_small_block_for_use(t_malloc_data *data, size_t size,
+																	size_t ind)
 {
+	t_small_block	*block;
 	t_small_block	*new_free_block;
-	char			replace_free_block;
+	char			new_free;
 
-	replace_free_block = 0;
-	if ((*free_block)->size > size + sizeof(t_small_block))
+	new_free = 0;
+	block = ((t_small_block*)data->free_small_blocks->elts[ind]);
+	if (block->size > size + (sizeof(t_small_block) * 2))
 	{
-		new_free_block = (*free_block) + sizeof(t_small_block) + size;
-		new_free_block->size = (*free_block)->size;
+		new_free_block = (void*)block + size + sizeof(t_small_block);
+		new_free_block->size = block->size - size - sizeof(t_small_block);
 		new_free_block->free = 1;
-		replace_free_block = 1;
+		new_free = 1;
 	}
-	(*free_block)->size = size;
-	(*free_block)->free = 0;
-	if (replace_free_block)
-		*free_block = (*free_block) + sizeof(t_small_block) + size;
+	block->size = size;
+	block->free = 0;
+	if (new_free)
+		data->free_small_blocks->elts[ind] = new_free_block;
 	else
-	{
-		char *tmp_str = "there\n";
-		write(1, tmp_str, ft_strlen(tmp_str));
-		fflush(stdout);
-		remove_free_block(data, free_block);
-	}
+		remove_free_block(data, ind);
+	return (block + sizeof(t_small_block));
 }
 
 void	*alloc_new_small_block(t_malloc_data *data, size_t size)
 {
-	t_small_block	**selected_block;
+	size_t			selected_ind;
+	t_small_block	*block;
 
-	char *tmp_str = "before\n";
-	write(1, tmp_str, ft_strlen(tmp_str));
-	fflush(stdout);
-	selected_block = select_small_block(data, size);
-	tmp_str = "between\n";
-	write(1, tmp_str, ft_strlen(tmp_str));
-	fflush(stdout);
-	reserve_small_block(data, selected_block, size);
-	tmp_str = "after\n";
-	write(1, tmp_str, ft_strlen(tmp_str));
-	fflush(stdout);
-	return (*selected_block + sizeof(t_small_block));
+	selected_ind = select_free_block(data, size);
+	block = alloc_small_block_for_use(data, size, selected_ind);
+	return (block);
 }
 
 void	*my_malloc(t_malloc_data *data, size_t size)
@@ -237,6 +218,73 @@ void	my_free(t_malloc_data *data, void *ptr)
 	(void)ptr;
 }
 
+void	print_zone_info(t_zone *zone)
+{
+	char	*tmp_str;
+
+	tmp_str = "  - number of allocated blocks : ";
+	write(1, tmp_str, ft_strlen(tmp_str));
+	print_number(zone->nb_used_blocks);
+	write(1, "\n", 1);
+	tmp_str = "  - type of zone : ";
+	write(1, tmp_str, ft_strlen(tmp_str));
+	if (zone->type == TINY)
+		tmp_str = "TINY";
+	else if (zone->type == SMALL)
+		tmp_str = "SMALL";
+	else if (zone->type == LARGE)
+		tmp_str = "LARGE";
+	else
+		tmp_str = "UNKNOWN TYPE!";
+	write(1, tmp_str, ft_strlen(tmp_str));
+	write(1, "\n", 1);
+}
+
+void	print_zone_content(t_malloc_data *data, t_zone *zone)
+{
+	void	*block;
+	void	*end;
+
+	end = NULL;
+	if (zone->type == SMALL)
+		end = (void*)zone + (NB_PAGES_PER_SMALL_ZONE * data->page_size);
+	block = (void*)zone + sizeof(t_zone);
+	while (block < end)
+	{
+		print_small_block(block);
+		block += ((t_small_block*)block)->size + sizeof(t_small_block);
+	}
+}
+
+void	print_zone(t_malloc_data *data, t_zone *zone)
+{
+	print_zone_info(zone);
+	print_zone_content(data, zone);
+}
+
+void	print_zones(t_malloc_data *data)
+{
+	size_t	i;
+	char	*tmp_str;
+
+	tmp_str = "Printing zones : \n";
+	write(1, tmp_str, ft_strlen(tmp_str));
+	i = 0;
+	while (i < data->zones->len)
+	{
+		print_number(i + 1);
+		write(1, " :\n", 3);
+		print_zone(data, data->zones->elts[i]);
+		i++;
+	}
+}
+
+void	print_mem(t_malloc_data *data)
+{
+	print_free_blocks(data->free_small_blocks);
+	//print_zones(data);
+}
+
 void	*handle_malloc_option(size_t size, char option, void *ptr)
 {
 	static t_malloc_data	*data = NULL;
@@ -247,12 +295,19 @@ void	*handle_malloc_option(size_t size, char option, void *ptr)
 		return (my_malloc(data, size));
 	else if (option == FREE)
 		my_free(data, ptr);
+	else if (option == PRINT_MEM)
+		print_mem(data);
 	return (NULL);
 }
 
 void	*malloc(size_t size)
 {
 	return (handle_malloc_option(size, ALLOC, NULL));
+}
+
+void	show_alloc_mem_ex(void)
+{
+	handle_malloc_option(0, PRINT_MEM, NULL);
 }
 
 int		main(void)
@@ -262,8 +317,12 @@ int		main(void)
 	int		x;
 
 	i = 0;
-	while (i < 288)
+	while (i < 1000000)
 	{
+		//print_number(i);
+		//write(1, "\n", 1);
+		//if (i >= 37829)
+		//	show_alloc_mem_ex();
 		str = malloc(sizeof(char) * 10);
 		x = 0;
 		while (x < 10)
@@ -275,28 +334,6 @@ int		main(void)
 		i++;
 	}
 	//printf("size of t_zone : %ld\nsize of small_block : %ld\n", sizeof(t_zone), sizeof(t_small_block));
+	show_alloc_mem_ex();
 	return (0);
 }
-
-/*int		main(void)
-{
-	char	*ptr;
-	int		i;
-
-	ptr = malloc(32);
-	i = 0;
-	while (i < 9)
-	{
-		ptr[i] = 'A';
-		i++;
-	}
-	ptr[i] = '\0';
-	printf("%s   |   %p\n", ptr, ptr);
-	i = -16;
-	while (i <= 0)
-	{
-		printf("%02X  ", *(ptr + i));
-		i++;
-	}
-	return (0);
-}*/

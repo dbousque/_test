@@ -9,8 +9,8 @@
 
 # define ALLOC 1
 # define FREE 2
-# define GET_MEM 3
-# define NB_PAGES_PER_SMALL_ZONE 4
+# define PRINT_MEM 3
+# define NB_PAGES_PER_SMALL_ZONE 1
 # define NB_PAGES_PER_TINY_ZONE 2
 # define TINY 1
 # define SMALL 2
@@ -44,7 +44,6 @@ typedef struct		s_small_block
 
 void				add_to_list(t_linked_list *list, void *elt);
 t_linked_list		*new_linked_list(void);
-void				print_zones(t_linked_list *zones);
 void				*my_mmap(size_t size);
 void				my_munmap(void *ptr, size_t size);
 size_t				ft_strlen(char *str);
