@@ -1,42 +1,50 @@
 
 
 #include "malloc.h"
-
+#include <stdio.h>
 t_linked_list	*new_linked_list(void)
 {
 	t_linked_list	*list;
 
 	list = (t_linked_list*)my_mmap(sizeof(t_linked_list));
-	list->elts = (void**)my_mmap(sizeof(void*) * 128);
-	list->size = 128;
+	list->size = getpagesize() / sizeof(void*);
 	list->len = 0;
+	list->elts = (void**)my_mmap(sizeof(void*) * list->size);
+	printf("initial size : %ld\n", sizeof(void*) * list->size);
 	return (list);
 }
-#include <stdio.h>
+
 static void	double_list_size(t_linked_list *list)
 {
 	void	**new_elts;
 	size_t	i;
 
-	new_elts = my_mmap(sizeof(void*) * (list->size * 2));
+	//printf("	list->elts location BEFORE : %p\n", list->elts);
+	//printf("new size : %ld\n", sizeof(void*) * (list->size * 2));
+	new_elts = (void**)my_mmap(sizeof(void*) * (list->size * 2));
 	i = 0;
-	while (i < list->len)
+	while (i < list->size * 2)
 	{
 		new_elts[i] = list->elts[i];
 		i++;
 	}
 	//printf("LA\n");
-	my_munmap(*list->elts, (sizeof(void*) * list->size));
+	my_munmap((void*)*list->elts, (sizeof(void*) * list->size));
 	//printf("LA AUSSI\n");
 	list->elts = new_elts;
 	list->size *= 2;
+	//printf("	list->elts location after : %p\n", list->elts);
 }
 
 void	add_to_list(t_linked_list *list, void *elt)
 {
 	if (list->len == list->size)
 		double_list_size(list);
+	//printf("ADDING\n");
+	//fflush(stdout);
 	list->elts[list->len] = elt;
+	//printf("AFTER ADDING\n");
+	//fflush(stdout);
 	list->len++;
 }
 

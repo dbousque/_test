@@ -69,6 +69,8 @@ void	add_new_small_zone(t_malloc_data *data)
 {
 	t_zone	*new_zone;
 
+	//printf("len : %ld,  size : %ld\n", data->zones->len, data->zones->size);
+	//fflush(stdout);
 	new_zone = (t_zone*)my_mmap(NB_PAGES_PER_SMALL_ZONE * data->page_size);
 	new_zone->nb_used_blocks = 0;
 	new_zone->type = SMALL;
@@ -152,7 +154,11 @@ size_t	select_free_block(t_malloc_data *data, size_t size)
 			i--;
 		}
 	}
+	//printf("ADDING SMALL BLOCK\n");
+	//fflush(stdout);
 	add_new_small_zone(data);
+	//printf("ADDED BLOCK\n");
+	//fflush(stdout);
 	return (data->free_small_blocks->len - 1);
 }
 
@@ -188,10 +194,21 @@ t_small_block	*alloc_small_block_for_use(t_malloc_data *data, size_t size,
 	block->size = size;
 	block->free = 0;
 	if (new_free)
+	{
 		data->free_small_blocks->elts[ind] = new_free_block;
+	}
 	else
+	{
 		remove_free_block(data, ind);
-	return (block + sizeof(t_small_block));
+		char 	*str = (char*)block + sizeof(t_small_block);
+		int x = 0;
+		while (x < 10)
+		{
+			str[x] = 'A';
+			x++;
+		}
+	}
+	return ((void*)block + sizeof(t_small_block));
 }
 
 void	*alloc_new_small_block(t_malloc_data *data, size_t size)
@@ -317,23 +334,42 @@ int		main(void)
 	int		x;
 
 	i = 0;
-	while (i < 1000000)
+	while (i < 10000000)
 	{
 		//print_number(i);
 		//write(1, "\n", 1);
-		//if (i >= 37829)
-		//	show_alloc_mem_ex();
-		str = malloc(sizeof(char) * 10);
+		/*if (i >= 37829)
+		{
+			printf("   BEFORE\n");
+			fflush(stdout);
+			show_alloc_mem_ex();
+		}*/
+		//printf("BEFORE MALLOC\n");
+		//fflush(stdout);
+		str = (char*)malloc(sizeof(char) * 10);
+		(void)str;
+		/*if (i >= 37829)
+		{
+			printf("   AFTER\n");
+			fflush(stdout);
+			show_alloc_mem_ex();
+		}*/
+		//printf("AFTER MALLOC\n");
+		//fflush(stdout);
 		x = 0;
 		while (x < 10)
 		{
 			str[x] = 'A';
 			x++;
 		}
+		//printf("AFTER WHILE\n");
+		//fflush(stdout);
 		//free(str);
 		i++;
 	}
+	printf("END OF PROGRAMM\n");
+	fflush(stdout);
 	//printf("size of t_zone : %ld\nsize of small_block : %ld\n", sizeof(t_zone), sizeof(t_small_block));
-	show_alloc_mem_ex();
+	//show_alloc_mem_ex();
 	return (0);
 }
