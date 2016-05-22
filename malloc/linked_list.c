@@ -28,61 +28,16 @@ static void	double_list_size(t_linked_list *list)
 		new_elts[i] = list->elts[i];
 		i++;
 	}
-	//printf("LA\n");
-	my_munmap((void*)*list->elts, (sizeof(void*) * list->size));
-	//printf("LA AUSSI\n");
+	//printf("LA : %ld\n", (sizeof(void*) * list->size) / getpagesize());
+	//my_munmap((void*)*list->elts, (sizeof(void*) * list->size) / getpagesize());
 	list->elts = new_elts;
 	list->size *= 2;
-	//printf("	list->elts location after : %p\n", list->elts);
 }
 
 void	add_to_list(t_linked_list *list, void *elt)
 {
 	if (list->len == list->size)
 		double_list_size(list);
-	//printf("ADDING\n");
-	//fflush(stdout);
 	list->elts[list->len] = elt;
-	//printf("AFTER ADDING\n");
-	//fflush(stdout);
 	list->len++;
 }
-
-/*void	print_zone(t_zone *zone)
-{
-	char	*tmp_str;
-
-	tmp_str = "  - number of allocated blocks : ";
-	write(1, tmp_str, ft_strlen(tmp_str));
-	print_number(zone->nb_used_blocks);
-	write(1, "\n", 1);
-	tmp_str = "  - type of zone : ";
-	write(1, tmp_str, ft_strlen(tmp_str));
-	if (zone->type == TINY)
-		tmp_str = "TINY";
-	else if (zone->type == SMALL)
-		tmp_str = "SMALL";
-	else if (zone->type == LARGE)
-		tmp_str = "LARGE";
-	else
-		tmp_str = "UNKNOWN TYPE!";
-	write(1, tmp_str, ft_strlen(tmp_str));
-	write(1, "\n", 1);
-}
-
-void	print_zones(t_linked_list *zones)
-{
-	size_t	i;
-	char	*tmp_str;
-
-	tmp_str = "Printing zones : \n";
-	write(1, tmp_str, ft_strlen(tmp_str));
-	i = 0;
-	while (i < zones->len)
-	{
-		tmp_str = "\nZone : \n";
-		write(1, tmp_str, ft_strlen(tmp_str));
-		print_zone(zones->elts[i]);
-		i++;
-	}
-}*/

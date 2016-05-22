@@ -327,7 +327,7 @@ void	show_alloc_mem_ex(void)
 	handle_malloc_option(0, PRINT_MEM, NULL);
 }
 
-int		main(void)
+/*int		main(void)
 {
 	char	*str;
 	int		i;
@@ -338,22 +338,22 @@ int		main(void)
 	{
 		//print_number(i);
 		//write(1, "\n", 1);
-		/*if (i >= 37829)
-		{
-			printf("   BEFORE\n");
-			fflush(stdout);
-			show_alloc_mem_ex();
-		}*/
+		//if (i >= 37829)
+		//{
+		//	printf("   BEFORE\n");
+		//	fflush(stdout);
+		//	show_alloc_mem_ex();
+		//}
 		//printf("BEFORE MALLOC\n");
 		//fflush(stdout);
 		str = (char*)malloc(sizeof(char) * 10);
 		(void)str;
-		/*if (i >= 37829)
-		{
-			printf("   AFTER\n");
-			fflush(stdout);
-			show_alloc_mem_ex();
-		}*/
+		//if (i >= 37829)
+		//{
+		//	printf("   AFTER\n");
+		//	fflush(stdout);
+		//	show_alloc_mem_ex();
+		//}
 		//printf("AFTER MALLOC\n");
 		//fflush(stdout);
 		x = 0;
@@ -371,5 +371,21 @@ int		main(void)
 	fflush(stdout);
 	//printf("size of t_zone : %ld\nsize of small_block : %ld\n", sizeof(t_zone), sizeof(t_small_block));
 	//show_alloc_mem_ex();
+	return (0);
+}*/
+
+int		main(void)
+{
+	int		i;
+	char	*addr;
+
+	//return (0);
+	i = 0;
+	while (i < 1024)
+	{
+		addr = (char*)malloc(1024);
+		addr[0] = 42;
+		i++;
+	}
 	return (0);
 }
