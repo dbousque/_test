@@ -381,7 +381,7 @@ int		main(void)
 
 	//return (0);
 	i = 0;
-	while (i < 1024)
+	while (i < 102400)
 	{
 		addr = (char*)malloc(1024);
 		addr[0] = 42;

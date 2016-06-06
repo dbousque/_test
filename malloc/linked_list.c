@@ -23,13 +23,13 @@ static void	double_list_size(t_linked_list *list)
 	//printf("new size : %ld\n", sizeof(void*) * (list->size * 2));
 	new_elts = (void**)my_mmap(sizeof(void*) * (list->size * 2));
 	i = 0;
-	while (i < list->size * 2)
+	while (i < list->len)
 	{
 		new_elts[i] = list->elts[i];
 		i++;
 	}
 	//printf("LA : %ld\n", (sizeof(void*) * list->size) / getpagesize());
-	//my_munmap((void*)*list->elts, (sizeof(void*) * list->size) / getpagesize());
+	my_munmap(list->elts, (sizeof(void*) * list->size));
 	list->elts = new_elts;
 	list->size *= 2;
 }
