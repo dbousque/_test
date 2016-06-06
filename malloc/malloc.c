@@ -377,6 +377,7 @@ void	show_alloc_mem_ex(void)
 int		main(void)
 {
 	int		i;
+	int		x;
 	char	*addr;
 
 	//return (0);
@@ -384,7 +385,12 @@ int		main(void)
 	while (i < 102400)
 	{
 		addr = (char*)malloc(1024);
-		addr[0] = 42;
+		x = 0;
+		while (x < 1024)
+		{
+			addr[x] = 42;
+			x++;
+		}
 		i++;
 	}
 	return (0);
