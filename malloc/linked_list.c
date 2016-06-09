@@ -7,6 +7,8 @@ t_linked_list	*new_linked_list(void)
 	t_linked_list	*list;
 
 	list = (t_linked_list*)my_mmap(sizeof(t_linked_list));
+	if (!list)
+		return (NULL);
 	list->size = getpagesize() / sizeof(void*);
 	list->len = 0;
 	list->elts = (void**)my_mmap(sizeof(void*) * list->size);
@@ -19,7 +21,7 @@ static void	double_list_size(t_linked_list *list)
 	void	**new_elts;
 	size_t	i;
 
-	//printf("	list->elts location BEFORE : %p\n", list->elts);
+	printf("	list->elts location BEFORE : %p\n", list->elts);
 	//printf("new size : %ld\n", sizeof(void*) * (list->size * 2));
 	new_elts = (void**)my_mmap(sizeof(void*) * (list->size * 2));
 	i = 0;
