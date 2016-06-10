@@ -73,8 +73,7 @@ int		add_new_small_zone(t_malloc_data *data)
 	new_zone->type = SMALL;
 	add_to_list(data->zones, new_zone);
 	add_new_free_small_block(data, (void*)new_zone + sizeof(t_zone),
-		NB_PAGES_PER_SMALL_ZONE * data->page_size
-		- sizeof(t_zone) - sizeof(t_small_block));
+		alloc_size - sizeof(t_zone) - sizeof(t_small_block));
 	return (1);
 }
 
@@ -103,8 +102,7 @@ int		add_new_tiny_zone(t_malloc_data *data)
 	new_zone->type = TINY;
 	add_to_list(data->zones, new_zone);
 	add_new_free_tiny_block(data, (void*)new_zone + sizeof(t_zone),
-		NB_PAGES_PER_SMALL_ZONE * data->page_size
-		- sizeof(t_zone) - sizeof(t_small_block));
+		alloc_size - sizeof(t_zone) - sizeof(t_tiny_block));
 	return (1);
 }
 
@@ -190,21 +188,34 @@ size_t	select_free_tiny_block(t_malloc_data *data, size_t size, int *error)
 {
 	size_t			i;
 
-	if (data->free_small_blocks->len > 0)
+	if (data->free_tiny_blocks->len > 0)
 	{
-		i = data->free_small_blocks->len - 1;
+		i = data->free_tiny_blocks->len - 1;
 		while (1)
 		{
-			if (((t_small_block*)data->free_small_blocks->elts[i])->size >= size + sizeof(t_small_block))
+			if (((t_tiny_block*)data->free_tiny_blocks->elts[i])->size >= size + sizeof(t_tiny_block))
 				return (i);
 			if (i == 0)
 				break ;
 			i--;
 		}
 	}
-	if (!add_new_small_zone(data))
+	if (!add_new_tiny_zone(data))
 		*error = 1;
-	return (data->free_small_blocks->len - 1);
+	return (data->free_tiny_blocks->len - 1);
+}
+
+void	remove_free_small_block(t_malloc_data *data, size_t ind)
+{
+	size_t	i;
+
+	i = ind + 1;
+	while (i < data->free_small_blocks->len)
+	{
+		data->free_small_blocks->elts[i - 1] = data->free_small_blocks->elts[i];
+		i++;
+	}
+	data->free_small_blocks->len--;
 }
 
 void	remove_free_small_block(t_malloc_data *data, size_t ind)
@@ -248,8 +259,8 @@ t_small_block	*alloc_small_block_for_use(t_malloc_data *data, size_t size,
 t_small_block	*alloc_tiny_block_for_use(t_malloc_data *data, size_t size,
 																	size_t ind)
 {
-	t_small_block	*block;
-	t_small_block	*new_free_block;
+	t_tiny_block	*block;
+	t_tiny_block	*new_free_block;
 	char			new_free;
 
 	new_free = 0;
@@ -270,7 +281,7 @@ t_small_block	*alloc_tiny_block_for_use(t_malloc_data *data, size_t size,
 	return ((void*)block + sizeof(t_tiny_block));
 }
 
-void	*alloc_new_small_block(t_malloc_data *data, size_t size)
+void	*alloc_new_block(t_malloc_data *data, size_t size)
 {
 	size_t			selected_ind;
 	t_small_block	*block;
@@ -300,7 +311,7 @@ void	*my_malloc(t_malloc_data *data, size_t size)
 {
 	void	*ptr;
 
-	ptr = alloc_new_small_block(data, size);
+	ptr = alloc_new_block(data, size);
 	return (ptr);
 }
 
