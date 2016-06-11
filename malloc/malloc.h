@@ -30,12 +30,12 @@ typedef struct		s_malloc_data
 	t_linked_list	*zones;
 	t_linked_list	*free_small_blocks;
 	t_linked_list	*free_tiny_blocks;
+	t_linked_list	*raw_blocks;
 	size_t			page_size;
 }					t_malloc_data;
 
 typedef struct		s_zone
 {
-	size_t			nb_used_blocks;
 	char			type;
 }					t_zone;
 

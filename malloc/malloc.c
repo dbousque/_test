@@ -48,6 +48,26 @@ void	my_munmap(void *ptr, size_t size)
 		munmap_failed();
 }
 
+size_t	get_tiny_zone_size(t_malloc_data *data)
+{
+	size_t	alloc_size;
+
+	alloc_size = NB_PAGES_PER_TINY_ZONE * data->page_size;
+	while (alloc_size < MAX_TINY_BLOCK * 100)
+		alloc_size *= 2;
+	return (alloc_size);
+}
+
+size_t	get_small_zone_size(t_malloc_data *data)
+{
+	size_t	alloc_size;
+
+	alloc_size = NB_PAGES_PER_SMALL_ZONE * data->page_size;
+	while (alloc_size < MAX_SMALL_BLOCK * 100)
+		alloc_size *= 2;
+	return (alloc_size);
+}
+
 void	add_new_free_small_block(t_malloc_data *data, void *start, size_t size)
 {
 	t_small_block	*block;
@@ -63,13 +83,10 @@ int		add_new_small_zone(t_malloc_data *data)
 	t_zone	*new_zone;
 	size_t	alloc_size;
 
-	alloc_size = NB_PAGES_PER_SMALL_ZONE * data->page_size;
-	while (alloc_size < MAX_SMALL_BLOCK * 100)
-		alloc_size *= 2;
+	alloc_size = get_small_zone_size(data);
 	new_zone = (t_zone*)my_mmap(alloc_size);
 	if (!new_zone)
 		return (0);
-	new_zone->nb_used_blocks = 0;
 	new_zone->type = SMALL;
 	add_to_list(data->zones, new_zone);
 	add_new_free_small_block(data, (void*)new_zone + sizeof(t_zone),
@@ -92,13 +109,10 @@ int		add_new_tiny_zone(t_malloc_data *data)
 	t_zone	*new_zone;
 	size_t	alloc_size;
 
-	alloc_size = NB_PAGES_PER_TINY_ZONE * data->page_size;
-	while (alloc_size < MAX_TINY_BLOCK * 100)
-		alloc_size *= 2;
+	alloc_size = get_tiny_zone_size(data);
 	new_zone = (t_zone*)my_mmap(alloc_size);
 	if (!new_zone)
 		return (0);
-	new_zone->nb_used_blocks = 0;
 	new_zone->type = TINY;
 	add_to_list(data->zones, new_zone);
 	add_new_free_tiny_block(data, (void*)new_zone + sizeof(t_zone),
@@ -111,6 +125,23 @@ void	print_small_block(t_small_block *block)
 	char	*tmp_str;
 
 	tmp_str = "  - small block of size ";
+	write(1, tmp_str, ft_strlen(tmp_str));
+	print_number(block->size);
+	write(1, "\n", 1);
+	tmp_str = "  - free : ";
+	write(1, tmp_str, ft_strlen(tmp_str));
+	if (block->free)
+		tmp_str = "Yes\n";
+	else
+		tmp_str = "No\n";
+	write(1, tmp_str, ft_strlen(tmp_str));
+}
+
+void	print_tiny_block(t_tiny_block *block)
+{
+	char	*tmp_str;
+
+	tmp_str = "  - tiny block of size ";
 	write(1, tmp_str, ft_strlen(tmp_str));
 	print_number(block->size);
 	write(1, "\n", 1);
@@ -159,7 +190,9 @@ t_malloc_data	*build_void_data(void)
 		return (NULL);
 	if (!add_new_tiny_zone(data))
 		return (NULL);
-	print_free_small_blocks(data->free_small_blocks);
+	data->raw_blocks = new_linked_list();
+	if (!data->raw_blocks)
+		return (NULL);
 	return (data);
 }
 
@@ -218,17 +251,17 @@ void	remove_free_small_block(t_malloc_data *data, size_t ind)
 	data->free_small_blocks->len--;
 }
 
-void	remove_free_small_block(t_malloc_data *data, size_t ind)
+void	remove_free_tiny_block(t_malloc_data *data, size_t ind)
 {
 	size_t	i;
 
 	i = ind + 1;
-	while (i < data->free_small_blocks->len)
+	while (i < data->free_tiny_blocks->len)
 	{
-		data->free_small_blocks->elts[i - 1] = data->free_small_blocks->elts[i];
+		data->free_tiny_blocks->elts[i - 1] = data->free_tiny_blocks->elts[i];
 		i++;
 	}
-	data->free_small_blocks->len--;
+	data->free_tiny_blocks->len--;
 }
 
 t_small_block	*alloc_small_block_for_use(t_malloc_data *data, size_t size,
@@ -256,7 +289,7 @@ t_small_block	*alloc_small_block_for_use(t_malloc_data *data, size_t size,
 	return ((void*)block + sizeof(t_small_block));
 }
 
-t_small_block	*alloc_tiny_block_for_use(t_malloc_data *data, size_t size,
+t_tiny_block	*alloc_tiny_block_for_use(t_malloc_data *data, size_t size,
 																	size_t ind)
 {
 	t_tiny_block	*block;
@@ -281,10 +314,31 @@ t_small_block	*alloc_tiny_block_for_use(t_malloc_data *data, size_t size,
 	return ((void*)block + sizeof(t_tiny_block));
 }
 
+size_t	get_next_pagesize(size_t size)
+{
+	size_t	page_size;
+
+	page_size = getpagesize();
+	return (size / page_size + page_size);
+}
+
+void	*get_raw_block(t_malloc_data *data, size_t size)
+{
+	size_t	block_size;
+	void	*ptr;
+
+	block_size = get_next_pagesize(size);
+	ptr = my_mmap(block_size);
+	if (!ptr)
+		return (NULL);
+	add_to_list(data->raw_blocks, ptr);
+	return (ptr);
+}
+
 void	*alloc_new_block(t_malloc_data *data, size_t size)
 {
 	size_t			selected_ind;
-	t_small_block	*block;
+	void			*block;
 	int				error;
 
 	error = 0;
@@ -315,10 +369,52 @@ void	*my_malloc(t_malloc_data *data, size_t size)
 	return (ptr);
 }
 
+char	is_allocated_small_adress(t_malloc_data *data, void *ptr, t_small_block *start)
+{
+	void	*block;
+
+	block = (void*)start;
+	while (1)
+	{
+		
+		block += ((t_small_block*)block)->size + sizeof(t_small_block);
+	}
+}
+
+char	get_zone_type(t_malloc_data *data, void *ptr)
+{
+	size_t	i;
+	size_t	tiny_zone_size;
+	size_t	small_zone_size;
+	void	*start;
+
+	tiny_zone_size = get_tiny_zone_size(data);
+	small_zone_size = get_small_zone_size(data);
+	i = data->zones->len - 1;
+	while (1)
+	{
+		start = (void*)*(data->zones->elts[i]);
+		if (ptr > start)
+		{
+			if (((t_zone*)start)->type == SMALL && ptr < start + small_zone_size)
+				return (is_allocated_small_adress(data, ptr, start + sizeof(t_zone)) ? 2 : -1);
+			if (((t_zone*)start)->type == TINY && ptr < start + tiny_zone_size)
+				return (is_allocated_tiny_adress(data, ptr, start + sizeof(t_zone)) ? 2 : -1);
+		}
+		if (i == 0)
+			break ;
+		i--;
+	}
+	return (is_raw_block(data, ptr) ? 3 : -1);
+}
+
+#include <stdio.h>
 void	my_free(t_malloc_data *data, void *ptr)
 {
-	(void)data;
-	(void)ptr;
+	char	zone_type;
+
+	zone_type = get_zone_type(data, ptr);
+	printf("zone type : %d\n", zone_type);
 }
 
 void	print_zone_info(t_zone *zone)
@@ -327,7 +423,6 @@ void	print_zone_info(t_zone *zone)
 
 	tmp_str = "  - number of allocated blocks : ";
 	write(1, tmp_str, ft_strlen(tmp_str));
-	print_number(zone->nb_used_blocks);
 	write(1, "\n", 1);
 	tmp_str = "  - type of zone : ";
 	write(1, tmp_str, ft_strlen(tmp_str));
@@ -350,12 +445,24 @@ void	print_zone_content(t_malloc_data *data, t_zone *zone)
 
 	end = NULL;
 	if (zone->type == SMALL)
-		end = (void*)zone + (NB_PAGES_PER_SMALL_ZONE * data->page_size);
+		end = (void*)zone + get_small_zone_size(data);
+	else if (zone->type == TINY)
+		end = (void*)zone + get_tiny_zone_size(data);
 	block = (void*)zone + sizeof(t_zone);
 	while (block < end)
 	{
-		print_small_block(block);
-		block += ((t_small_block*)block)->size + sizeof(t_small_block);
+		if (zone->type == SMALL)
+			print_small_block(block);
+		else if (zone->type == TINY)
+			print_tiny_block(block);
+		if (zone->type == SMALL)
+			block += ((t_small_block*)block)->size + sizeof(t_small_block);
+		else if (zone->type == TINY)
+			block += ((t_tiny_block*)block)->size + sizeof(t_tiny_block);
+		else
+		{
+			write(1, "UNIMPLEMENTED\n", 14);
+		}
 	}
 }
 
@@ -410,7 +517,7 @@ void	*malloc(size_t size)
 	return (handle_malloc_option(size, ALLOC, NULL));
 }
 
-void	show_alloc_mem_ex(void)
+void	show_alloc_mem(void)
 {
 	handle_malloc_option(0, PRINT_MEM, NULL);
 }
@@ -433,6 +540,6 @@ int		main(void)
 		}
 		i++;
 	}
-	show_alloc_mem_ex();
+	show_alloc_mem();
 	return (0);
 }
