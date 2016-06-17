@@ -1,4 +1,4 @@
-RESULT = cipher
-SOURCES = uncipher.ml cipher.ml
+RESULT = btree
+SOURCES = btree.ml
 OCAMLMAKEFILE = OCamlMakefile
 include $(OCAMLMAKEFILE)
