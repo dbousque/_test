@@ -15,9 +15,9 @@ let large_pencil () =
 
 let pick_color = function
 	| n when n mod 5 = 0 -> Graphics.black
-	| n when n mod 5 = 1 -> Graphics.red
-	| n when n mod 5 = 2 -> Graphics.blue
-	| n when n mod 5 = 3 -> Graphics.green
+	| n when n mod 5 = 1 -> Graphics.black
+	| n when n mod 5 = 2 -> Graphics.red
+	| n when n mod 5 = 3 -> Graphics.blue
 	| _ -> Graphics.cyan
 
 let draw_rectangle x y w h =
@@ -78,29 +78,41 @@ let rec power n x =
 		| 1 -> n
 		| _ -> n * (power n (x - 1))
 
-let rec draw_borders depth nb_sq center_x center_y width =
-	large_pencil () ;
+let rec draw_borders depth nb_sq center_x center_y width ori_depth =
+	if depth = 1 then std_pencil () else large_pencil () ;
 	Graphics.set_color (pick_color depth);
 	match depth with
-		| n when n <= 0 -> ignore ()
-		| 1 -> draw_n_squares nb_sq center_x center_y (width * nb_sq)
-		| _ -> let pow_nb = (power nb_sq (depth - 1)) in
-				draw_n_squares nb_sq center_x center_y (width * pow_nb) ;
-				draw_borders (depth - 1) nb_sq center_x center_y width
+		| n when n <= 0 || n > ori_depth -> ignore ()
+		| _ ->  let nb_sq_to_draw = power nb_sq (ori_depth - depth + 1) in
+				let pow_nb = (power nb_sq (depth - 1)) in
+				draw_n_squares nb_sq_to_draw center_x center_y (width * pow_nb) ;
+				draw_borders (depth + 1) nb_sq center_x center_y width ori_depth
 
 let draw_n_n_squares depth nb_sq center_x center_y width =
 	match depth with
 		| n when n > 0 ->
-			let tot_nb_sq = power nb_sq depth in
-			std_pencil () ;
-			draw_n_squares tot_nb_sq center_x center_y width ;
-			draw_borders depth nb_sq center_x center_y width
+			draw_borders 1 nb_sq center_x center_y width depth
 		| _ -> ignore ()
 
-let draw_tic_tac_toe tab =
-	draw_n_n_squares 3 2 (width / 2) (height / 2) 60
+let get_sq_width depth nb_sq =
+	(width - width / 4) / (power nb_sq depth) / 4 * 4
+
+let draw_tic_tac_toe depth nb_sq =
+	let sq_width = get_sq_width depth nb_sq in
+	draw_n_n_squares depth nb_sq (width / 2) (height / 2) sq_width
+
+let get_click_coords () =
+	let status = Graphics.wait_next_event [Graphics.Button_down] in
+	(status.mouse_x, status.mouse_y)
+
+let main_loop () =
+	let mouse_coords = get_click_coords () in
+	print_string "ok"
+
+let launch depth nb_sq =
+	init () ;
+    draw_tic_tac_toe depth nb_sq ;
+	main_loop ()
 
 let () =
-	init () ;
-    draw_tic_tac_toe "salut" ;
-	ignore (read_line () )
+	launch 2 3
