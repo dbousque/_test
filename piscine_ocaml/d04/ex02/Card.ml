@@ -53,6 +53,36 @@ struct
 		| King -> "King"
 		| As -> "As"
 
+    let next = function
+	    | T2 -> T3
+	    | T3 -> T4
+	    | T4 -> T5
+	    | T5 -> T6
+	    | T6 -> T7
+	    | T7 -> T8
+	    | T8 -> T9
+    	| T9 -> T10
+    	| T10 -> Jack
+    	| Jack -> Queen
+    	| Queen -> King
+    	| King -> As
+    	| As -> invalid_arg "As has no next card"
+
+    let previous = function
+    	| T2 -> invalid_arg "2 has no previous card"
+    	| T3 -> T2
+    	| T4 -> T3
+    	| T5 -> T4
+    	| T6 -> T5
+    	| T7 -> T6
+    	| T8 -> T7
+    	| T9 -> T8
+    	| T10 -> T9
+    	| Jack -> T10
+    	| Queen -> Jack
+    	| King -> Queen
+    	| As -> King
+
 end
 
 module Color =
@@ -152,7 +182,7 @@ let best cards =
 				match cards with
 				| [] -> current_best
 				| card::cards ->
-					let new_best = if n = 0 then card else max card current_best in
+					let new_best = if n = 0 then card else max current_best card in
 					best_cards cards new_best (n + 1)
 			in
 			best_cards cards {color=Color.Spade;value=Value.T2} 0
