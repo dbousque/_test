@@ -15,7 +15,7 @@ let print_color_list cols =
 	print_char '\n'
 
 let color_test () =
-	print_color_list (Card.Color.all ())
+	print_color_list (Card.Color.all)
 
 let print_card_list cards func =
 	let rec print_cards cards func n =
@@ -47,12 +47,12 @@ let rec get_previous = function
 	| card::cards -> (Card.Value.previous card)::(get_previous cards)
 
 let value_test () =
-	let nexts = get_nexts (rm_last (Card.Value.all ())) in
-	let previous = get_previous (rm_first (Card.Value.all ())) in
+	let nexts = get_nexts (rm_last (Card.Value.all)) in
+	let previous = get_previous (rm_first (Card.Value.all)) in
 	print_string "all cards : " ;
-	print_card_list (Card.Value.all ()) Card.Value.toString ;
+	print_card_list (Card.Value.all) Card.Value.toString ;
 	print_string "\nall cards verbose : " ;
-	print_card_list (Card.Value.all ()) Card.Value.toStringVerbose ;
+	print_card_list (Card.Value.all) Card.Value.toStringVerbose ;
 	print_string "\nall valid nexts : " ;
 	print_card_list nexts Card.Value.toString ;
 	print_string "\nall valid previous : " ;
@@ -78,19 +78,19 @@ let card_test () =
     (Card.toStringVerbose card1)) ;
     print_char '\n' ;
     print_string "all spades : " ;
-    print_card_list (Card.allSpades ()) Card.toStringVerbose ;
+    print_card_list (Card.allSpades ) Card.toStringVerbose ;
     print_char '\n' ;
     print_string "all hearts : " ;
-    print_card_list (Card.allHearts ()) Card.toStringVerbose ;
+    print_card_list (Card.allHearts ) Card.toStringVerbose ;
     print_char '\n' ;
     print_string "all diamonds : " ;
-    print_card_list (Card.allDiamonds ()) Card.toStringVerbose ;
+    print_card_list (Card.allDiamonds ) Card.toStringVerbose ;
     print_char '\n' ;
     print_string "all clubs : " ;
-    print_card_list (Card.allClubs ()) Card.toStringVerbose ;
+    print_card_list (Card.allClubs ) Card.toStringVerbose ;
     print_char '\n' ;
     print_string "\nall cards : " ;
-    print_card_list (Card.all () ) Card.toString ;
+    print_card_list (Card.all ) Card.toString ;
     print_string ("\n\ngetValue of " ^ (Card.toString card1) ^ " : " ^
     (Card.Value.toStringVerbose (Card.getValue card1))) ;
     print_char '\n' ;

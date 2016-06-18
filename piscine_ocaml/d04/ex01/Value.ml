@@ -2,8 +2,7 @@
 
 type t = T2 | T3 | T4 | T5 | T6 | T7 | T8 | T9 | T10 | Jack | Queen | King | As
 
-let all () =
-	[T2;T3;T4;T5;T6;T7;T8;T9;T10;Jack;Queen;King;As]
+let all = [T2;T3;T4;T5;T6;T7;T8;T9;T10;Jack;Queen;King;As]
 
 let toInt = function
 	| T2 -> 1

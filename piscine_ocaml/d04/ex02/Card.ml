@@ -5,8 +5,7 @@ struct
 
 	type t = T2 | T3 | T4 | T5 | T6 | T7 | T8 | T9 | T10 | Jack | Queen | King | As
 
-	let all () =
-		[T2;T3;T4;T5;T6;T7;T8;T9;T10;Jack;Queen;King;As]
+	let all = [T2;T3;T4;T5;T6;T7;T8;T9;T10;Jack;Queen;King;As]
 
 	let toInt = function
 		| T2 -> 1
@@ -90,8 +89,7 @@ struct
 
 	type t = Spade | Heart | Diamond | Club
 
-	let all () =
-		[Spade; Heart; Diamond; Club]
+	let all = [Spade; Heart; Diamond; Club]
 
 	let toString = function
 		| Spade -> "S"
@@ -118,24 +116,20 @@ let rec newCardList values color =
 		| [] -> []
 		| value::values -> (newCard value color)::(newCardList values color)
 
-let allSpades () =
-	newCardList ( Value.all () ) Color.Spade
+let allSpades = newCardList ( Value.all ) Color.Spade
 
-let allHearts () =
-	newCardList ( Value.all () ) Color.Heart
+let allHearts = newCardList ( Value.all ) Color.Heart
 
-let allDiamonds () =
-	newCardList ( Value.all () ) Color.Diamond
+let allDiamonds = newCardList ( Value.all ) Color.Diamond
 
-let allClubs () =
-	newCardList ( Value.all () ) Color.Club
+let allClubs = newCardList ( Value.all ) Color.Club
 
-let all () =
+let all =
 	let rec get_all = function
 		| [] -> []
 		| value::values -> (newCard value Color.Spade)::(newCard value Color.Heart)::(newCard value Color.Diamond)::(newCard value Color.Club)::(get_all values)
 	in
-	get_all (Value.all () )
+	get_all (Value.all )
 
 let getValue card =
 	card.value
@@ -159,8 +153,8 @@ let compare_values val1 val2 =
 		in
 		ind lis value 0
 	in
-	let ind1 = index (Value.all ()) val1 in
-	let ind2 = index (Value.all ()) val2 in
+	let ind1 = index (Value.all) val1 in
+	let ind2 = index (Value.all) val2 in
 	ind1 - ind2
 
 let compare {color = col1; value = val1} {color = col2; value = val2} =

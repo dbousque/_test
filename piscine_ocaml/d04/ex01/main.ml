@@ -30,12 +30,12 @@ let rec get_previous = function
 	| card::cards -> (Value.previous card)::(get_previous cards)
 
 let () =
-	let nexts = get_nexts (rm_last (Value.all ())) in
-	let previous = get_previous (rm_first (Value.all ())) in
+	let nexts = get_nexts (rm_last (Value.all)) in
+	let previous = get_previous (rm_first (Value.all)) in
 	print_string "all cards : " ;
-	print_card_list (Value.all ()) Value.toString ;
+	print_card_list (Value.all) Value.toString ;
 	print_string "\nall cards verbose : " ;
-	print_card_list (Value.all ()) Value.toStringVerbose ;
+	print_card_list (Value.all) Value.toStringVerbose ;
 	print_string "\nall valid nexts : " ;
 	print_card_list nexts Value.toString ;
 	print_string "\nall valid previous : " ;

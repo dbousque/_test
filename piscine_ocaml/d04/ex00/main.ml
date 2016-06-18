@@ -16,4 +16,4 @@ let print_color_list cols =
 	print_char '\n'
 
 let () =
-	print_color_list (Color.all ())
+	print_color_list (Color.all)
