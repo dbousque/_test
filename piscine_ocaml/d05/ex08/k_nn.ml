@@ -230,7 +230,9 @@ let most_frequent_category closests k =
 		| h::tl -> (h::(update_labels closests ind tl))
 	in
 	let label_cmp lab1 lab2 =
-		compare lab2.count lab1.count
+        if lab1.count = lab2.count then (
+            if Random.int 2 = 0 then 1 else -1 )
+        else compare lab2.count lab1.count
 	in
 	let rec most_freq closests ind k labels =
 		if ind >= k then 
@@ -280,9 +282,6 @@ let k_nn radars radar k print =
 	let best_cat = most_frequent_category closests k in
     best_cat
 
-let one_nn radars radar =
-	k_nn radars radar 1 true
-
 let rec remove_n elts n =
     match elts with
     | [] -> []
@@ -295,16 +294,18 @@ let rec take_n elts n =
     | h::tl -> take_n tl (n - 1)
     | [] -> failwith "out of bounds"
 
-let print_testing filename n =
+let print_testing filename n k =
     print_string "\nLaunching test with file \"" ;
     print_string filename ;
-    print_string "\" and point number " ;
+    print_string "\", point number " ;
     print_int n ;
+    print_string " and k=" ;
+    print_int k ;
     print_endline " : \n-----------------------------------------------" ;
     let raw_radars = examples_of_file filename in
 	let radars = remove_n raw_radars n in
 	let radar = take_n raw_radars n in
-    let best_cat = one_nn radars radar in
+    let best_cat = k_nn radars radar k true in
     print_string " -> Found category : \"" ;
     print_string best_cat ;
     print_endline "\""
@@ -312,8 +313,10 @@ let print_testing filename n =
 let get_radar_category = function
     | (arr, str) -> str
 
-let test_error_rate filename =
-    print_endline "\nTesting error rate : " ;
+let test_error_rate filename k =
+    print_string "\nTesting error rate with k=" ;
+    print_int k ;
+    print_endline " : " ;
     let right = ref 0 in
     let wrong = ref 0 in
     let raw_radars = examples_of_file filename in
@@ -321,7 +324,7 @@ let test_error_rate filename =
         let tmp_rads = remove_n raw_radars i in
         let rad = take_n raw_radars i in
         let rad_cat = get_radar_category rad in
-        let cat = k_nn tmp_rads rad 1 false in
+        let cat = k_nn tmp_rads rad k false in
         if rad_cat = cat then right := !right + 1 else wrong := !wrong + 1 ;
     done ;
     print_int (List.length raw_radars) ;
@@ -338,7 +341,12 @@ let test_error_rate filename =
 let () =
 	let filename1 = "ionosphere.train.csv" in
     let filename2 = "ionosphere.test.csv" in
-    print_testing filename1 0 ;
-    print_testing filename1 3 ;
-    print_testing filename2 5 ;
-    test_error_rate filename1
+    print_testing filename1 0 5 ;
+    print_testing filename1 3 20 ;
+    print_testing filename2 5 3 ;
+    test_error_rate filename1 1 ;
+    test_error_rate filename1 2 ;
+    test_error_rate filename1 5 ;
+    test_error_rate filename1 8 ;
+    test_error_rate filename1 13 ;
+    test_error_rate filename1 20 ;
