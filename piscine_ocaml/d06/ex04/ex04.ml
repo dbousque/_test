@@ -7,21 +7,21 @@ sig
     val mul : t -> t -> t
 end
 
-module IntVal : VAL =
+module IntVal : VAL with type t = int =
 struct
     type t = int
     let add = ( + )
     let mul = ( * )
 end
 
-module FloatVal : VAL =
+module FloatVal : VAL with type t = float =
 struct
     type t = float
     let add = ( +. )
     let mul = ( *. )
 end
 
-module StringVal : VAL =
+module StringVal : VAL with type t = string =
 struct
     type t = string
     let add s1 s2 = if (String.length s1) > (String.length s2) then s1 else s2
@@ -31,20 +31,20 @@ end
 module type EVALEXPR =
 sig
     type t
-    type expr = Add of expr * expr | Mul of expr * expr | Value of t
+    type expr = Value of t | Add of expr * expr | Mul of expr * expr
 
     val eval : expr -> t
 end
 
 module type MAKEEVALEXPR =
     functor (Val : VAL) ->
-        EVALEXPR with type t := Val.t
+        EVALEXPR with type t = Val.t
 
 module MakeEvalExpr : MAKEEVALEXPR =
     functor (Val : VAL) ->
         struct
             type t = Val.t
-            type expr = Add of expr * expr | Mul of expr * expr | Value of t
+            type expr = Value of t | Add of expr * expr | Mul of expr * expr
         
             let rec eval = function
                 | Add (a,b) -> Val.add (eval a) (eval b)
@@ -52,9 +52,9 @@ module MakeEvalExpr : MAKEEVALEXPR =
                 | Value v -> v
         end
 
-module IntEvalExpr : EVALEXPR = MakeEvalExpr (IntVal)
-module FloatEvalExpr : EVALEXPR = MakeEvalExpr (FloatVal)
-module StringEvalExpr : EVALEXPR = MakeEvalExpr (StringVal)
+module IntEvalExpr : (EVALEXPR with type t = IntVal.t) = MakeEvalExpr (IntVal)
+module FloatEvalExpr : (EVALEXPR with type t = FloatVal.t) = MakeEvalExpr (FloatVal)
+module StringEvalExpr : (EVALEXPR with type t = StringVal.t) = MakeEvalExpr (StringVal)
 
 let ie = IntEvalExpr.Add (IntEvalExpr.Value 40, IntEvalExpr.Value 2)
 let fe = FloatEvalExpr.Add (FloatEvalExpr.Value 41.5, FloatEvalExpr.Value 0.92)
