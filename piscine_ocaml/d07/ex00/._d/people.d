@@ -1,2 +1,0 @@
-people.cmo :
-people.cmx :
