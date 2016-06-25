@@ -1,2 +1,0 @@
-arithmetic.cmo :
-arithmetic.cmx :
