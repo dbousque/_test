@@ -319,20 +319,28 @@ size_t	get_next_pagesize(size_t size)
 	size_t	page_size;
 
 	page_size = getpagesize();
-	return (size / page_size + page_size);
+	if (size % page_size == 0)
+		return (size);
+	return (size - (size % page_size) + page_size);
 }
 
 void	*get_raw_block(t_malloc_data *data, size_t size)
 {
 	size_t	block_size;
 	void	*ptr;
+	size_t	*ptr_t;
 
+	size += (sizeof(size_t) * 2);
 	block_size = get_next_pagesize(size);
 	ptr = my_mmap(block_size);
 	if (!ptr)
 		return (NULL);
+	ptr_t = (size_t*)ptr;
+	*ptr_t = block_size;
+	ptr_t = (size_t*)(ptr + sizeof(size_t));
+	*ptr_t = size - (sizeof(size_t) * 2);
 	add_to_list(data->raw_blocks, ptr);
-	return (ptr);
+	return (ptr + (sizeof(size_t) * 2));
 }
 
 void	*alloc_new_block(t_malloc_data *data, size_t size)
@@ -376,20 +384,20 @@ char	is_allocated_small_adress(t_malloc_data *data, void *ptr, t_small_block *st
 	void	*end;
 
 	block = (void*)start;
-	end = block + get_small_zone_size(data);
+	end = block + (get_small_zone_size(data) - sizeof(t_zone));
 	while (block < end)
 	{
-		*next_block = block + ((void*)((t_small_block*)block)->size + sizeof(t_small_block));
+		*next_block = block + ((size_t)((t_small_block*)block)->size + sizeof(t_small_block));
 		if (*next_block >= end)
 			*next_block = NULL;
-		if (ptr == block)
+		if (ptr == (block + sizeof(t_small_block)))
 			return (1);
 		*prev_block = block;
 		block = *next_block;
 	}
 	return (0);
 }
-
+#   include <stdio.h>
 char	is_allocated_tiny_adress(t_malloc_data *data, void *ptr, t_tiny_block *start,
 										void **prev_block, void **next_block)
 {
@@ -397,13 +405,13 @@ char	is_allocated_tiny_adress(t_malloc_data *data, void *ptr, t_tiny_block *star
 	void	*end;
 
 	block = (void*)start;
-	end = block + get_tiny_zone_size(data);
+	end = block + (get_tiny_zone_size(data) - sizeof(t_zone));
 	while (block < end)
 	{
-		*next_block = block + ((void*)((t_tiny_block*)block)->size + sizeof(t_tiny_block));
+		*next_block = block + ((size_t)((t_tiny_block*)block)->size + sizeof(t_tiny_block));
 		if (*next_block >= end)
 			*next_block = NULL;
-		if (ptr == block)
+		if (ptr == (block + sizeof(t_tiny_block)))
 			return (1);
 		*prev_block = block;
 		block = *next_block;
@@ -418,10 +426,11 @@ size_t	is_raw_block(t_malloc_data *data, void *ptr)
 	i = data->raw_blocks->len - 1;
 	while (1)
 	{
-		if (data->raw_blocks->elts[i] == ptr)
+		if ((data->raw_blocks->elts[i] + (sizeof(size_t) * 2)) == ptr)
 			return (i + 1);
 		if (i == 0)
 			break ;
+		i--;
 	}
 	return (0);
 }
@@ -455,12 +464,19 @@ size_t	get_zone_type(t_malloc_data *data, void *ptr, void **prev_block, void **n
 
 void	free_tiny(void *ptr, void *prev_block, void *next_block)
 {
+	char	next_block_free;
+	char	prev_block_free;
+
+	printf("CALLED\n");
+	fflush(stdout);
+	next_block_free = next_block && ((t_tiny_block*)next_block)->free == 1;
+	prev_block_free = prev_block && ((t_tiny_block*)prev_block)->free == 1;
 	if (((t_tiny_block*)ptr)->free == 1)
 		return ;
 	((t_tiny_block*)ptr)->free = 1;
-	if (prev_block && ((t_tiny_block*)prev_block)->free == 1)
+	if (prev_block_free)
 	{
-		if (next_block && ((t_tiny_block*)next_block)->free == 1)
+		if (next_block_free)
 		{
 			((t_tiny_block*)prev_block)->size += (sizeof(t_tiny_block) * 2)
 					+ ((t_tiny_block*)next_block)->size + ((t_tiny_block*)ptr)->size;
@@ -468,18 +484,27 @@ void	free_tiny(void *ptr, void *prev_block, void *next_block)
 		else
 			((t_tiny_block*)prev_block)->size += sizeof(t_tiny_block) + ((t_tiny_block*)ptr)->size;
 	}
-	else if (next_block && ((t_tiny_block*)next_block)->free == 1)
+	else if (next_block_free)
+	{
+		printf("ICI\n");
+		fflush(stdout);
 		((t_tiny_block*)ptr)->size += sizeof(t_tiny_block) + ((t_tiny_block*)next_block)->size;
+	}
 }
 
 void	free_small(void *ptr, void *prev_block, void *next_block)
 {
+	char	next_block_free;
+	char	prev_block_free;
+
+	next_block_free = next_block && ((t_small_block*)next_block)->free == 1;
+	prev_block_free = prev_block && ((t_small_block*)prev_block)->free == 1;
 	if (((t_small_block*)ptr)->free == 1)
 		return ;
 	((t_small_block*)ptr)->free = 1;
-	if (prev_block && ((t_small_block*)prev_block)->free == 1)
+	if (prev_block_free)
 	{
-		if (next_block && ((t_small_block*)next_block)->free == 1)
+		if (next_block_free)
 		{
 			((t_small_block*)prev_block)->size += (sizeof(t_small_block) * 2)
 					+ ((t_small_block*)next_block)->size + ((t_small_block*)ptr)->size;
@@ -487,33 +512,52 @@ void	free_small(void *ptr, void *prev_block, void *next_block)
 		else
 			((t_small_block*)prev_block)->size += sizeof(t_small_block) + ((t_small_block*)ptr)->size;
 	}
-	else if (next_block && ((t_small_block*)next_block)->free == 1)
+	else if (next_block_free)
 		((t_small_block*)ptr)->size += sizeof(t_small_block) + ((t_small_block*)next_block)->size;
 }
 
-void	free_raw_block(t_malloc_data *data, size_t )
+void	free_raw_block(t_malloc_data *data, size_t ind)
+{
+	size_t	i;
 
-#include <stdio.h>
+	my_munmap(data->raw_blocks->elts[ind], *((size_t*)(data->raw_blocks->elts[ind])));
+	data->raw_blocks->elts[ind] = NULL;
+	i = ind + 1;
+	while (i < data->raw_blocks->len)
+	{
+		data->raw_blocks->elts[i - 1] = data->raw_blocks->elts[i];
+		i++;
+	}
+	data->raw_blocks->len--;
+}
+
 void	my_free(t_malloc_data *data, void *ptr)
 {
 	size_t	zone_type;
 	void	*prev_block;
 	void	*next_block;
 
+	printf("CALLED MY_FREE\n");
+	fflush(stdout);
 	if (!ptr)
 		return ;
 	prev_block = NULL;
 	next_block = NULL;
 	zone_type = get_zone_type(data, ptr, &prev_block, &next_block);
-	printf("zone type : %d\n", zone_type);
+	printf("AFTER ZONE TYPE\n");
+	fflush(stdout);
+	printf("zone type : %zu\n", zone_type);
+	fflush(stdout);
 	if (zone_type == 3 || zone_type == 0)
 		return ;
 	if (zone_type == TINY)
-		free_tiny(ptr, prev_block, next_block);
-	if (zone_type == SMALL)
-		free_small(ptr, prev_block, next_block);
+		free_tiny((ptr - sizeof(t_tiny_block)), prev_block, next_block);
+	else if (zone_type == SMALL)
+		free_small((ptr - sizeof(t_small_block)), prev_block, next_block);
 	else
 		free_raw_block(data, zone_type - 4);
+	printf("AFTER MY_FREE\n");
+	fflush(stdout);
 }
 
 void	print_zone_info(t_zone *zone)
@@ -588,10 +632,30 @@ void	print_zones(t_malloc_data *data)
 	}
 }
 
+void	print_raw_blocks(t_malloc_data *data)
+{
+	size_t	i;
+	char	*tmp_str;
+
+	tmp_str = "Printing large blocks : \n";
+	write(1, tmp_str, ft_strlen(tmp_str));
+	i = 0;
+	while (i < data->raw_blocks->len)
+	{
+		print_number(i + 1);
+		tmp_str = " : \n  - block of size ";
+		write(1, tmp_str, ft_strlen(tmp_str));
+		print_number(*((size_t*)(data->raw_blocks->elts[i] + sizeof(size_t))));
+		write(1, "\n", 1);
+		i++;
+	}
+}
+
 void	print_mem(t_malloc_data *data)
 {
-	print_free_small_blocks(data->free_small_blocks);
+	//print_free_small_blocks(data->free_small_blocks);
 	print_zones(data);
+	print_raw_blocks(data);
 }
 
 void	*handle_malloc_option(size_t size, char option, void *ptr)
@@ -618,6 +682,8 @@ void	*malloc(size_t size)
 
 void	free(void *ptr)
 {
+	printf("CALLED FREE\n");
+	fflush(stdout);
 	handle_malloc_option(0, FREE, ptr);
 }
 
@@ -629,9 +695,25 @@ void	show_alloc_mem(void)
 int		main(void)
 {
 	void	*ptr;
+	void	*ptr2;
+	void	*ptr3;
 
 	ptr = malloc(8192);
+	ptr2 = malloc(1);
+	printf("salut\n");
+	fflush(stdout);
+	free(ptr2);
+	printf("salut2\n");
+	fflush(stdout);
+	ptr2 = malloc(1);
+	ptr3 = malloc(56798);
+	show_alloc_mem();
 	free(ptr);
+	free(ptr2);
+	show_alloc_mem();
+	printf("AFTER SHOW\n");
+	fflush(stdout);
+	free(ptr3);
 	return (0);
 }
 
