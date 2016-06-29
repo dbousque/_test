@@ -2,6 +2,12 @@
 
 #include "malloc.h"
 
+
+
+ #     include <stdlib.h>
+
+#   include <stdio.h>
+
 size_t	ft_strlen(char *str)
 {
 	size_t	i;
@@ -180,7 +186,10 @@ t_malloc_data	*build_void_data(void)
 	data->zones = new_linked_list();
 	if (!data->zones)
 		return (NULL);
-	data->free_small_blocks = new_linked_list();
+	data->free_small_blocks = NULL;
+	data->free_tiny_blocks = NULL;
+	data->raw_blocks = NULL;
+	/*data->free_small_blocks = new_linked_list();
 	if (!data->free_small_blocks)
 		return (NULL);
 	if (!add_new_small_zone(data))
@@ -192,7 +201,7 @@ t_malloc_data	*build_void_data(void)
 		return (NULL);
 	data->raw_blocks = new_linked_list();
 	if (!data->raw_blocks)
-		return (NULL);
+		return (NULL);*/
 	return (data);
 }
 
@@ -343,29 +352,64 @@ void	*get_raw_block(t_malloc_data *data, size_t size)
 	return (ptr + (sizeof(size_t) * 2));
 }
 
-void	*alloc_new_block(t_malloc_data *data, size_t size)
+void	*alloc_tiny(t_malloc_data *data, size_t size)
 {
 	size_t			selected_ind;
-	void			*block;
 	int				error;
 
 	error = 0;
+	if (!data->free_tiny_blocks)
+	{
+		data->free_tiny_blocks = new_linked_list();
+		if (!data->free_tiny_blocks)
+			return (NULL);
+		if (!add_new_tiny_zone(data))
+			return (NULL);
+	}
+	selected_ind = select_free_tiny_block(data, size, &error);
+	if (error)
+		return (NULL);
+	return (alloc_tiny_block_for_use(data, size, selected_ind));
+}
+
+void	*alloc_small(t_malloc_data *data, size_t size)
+{
+	size_t			selected_ind;
+	int				error;
+
+	error = 0;
+	if (!data->free_small_blocks)
+	{
+		data->free_small_blocks = new_linked_list();
+		if (!data->free_small_blocks)
+			return (NULL);
+		if (!add_new_small_zone(data))
+			return (NULL);
+	}
+	selected_ind = select_free_small_block(data, size, &error);
+	if (error)
+		return (NULL);
+	return (alloc_small_block_for_use(data, size, selected_ind));
+}
+
+void	*alloc_new_block(t_malloc_data *data, size_t size)
+{
+	void			*block;
+
 	if (size <= MAX_TINY_BLOCK)
-	{
-		selected_ind = select_free_tiny_block(data, size, &error);
-		if (error)
-			return (NULL);
-		block = alloc_tiny_block_for_use(data, size, selected_ind);
-	}
+		block = alloc_tiny(data, size);
 	else if (size <= MAX_SMALL_BLOCK)
-	{
-		selected_ind = select_free_small_block(data, size, &error);
-		if (error)
-			return (NULL);
-		block = alloc_small_block_for_use(data, size, selected_ind);
-	}
+		block = alloc_small(data, size);
 	else
+	{
+		if (!data->raw_blocks)
+		{
+			data->raw_blocks = new_linked_list();
+			if (!data->raw_blocks)
+				return (NULL);
+		}
 		block = get_raw_block(data, size);
+	}
 	return (block);
 }
 
@@ -397,7 +441,7 @@ char	is_allocated_small_adress(t_malloc_data *data, void *ptr, t_small_block *st
 	}
 	return (0);
 }
-#   include <stdio.h>
+
 char	is_allocated_tiny_adress(t_malloc_data *data, void *ptr, t_tiny_block *start,
 										void **prev_block, void **next_block)
 {
@@ -423,6 +467,8 @@ size_t	is_raw_block(t_malloc_data *data, void *ptr)
 {
 	size_t	i;
 
+	if (!data->raw_blocks)
+		return (0);
 	i = data->raw_blocks->len - 1;
 	while (1)
 	{
@@ -462,13 +508,49 @@ size_t	get_zone_type(t_malloc_data *data, void *ptr, void **prev_block, void **n
 	return (is_raw_block(data, ptr) + 3);
 }
 
-void	free_tiny(void *ptr, void *prev_block, void *next_block)
+void	change_free_tiny(t_malloc_data *data, void *from, void *to)
+{
+	size_t	i;
+
+	i = data->free_tiny_blocks->len - 1;
+	while (1)
+	{
+		if (data->free_tiny_blocks->elts[i] == from)
+		{
+			data->free_tiny_blocks->elts[i] = to;
+			return ;
+		}
+		if (i == 0)
+			break ;
+		i--;
+	}
+	write(1, "COULD NOT CHANGE TINY\n", ft_strlen("COULD NOT CHANGE TINY\n"));
+} 
+
+void	change_free_small(t_malloc_data *data, void *from, void *to)
+{
+	size_t	i;
+
+	i = data->free_small_blocks->len - 1;
+	while (1)
+	{
+		if (data->free_small_blocks->elts[i] == from)
+		{
+			data->free_small_blocks->elts[i] = to;
+			return ;
+		}
+		if (i == 0)
+			break ;
+		i--;
+	}
+	write(1, "COULD NOT CHANGE SMAL\n", ft_strlen("COULD NOT CHANGE SMAL\n"));
+}
+
+void	free_tiny(t_malloc_data *data, void *ptr, void *prev_block, void *next_block)
 {
 	char	next_block_free;
 	char	prev_block_free;
 
-	printf("CALLED\n");
-	fflush(stdout);
 	next_block_free = next_block && ((t_tiny_block*)next_block)->free == 1;
 	prev_block_free = prev_block && ((t_tiny_block*)prev_block)->free == 1;
 	if (((t_tiny_block*)ptr)->free == 1)
@@ -486,13 +568,14 @@ void	free_tiny(void *ptr, void *prev_block, void *next_block)
 	}
 	else if (next_block_free)
 	{
-		printf("ICI\n");
-		fflush(stdout);
 		((t_tiny_block*)ptr)->size += sizeof(t_tiny_block) + ((t_tiny_block*)next_block)->size;
+		change_free_tiny(data, next_block, ptr);
 	}
+	else
+		add_to_list(data->free_tiny_blocks, ptr);
 }
 
-void	free_small(void *ptr, void *prev_block, void *next_block)
+void	free_small(t_malloc_data *data, void *ptr, void *prev_block, void *next_block)
 {
 	char	next_block_free;
 	char	prev_block_free;
@@ -513,7 +596,12 @@ void	free_small(void *ptr, void *prev_block, void *next_block)
 			((t_small_block*)prev_block)->size += sizeof(t_small_block) + ((t_small_block*)ptr)->size;
 	}
 	else if (next_block_free)
+	{
 		((t_small_block*)ptr)->size += sizeof(t_small_block) + ((t_small_block*)next_block)->size;
+		change_free_small(data, next_block, ptr);
+	}
+	else
+		add_to_list(data->free_small_blocks, ptr);
 }
 
 void	free_raw_block(t_malloc_data *data, size_t ind)
@@ -537,27 +625,21 @@ void	my_free(t_malloc_data *data, void *ptr)
 	void	*prev_block;
 	void	*next_block;
 
-	printf("CALLED MY_FREE\n");
-	fflush(stdout);
 	if (!ptr)
 		return ;
 	prev_block = NULL;
 	next_block = NULL;
 	zone_type = get_zone_type(data, ptr, &prev_block, &next_block);
-	printf("AFTER ZONE TYPE\n");
-	fflush(stdout);
 	printf("zone type : %zu\n", zone_type);
 	fflush(stdout);
 	if (zone_type == 3 || zone_type == 0)
 		return ;
 	if (zone_type == TINY)
-		free_tiny((ptr - sizeof(t_tiny_block)), prev_block, next_block);
+		free_tiny(data, (ptr - sizeof(t_tiny_block)), prev_block, next_block);
 	else if (zone_type == SMALL)
-		free_small((ptr - sizeof(t_small_block)), prev_block, next_block);
+		free_small(data, (ptr - sizeof(t_small_block)), prev_block, next_block);
 	else
 		free_raw_block(data, zone_type - 4);
-	printf("AFTER MY_FREE\n");
-	fflush(stdout);
 }
 
 void	print_zone_info(t_zone *zone)
@@ -637,6 +719,8 @@ void	print_raw_blocks(t_malloc_data *data)
 	size_t	i;
 	char	*tmp_str;
 
+	if (!data->raw_blocks)
+		return ;
 	tmp_str = "Printing large blocks : \n";
 	write(1, tmp_str, ft_strlen(tmp_str));
 	i = 0;
@@ -682,8 +766,6 @@ void	*malloc(size_t size)
 
 void	free(void *ptr)
 {
-	printf("CALLED FREE\n");
-	fflush(stdout);
 	handle_malloc_option(0, FREE, ptr);
 }
 
@@ -692,32 +774,28 @@ void	show_alloc_mem(void)
 	handle_malloc_option(0, PRINT_MEM, NULL);
 }
 
-int		main(void)
+/*int		main(void)
 {
 	void	*ptr;
 	void	*ptr2;
 	void	*ptr3;
 
+	show_alloc_mem();
+	(void)ptr3;
 	ptr = malloc(8192);
 	ptr2 = malloc(1);
-	printf("salut\n");
-	fflush(stdout);
 	free(ptr2);
-	printf("salut2\n");
-	fflush(stdout);
 	ptr2 = malloc(1);
 	ptr3 = malloc(56798);
 	show_alloc_mem();
 	free(ptr);
 	free(ptr2);
 	show_alloc_mem();
-	printf("AFTER SHOW\n");
-	fflush(stdout);
 	free(ptr3);
 	return (0);
-}
+}*/
 
-/*int		main(void)
+int		main(void)
 {
 	int		i;
 	int		x;
@@ -737,4 +815,4 @@ int		main(void)
 	}
 	show_alloc_mem();
 	return (0);
-}*/
+}

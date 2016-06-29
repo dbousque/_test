@@ -57,5 +57,6 @@ void				*my_mmap(size_t size);
 void				my_munmap(void *ptr, size_t size);
 size_t				ft_strlen(char *str);
 void				print_number(size_t number);
+void				show_alloc_mem(void);
 
 #endif
