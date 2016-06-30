@@ -2,17 +2,14 @@
 
 #include "malloc.h"
 #include <stdio.h>
-t_linked_list	*new_linked_list(void)
+t_linked_list	new_linked_list(void)
 {
-	t_linked_list	*list;
+	t_linked_list	list;
 
-	list = (t_linked_list*)my_mmap(sizeof(t_linked_list));
-	if (!list)
-		return (NULL);
-	list->size = getpagesize() / sizeof(void*);
-	list->len = 0;
-	list->elts = (void**)my_mmap(sizeof(void*) * list->size);
-	printf("initial size : %ld\n", sizeof(void*) * list->size);
+	list.size = getpagesize() / sizeof(void*);
+	list.len = 0;
+	list.elts = (void**)my_mmap(sizeof(void*) * list.size);
+	printf("initial size : %ld\n", sizeof(void*) * list.size);
 	return (list);
 }
 

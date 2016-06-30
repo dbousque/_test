@@ -27,10 +27,10 @@ typedef struct		s_linked_list
 
 typedef struct		s_malloc_data
 {
-	t_linked_list	*zones;
-	t_linked_list	*free_small_blocks;
-	t_linked_list	*free_tiny_blocks;
-	t_linked_list	*raw_blocks;
+	t_linked_list	zones;
+	t_linked_list	free_small_blocks;
+	t_linked_list	free_tiny_blocks;
+	t_linked_list	raw_blocks;
 	size_t			page_size;
 }					t_malloc_data;
 
@@ -52,7 +52,7 @@ typedef struct		s_tiny_block
 }					t_tiny_block;
 
 void				add_to_list(t_linked_list *list, void *elt);
-t_linked_list		*new_linked_list(void);
+t_linked_list		new_linked_list(void);
 void				*my_mmap(size_t size);
 void				my_munmap(void *ptr, size_t size);
 size_t				ft_strlen(char *str);
