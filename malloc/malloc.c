@@ -4,9 +4,7 @@
 
 
 
-
-
-#   include <stdio.h>
+#  include <stdio.h>
 
 size_t	ft_strlen(char *str)
 {
@@ -82,6 +80,8 @@ size_t	get_small_zone_size(t_malloc_data *data)
 	alloc_size = NB_PAGES_PER_SMALL_ZONE * data->page_size;
 	while (alloc_size < MAX_SMALL_BLOCK * 100)
 		alloc_size *= 2;
+
+	    return (4096);
 	return (alloc_size);
 }
 
@@ -371,7 +371,9 @@ void	*alloc_small(t_malloc_data *data, size_t size)
 	error = 0;
 	if (!data->free_small_blocks.elts)
 	{
-		data->free_small_blocks = new_linked_list();
+		data->free_small_blocks.size = getpagesize() / sizeof(void*);
+		data->free_small_blocks.len = 0;
+		data->free_small_blocks.elts = (void**)my_mmap(sizeof(void*) * data->free_small_blocks.size);
 		if (!data->free_small_blocks.elts)
 			return (NULL);
 		if (!add_new_small_zone(data))
@@ -395,7 +397,9 @@ void	*alloc_new_block(t_malloc_data *data, size_t size)
 	{
 		if (!data->raw_blocks.elts)
 		{
-			data->raw_blocks = new_linked_list();
+			data->raw_blocks.size = getpagesize() / sizeof(void*);
+			data->raw_blocks.len = 0;
+			data->raw_blocks.elts = (void**)my_mmap(sizeof(void*) * data->raw_blocks.size);
 			if (!data->raw_blocks.elts)
 				return (NULL);
 		}
@@ -408,7 +412,6 @@ void	*my_malloc(t_malloc_data *data, size_t size)
 {
 	void	*ptr;
 
-	return (NULL);
 	ptr = alloc_new_block(data, size);
 	return (ptr);
 }
@@ -622,8 +625,6 @@ void	my_free(t_malloc_data *data, void *ptr)
 	prev_block = NULL;
 	next_block = NULL;
 	zone_type = get_zone_type(data, ptr, &prev_block, &next_block);
-	//printf("zone type : %zu\n", zone_type);
-	//fflush(stdout);
 	if (zone_type == 3 || zone_type == 0)
 		return ;
 	if (zone_type == TINY)
