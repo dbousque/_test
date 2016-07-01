@@ -376,8 +376,10 @@ void	*alloc_small(t_malloc_data *data, size_t size)
 		data->free_small_blocks.elts = (void**)my_mmap(sizeof(void*) * data->free_small_blocks.size);
 		if (!data->free_small_blocks.elts)
 			return (NULL);
+		size_t lol = *data->free_small_blocks.elts + 1;
 		if (!add_new_small_zone(data))
 			return (NULL);
+		return (NULL);
 	}
 	selected_ind = select_free_small_block(data, size, &error);
 	if (error)

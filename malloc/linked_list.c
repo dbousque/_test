@@ -9,7 +9,6 @@ t_linked_list	new_linked_list(void)
 	list.size = getpagesize() / sizeof(void*);
 	list.len = 0;
 	list.elts = (void**)my_mmap(sizeof(void*) * list.size);
-	printf("initial size : %ld\n", sizeof(void*) * list.size);
 	return (list);
 }
 
