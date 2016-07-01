@@ -10,6 +10,7 @@
 # define ALLOC 1
 # define FREE 2
 # define PRINT_MEM 3
+# define REALLOC 4
 # define NB_PAGES_PER_SMALL_ZONE 128
 # define NB_PAGES_PER_TINY_ZONE 16
 # define MAX_SMALL_BLOCK 4000

@@ -379,7 +379,6 @@ void	*alloc_small(t_malloc_data *data, size_t size)
 		size_t lol = *data->free_small_blocks.elts + 1;
 		if (!add_new_small_zone(data))
 			return (NULL);
-		return (NULL);
 	}
 	selected_ind = select_free_small_block(data, size, &error);
 	if (error)
@@ -548,6 +547,8 @@ void	free_tiny(t_malloc_data *data, void *ptr, void *prev_block, void *next_bloc
 	char	next_block_free;
 	char	prev_block_free;
 
+	if (((t_tiny_block*)ptr)->free)
+		return ;
 	next_block_free = next_block && ((t_tiny_block*)next_block)->free == 1;
 	prev_block_free = prev_block && ((t_tiny_block*)prev_block)->free == 1;
 	if (((t_tiny_block*)ptr)->free == 1)
@@ -577,6 +578,8 @@ void	free_small(t_malloc_data *data, void *ptr, void *prev_block, void *next_blo
 	char	next_block_free;
 	char	prev_block_free;
 
+	if (((t_small_block*)ptr)->free)
+		return ;
 	next_block_free = next_block && ((t_small_block*)next_block)->free == 1;
 	prev_block_free = prev_block && ((t_small_block*)prev_block)->free == 1;
 	if (((t_small_block*)ptr)->free == 1)
@@ -635,6 +638,87 @@ void	my_free(t_malloc_data *data, void *ptr)
 		free_small(data, (ptr - sizeof(t_small_block)), prev_block, next_block);
 	else
 		free_raw_block(data, zone_type - 4);
+}
+
+void	memcopy(void *from, void *to, size_t nb)
+{
+	char	*from_c;
+	char	*to_c;
+
+	from_c = (char*)from;
+	to_c = (char*)to;
+	if (nb == 0)
+		return ;
+	nb--;
+	while (1)
+	{
+		to_c[nb] = from_c[nb]
+		if (nb == 0)
+			break ;
+		nb--;
+	}
+}
+
+void	*realloc_tiny(t_malloc_data *data, void *prev_next_blocks[2],
+													void *ptr, size_t size)
+{
+	t_tiny_block	*block;
+	t_tiny_block	*new_block;
+	t_tiny_block	*next;
+	size_t			res_size;
+
+	block = ptr - (sizeof(t_tiny_block));
+	if (size >= block->size - sizeof(t_tiny_block) && size <= block->size)
+		return (ptr);
+	if (size < block->size)
+	{
+		res_size = block->size - size - sizeof(t_tiny_block);
+		if (prev_next_blocks[1] && prev_next_blocks[1]->free == 1)
+			res_size += prev_next_blocks[1]->size + sizeof(t_tiny_block);
+		new_block = ((t_tiny_block*)ptr + size);
+		*new_block->free = 1;
+		*new_block->size = res_size;
+		add_to_list(&(data->free_tiny_blocks), new_block);
+		block->size = size;
+	}
+	else
+	{
+		if (prev_next_blocks[1] && prev_next_blocks[1]->free == 1)
+		{
+			if (prev_next_blocks[1]->size >= size - block->size)
+			{
+				new_block = ((t_tiny_block*)ptr + size);
+				new_block
+				return
+			}
+			else if (prev_next_blocks[1]->size + sizeof(t_tiny_block) >= size - block->size)
+				return
+		}
+		void *new = malloc(size);
+		memcopy(ptr, new, block->size);
+		free_tiny(data, ptr, prev_next_blocks[0], prev_next_blocks[1]);
+		return (new);
+	}
+}
+
+void	*my_realloc(t_malloc_data *data, void *ptr, size_t size)
+{
+	size_t	zone_type;
+	void	*prev_next_blocks[2];
+
+	if (!ptr)
+		return (my_malloc(data, size));
+	prev_next_blocks[0] = NULL;
+	prev_next_blocks[1] = NULL;
+	zone_type = get_zone_type(data, ptr, &(prev_next_blocks[1]), &(prev_next_blocks[0]));
+	if (zone_type == 3 || zone_type == 0)
+		return (NULL);
+	if (zone_type == TINY)
+		return (realloc_tiny(data, prev_next_blocks, ptr, size));
+	if (zone_type == SMALL)
+		return (realloc_small(data, prev_next_blocks, ptr, size));
+	else
+		return (realloc_raw(data, prev_next_blocks, ptr, size));
 }
 
 void	print_zone_info(t_zone *zone)
@@ -745,6 +829,8 @@ void	*handle_malloc_option(size_t size, char option, void *ptr)
 		data = build_void_data();
 	if (option == ALLOC)
 		return (my_malloc(&data, size));
+	//else if (option == REALLOC)
+	//	return (my_realloc(&data, ptr, size));
 	else if (option == FREE)
 		my_free(&data, ptr);
 	else if (option == PRINT_MEM)
@@ -760,6 +846,11 @@ void	*malloc(size_t size)
 void	free(void *ptr)
 {
 	handle_malloc_option(0, FREE, ptr);
+}
+
+void	*realloc(void *ptr, size_t size)
+{
+	return (handle_malloc_option(size, REALLOC, ptr));
 }
 
 void	show_alloc_mem(void)
@@ -828,12 +919,16 @@ int		main(void)
 {
 	int		i;
 	char 	*addr;
+	char	*lol;
 
+	*lol = 2;
+	free(lol);
 	i = 0;
 	while (i < 1024)
 	{
 		addr = malloc(1024);
 		addr[0] = 42;
+		free(addr);
 		free(addr);
 		i++;
 	}
