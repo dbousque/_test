@@ -188,22 +188,6 @@ void	print_free_small_blocks(t_linked_list *free_small_blocks)
 	}
 }
 
-t_malloc_data	build_void_data(void)
-{
-	t_malloc_data	data;
-
-	data.page_size = getpagesize();
-	data.zones.size = getpagesize() / sizeof(void*);
-	data.zones.len = 0;
-	data.zones.elts = (void**)my_mmap(sizeof(void*) * data.zones.size);
-	if (!data.zones.elts)
-		return (data);
-	data.free_small_blocks = ((t_linked_list){NULL, 0, 0});
-	data.free_tiny_blocks = ((t_linked_list){NULL, 0, 0});
-	data.raw_blocks = ((t_linked_list){NULL, 0, 0});
-	return (data);
-}
-
 size_t	select_free_small_block(t_malloc_data *data, size_t size, int *error)
 {
 	size_t			i;
@@ -652,7 +636,7 @@ void	memcopy(void *from, void *to, size_t nb)
 	nb--;
 	while (1)
 	{
-		to_c[nb] = from_c[nb]
+		to_c[nb] = from_c[nb];
 		if (nb == 0)
 			break ;
 		nb--;
@@ -826,11 +810,26 @@ void	*handle_malloc_option(size_t size, char option, void *ptr)
 	static t_malloc_data	data = {{NULL, 0, 0}, {NULL, 0, 0}, {NULL, 0, 0}, {NULL, 0, 0}, 0};
 
 	if (!data.page_size)
-		data = build_void_data();
+	{
+		data.page_size = getpagesize();
+		data.zones.size = getpagesize() / sizeof(void*);
+		data.zones.len = 0;
+		data.zones.elts = (void**)my_mmap(sizeof(void*) * data.zones.size);
+		if (!data.zones.elts)
+		{
+			data.page_size = 0;
+			return (NULL);
+		}
+		int *p = (int*)data.zones.elts;
+		*p = 1; 
+		data.free_small_blocks = ((t_linked_list){NULL, 0, 0});
+		data.free_tiny_blocks = ((t_linked_list){NULL, 0, 0});
+		data.raw_blocks = ((t_linked_list){NULL, 0, 0});
+	}
 	if (option == ALLOC)
 		return (my_malloc(&data, size));
-	//else if (option == REALLOC)
-	//	return (my_realloc(&data, ptr, size));
+	else if (option == REALLOC)
+		return (my_realloc(&data, ptr, size));
 	else if (option == FREE)
 		my_free(&data, ptr);
 	else if (option == PRINT_MEM)
@@ -921,15 +920,15 @@ int		main(void)
 	char 	*addr;
 	char	*lol;
 
-	*lol = 2;
-	free(lol);
+	//*lol = 2;
+	//free(lol);
 	i = 0;
 	while (i < 1024)
 	{
 		addr = malloc(1024);
 		addr[0] = 42;
 		free(addr);
-		free(addr);
+		//free(addr);
 		i++;
 	}
 	return (0);
