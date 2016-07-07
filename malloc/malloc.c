@@ -360,7 +360,6 @@ void	*alloc_small(t_malloc_data *data, size_t size)
 		data->free_small_blocks.elts = (void**)my_mmap(sizeof(void*) * data->free_small_blocks.size);
 		if (!data->free_small_blocks.elts)
 			return (NULL);
-		size_t lol = *data->free_small_blocks.elts + 1;
 		if (!add_new_small_zone(data))
 			return (NULL);
 	}
@@ -643,6 +642,22 @@ void	memcopy(void *from, void *to, size_t nb)
 	}
 }
 
+size_t	ind_of_tiny_block(t_malloc_data *data, void *ptr)
+{
+	size_t	i;
+
+	i = data->free_tiny_blocks.len;
+	while (1)
+	{
+		if (i == 0)
+			break ;
+		if (data->free_tiny_blocks.elts[i - 1] == ptr)
+			return (i);
+		i--;
+	}
+	return (0);
+}
+
 void	*realloc_tiny(t_malloc_data *data, void *prev_next_blocks[2],
 													void *ptr, size_t size)
 {
@@ -657,25 +672,28 @@ void	*realloc_tiny(t_malloc_data *data, void *prev_next_blocks[2],
 	if (size < block->size)
 	{
 		res_size = block->size - size - sizeof(t_tiny_block);
-		if (prev_next_blocks[1] && prev_next_blocks[1]->free == 1)
-			res_size += prev_next_blocks[1]->size + sizeof(t_tiny_block);
+		if (prev_next_blocks[1] && ((t_tiny_block*)prev_next_blocks[1])->free == 1)
+		{
+			remove_free_tiny_block(data, ind_of_tiny_block(data, prev_next_blocks[1]));
+			res_size += ((t_tiny_block*)prev_next_blocks[1])->size + sizeof(t_tiny_block);
+		}
 		new_block = ((t_tiny_block*)ptr + size);
-		*new_block->free = 1;
-		*new_block->size = res_size;
+		new_block->free = 1;
+		new_block->size = res_size;
 		add_to_list(&(data->free_tiny_blocks), new_block);
 		block->size = size;
 	}
 	else
 	{
-		if (prev_next_blocks[1] && prev_next_blocks[1]->free == 1)
+		if (prev_next_blocks[1] && ((t_tiny_block*)prev_next_blocks[1])->free == 1)
 		{
-			if (prev_next_blocks[1]->size >= size - block->size)
+			if (((t_tiny_block*)prev_next_blocks[1])->size >= size - block->size)
 			{
 				new_block = ((t_tiny_block*)ptr + size);
 				new_block
 				return
 			}
-			else if (prev_next_blocks[1]->size + sizeof(t_tiny_block) >= size - block->size)
+			else if (((t_tiny_block*)prev_next_blocks[1])->size + sizeof(t_tiny_block) >= size - block->size)
 				return
 		}
 		void *new = malloc(size);
