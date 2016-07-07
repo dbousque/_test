@@ -690,7 +690,8 @@ void	*realloc_tiny(t_malloc_data *data, void *prev_next_blocks[2],
 			if (((t_tiny_block*)prev_next_blocks[1])->size >= size - block->size)
 			{
 				new_block = ((t_tiny_block*)ptr + size);
-				new_block
+				new_block 
+				block->size = size;
 				return
 			}
 			else if (((t_tiny_block*)prev_next_blocks[1])->size + sizeof(t_tiny_block) >= size - block->size)
