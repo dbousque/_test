@@ -408,7 +408,7 @@ char	is_allocated_small_adress(t_malloc_data *data, void *ptr, t_small_block *st
 
 	block = (void*)start;
 	end = block + (get_small_zone_size(data) - sizeof(t_zone));
-	while (block < end)
+	while (block != NULL && block < end)
 	{
 		*next_block = block + ((size_t)((t_small_block*)block)->size + sizeof(t_small_block));
 		if (*next_block >= end)
@@ -429,7 +429,7 @@ char	is_allocated_tiny_adress(t_malloc_data *data, void *ptr, t_tiny_block *star
 
 	block = (void*)start;
 	end = block + (get_tiny_zone_size(data) - sizeof(t_zone));
-	while (block < end)
+	while (block != NULL && block < end)
 	{
 		*next_block = block + ((size_t)((t_tiny_block*)block)->size + sizeof(t_tiny_block));
 		if (*next_block >= end)
@@ -469,20 +469,23 @@ size_t	get_zone_type(t_malloc_data *data, void *ptr, void **prev_block, void **n
 
 	tiny_zone_size = get_tiny_zone_size(data);
 	small_zone_size = get_small_zone_size(data);
-	i = data->zones.len - 1;
-	while (1)
+	if (data->zones.len > 0)
 	{
-		start = (void*)(data->zones.elts[i]);
-		if (ptr > start)
+		i = data->zones.len - 1;
+		while (1)
 		{
-			if (((t_zone*)start)->type == SMALL && ptr < start + small_zone_size)
-				return (is_allocated_small_adress(data, ptr, start + sizeof(t_zone), prev_block, next_block) ? SMALL : 0);
-			if (((t_zone*)start)->type == TINY && ptr < start + tiny_zone_size)
-				return (is_allocated_tiny_adress(data, ptr, start + sizeof(t_zone), prev_block, next_block) ? TINY : 0);
+			start = (void*)(data->zones.elts[i]);
+			if (ptr > start)
+			{
+				if (((t_zone*)start)->type == SMALL && ptr < start + small_zone_size)
+					return (is_allocated_small_adress(data, ptr, start + sizeof(t_zone), prev_block, next_block) ? SMALL : 0);
+				if (((t_zone*)start)->type == TINY && ptr < start + tiny_zone_size)
+					return (is_allocated_tiny_adress(data, ptr, start + sizeof(t_zone), prev_block, next_block) ? TINY : 0);
+			}
+			if (i == 0)
+				break ;
+			i--;
 		}
-		if (i == 0)
-			break ;
-		i--;
 	}
 	return (is_raw_block(data, ptr) + 3);
 }
@@ -658,6 +661,73 @@ size_t	ind_of_tiny_block(t_malloc_data *data, void *ptr)
 	return (0);
 }
 
+size_t	ind_of_small_block(t_malloc_data *data, void *ptr)
+{
+	size_t	i;
+
+	i = data->free_small_blocks.len;
+	while (1)
+	{
+		if (i == 0)
+			break ;
+		if (data->free_small_blocks.elts[i - 1] == ptr)
+			return (i);
+		i--;
+	}
+	return (0);
+}
+
+void	*realloc_small(t_malloc_data *data, void *prev_next_blocks[2],
+													void *ptr, size_t size)
+{
+	t_small_block	*block;
+	t_small_block	*new_block;
+	t_small_block	*next;
+	size_t			res_size;
+
+	block = ptr - (sizeof(t_small_block));
+	if (size >= block->size - sizeof(t_small_block) && size <= block->size)
+		return (ptr);
+	if (size < block->size)
+	{
+		res_size = block->size - size - sizeof(t_small_block);
+		if (prev_next_blocks[1] && ((t_small_block*)prev_next_blocks[1])->free == 1)
+		{
+			remove_free_small_block(data, ind_of_small_block(data, prev_next_blocks[1]));
+			res_size += ((t_small_block*)prev_next_blocks[1])->size + sizeof(t_small_block);
+		}
+		new_block = ((t_small_block*)ptr + size);
+		new_block->free = 1;
+		new_block->size = res_size;
+		add_to_list(&(data->free_small_blocks), new_block);
+		block->size = size;
+		return (ptr);
+	}
+	if (prev_next_blocks[1] && ((t_small_block*)prev_next_blocks[1])->free == 1)
+	{
+		if (((t_small_block*)prev_next_blocks[1])->size >= size - block->size)
+		{
+			new_block = ((t_small_block*)ptr + size);
+			new_block->free = 1;
+			new_block->size = ((t_small_block*)prev_next_blocks[1])->size - (size - block->size);
+			remove_free_small_block(data, ind_of_small_block(data, prev_next_blocks[1]));
+			add_to_list(&(data->free_tiny_blocks), new_block);
+			block->size = size;
+			return (ptr);
+		}
+		else if (((t_small_block*)prev_next_blocks[1])->size + sizeof(t_small_block) >= size - block->size)
+		{
+			block->size += ((t_small_block*)prev_next_blocks[1])->size + sizeof(t_small_block);
+			remove_free_small_block(data, ind_of_small_block(data, prev_next_blocks[1]));
+			return (ptr);
+		}
+	}
+	void *new = malloc(size);
+	memcopy(ptr, new, block->size);
+	free_small(data, ptr, prev_next_blocks[0], prev_next_blocks[1]);
+	return (new);
+}
+
 void	*realloc_tiny(t_malloc_data *data, void *prev_next_blocks[2],
 													void *ptr, size_t size)
 {
@@ -682,26 +752,46 @@ void	*realloc_tiny(t_malloc_data *data, void *prev_next_blocks[2],
 		new_block->size = res_size;
 		add_to_list(&(data->free_tiny_blocks), new_block);
 		block->size = size;
+		return (ptr);
 	}
-	else
+	if (prev_next_blocks[1] && ((t_tiny_block*)prev_next_blocks[1])->free == 1)
 	{
-		if (prev_next_blocks[1] && ((t_tiny_block*)prev_next_blocks[1])->free == 1)
+		if (((t_tiny_block*)prev_next_blocks[1])->size >= size - block->size)
 		{
-			if (((t_tiny_block*)prev_next_blocks[1])->size >= size - block->size)
-			{
-				new_block = ((t_tiny_block*)ptr + size);
-				new_block 
-				block->size = size;
-				return
-			}
-			else if (((t_tiny_block*)prev_next_blocks[1])->size + sizeof(t_tiny_block) >= size - block->size)
-				return
+			new_block = ((t_tiny_block*)ptr + size);
+			new_block->free = 1;
+			new_block->size = ((t_tiny_block*)prev_next_blocks[1])->size - (size - block->size);
+			remove_free_tiny_block(data, ind_of_tiny_block(data, prev_next_blocks[1]));
+			add_to_list(&(data->free_tiny_blocks), new_block);
+			block->size = size;
+			return (ptr);
 		}
-		void *new = malloc(size);
-		memcopy(ptr, new, block->size);
-		free_tiny(data, ptr, prev_next_blocks[0], prev_next_blocks[1]);
-		return (new);
+		else if (((t_tiny_block*)prev_next_blocks[1])->size + sizeof(t_tiny_block) >= size - block->size)
+		{
+			block->size += ((t_tiny_block*)prev_next_blocks[1])->size + sizeof(t_tiny_block);
+			remove_free_tiny_block(data, ind_of_tiny_block(data, prev_next_blocks[1]));
+			return (ptr);
+		}
 	}
+	void *new = malloc(size);
+	memcopy(ptr, new, block->size);
+	free_tiny(data, ptr, prev_next_blocks[0], prev_next_blocks[1]);
+	return (new);
+}
+
+void	*realloc_raw(t_malloc_data *data, void *prev_next_blocks[2], void *ptr, size_t size)
+{
+	void	*res;
+
+	if (*((size_t*)ptr - (sizeof(size_t) * 2)) >= size)
+	{
+		*((size_t*)ptr - (sizeof(size_t))) = size;
+		return (ptr);
+	}
+	res = malloc(size);
+	memcopy(ptr, res, *((size_t*)ptr - (sizeof(size_t))));
+	my_free(data, ptr);
+	return (res);
 }
 
 void	*my_realloc(t_malloc_data *data, void *ptr, size_t size)
@@ -715,7 +805,13 @@ void	*my_realloc(t_malloc_data *data, void *ptr, size_t size)
 	prev_next_blocks[1] = NULL;
 	zone_type = get_zone_type(data, ptr, &(prev_next_blocks[1]), &(prev_next_blocks[0]));
 	if (zone_type == 3 || zone_type == 0)
+	{
+		printf("NUUUUUULLLL\n");
+		fflush(stdout);
 		return (NULL);
+	}
+	printf("THHHHEEERRRE\n");
+	fflush(stdout);
 	if (zone_type == TINY)
 		return (realloc_tiny(data, prev_next_blocks, ptr, size));
 	if (zone_type == SMALL)
@@ -839,8 +935,6 @@ void	*handle_malloc_option(size_t size, char option, void *ptr)
 			data.page_size = 0;
 			return (NULL);
 		}
-		int *p = (int*)data.zones.elts;
-		*p = 1; 
 		data.free_small_blocks = ((t_linked_list){NULL, 0, 0});
 		data.free_tiny_blocks = ((t_linked_list){NULL, 0, 0});
 		data.raw_blocks = ((t_linked_list){NULL, 0, 0});
@@ -940,13 +1034,23 @@ int		main(void)
 	char	*lol;
 
 	//*lol = 2;
-	//free(lol);
+	free(lol);
 	i = 0;
-	while (i < 1024)
+	addr = malloc(1024);
+	while (i < 102400)
 	{
-		addr = malloc(1024);
+		printf("BEFORE REALLOC\n");
+		fflush(stdout);
+		addr = realloc(addr, 1024);
+		printf("AFTER REALLOC\n");
+		fflush(stdout);
 		addr[0] = 42;
+		//free(addr);
+		printf("BEFORE FREE\n");
+		fflush(stdout);
 		free(addr);
+		printf("AFTER FREE\n");
+		fflush(stdout);
 		//free(addr);
 		i++;
 	}

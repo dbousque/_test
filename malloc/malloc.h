@@ -52,6 +52,7 @@ typedef struct		s_tiny_block
 	char			free;
 }					t_tiny_block;
 
+void				*malloc(size_t size);
 void				add_to_list(t_linked_list *list, void *elt);
 t_linked_list		new_linked_list(void);
 void				*my_mmap(size_t size);
