@@ -810,8 +810,6 @@ void	*my_realloc(t_malloc_data *data, void *ptr, size_t size)
 		fflush(stdout);
 		return (NULL);
 	}
-	printf("THHHHEEERRRE\n");
-	fflush(stdout);
 	if (zone_type == TINY)
 		return (realloc_tiny(data, prev_next_blocks, ptr, size));
 	if (zone_type == SMALL)
@@ -1037,7 +1035,7 @@ int		main(void)
 	free(lol);
 	i = 0;
 	addr = malloc(1024);
-	while (i < 102400)
+	while (i < 1024)
 	{
 		printf("BEFORE REALLOC\n");
 		fflush(stdout);
