@@ -53,6 +53,17 @@ typedef struct		s_tiny_block
 }					t_tiny_block;
 
 void				*malloc(size_t size);
+void				*my_realloc(t_malloc_data *data, void *ptr, size_t size);
+void				*my_malloc(t_malloc_data *data, size_t size);
+void				my_free(t_malloc_data *data, void *ptr);
+void				remove_free_small_block(t_malloc_data *data, size_t ind);
+void				remove_free_tiny_block(t_malloc_data *data, size_t ind);
+size_t				ind_of_small_block(t_malloc_data *data, void *ptr);
+size_t				ind_of_tiny_block(t_malloc_data *data, void *ptr);
+void				memcopy(void *from, void *to, size_t nb);
+void				free_small(t_malloc_data *data, void *ptr, void *prev_block, void *next_block);
+void				free_tiny(t_malloc_data *data, void *ptr, void *prev_block, void *next_block);
+size_t				get_zone_type(t_malloc_data *data, void *ptr, void **prev_block, void **next_block);
 void				add_to_list(t_linked_list *list, void *elt);
 t_linked_list		new_linked_list(void);
 void				*my_mmap(size_t size);
