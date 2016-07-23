@@ -767,15 +767,16 @@ int		main(void)
 	//*lol = 2;
 	//free(lol);
 	i = 0;
-	size = 0;
+	size = 15000;
 	addr = malloc(size);
 	while (i < 10240)
 	{
 		//show_alloc_mem();
-		//printf("BEFORE REALLOC : %p\n", addr);
+		//printf("BEFORE REALLOC : %zu\n", size);
 		//fflush(stdout);
 		//if (size > 4100)
 		//	exit(1);
+		addr = NULL;
 		addr = realloc(addr, size);
 		//printf("AFTER REALLOC\n");
 		//fflush(stdout);
@@ -796,7 +797,9 @@ int		main(void)
 		free(addr + 10 + sizeof(t_small_block));
 		free(NULL);
 		i++;
-		size += 20;
+		if (size < 14900)
+			break ;
+		size -= 14900;
 	}
 	show_alloc_mem();
 	//assert42(addr, size - 20);

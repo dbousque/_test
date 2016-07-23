@@ -139,20 +139,27 @@ void	*realloc_tiny(t_malloc_data *data, void *prev_next_blocks[2],
 	return (new_tiny(data, ptr, prev_next_blocks, size));
 }
 
+void	*new_raw(t_malloc_data *data, void *ptr, size_t size)
+{
+	void 			*res;
+
+	res = malloc(size);
+	memcopy(ptr, res, *((size_t*)(ptr - (sizeof(size_t)))));
+	my_free(data, ptr);
+	return (res);
+}
+
 void	*realloc_raw(t_malloc_data *data, void *prev_next_blocks[2], void *ptr, size_t size)
 {
-	void	*res;
-
 	(void)prev_next_blocks;
+	if (size <= MAX_SMALL_BLOCK)
+		return (new_raw(data, ptr, size));
 	if (*((size_t*)(ptr - (sizeof(size_t) * 2))) - (sizeof(size_t) * 2) >= size)
 	{
 		*((size_t*)(ptr - (sizeof(size_t)))) = size;
 		return (ptr);
 	}
-	res = malloc(size);
-	memcopy(ptr, res, *((size_t*)(ptr - (sizeof(size_t)))));
-	my_free(data, ptr);
-	return (res);
+	return (new_raw(data, ptr, size));
 }
 
 void	*my_realloc(t_malloc_data *data, void *ptr, size_t size)
