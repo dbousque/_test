@@ -6,6 +6,7 @@
 
 #  include <stdio.h>
 
+
 size_t	ft_strlen(char *str)
 {
 	size_t	i;
@@ -80,8 +81,6 @@ size_t	get_small_zone_size(t_malloc_data *data)
 	alloc_size = NB_PAGES_PER_SMALL_ZONE * data->page_size;
 	while (alloc_size < MAX_SMALL_BLOCK * 100)
 		alloc_size *= 2;
-
-	    return (4096);
 	return (alloc_size);
 }
 
@@ -135,57 +134,6 @@ int		add_new_tiny_zone(t_malloc_data *data)
 	add_new_free_tiny_block(data, (void*)new_zone + sizeof(t_zone),
 		alloc_size - sizeof(t_zone) - sizeof(t_tiny_block));
 	return (1);
-}
-
-void	print_small_block(t_small_block *block)
-{
-	char	*tmp_str;
-
-	tmp_str = "  - small block of size ";
-	write(1, tmp_str, ft_strlen(tmp_str));
-	print_number(block->size);
-	write(1, "\n", 1);
-	tmp_str = "  - free : ";
-	write(1, tmp_str, ft_strlen(tmp_str));
-	if (block->free)
-		tmp_str = "Yes\n";
-	else
-		tmp_str = "No\n";
-	write(1, tmp_str, ft_strlen(tmp_str));
-}
-
-void	print_tiny_block(t_tiny_block *block)
-{
-	char	*tmp_str;
-
-	tmp_str = "  - tiny block of size ";
-	write(1, tmp_str, ft_strlen(tmp_str));
-	print_number(block->size);
-	write(1, "\n", 1);
-	tmp_str = "  - free : ";
-	write(1, tmp_str, ft_strlen(tmp_str));
-	if (block->free)
-		tmp_str = "Yes\n";
-	else
-		tmp_str = "No\n";
-	write(1, tmp_str, ft_strlen(tmp_str));
-}
-
-void	print_free_small_blocks(t_linked_list *free_small_blocks)
-{
-	size_t	i;
-	char	*tmp_str;
-
-	tmp_str = "Printing free blocks :\n";
-	write(1, tmp_str, ft_strlen(tmp_str));
-	i = 0;
-	while (i < free_small_blocks->len)
-	{
-		print_number(i + 1);
-		write(1, " :\n", 3);
-		print_small_block(free_small_blocks->elts[i]);
-		i++;
-	}
 }
 
 size_t	select_free_small_block(t_malloc_data *data, size_t size, int *error)
@@ -396,6 +344,8 @@ void	*my_malloc(t_malloc_data *data, size_t size)
 {
 	void	*ptr;
 
+	if (!size)
+		return (NULL);
 	ptr = alloc_new_block(data, size);
 	return (ptr);
 }
@@ -446,7 +396,7 @@ size_t	is_raw_block(t_malloc_data *data, void *ptr)
 {
 	size_t	i;
 
-	if (!data->raw_blocks.elts)
+	if (!data->raw_blocks.elts || data->raw_blocks.len == 0)
 		return (0);
 	i = data->raw_blocks.len - 1;
 	while (1)
@@ -677,106 +627,6 @@ size_t	ind_of_small_block(t_malloc_data *data, void *ptr)
 	return (0);
 }
 
-void	print_zone_info(t_zone *zone)
-{
-	char	*tmp_str;
-
-	tmp_str = "  - number of allocated blocks : ";
-	write(1, tmp_str, ft_strlen(tmp_str));
-	write(1, "\n", 1);
-	tmp_str = "  - type of zone : ";
-	write(1, tmp_str, ft_strlen(tmp_str));
-	if (zone->type == TINY)
-		tmp_str = "TINY";
-	else if (zone->type == SMALL)
-		tmp_str = "SMALL";
-	else if (zone->type == LARGE)
-		tmp_str = "LARGE";
-	else
-		tmp_str = "UNKNOWN TYPE!";
-	write(1, tmp_str, ft_strlen(tmp_str));
-	write(1, "\n", 1);
-}
-
-void	print_zone_content(t_malloc_data *data, t_zone *zone)
-{
-	void	*block;
-	void	*end;
-
-	end = NULL;
-	if (zone->type == SMALL)
-		end = (void*)zone + get_small_zone_size(data);
-	else if (zone->type == TINY)
-		end = (void*)zone + get_tiny_zone_size(data);
-	block = (void*)zone + sizeof(t_zone);
-	while (block < end)
-	{
-		if (zone->type == SMALL)
-			print_small_block(block);
-		else if (zone->type == TINY)
-			print_tiny_block(block);
-		if (zone->type == SMALL)
-			block += ((t_small_block*)block)->size + sizeof(t_small_block);
-		else if (zone->type == TINY)
-			block += ((t_tiny_block*)block)->size + sizeof(t_tiny_block);
-		else
-		{
-			write(1, "UNIMPLEMENTED\n", 14);
-		}
-	}
-}
-
-void	print_zone(t_malloc_data *data, t_zone *zone)
-{
-	print_zone_info(zone);
-	print_zone_content(data, zone);
-}
-
-void	print_zones(t_malloc_data *data)
-{
-	size_t	i;
-	char	*tmp_str;
-
-	tmp_str = "Printing zones : \n";
-	write(1, tmp_str, ft_strlen(tmp_str));
-	i = 0;
-	while (i < data->zones.len)
-	{
-		print_number(i + 1);
-		write(1, " :\n", 3);
-		print_zone(data, data->zones.elts[i]);
-		i++;
-	}
-}
-
-void	print_raw_blocks(t_malloc_data *data)
-{
-	size_t	i;
-	char	*tmp_str;
-
-	if (!data->raw_blocks.size)
-		return ;
-	tmp_str = "Printing large blocks : \n";
-	write(1, tmp_str, ft_strlen(tmp_str));
-	i = 0;
-	while (i < data->raw_blocks.len)
-	{
-		print_number(i + 1);
-		tmp_str = " : \n  - block of size ";
-		write(1, tmp_str, ft_strlen(tmp_str));
-		print_number(*((size_t*)(data->raw_blocks.elts[i] + sizeof(size_t))));
-		write(1, "\n", 1);
-		i++;
-	}
-}
-
-void	print_mem(t_malloc_data *data)
-{
-	//print_free_small_blocks(data->free_small_blocks);
-	print_zones(data);
-	print_raw_blocks(data);
-}
-
 void	*handle_malloc_option(size_t size, char option, void *ptr)
 {
 	static t_malloc_data	data = {{NULL, 0, 0}, {NULL, 0, 0}, {NULL, 0, 0}, {NULL, 0, 0}, 0};
@@ -884,34 +734,72 @@ void	show_alloc_mem(void)
 	return (0);
 }*/
 
+void	assert42(char *addr, size_t size)
+{
+	int		i;
+
+	i = 0;
+	while (i < (int)size)
+	{
+		if (addr[i] != 42)
+		{
+			printf("NOT ALL 42!!!\n");
+			fflush(stdout);
+			return ;
+		}
+		i++;
+	}
+	printf("ALLL 42!!!\n");
+	fflush(stdout);
+}
+
+
+#  include <stdlib.h>
+
 int		main(void)
 {
 	int		i;
 	char 	*addr;
 	size_t	size;
+	//int		x;
 	//char	*lol;
 
 	//*lol = 2;
 	//free(lol);
 	i = 0;
-	size = 4024;
+	size = 0;
 	addr = malloc(size);
-	while (i < 1024)
+	while (i < 10240)
 	{
-		printf("TOUR : %ld\n", size);
-		fflush(stdout);
+		//show_alloc_mem();
+		//printf("BEFORE REALLOC : %p\n", addr);
+		//fflush(stdout);
+		//if (size > 4100)
+		//	exit(1);
 		addr = realloc(addr, size);
-		addr[0] = 42;
-		/*free(addr);
+		//printf("AFTER REALLOC\n");
+		//fflush(stdout);
+		/*x = size - 20;
+		while (x >= 0 && x < (int)size)
+		{
+			addr[x] = 42;
+			x++;
+		}*/
+		//printf("BEFORE FREE\n");
+		//fflush(stdout);
+		if (addr)
+			free(addr);
 		free(addr);
 		free(addr);
 		free(addr + 1);
 		free(addr + 10);
 		free(addr + 10 + sizeof(t_small_block));
-		free(NULL);*/
+		free(NULL);
 		i++;
 		size += 20;
 	}
+	show_alloc_mem();
+	//assert42(addr, size - 20);
 	return (0);
 }
 
