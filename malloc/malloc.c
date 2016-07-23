@@ -145,7 +145,8 @@ size_t	select_free_small_block(t_malloc_data *data, size_t size, int *error)
 		i = data->free_small_blocks.len - 1;
 		while (1)
 		{
-			if (((t_small_block*)data->free_small_blocks.elts[i])->size >= size + sizeof(t_small_block))
+			if (((t_small_block*)data->free_small_blocks.elts[i])->size >=
+												size + sizeof(t_small_block))
 				return (i);
 			if (i == 0)
 				break ;
@@ -166,7 +167,8 @@ size_t	select_free_tiny_block(t_malloc_data *data, size_t size, int *error)
 		i = data->free_tiny_blocks.len - 1;
 		while (1)
 		{
-			if (((t_tiny_block*)data->free_tiny_blocks.elts[i])->size >= size + sizeof(t_tiny_block))
+			if (((t_tiny_block*)data->free_tiny_blocks.elts[i])->size >=
+												size + sizeof(t_tiny_block))
 				return (i);
 			if (i == 0)
 				break ;
@@ -283,7 +285,8 @@ void	*alloc_tiny(t_malloc_data *data, size_t size)
 	{
 		data->free_tiny_blocks.size = getpagesize() / sizeof(void*);
 		data->free_tiny_blocks.len = 0;
-		data->free_tiny_blocks.elts = (void**)my_mmap(sizeof(void*) * data->free_tiny_blocks.size);
+		data->free_tiny_blocks.elts = (void**)my_mmap(sizeof(void*)
+											* data->free_tiny_blocks.size);
 		if (!data->free_tiny_blocks.elts)
 			return (NULL);
 		if (!add_new_tiny_zone(data))
@@ -305,7 +308,8 @@ void	*alloc_small(t_malloc_data *data, size_t size)
 	{
 		data->free_small_blocks.size = getpagesize() / sizeof(void*);
 		data->free_small_blocks.len = 0;
-		data->free_small_blocks.elts = (void**)my_mmap(sizeof(void*) * data->free_small_blocks.size);
+		data->free_small_blocks.elts = (void**)my_mmap(sizeof(void*)
+											* data->free_small_blocks.size);
 		if (!data->free_small_blocks.elts)
 			return (NULL);
 		if (!add_new_small_zone(data))
@@ -331,7 +335,8 @@ void	*alloc_new_block(t_malloc_data *data, size_t size)
 		{
 			data->raw_blocks.size = getpagesize() / sizeof(void*);
 			data->raw_blocks.len = 0;
-			data->raw_blocks.elts = (void**)my_mmap(sizeof(void*) * data->raw_blocks.size);
+			data->raw_blocks.elts = (void**)my_mmap(sizeof(void*)
+												* data->raw_blocks.size);
 			if (!data->raw_blocks.elts)
 				return (NULL);
 		}
@@ -351,7 +356,7 @@ void	*my_malloc(t_malloc_data *data, size_t size)
 }
 
 char	is_allocated_small_adress(t_malloc_data *data, void *ptr, t_small_block *start,
-										void **prev_block, void **next_block)
+										void **prev_next_block[2])
 {
 	void	*block;
 	void	*end;
@@ -360,19 +365,20 @@ char	is_allocated_small_adress(t_malloc_data *data, void *ptr, t_small_block *st
 	end = block + (get_small_zone_size(data) - sizeof(t_zone));
 	while (block != NULL && block < end)
 	{
-		*next_block = block + ((size_t)((t_small_block*)block)->size + sizeof(t_small_block));
-		if (*next_block >= end)
-			*next_block = NULL;
+		*(prev_next_block[1]) = block + ((size_t)((t_small_block*)block)->size
+													+ sizeof(t_small_block));
+		if (*(prev_next_block[1]) >= end)
+			*(prev_next_block[1]) = NULL;
 		if (ptr == (block + sizeof(t_small_block)))
 			return (1);
-		*prev_block = block;
-		block = *next_block;
+		*(prev_next_block[0]) = block;
+		block = *(prev_next_block[1]);
 	}
 	return (0);
 }
 
 char	is_allocated_tiny_adress(t_malloc_data *data, void *ptr, t_tiny_block *start,
-										void **prev_block, void **next_block)
+										void **prev_next_block[2])
 {
 	void	*block;
 	void	*end;
@@ -381,13 +387,14 @@ char	is_allocated_tiny_adress(t_malloc_data *data, void *ptr, t_tiny_block *star
 	end = block + (get_tiny_zone_size(data) - sizeof(t_zone));
 	while (block != NULL && block < end)
 	{
-		*next_block = block + ((size_t)((t_tiny_block*)block)->size + sizeof(t_tiny_block));
-		if (*next_block >= end)
-			*next_block = NULL;
+		*(prev_next_block[1]) = block + ((size_t)((t_tiny_block*)block)->size
+													+ sizeof(t_tiny_block));
+		if (*(prev_next_block[1]) >= end)
+			*(prev_next_block[1]) = NULL;
 		if (ptr == (block + sizeof(t_tiny_block)))
 			return (1);
-		*prev_block = block;
-		block = *next_block;
+		*(prev_next_block[0]) = block;
+		block = *(prev_next_block[1]);
 	}
 	return (0);
 }
@@ -416,7 +423,10 @@ size_t	get_zone_type(t_malloc_data *data, void *ptr, void **prev_block, void **n
 	size_t	tiny_zone_size;
 	size_t	small_zone_size;
 	void	*start;
+	void	**prev_next_block[2];
 
+	prev_next_block[0] = prev_block;
+	prev_next_block[1] = next_block;
 	tiny_zone_size = get_tiny_zone_size(data);
 	small_zone_size = get_small_zone_size(data);
 	if (data->zones.len > 0)
@@ -427,10 +437,14 @@ size_t	get_zone_type(t_malloc_data *data, void *ptr, void **prev_block, void **n
 			start = (void*)(data->zones.elts[i]);
 			if (ptr > start)
 			{
-				if (((t_zone*)start)->type == SMALL && ptr < start + small_zone_size)
-					return (is_allocated_small_adress(data, ptr, start + sizeof(t_zone), prev_block, next_block) ? SMALL : 0);
-				if (((t_zone*)start)->type == TINY && ptr < start + tiny_zone_size)
-					return (is_allocated_tiny_adress(data, ptr, start + sizeof(t_zone), prev_block, next_block) ? TINY : 0);
+				if (((t_zone*)start)->type == SMALL
+					&& ptr < start + small_zone_size)
+					return (is_allocated_small_adress(data, ptr, start
+							+ sizeof(t_zone), prev_next_block) ? SMALL : 0);
+				if (((t_zone*)start)->type == TINY
+					&& ptr < start + tiny_zone_size)
+					return (is_allocated_tiny_adress(data, ptr, start
+							+ sizeof(t_zone), prev_next_block) ? TINY : 0);
 			}
 			if (i == 0)
 				break ;
@@ -767,7 +781,7 @@ int		main(void)
 	//*lol = 2;
 	//free(lol);
 	i = 0;
-	size = 15000;
+	size = 0;
 	addr = malloc(size);
 	while (i < 10240)
 	{
@@ -776,7 +790,6 @@ int		main(void)
 		//fflush(stdout);
 		//if (size > 4100)
 		//	exit(1);
-		addr = NULL;
 		addr = realloc(addr, size);
 		//printf("AFTER REALLOC\n");
 		//fflush(stdout);
@@ -788,18 +801,16 @@ int		main(void)
 		}*/
 		//printf("BEFORE FREE\n");
 		//fflush(stdout);
-		if (addr)
+		/*if (addr)
 			free(addr);
 		free(addr);
 		free(addr);
 		free(addr + 1);
 		free(addr + 10);
 		free(addr + 10 + sizeof(t_small_block));
-		free(NULL);
+		free(NULL);*/
 		i++;
-		if (size < 14900)
-			break ;
-		size -= 14900;
+		size += 20;
 	}
 	show_alloc_mem();
 	//assert42(addr, size - 20);
