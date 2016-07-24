@@ -6,6 +6,7 @@
 # include <sys/mman.h>
 # include <stdint.h>
 # include <unistd.h>
+# include <stdlib.h>
 
 # define ALLOC 1
 # define FREE 2
@@ -33,6 +34,8 @@ typedef struct		s_malloc_data
 	t_linked_list	free_tiny_blocks;
 	t_linked_list	raw_blocks;
 	size_t			page_size;
+	char			debug_alloc;
+	char			debug_print;
 }					t_malloc_data;
 
 typedef struct		s_zone
@@ -52,6 +55,7 @@ typedef struct		s_tiny_block
 	char			free;
 }					t_tiny_block;
 
+char				get_debug(int opt);
 void				*malloc(size_t size);
 void				*my_realloc(t_malloc_data *data, void *ptr, size_t size);
 void				*my_malloc(t_malloc_data *data, size_t size);
@@ -60,6 +64,25 @@ void				*realloc_small(t_malloc_data *data, void *p_nx_b[2],
 													void *ptr, size_t size);
 void				*realloc_tiny(t_malloc_data *data, void *p_nx_b[2],
 													void *ptr, size_t size);
+void				*my_mmap(size_t size);
+void				my_munmap(void *ptr, size_t size);
+size_t				get_next_pagesize(size_t size);
+void				*alloc_new_block(t_malloc_data *data, size_t size);
+void				*alloc_tiny(t_malloc_data *data, size_t size);
+void				*alloc_small(t_malloc_data *data, size_t size);
+void				add_new_free_tiny_block(t_malloc_data *data, void *start,
+																size_t size);
+void				add_new_free_small_block(t_malloc_data *data, void *start,
+																size_t size);
+void				free_small(t_malloc_data *data, void *ptr,
+										void *prev_block, void *next_block);
+void				free_tiny(t_malloc_data *data, void *ptr,
+										void *prev_block, void *next_block);
+char				is_allocated_small_adress(t_malloc_data *data, void *ptr,
+							t_small_block *start, void **prev_next_block[2]);
+char				is_allocated_tiny_adress(t_malloc_data *data, void *ptr,
+							t_tiny_block *start, void **prev_next_block[2]);
+size_t				is_raw_block(t_malloc_data *data, void *ptr);
 void				print_mem(t_malloc_data *data);
 size_t				get_small_zone_size(t_malloc_data *data);
 size_t				get_tiny_zone_size(t_malloc_data *data);
@@ -80,6 +103,20 @@ void				*my_mmap(size_t size);
 void				my_munmap(void *ptr, size_t size);
 size_t				ft_strlen(char *str);
 void				print_number(size_t number);
+void				print_address(void *ptr);
 void				show_alloc_mem(void);
+void				print_debug_free_null(void);
+void				print_debug_free_raw(void *ptr, size_t size);
+void				print_debug_free_small(t_malloc_data *data, void *ptr,
+																size_t size);
+void				print_debug_free_tiny(t_malloc_data *data, void *ptr,
+																size_t size);
+void				print_debug_realloc_raw(void *ptr, size_t start_size,
+															size_t end_size);
+void				print_debug_realloc_small(t_malloc_data *data, void *ptr,
+										size_t start_size, size_t end_size);
+void				print_debug_realloc_tiny(t_malloc_data *data, void *ptr,
+										size_t start_size, size_t end_size);
+void				print_debug_malloc(size_t size);
 
 #endif

@@ -26,3 +26,15 @@ void	print_number(size_t number)
 		ind++;
 	}
 }
+
+
+#  include <stdio.h>
+
+
+
+
+void	print_address(void *ptr)
+{
+	printf("%p", ptr);
+	fflush(stdout);
+}

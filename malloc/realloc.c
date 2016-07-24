@@ -16,7 +16,9 @@ void	*realloc_raw(t_malloc_data *data, void *prev_next_blocks[2],
 													void *ptr, size_t size)
 {
 	(void)prev_next_blocks;
-	if (size <= MAX_SMALL_BLOCK)
+	if (data->debug_print)
+		print_debug_realloc_raw(ptr, *((size_t*)(ptr - (sizeof(size_t)))), size);
+	if (data->debug_alloc || size <= MAX_SMALL_BLOCK)
 		return (new_raw(data, ptr, size));
 	if (*((size_t*)(ptr - (sizeof(size_t) * 2))) - (sizeof(size_t) * 2) >= size)
 	{

@@ -65,6 +65,7 @@ void	*realloc_tiny(t_malloc_data *data, void *p_nx_b[2],
 	bloc = (t_tiny_block*)(ptr - (sizeof(t_tiny_block)));
 	if (bloc->free)
 		return (NULL);
+	print_debug_realloc_tiny(data, ptr, bloc->size, size);
 	if (size > MAX_TINY_BLOCK)
 		return (new_tiny(data, ptr, p_nx_b, size));
 	if (size >= bloc->size - ((int)sizeof(t_tiny_block)) && size <= bloc->size)
