@@ -43,6 +43,12 @@ typedef struct		s_zone
 	char			type;
 }					t_zone;
 
+typedef struct		s_sort_zone
+{
+	char			type;
+	void			*zone;
+}					t_sort_zone;
+
 typedef struct		s_small_block
 {
 	uint32_t		size;
@@ -118,5 +124,10 @@ void				print_debug_realloc_small(t_malloc_data *data, void *ptr,
 void				print_debug_realloc_tiny(t_malloc_data *data, void *ptr,
 										size_t start_size, size_t end_size);
 void				print_debug_malloc(size_t size);
+void				print_ft_ntoa_base(size_t n, char *base);
+void				quicksort(void **array, int start, int end,
+										int (*cmp)(void *elt1, void *elt2));
+void				quicksort_zones(t_sort_zone *array, int start, int end,
+							int (*cmp)(t_sort_zone *elt1, t_sort_zone *elt2));
 
 #endif

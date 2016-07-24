@@ -14,8 +14,8 @@ void    print_small_block(t_small_block *block)
     tmp_str = "  - small block of size ";
     write(1, tmp_str, ft_strlen(tmp_str));
     print_number(block->size);
-    printf("  : %p", block);
-    fflush(stdout);
+    write(1, "  : ", 4);
+    print_address(((void*)block) + sizeof(t_small_block));
     write(1, "\n", 1);
     tmp_str = "  - free : ";
     write(1, tmp_str, ft_strlen(tmp_str));
@@ -155,9 +155,40 @@ void    print_raw_blocks(t_malloc_data *data)
     }
 }
 
+int		cmp_by_addr(t_sort_zone *elt1, t_sort_zone *elt2)
+{
+	if (elt1->zone == elt2->zone)
+		return (0);
+	if (elt1->zone > elt2->zone)
+		return (1);
+	return (-1);
+}
+
+void	assert_sorted(t_sort_zone *zones, size_t len)
+{
+	size_t	i;
+
+	i = 0;
+	while (i < len - 1)
+	{
+		if (zones[i].zone > zones[i + 1].zone)
+		{
+			write(1, "NOT SORTED!\n", 12);
+			return ;
+		}
+		i++;
+	}
+	write(1, "IS  SORTED!\n", 12);
+}
+
 void    print_mem(t_malloc_data *data)
 {
-    print_free_small_blocks(&(data->free_small_blocks));
+    /*print_free_small_blocks(&(data->free_small_blocks));
     print_zones(data);
-    print_raw_blocks(data);
+    print_raw_blocks(data);*/
+    t_sort_zone	allocs[data->zones.len + data->raw_blocks.len];
+
+    (void)allocs;
+    quicksort_zones(allocs, 0, data->zones.len + data->raw_blocks.len, cmp_by_addr);
+    assert_sorted(allocs, data->zones.len + data->raw_blocks.len);
 }

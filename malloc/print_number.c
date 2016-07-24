@@ -28,13 +28,9 @@ void	print_number(size_t number)
 }
 
 
-#  include <stdio.h>
-
-
-
-
 void	print_address(void *ptr)
 {
-	printf("%p", ptr);
-	fflush(stdout);
+	//printf("%p", ptr);
+	//fflush(stdout);
+	print_ft_ntoa_base((size_t)ptr, "0123456789ABCDEF");
 }

@@ -6,6 +6,20 @@
 
 #   include <stdio.h>
 
+void	*launch_option(t_malloc_data *data, char option, void *ptr,
+														size_t size)
+{
+	if (option == ALLOC)
+		return (my_malloc(data, size));
+	else if (option == REALLOC)
+		return (my_realloc(data, ptr, size));
+	else if (option == FREE)
+		my_free(data, ptr);
+	else if (option == PRINT_MEM)
+		print_mem(data);
+	return (NULL);
+}
+
 void	*handle_malloc_option(size_t size, char option, void *ptr)
 {
 	static t_malloc_data	data = {{NULL, 0, 0}, {NULL, 0, 0},
@@ -28,15 +42,7 @@ void	*handle_malloc_option(size_t size, char option, void *ptr)
 		data.debug_alloc = get_debug(1);
 		data.debug_print = get_debug(2);
 	}
-	if (option == ALLOC)
-		return (my_malloc(&data, size));
-	else if (option == REALLOC)
-		return (my_realloc(&data, ptr, size));
-	else if (option == FREE)
-		my_free(&data, ptr);
-	else if (option == PRINT_MEM)
-		print_mem(&data);
-	return (NULL);
+	return (launch_option(&data, option, ptr, size));
 }
 
 void	*malloc(size_t size)
