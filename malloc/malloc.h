@@ -23,6 +23,7 @@
 # define PRINT_MEM 3
 # define REALLOC 4
 # define DUMP_HEXA 5
+# define DUMP_FREE 6
 # define NB_PAGES_PER_SMALL_ZONE 128
 # define NB_PAGES_PER_TINY_ZONE 16
 # define MAX_SMALL_BLOCK 4000
@@ -155,5 +156,7 @@ void					dump_hexa_raw(void *zone);
 void					dump_hexa_small(t_malloc_data *data, void *zone);
 void					dump_hexa_tiny(t_malloc_data *data, void *zone);
 void					dump_hexa(void *ptr, size_t size);
+void					malloc_free_zones(void);
+void					malloc_dump_free(t_malloc_data *data);
 
 #endif

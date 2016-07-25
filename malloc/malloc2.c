@@ -25,6 +25,8 @@ void	*launch_option(t_malloc_data *data, char option, void *ptr,
 		print_mem(data);
 	else if (option == DUMP_HEXA)
 		malloc_dump_hexa(data);
+	else if (option == DUMP_FREE)
+		malloc_dump_free(data);
 	return (NULL);
 }
 
@@ -50,4 +52,9 @@ void	*handle_malloc_option(size_t size, char option, void *ptr)
 		data.debug_print = get_debug(2);
 	}
 	return (launch_option(&data, option, ptr, size));
+}
+
+void	malloc_free_zones(void)
+{
+	handle_malloc_option(0, DUMP_FREE, NULL);
 }

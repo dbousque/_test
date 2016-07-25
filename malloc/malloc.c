@@ -82,9 +82,14 @@ int		main(void)
 	show_alloc_mem();*/
 	char *lol = malloc(33);
 	lol[2] = 42;
-	lol = malloc(4201);
+	char *lol2 = malloc(25);
+	char *lol3 = malloc(56);
+	(void)lol3;
+	free(lol2);
+	lol = malloc(3455);
 	lol[3] = 42;
 	malloc_dump();
+	malloc_free_zones();
 	return (0);
 }
 

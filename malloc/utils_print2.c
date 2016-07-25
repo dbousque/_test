@@ -61,3 +61,32 @@ void	print_debug_malloc(size_t size)
 	print_number(size);
 	write(1, "\n", 1);
 }
+
+void	malloc_dump_free(t_malloc_data *data)
+{
+	size_t	i;
+	char	*tmp;
+
+	i = 0;
+	while (i < data->free_tiny_blocks.len)
+	{
+		tmp = "free tiny  block of size ";
+		write(1, tmp, ft_strlen(tmp));
+		print_number(((t_tiny_block*)data->free_tiny_blocks.elts[i])->size);
+		write(1, " bytes at ", 10);
+		print_address(data->free_tiny_blocks.elts[i] + sizeof(t_tiny_block));
+		write(1, "\n", 1);
+		i++;
+	}
+	i = 0;
+	while (i < data->free_small_blocks.len)
+	{
+		tmp = "free small block of size ";
+		write(1, tmp, ft_strlen(tmp));
+		print_number(((t_small_block*)data->free_small_blocks.elts[i])->size);
+		write(1, " bytes at ", 10);
+		print_address(data->free_small_blocks.elts[i] + sizeof(t_small_block));
+		write(1, "\n", 1);
+		i++;
+	}
+}
