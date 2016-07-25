@@ -30,7 +30,11 @@ void	print_number(size_t number)
 
 void	print_address(void *ptr)
 {
-	//printf("%p", ptr);
-	//fflush(stdout);
+	write(1, "0x", 2);	
 	print_ft_ntoa_base((size_t)ptr, "0123456789ABCDEF");
+}
+
+void	print_byte(void *ptr)
+{
+	print_ft_ntoa_base(*((char*)ptr), "0123456789abcdef");
 }

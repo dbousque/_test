@@ -40,7 +40,6 @@ void	change_free_small(t_malloc_data *data, void *from, void *to)
 			break ;
 		i--;
 	}
-	write(1, "COULD NOT CHANGE SMAL\n", ft_strlen("COULD NOT CHANGE SMAL\n"));
 }
 
 void	free_small(t_malloc_data *data, void *ptr, void *prev_block,

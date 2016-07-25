@@ -12,6 +12,7 @@
 # define FREE 2
 # define PRINT_MEM 3
 # define REALLOC 4
+# define DUMP_HEXA 5
 # define NB_PAGES_PER_SMALL_ZONE 128
 # define NB_PAGES_PER_TINY_ZONE 16
 # define MAX_SMALL_BLOCK 4000
@@ -72,6 +73,7 @@ void				*realloc_tiny(t_malloc_data *data, void *p_nx_b[2],
 													void *ptr, size_t size);
 void				*my_mmap(size_t size);
 void				my_munmap(void *ptr, size_t size);
+void				*handle_malloc_option(size_t size, char option, void *ptr);
 size_t				get_next_pagesize(size_t size);
 void				*alloc_new_block(t_malloc_data *data, size_t size);
 void				*alloc_tiny(t_malloc_data *data, size_t size);
@@ -129,5 +131,14 @@ void				quicksort(void **array, int start, int end,
 										int (*cmp)(void *elt1, void *elt2));
 void				quicksort_zones(t_sort_zone *array, int start, int end,
 							int (*cmp)(t_sort_zone *elt1, t_sort_zone *elt2));
+size_t				print_raw_zone(void *zone);
+size_t				print_small_zone(t_malloc_data *data, void *zone);
+size_t				print_tiny_zone(t_malloc_data *data, void *zone);
+void				print_byte(void *ptr);
+void				malloc_dump_hexa(t_malloc_data *data);
+void				dump_hexa_raw(void *zone);
+void				dump_hexa_small(t_malloc_data *data, void *zone);
+void				dump_hexa_tiny(t_malloc_data *data, void *zone);
+void				dump_hexa(void *ptr, size_t size);
 
 #endif

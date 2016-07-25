@@ -40,7 +40,6 @@ void	change_free_tiny(t_malloc_data *data, void *from, void *to)
 			break ;
 		i--;
 	}
-	write(1, "COULD NOT CHANGE TINY\n", ft_strlen("COULD NOT CHANGE TINY\n"));
 }
 
 void	free_tiny(t_malloc_data *data, void *ptr, void *prev_block,
