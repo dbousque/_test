@@ -1,4 +1,14 @@
-
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   realloc_small.c                                    :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: dbousque <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2016/07/25 15:53:34 by dbousque          #+#    #+#             */
+/*   Updated: 2016/07/25 16:11:27 by dbousque         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
 #include "malloc.h"
 
@@ -58,33 +68,32 @@ void	*resize_small_greater(t_malloc_data *data, void *ptr,
 	return (ptr);
 }
 
-void	*realloc_small(t_malloc_data *data, void *p_nx_b[2],
+void	*realloc_small(t_malloc_data *data, void *p_nx[2],
 													void *ptr, size_t size)
 {
-	t_small_block	*blo;
+	t_small_block	*b;
 
-	blo = (t_small_block*)(ptr - (sizeof(t_small_block)));
-	if (blo->free)
+	b = (t_small_block*)(ptr - (sizeof(t_small_block)));
+	if (b->free)
 		return (NULL);
-	print_debug_realloc_small(data, ptr, blo->size, size);
+	print_debug_realloc_small(data, ptr, b->size, size);
 	if (size > MAX_SMALL_BLOCK || size <= MAX_TINY_BLOCK)
-		return (new_small(data, ptr, p_nx_b, size));
-	if (size >= blo->size - ((int)sizeof(t_small_block)) && size <= blo->size)
+		return (new_small(data, ptr, p_nx, size));
+	if (size >= b->size - ((int)sizeof(t_small_block)) && size <= b->size)
 		return (ptr);
-	if (size < blo->size)
-		return (reduce_small_size(data, ptr, p_nx_b, size));
-	if (p_nx_b[1] && ((t_small_block*)p_nx_b[1])->free == 1)
+	if (size < b->size)
+		return (reduce_small_size(data, ptr, p_nx, size));
+	if (p_nx[1] && ((t_small_block*)p_nx[1])->free == 1)
 	{
-		if (((t_small_block*)p_nx_b[1])->size >= size - blo->size)
-			return (resize_small_greater(data, ptr, p_nx_b, size));
-		else if (((t_small_block*)p_nx_b[1])->size
-							+ sizeof(t_small_block) >= size - blo->size)
+		if (((t_small_block*)p_nx[1])->size >= size - b->size)
+			return (resize_small_greater(data, ptr, p_nx, size));
+		else if (((t_small_block*)p_nx[1])->size
+							+ sizeof(t_small_block) >= size - b->size)
 		{
-			blo->size += ((t_small_block*)p_nx_b[1])->size
-												+ sizeof(t_small_block);
-			remove_free_small_block(data, ind_of_small_block(data, p_nx_b[1]));
+			b->size += ((t_small_block*)p_nx[1])->size + sizeof(t_small_block);
+			remove_free_small_block(data, ind_of_small_block(data, p_nx[1]));
 			return (ptr);
 		}
 	}
-	return (new_small(data, ptr, p_nx_b, size));
+	return (new_small(data, ptr, p_nx, size));
 }

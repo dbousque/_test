@@ -1,4 +1,14 @@
-
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   alloc.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: dbousque <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2016/07/25 15:50:20 by dbousque          #+#    #+#             */
+/*   Updated: 2016/07/25 15:54:36 by dbousque         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
 #include "malloc.h"
 
@@ -24,9 +34,9 @@ void	add_new_free_small_block(t_malloc_data *data, void *start, size_t size)
 
 void	*get_raw_block(t_malloc_data *data, size_t size)
 {
-	size_t  block_size;
+	size_t	block_size;
 	void	*ptr;
-	size_t  *ptr_t;
+	size_t	*ptr_t;
 
 	size += (sizeof(size_t) * 2);
 	block_size = get_next_pagesize(size);

@@ -1,4 +1,14 @@
-
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   free_tiny.c                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: dbousque <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2016/07/25 15:51:09 by dbousque          #+#    #+#             */
+/*   Updated: 2016/07/25 15:51:11 by dbousque         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
 #include "malloc.h"
 
@@ -45,25 +55,20 @@ void	change_free_tiny(t_malloc_data *data, void *from, void *to)
 void	free_tiny(t_malloc_data *data, void *ptr, void *prev_block,
 															void *next_block)
 {
-	char	next_block_free;
-	char	prev_block_free;
-
 	if (((t_tiny_block*)ptr)->free)
 		return ;
 	print_debug_free_tiny(data, ptr, ((t_tiny_block*)ptr)->size);
-	next_block_free = next_block && ((t_tiny_block*)next_block)->free == 1;
-	prev_block_free = prev_block && ((t_tiny_block*)prev_block)->free == 1;
 	((t_tiny_block*)ptr)->free = 1;
-	if (prev_block_free)
+	if (prev_block && ((t_tiny_block*)prev_block)->free == 1)
 	{
-		if (next_block_free)
+		if (next_block && ((t_tiny_block*)next_block)->free == 1)
 			((t_tiny_block*)prev_block)->size += (sizeof(t_tiny_block) * 2)
 			+ ((t_tiny_block*)next_block)->size + ((t_tiny_block*)ptr)->size;
 		else
 			((t_tiny_block*)prev_block)->size += sizeof(t_tiny_block)
 				+ ((t_tiny_block*)ptr)->size;
 	}
-	else if (next_block_free)
+	else if (next_block && ((t_tiny_block*)next_block)->free == 1)
 	{
 		((t_tiny_block*)ptr)->size += sizeof(t_tiny_block)
 										+ ((t_tiny_block*)next_block)->size;

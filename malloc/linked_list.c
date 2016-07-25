@@ -1,4 +1,14 @@
-
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   linked_list.c                                      :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: dbousque <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2016/07/25 15:51:35 by dbousque          #+#    #+#             */
+/*   Updated: 2016/07/25 15:58:07 by dbousque         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
 #include "malloc.h"
 
@@ -12,7 +22,7 @@ t_linked_list	new_linked_list(void)
 	return (list);
 }
 
-static void	double_list_size(t_linked_list *list)
+static void		double_list_size(t_linked_list *list)
 {
 	void	**new_elts;
 	size_t	i;
@@ -29,7 +39,7 @@ static void	double_list_size(t_linked_list *list)
 	list->size *= 2;
 }
 
-void	add_to_list(t_linked_list *list, void *elt)
+void			add_to_list(t_linked_list *list, void *elt)
 {
 	if (list->len == list->size)
 		double_list_size(list);

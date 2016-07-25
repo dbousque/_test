@@ -1,4 +1,14 @@
-
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   realloc.c                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: dbousque <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2016/07/25 15:53:02 by dbousque          #+#    #+#             */
+/*   Updated: 2016/07/25 16:00:04 by dbousque         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
 #include "malloc.h"
 
@@ -17,7 +27,8 @@ void	*realloc_raw(t_malloc_data *data, void *prev_next_blocks[2],
 {
 	(void)prev_next_blocks;
 	if (data->debug_print)
-		print_debug_realloc_raw(ptr, *((size_t*)(ptr - (sizeof(size_t)))), size);
+		print_debug_realloc_raw(ptr,
+							*((size_t*)(ptr - (sizeof(size_t)))), size);
 	if (data->debug_alloc || size <= MAX_SMALL_BLOCK)
 		return (new_raw(data, ptr, size));
 	if (*((size_t*)(ptr - (sizeof(size_t) * 2))) - (sizeof(size_t) * 2) >= size)

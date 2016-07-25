@@ -1,4 +1,14 @@
-
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   malloc2.c                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: dbousque <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2016/07/25 15:52:03 by dbousque          #+#    #+#             */
+/*   Updated: 2016/07/25 16:47:35 by dbousque         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
 #include "malloc.h"
 
@@ -20,8 +30,7 @@ void	*launch_option(t_malloc_data *data, char option, void *ptr,
 
 void	*handle_malloc_option(size_t size, char option, void *ptr)
 {
-	static t_malloc_data	data = {{NULL, 0, 0}, {NULL, 0, 0},
-									{NULL, 0, 0}, {NULL, 0, 0}, 0, 0, 0};
+	static t_md	data = {{N, 0, 0}, {N, 0, 0}, {N, 0, 0}, {N, 0, 0}, 0, 0, 0};
 
 	if (!data.page_size)
 	{

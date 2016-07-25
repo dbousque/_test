@@ -1,8 +1,18 @@
-
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   alloc_tiny.c                                       :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: dbousque <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2016/07/25 15:50:51 by dbousque          #+#    #+#             */
+/*   Updated: 2016/07/25 15:56:54 by dbousque         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
 #include "malloc.h"
 
-int		add_new_tiny_zone(t_malloc_data *data)
+int				add_new_tiny_zone(t_malloc_data *data)
 {
 	t_zone	*new_zone;
 	size_t	alloc_size;
@@ -18,7 +28,8 @@ int		add_new_tiny_zone(t_malloc_data *data)
 	return (1);
 }
 
-size_t	select_free_tiny_block(t_malloc_data *data, size_t size, int *error)
+size_t			select_free_tiny_block(t_malloc_data *data, size_t size,
+															int *error)
 {
 	size_t	i;
 
@@ -40,9 +51,9 @@ size_t	select_free_tiny_block(t_malloc_data *data, size_t size, int *error)
 	return (data->free_tiny_blocks.len - 1);
 }
 
-void	remove_free_tiny_block(t_malloc_data *data, size_t ind)
+void			remove_free_tiny_block(t_malloc_data *data, size_t ind)
 {
-	size_t  i;
+	size_t	i;
 
 	i = ind + 1;
 	while (i < data->free_tiny_blocks.len)
@@ -78,7 +89,7 @@ t_tiny_block	*alloc_tiny_block_for_use(t_malloc_data *data, size_t size,
 	return ((void*)block + sizeof(t_tiny_block));
 }
 
-void	*alloc_tiny(t_malloc_data *data, size_t size)
+void			*alloc_tiny(t_malloc_data *data, size_t size)
 {
 	size_t	selected_ind;
 	int		error;

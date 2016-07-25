@@ -1,8 +1,18 @@
-
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   quicksort_zones.c                                  :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: dbousque <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2016/07/25 15:52:51 by dbousque          #+#    #+#             */
+/*   Updated: 2016/07/25 16:02:42 by dbousque         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
 #include "malloc.h"
 
-static int		get_nb_smaller(t_sort_zone *array, int start, int end,
+static int	get_nb_smaller(t_sort_zone *array, int start, int end,
 							int (*cmp)(t_sort_zone *elt1, t_sort_zone *elt2))
 {
 	int		nb_smaller;
@@ -28,33 +38,38 @@ static void	swap_arr(t_sort_zone *array, int a, int z)
 	array[z] = tmp;
 }
 
-void	quicksort_zones(t_sort_zone *array, int start, int end,
+void		init_vars(int *a, int *z, int start, int end)
+{
+	*a = start;
+	*z = end - 1;
+}
+
+void		quicksort_zones(t_sort_zone *array, int start, int end,
 							int (*cmp)(t_sort_zone *elt1, t_sort_zone *elt2))
 {
-	int		nb_smaller;
+	int		n;
 	int		a;
 	int		z;
 
 	if (end - start <= 1)
 		return ;
-	nb_smaller = get_nb_smaller(array, start, end, cmp);
-	swap_arr(array, start + nb_smaller, end - 1);
-	a = start;
-	z = end - 1;
+	n = get_nb_smaller(array, start, end, cmp);
+	swap_arr(array, start + n, end - 1);
+	init_vars(&a, &z, start, end);
 	while (1)
 	{
-		while (a < start + nb_smaller && cmp(&(array[a]), &(array[start + nb_smaller])) < 0)
+		while (a < start + n && cmp(&(array[a]), &(array[start + n])) < 0)
 			a++;
-		if (a >= start + nb_smaller)
+		if (a >= start + n)
 			break ;
-		while (z > start + nb_smaller && cmp(&(array[z]), &(array[start + nb_smaller])) > 0)
+		while (z > start + n && cmp(&(array[z]), &(array[start + n])) > 0)
 			z--;
-		if (z <= start + nb_smaller)
-			break;
+		if (z <= start + n)
+			break ;
 		swap_arr(array, a, z);
 		a++;
 		z--;
 	}
-	quicksort_zones(array, start, start + nb_smaller, cmp);
-	quicksort_zones(array, start + nb_smaller + 1, end, cmp);
+	quicksort_zones(array, start, start + n, cmp);
+	quicksort_zones(array, start + n + 1, end, cmp);
 }

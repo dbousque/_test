@@ -1,8 +1,18 @@
-
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   alloc_small.c                                      :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: dbousque <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2016/07/25 15:50:44 by dbousque          #+#    #+#             */
+/*   Updated: 2016/07/25 15:56:45 by dbousque         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
 #include "malloc.h"
 
-int		add_new_small_zone(t_malloc_data *data)
+int				add_new_small_zone(t_malloc_data *data)
 {
 	t_zone	*new_zone;
 	size_t	alloc_size;
@@ -18,7 +28,8 @@ int		add_new_small_zone(t_malloc_data *data)
 	return (1);
 }
 
-size_t	select_free_small_block(t_malloc_data *data, size_t size, int *error)
+size_t			select_free_small_block(t_malloc_data *data, size_t size,
+															int *error)
 {
 	size_t	i;
 
@@ -40,7 +51,7 @@ size_t	select_free_small_block(t_malloc_data *data, size_t size, int *error)
 	return (data->free_small_blocks.len - 1);
 }
 
-void	remove_free_small_block(t_malloc_data *data, size_t ind)
+void			remove_free_small_block(t_malloc_data *data, size_t ind)
 {
 	size_t	i;
 
@@ -53,7 +64,7 @@ void	remove_free_small_block(t_malloc_data *data, size_t ind)
 	data->free_small_blocks.len--;
 }
 
-t_small_block   *alloc_small_block_for_use(t_malloc_data *data, size_t size,
+t_small_block	*alloc_small_block_for_use(t_malloc_data *data, size_t size,
 																	size_t ind)
 {
 	t_small_block	*block;
@@ -78,7 +89,7 @@ t_small_block   *alloc_small_block_for_use(t_malloc_data *data, size_t size,
 	return ((void*)block + sizeof(t_small_block));
 }
 
-void	*alloc_small(t_malloc_data *data, size_t size)
+void			*alloc_small(t_malloc_data *data, size_t size)
 {
 	size_t	selected_ind;
 	int		error;

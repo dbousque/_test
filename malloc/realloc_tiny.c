@@ -1,4 +1,14 @@
-
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   realloc_tiny.c                                     :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: dbousque <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2016/07/25 15:53:10 by dbousque          #+#    #+#             */
+/*   Updated: 2016/07/25 16:43:45 by dbousque         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
 #include "malloc.h"
 
@@ -60,27 +70,26 @@ void	*resize_tiny_greater(t_malloc_data *data, void *ptr,
 void	*realloc_tiny(t_malloc_data *data, void *p_nx_b[2],
 													void *ptr, size_t size)
 {
-	t_tiny_block	*bloc;
+	t_tiny_block	*b;
 
-	bloc = (t_tiny_block*)(ptr - (sizeof(t_tiny_block)));
-	if (bloc->free)
+	b = (t_tiny_block*)(ptr - (sizeof(t_tiny_block)));
+	if (b->free)
 		return (NULL);
-	print_debug_realloc_tiny(data, ptr, bloc->size, size);
+	print_debug_realloc_tiny(data, ptr, b->size, size);
 	if (size > MAX_TINY_BLOCK)
 		return (new_tiny(data, ptr, p_nx_b, size));
-	if (size >= bloc->size - ((int)sizeof(t_tiny_block)) && size <= bloc->size)
+	if (size >= b->size - ((int)sizeof(t_tiny_block)) && size <= b->size)
 		return (ptr);
-	if (size < bloc->size)
+	if (size < b->size)
 		return (reduce_tiny_size(data, ptr, p_nx_b, size));
 	if (p_nx_b[1] && ((t_tiny_block*)p_nx_b[1])->free == 1)
 	{
-		if (((t_tiny_block*)p_nx_b[1])->size >= size - bloc->size)
+		if (((t_tiny_block*)p_nx_b[1])->size >= size - b->size)
 			return (resize_tiny_greater(data, ptr, p_nx_b, size));
 		else if (((t_tiny_block*)p_nx_b[1])->size
-							+ sizeof(t_tiny_block) >= size - bloc->size)
+							+ sizeof(t_tiny_block) >= size - b->size)
 		{
-			bloc->size += ((t_tiny_block*)p_nx_b[1])->size
-												+ sizeof(t_tiny_block);
+			b->size += ((t_tiny_block*)p_nx_b[1])->size + sizeof(t_tiny_block);
 			remove_free_tiny_block(data, ind_of_tiny_block(data, p_nx_b[1]));
 			return (ptr);
 		}

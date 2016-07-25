@@ -1,4 +1,14 @@
-
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   print_malloc.c                                     :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: dbousque <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2016/07/25 15:52:18 by dbousque          #+#    #+#             */
+/*   Updated: 2016/07/25 15:52:19 by dbousque         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
 #include "malloc.h"
 
@@ -33,29 +43,29 @@ void	print_sort_zones(t_malloc_data *data, t_sort_zone *zones, size_t len)
 	write(1, " octets\n", 8);
 }
 
-void    print_mem(t_malloc_data *data)
+void	print_mem(t_malloc_data *data)
 {
-    t_sort_zone	allocs[data->zones.len + data->raw_blocks.len];
-    size_t	i;
-    size_t	tmp;
+	t_sort_zone	allocs[data->zones.len + data->raw_blocks.len];
+	size_t		i;
+	size_t		tmp;
 
-    i = 0;
-    while (i < data->zones.len)
-    {
-    	allocs[i].type = ((t_zone*)data->zones.elts[i])->type;
-    	allocs[i].zone = data->zones.elts[i];
-    	i++;
-    }
-    tmp = i;
-    while (i - tmp < data->raw_blocks.len)
-    {
-    	allocs[i].type = LARGE;
-    	allocs[i].zone = data->raw_blocks.elts[i - tmp];
-    	i++;
-    }
-    quicksort_zones(allocs, 0, data->zones.len + data->raw_blocks.len,
-    															cmp_by_addr);
-    print_sort_zones(data, allocs, data->zones.len + data->raw_blocks.len);
+	i = 0;
+	while (i < data->zones.len)
+	{
+		allocs[i].type = ((t_zone*)data->zones.elts[i])->type;
+		allocs[i].zone = data->zones.elts[i];
+		i++;
+	}
+	tmp = i;
+	while (i - tmp < data->raw_blocks.len)
+	{
+		allocs[i].type = LARGE;
+		allocs[i].zone = data->raw_blocks.elts[i - tmp];
+		i++;
+	}
+	quicksort_zones(allocs, 0, data->zones.len + data->raw_blocks.len,
+																cmp_by_addr);
+	print_sort_zones(data, allocs, data->zones.len + data->raw_blocks.len);
 }
 
 void	dump_hexa(void *ptr, size_t size)
@@ -80,19 +90,19 @@ void	malloc_dump_hexa(t_malloc_data *data)
 {
 	size_t	i;
 
-    i = 0;
-    while (i < data->zones.len)
-    {
-    	if (((t_zone*)data->zones.elts[i])->type == TINY)
-    		dump_hexa_tiny(data, data->zones.elts[i]);
-    	if (((t_zone*)data->zones.elts[i])->type == SMALL)
-    		dump_hexa_small(data, data->zones.elts[i]);
-    	i++;
-    }
-    i = 0;
-    while (i < data->raw_blocks.len)
-    {
-    	dump_hexa_raw(data->raw_blocks.elts[i]);
-    	i++;
-    }
+	i = 0;
+	while (i < data->zones.len)
+	{
+		if (((t_zone*)data->zones.elts[i])->type == TINY)
+			dump_hexa_tiny(data, data->zones.elts[i]);
+		if (((t_zone*)data->zones.elts[i])->type == SMALL)
+			dump_hexa_small(data, data->zones.elts[i]);
+		i++;
+	}
+	i = 0;
+	while (i < data->raw_blocks.len)
+	{
+		dump_hexa_raw(data->raw_blocks.elts[i]);
+		i++;
+	}
 }

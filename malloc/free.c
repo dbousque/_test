@@ -1,4 +1,14 @@
-
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   free.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: dbousque <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2016/07/25 15:50:29 by dbousque          #+#    #+#             */
+/*   Updated: 2016/07/25 15:54:52 by dbousque         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
 #include "malloc.h"
 
@@ -26,7 +36,7 @@ void	free_raw_block(t_malloc_data *data, size_t ind)
 
 	if (data->debug_print)
 		print_debug_free_raw(data->raw_blocks.elts[ind],
-							*((size_t*)(data->raw_blocks.elts[ind] + sizeof(size_t))));
+				*((size_t*)(data->raw_blocks.elts[ind] + sizeof(size_t))));
 	my_munmap(data->raw_blocks.elts[ind],
 								*((size_t*)(data->raw_blocks.elts[ind])));
 	data->raw_blocks.elts[ind] = NULL;

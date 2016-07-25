@@ -1,7 +1,16 @@
-
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   utils_print2.c                                     :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: dbousque <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2016/07/25 15:54:09 by dbousque          #+#    #+#             */
+/*   Updated: 2016/07/25 16:12:52 by dbousque         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
 #include "malloc.h"
-
 
 void	print_debug_realloc_small(t_malloc_data *data, void *ptr,
 										size_t start_size, size_t end_size)
@@ -23,7 +32,7 @@ void	print_debug_realloc_small(t_malloc_data *data, void *ptr,
 	}
 }
 
-void    print_debug_realloc_tiny(t_malloc_data *data, void *ptr,
+void	print_debug_realloc_tiny(t_malloc_data *data, void *ptr,
 										size_t start_size, size_t end_size)
 {
 	char	*tmp;
