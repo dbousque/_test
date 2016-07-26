@@ -58,6 +58,10 @@ void	malloc_dump(void)
 	return (0);
 }*/
 
+
+
+#   include <stdio.h>
+
 int		main(void)
 {
 	//int		i;
@@ -90,6 +94,7 @@ int		main(void)
 	lol[3] = 42;
 	malloc_dump();
 	malloc_free_zones();
+	pthread_mutex_destroy(lock);
 	return (0);
 }
 

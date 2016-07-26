@@ -15,10 +15,14 @@
 void	*launch_option(t_malloc_data *data, char option, void *ptr,
 														size_t size)
 {
+	void	*res;
+	void	*to_ret;
+
+	res = NULL;
 	if (option == ALLOC)
-		return (my_malloc(data, size));
+		res = my_malloc(data, size);
 	else if (option == REALLOC)
-		return (my_realloc(data, ptr, size));
+		res = my_realloc(data, ptr, size);
 	else if (option == FREE)
 		my_free(data, ptr);
 	else if (option == PRINT_MEM)
@@ -27,13 +31,18 @@ void	*launch_option(t_malloc_data *data, char option, void *ptr,
 		malloc_dump_hexa(data);
 	else if (option == DUMP_FREE)
 		malloc_dump_free(data);
-	return (NULL);
+	to_ret = res;
+	pthread_mutex_unlock(lock);
+	return (to_ret);
 }
 
 void	*handle_malloc_option(size_t size, char option, void *ptr)
 {
 	static t_md	data = {{N, 0, 0}, {N, 0, 0}, {N, 0, 0}, {N, 0, 0}, 0, 0, 0};
 
+	if (!data.page_size)
+		pthread_mutex_init(lock, NULL);
+	pthread_mutex_lock(lock);
 	if (!data.page_size)
 	{
 		data.page_size = getpagesize();
@@ -43,6 +52,7 @@ void	*handle_malloc_option(size_t size, char option, void *ptr)
 		if (!data.zones.elts)
 		{
 			data.page_size = 0;
+			pthread_mutex_unlock(lock);
 			return (NULL);
 		}
 		data.free_small_blocks = ((t_linked_list){NULL, 0, 0});

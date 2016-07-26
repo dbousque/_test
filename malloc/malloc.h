@@ -17,6 +17,7 @@
 # include <stdint.h>
 # include <unistd.h>
 # include <stdlib.h>
+# include <pthread.h>
 
 # define ALLOC 1
 # define FREE 2
@@ -75,6 +76,8 @@ typedef struct			s_tiny_block
 }						t_tiny_block;
 
 typedef t_malloc_data	t_md;
+
+pthread_mutex_t 		*lock;
 
 char					get_debug(int opt);
 void					*malloc(size_t size);
