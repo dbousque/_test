@@ -85,6 +85,7 @@ int		main(void)
 	}
 	show_alloc_mem();*/
 	char *lol = malloc(33);
+	(void)lol;
 	lol[2] = 42;
 	char *lol2 = malloc(25);
 	char *lol3 = malloc(56);
@@ -92,9 +93,9 @@ int		main(void)
 	free(lol2);
 	lol = malloc(3455);
 	lol[3] = 42;
+	show_alloc_mem();
 	malloc_dump();
 	malloc_free_zones();
-	pthread_mutex_destroy(lock);
 	return (0);
 }
 

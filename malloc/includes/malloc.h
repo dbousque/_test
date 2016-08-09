@@ -77,7 +77,7 @@ typedef struct			s_tiny_block
 
 typedef t_malloc_data	t_md;
 
-pthread_mutex_t 		*lock;
+pthread_mutex_t 		lock;
 
 char					get_debug(int opt);
 void					*malloc(size_t size);

@@ -32,7 +32,7 @@ void	*launch_option(t_malloc_data *data, char option, void *ptr,
 	else if (option == DUMP_FREE)
 		malloc_dump_free(data);
 	to_ret = res;
-	pthread_mutex_unlock(lock);
+	pthread_mutex_unlock(&lock);
 	return (to_ret);
 }
 
@@ -41,8 +41,8 @@ void	*handle_malloc_option(size_t size, char option, void *ptr)
 	static t_md	data = {{N, 0, 0}, {N, 0, 0}, {N, 0, 0}, {N, 0, 0}, 0, 0, 0};
 
 	if (!data.page_size)
-		pthread_mutex_init(lock, NULL);
-	pthread_mutex_lock(lock);
+		pthread_mutex_init(&lock, NULL);
+	pthread_mutex_lock(&lock);
 	if (!data.page_size)
 	{
 		data.page_size = getpagesize();
@@ -52,7 +52,7 @@ void	*handle_malloc_option(size_t size, char option, void *ptr)
 		if (!data.zones.elts)
 		{
 			data.page_size = 0;
-			pthread_mutex_unlock(lock);
+			pthread_mutex_unlock(&lock);
 			return (NULL);
 		}
 		data.free_small_blocks = ((t_linked_list){NULL, 0, 0});
