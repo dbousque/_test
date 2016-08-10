@@ -39,11 +39,20 @@ void	*realloc_raw(t_malloc_data *data, void *prev_next_blocks[2],
 	return (new_raw(data, ptr, size));
 }
 
+
+  # include <stdio.h>
+
 void	*my_realloc(t_malloc_data *data, void *ptr, size_t size)
 {
 	size_t	zone_type;
 	void	*prev_next_blocks[2];
 
+	//printf("size : %zu", size);
+	print_number(size);
+	write(1, "\n", 1);
+	print_address(ptr);
+	write(1, "\n", 1);
+	fflush(stdout);
 	if (!size)
 		return (NULL);
 	if (!ptr)

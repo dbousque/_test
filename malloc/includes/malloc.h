@@ -136,6 +136,7 @@ void					print_address(void *ptr);
 void					show_alloc_mem(void);
 void					print_debug_free_null(void);
 void					print_debug_free_raw(void *ptr, size_t size);
+void					print_debug_bad_free(void *ptr);
 void					print_debug_free_small(t_malloc_data *data, void *ptr,
 																size_t size);
 void					print_debug_free_tiny(t_malloc_data *data, void *ptr,
@@ -146,7 +147,7 @@ void					print_debug_realloc_small(t_malloc_data *data,
 								void *ptr, size_t start_size, size_t end_size);
 void					print_debug_realloc_tiny(t_malloc_data *data,
 								void *ptr, size_t start_size, size_t end_size);
-void					print_debug_malloc(size_t size);
+void					print_debug_malloc(size_t size, void *ptr);
 void					print_ft_ntoa_base(size_t n, char *base);
 void					quicksort_zones(t_sort_zone *array, int start, int end,
 							int (*cmp)(t_sort_zone *elt1, t_sort_zone *elt2));

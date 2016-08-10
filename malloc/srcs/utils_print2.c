@@ -52,13 +52,15 @@ void	print_debug_realloc_tiny(t_malloc_data *data, void *ptr,
 	}
 }
 
-void	print_debug_malloc(size_t size)
+void	print_debug_malloc(size_t size, void *ptr)
 {
 	char	*tmp;
 
 	tmp = "Malloc of size ";
 	write(1, tmp, ft_strlen(tmp));
 	print_number(size);
+	write(1, " : ", 3);
+	print_address(ptr);
 	write(1, "\n", 1);
 }
 

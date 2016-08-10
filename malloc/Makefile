@@ -39,7 +39,8 @@ SOURCES		=	srcs/alloc.c \
 				srcs/utils3.c \
 				srcs/utils4.c \
 				srcs/utils_print.c \
-				srcs/utils_print2.c
+				srcs/utils_print2.c \
+				srcs/utils_print3.c
 
 HEADERS	=	-I./includes/
 

@@ -14,17 +14,29 @@
 
 void	*malloc(size_t size)
 {
-	return (handle_malloc_option(size, ALLOC, NULL));
+	void	*res;
+
+	write(1, "MALLOC CALLED\n", 14);
+	res = handle_malloc_option(size, ALLOC, NULL);
+	write(1, "MALLOC END   \n", 14);
+	return (res);
 }
 
 void	free(void *ptr)
 {
+	write(1, "FREE CALLED\n", 12);
 	handle_malloc_option(0, FREE, ptr);
+	write(1, "FREE END   \n", 12);
 }
 
 void	*realloc(void *ptr, size_t size)
 {
-	return (handle_malloc_option(size, REALLOC, ptr));
+	void	*res;
+
+	write(1, "REALLOC CALLED\n", 15);
+	res = handle_malloc_option(size, REALLOC, ptr);
+	write(1, "REALLOC END   \n", 15);
+	return (res);
 }
 
 void	show_alloc_mem(void)
@@ -60,10 +72,10 @@ void	malloc_dump(void)
 
 
 
-#   include <stdio.h>
+//#   include <stdio.h>
 
-int		main(void)
-{
+//int		main(void)
+//{
 	//int		i;
 	//int		x;
 	//char	*addr;
@@ -84,7 +96,7 @@ int		main(void)
 		i++;
 	}
 	show_alloc_mem();*/
-	char *lol = malloc(33);
+	/*char *lol = malloc(33);
 	(void)lol;
 	lol[2] = 42;
 	char *lol2 = malloc(25);
@@ -97,7 +109,7 @@ int		main(void)
 	malloc_dump();
 	malloc_free_zones();
 	return (0);
-}
+}*/
 
 /*int		main(void)
 {

@@ -38,9 +38,9 @@ void	*my_malloc(t_malloc_data *data, size_t size)
 
 	if (!size)
 		return (NULL);
-	if (data->debug_print)
-		print_debug_malloc(size);
 	ptr = alloc_new_block(data, size);
+	if (data->debug_print)
+		print_debug_malloc(size, ptr);
 	return (ptr);
 }
 
