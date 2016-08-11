@@ -12,19 +12,46 @@
 
 #include "malloc.h"
 
+
+
+	# include <stdio.h>
+
 void	*malloc(size_t size)
 {
-	return (handle_malloc_option(size, ALLOC, NULL));
+	void	*res;
+
+	ft_putstr("\n-- MALLOC CALLED WITH ");
+	print_number(size);
+	ft_putstr("\n\n");
+	res = handle_malloc_option(size, ALLOC, NULL);
+	ft_putstr("\n-- MALLOC RETURNS ");
+	print_address(res);
+	ft_putstr("\n\n");
+	return (res);
 }
 
 void	free(void *ptr)
 {
+	ft_putstr("\n-- FREE CALLED WITH ");
+	print_address(ptr);
+	ft_putstr("\n\n");
 	handle_malloc_option(0, FREE, ptr);
 }
 
 void	*realloc(void *ptr, size_t size)
 {
-	return (handle_malloc_option(size, REALLOC, ptr));
+	void	*res;
+
+	ft_putstr("\n-- REALLOC CALLED WITH ");
+	print_address(ptr);
+	ft_putstr(" ");
+	print_number(size);
+	ft_putstr("\n\n");
+	res = handle_malloc_option(size, REALLOC, ptr);
+	ft_putstr("\n-- REALLOC RETURNS ");
+	print_address(res);
+	ft_putstr("\n\n");
+	return (res);
 }
 
 void	show_alloc_mem(void)

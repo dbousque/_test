@@ -38,12 +38,10 @@ void	*launch_option(t_malloc_data *data, char option, void *ptr,
 		malloc_dump_free(data);
 	to_ret = res;
 	pthread_mutex_unlock(&lock);
-	//write(1, "launch option end  \n", 20);
-	//fflush(stdout);
-	if (option == ALLOC || option == REALLOC)
+	if ((option == ALLOC || option == REALLOC) && to_ret)
 		((char*)to_ret)[1] = 0;
-	//write(1, "launch option after\n", 20);
-	//flush(stdout);
+	write(1, "RETURNING  \n", 10);
+	fflush(stdout);
 	return (to_ret);
 }
 

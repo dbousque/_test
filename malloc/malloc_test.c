@@ -18,7 +18,7 @@ int		main(void)
 		free(NULL);
 		free(NULL - 1);
 		ptr = malloc(8);
-		ptr = realloc(ptr, 5000);
+		//ptr = realloc(ptr, 5000);
 		i++;
 	}
 	free(ptr);

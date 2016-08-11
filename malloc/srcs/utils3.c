@@ -12,6 +12,10 @@
 
 #include "malloc.h"
 
+
+
+	#  include <stdio.h>
+
 char	get_zone_type_ifs(void *ptr, void *start, t_malloc_data *data,
 													void **prev_next_block[2])
 {
