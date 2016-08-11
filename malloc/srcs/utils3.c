@@ -54,6 +54,9 @@ size_t	get_zone_type(t_malloc_data *data, void *ptr, void **prev_block,
 		while (1)
 		{
 			start = (void*)(data->zones.elts[i]);
+			ft_putstr("zone start : ");
+			print_address(start);
+			ft_putstr("\n");
 			res = get_zone_type_ifs(ptr, start, data, prev_next_block);
 			if (res != -1)
 				return (res);

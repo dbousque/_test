@@ -14,29 +14,17 @@
 
 void	*malloc(size_t size)
 {
-	void	*res;
-
-	write(1, "MALLOC CALLED\n", 14);
-	res = handle_malloc_option(size, ALLOC, NULL);
-	write(1, "MALLOC END   \n", 14);
-	return (res);
+	return (handle_malloc_option(size, ALLOC, NULL));
 }
 
 void	free(void *ptr)
 {
-	write(1, "FREE CALLED\n", 12);
 	handle_malloc_option(0, FREE, ptr);
-	write(1, "FREE END   \n", 12);
 }
 
 void	*realloc(void *ptr, size_t size)
 {
-	void	*res;
-
-	write(1, "REALLOC CALLED\n", 15);
-	res = handle_malloc_option(size, REALLOC, ptr);
-	write(1, "REALLOC END   \n", 15);
-	return (res);
+	return (handle_malloc_option(size, REALLOC, ptr));
 }
 
 void	show_alloc_mem(void)

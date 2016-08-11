@@ -23,8 +23,11 @@ int				add_new_tiny_zone(t_malloc_data *data)
 		return (0);
 	new_zone->type = TINY;
 	add_to_list(&(data->zones), new_zone);
-	add_new_free_tiny_block(data, (void*)new_zone + sizeof(t_zone),
+	add_new_free_tiny_block(data, ((void*)new_zone) + sizeof(t_zone),
 		alloc_size - sizeof(t_zone) - sizeof(t_tiny_block));
+	ft_putstr("NEW ZONE TINY SIZE FOR FREE BLOCK : ");
+	print_number(alloc_size - sizeof(t_zone) - sizeof(t_tiny_block));
+	ft_putstr("\n");
 	return (1);
 }
 
@@ -72,7 +75,10 @@ t_tiny_block	*alloc_tiny_block_for_use(t_malloc_data *data, size_t size,
 	char			new_free;
 
 	new_free = 0;
-	block = ((t_tiny_block*)data->free_tiny_blocks.elts[ind]);
+	block = ((t_tiny_block*)(data->free_tiny_blocks.elts[ind]));
+	ft_putstr("selected block address : ");
+	print_address(block);
+	ft_putstr("\n");
 	if (block->size > size + (sizeof(t_tiny_block) * 2))
 	{
 		new_free_block = (void*)block + size + sizeof(t_tiny_block);
@@ -85,8 +91,11 @@ t_tiny_block	*alloc_tiny_block_for_use(t_malloc_data *data, size_t size,
 	if (new_free)
 		data->free_tiny_blocks.elts[ind] = new_free_block;
 	else
+	{
+		ft_putstr("REMOVING\n");
 		remove_free_tiny_block(data, ind);
-	return ((void*)block + sizeof(t_tiny_block));
+	}
+	return (((void*)block) + sizeof(t_tiny_block));
 }
 
 void			*alloc_tiny(t_malloc_data *data, size_t size)

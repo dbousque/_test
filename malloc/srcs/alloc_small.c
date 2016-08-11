@@ -72,7 +72,7 @@ t_small_block	*alloc_small_block_for_use(t_malloc_data *data, size_t size,
 	char			new_free;
 
 	new_free = 0;
-	block = ((t_small_block*)data->free_small_blocks.elts[ind]);
+	block = ((t_small_block*)(data->free_small_blocks.elts[ind]));
 	if (block->size > size + (sizeof(t_small_block) * 2))
 	{
 		new_free_block = (void*)block + size + sizeof(t_small_block);
@@ -86,7 +86,7 @@ t_small_block	*alloc_small_block_for_use(t_malloc_data *data, size_t size,
 		data->free_small_blocks.elts[ind] = new_free_block;
 	else
 		remove_free_small_block(data, ind);
-	return ((void*)block + sizeof(t_small_block));
+	return (((void*)block) + sizeof(t_small_block));
 }
 
 void			*alloc_small(t_malloc_data *data, size_t size)

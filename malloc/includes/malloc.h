@@ -162,5 +162,6 @@ void					dump_hexa_tiny(t_malloc_data *data, void *zone);
 void					dump_hexa(void *ptr, size_t size);
 void					malloc_free_zones(void);
 void					malloc_dump_free(t_malloc_data *data);
+void					ft_putstr(char *str);
 
 #endif

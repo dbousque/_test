@@ -64,12 +64,10 @@ void	my_free(t_malloc_data *data, void *ptr)
 	prev_block = NULL;
 	next_block = NULL;
 	zone_type = get_zone_type(data, ptr, &prev_block, &next_block);
-	write(1, "zone type : ", ft_strlen("zone type : "));
-	print_number(zone_type);
-	write(1, "\n", 1);
 	if (zone_type == 3 || zone_type == 0)
 	{
-		print_debug_bad_free(ptr);
+		if (data->debug_print)
+			print_debug_bad_free(ptr);
 		return ;
 	}
 	if (zone_type == TINY)

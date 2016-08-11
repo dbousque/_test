@@ -12,12 +12,17 @@
 
 #include "malloc.h"
 
+
+  # include <stdio.h>
+
 void	*launch_option(t_malloc_data *data, char option, void *ptr,
 														size_t size)
 {
 	void	*res;
 	void	*to_ret;
 
+	//write(1, "launch option start\n", 20);
+	//fflush(stdout);
 	res = NULL;
 	if (option == ALLOC)
 		res = my_malloc(data, size);
@@ -33,6 +38,12 @@ void	*launch_option(t_malloc_data *data, char option, void *ptr,
 		malloc_dump_free(data);
 	to_ret = res;
 	pthread_mutex_unlock(&lock);
+	//write(1, "launch option end  \n", 20);
+	//fflush(stdout);
+	if (option == ALLOC || option == REALLOC)
+		((char*)to_ret)[1] = 0;
+	//write(1, "launch option after\n", 20);
+	//flush(stdout);
 	return (to_ret);
 }
 
@@ -58,9 +69,9 @@ void	*handle_malloc_option(size_t size, char option, void *ptr)
 		data.free_small_blocks = ((t_linked_list){NULL, 0, 0});
 		data.free_tiny_blocks = ((t_linked_list){NULL, 0, 0});
 		data.raw_blocks = ((t_linked_list){NULL, 0, 0});
-		data.debug_alloc = get_debug(1);
-		data.debug_print = get_debug(2);
 	}
+	data.debug_alloc = get_debug(1);
+	data.debug_print = get_debug(2);
 	return (launch_option(&data, option, ptr, size));
 }
 

@@ -20,10 +20,23 @@ char	is_allocated_tiny_adress(t_malloc_data *data, void *ptr,
 
 	block = (void*)start;
 	end = block + (get_tiny_zone_size(data) - sizeof(t_zone));
+	write(1, "tiny ? address : ", ft_strlen("tiny ? address : "));
+	print_address(ptr);
+	write(1, "\n", 1);
+	ft_putstr("end : ");
+	print_address(end);
+	ft_putstr("\n");
 	while (block != NULL && block < end)
 	{
 		*(prev_next_block[1]) = block + ((size_t)((t_tiny_block*)block)->size
 													+ sizeof(t_tiny_block));
+		write(1, "block : ", 7);
+		print_address(block);
+		write(1, "\n", 1);
+		print_number(((t_tiny_block*)block)->size);
+		ft_putstr("\n");
+		print_number(get_tiny_zone_size(data));
+		ft_putstr("\n");
 		if (*(prev_next_block[1]) >= end)
 			*(prev_next_block[1]) = NULL;
 		if (ptr == (block + sizeof(t_tiny_block)))
@@ -31,6 +44,8 @@ char	is_allocated_tiny_adress(t_malloc_data *data, void *ptr,
 		*(prev_next_block[0]) = block;
 		block = *(prev_next_block[1]);
 	}
+	*(prev_next_block[0]) = NULL;
+	*(prev_next_block[1]) = NULL;
 	return (0);
 }
 

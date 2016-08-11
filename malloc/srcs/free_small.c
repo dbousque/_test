@@ -31,6 +31,8 @@ char	is_allocated_small_adress(t_malloc_data *data, void *ptr,
 		*(prev_next_block[0]) = block;
 		block = *(prev_next_block[1]);
 	}
+	*(prev_next_block[0]) = NULL;
+	*(prev_next_block[1]) = NULL;
 	return (0);
 }
 

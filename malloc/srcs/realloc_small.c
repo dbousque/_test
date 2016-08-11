@@ -19,7 +19,7 @@ void	*new_small(t_malloc_data *data, void *ptr,
 	t_small_block	*block;
 
 	block = (t_small_block*)(ptr - (sizeof(t_small_block)));
-	new = malloc(size);
+	new = my_malloc(data, size);
 	memcopy(ptr, new, block->size);
 	free_small(data, block, prev_next_blocks[0], prev_next_blocks[1]);
 	return (new);
