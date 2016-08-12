@@ -49,6 +49,8 @@ typedef struct		s_fourmi
 	int				id;
 }					t_fourmi;
 
+void				print_ft_ntoa_base(size_t n, char *base);
+void				print_ft_ntoa_base_fd(size_t n, char *base, int fd);
 char				is_tube_description(char *line);
 char				is_comment(char *line);
 char				only_numbers(char *str);
@@ -94,5 +96,6 @@ int					get_flags(int argc, char **argv, t_flag *flags);
 t_flag				*void_flags(void);
 void				print_fourmis(t_list *fourmis, t_fourm *fourmiliere);
 void				print_fourmi_pos_color(int id, char *name);
+void				print_address(void *ptr);
 
 #endif

@@ -38,8 +38,7 @@ size_t			select_free_small_block(t_malloc_data *data, size_t size,
 		i = data->free_small_blocks.len - 1;
 		while (1)
 		{
-			if (((t_small_block*)data->free_small_blocks.elts[i])->size >=
-												size + sizeof(t_small_block))
+			if (((t_small_block*)data->free_small_blocks.elts[i])->size >= size)
 				return (i);
 			if (i == 0)
 				break ;
@@ -79,8 +78,8 @@ t_small_block	*alloc_small_block_for_use(t_malloc_data *data, size_t size,
 		new_free_block->size = block->size - size - sizeof(t_small_block);
 		new_free_block->free = 1;
 		new_free = 1;
+		block->size = size;
 	}
-	block->size = size;
 	block->free = 0;
 	if (new_free)
 		data->free_small_blocks.elts[ind] = new_free_block;

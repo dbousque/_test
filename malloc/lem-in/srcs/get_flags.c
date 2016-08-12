@@ -18,6 +18,7 @@ t_flag	*void_flags(void)
 
 	if (!(flags = (t_flag*)malloc(sizeof(t_flag))))
 		return (NULL);
+	ft_putstr("\n\nFLAGS ALLOC\n\n\n");
 	flags->n = 0;
 	flags->c = 0;
 	return (flags);

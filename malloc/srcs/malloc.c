@@ -23,10 +23,22 @@ void	*malloc(size_t size)
 	ft_putstr("\n-- MALLOC CALLED WITH ");
 	print_number(size);
 	ft_putstr("\n\n");
+
+	show_alloc_mem();
+
+	malloc_free_zones();
+
+	/*ft_putstr_fd("\tmalloc(", 2);
+	print_number_fd(size, 2);
+	ft_putstr_fd(");\n", 2);*/
+
 	res = handle_malloc_option(size, ALLOC, NULL);
 	ft_putstr("\n-- MALLOC RETURNS ");
 	print_address(res);
 	ft_putstr("\n\n");
+
+	malloc_free_zones();
+
 	return (res);
 }
 
@@ -35,7 +47,18 @@ void	free(void *ptr)
 	ft_putstr("\n-- FREE CALLED WITH ");
 	print_address(ptr);
 	ft_putstr("\n\n");
+
+	malloc_free_zones();
+
+	show_alloc_mem();
+
+	/*ft_putstr_fd("\tvoid *to_free = ", 2);
+	print_address_fd(ptr, 2);
+	ft_putstr_fd(";\n\tfree(to_free);\n", 2);*/
+
 	handle_malloc_option(0, FREE, ptr);
+
+	malloc_free_zones();
 }
 
 void	*realloc(void *ptr, size_t size)
@@ -47,6 +70,15 @@ void	*realloc(void *ptr, size_t size)
 	ft_putstr(" ");
 	print_number(size);
 	ft_putstr("\n\n");
+
+	show_alloc_mem();
+
+	/*ft_putstr_fd("\tto_realloc = ", 2);
+	print_address_fd(ptr, 2);
+	ft_putstr_fd(";\n\trealloc(to_realloc, ", 2);
+	print_number_fd(size, 2);
+	ft_putstr_fd(");\n", 2);*/
+
 	res = handle_malloc_option(size, REALLOC, ptr);
 	ft_putstr("\n-- REALLOC RETURNS ");
 	print_address(res);

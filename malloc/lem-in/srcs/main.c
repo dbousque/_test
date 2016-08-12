@@ -57,12 +57,16 @@ int		**path_to_int_paths(t_list **best_paths, int nb_paths)
 	return (res);
 }
 
+  # include <stdio.h>
+
 int		find_best_paths_and_travel(t_fourm *fourmiliere, t_list *lines,
 												int nb_paths)
 {
 	int		**best_paths;
 	t_list	*finished_paths;
 
+	ft_putstr("FIND BEST PATHS\n");
+	fflush(stdout);
 	if (!(best_paths = find_best_paths(fourmiliere, nb_paths, &finished_paths)))
 	{
 		nb_paths--;
@@ -75,6 +79,8 @@ int		find_best_paths_and_travel(t_fourm *fourmiliere, t_list *lines,
 	put_lines(lines);
 	if (fourmiliere->flags->b)
 		put_best_paths(best_paths, fourmiliere);
+	ft_putstr("BEFORE MAKE FOURMI TRAVEL\n");
+	fflush(stdout);
 	return (make_fourmi_travel(best_paths, fourmiliere, intintlen(best_paths),
 																		NULL));
 }
@@ -94,9 +100,13 @@ int		main(int argc, char **argv)
 		return (0);
 	if (!flags)
 		return (ft_error());
+	ft_putstr("BEFORE GET FOURMI\n");
+	fflush(stdout);
 	if (!(fourmiliere = get_fourmiliere(&start_end_salle[0],
 												&start_end_salle[1], &lines)))
 		return (ft_error());
+	ft_putstr("AFTER GET FOURMI\n");
+	fflush(stdout);
 	if (!(nb_paths_to_find = min_end_start(fourmiliere)))
 		return (ft_error());
 	fourmiliere->flags = flags;

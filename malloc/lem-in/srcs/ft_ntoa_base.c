@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "malloc.h"
+#include "lem_in.h"
 
 static int	ft_get_res_length(unsigned long long n, int base_length)
 {

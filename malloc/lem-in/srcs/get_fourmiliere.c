@@ -91,6 +91,9 @@ t_fourm	*salles_to_fourmiliere(int nb_fourmis, t_salle **salles,
 	return (res);
 }
 
+
+	#  include <stdio.h>
+
 t_fourm	*get_fourmiliere(t_salle **start_salle, t_salle **end_salle,
 																t_list **lines)
 {
@@ -107,7 +110,11 @@ t_fourm	*get_fourmiliere(t_salle **start_salle, t_salle **end_salle,
 			ft_lstnew(line, sizeof(char) * (ft_strlen(line) + 1)));
 	*lines = lines_end;
 	free(line);
+	ft_putstr("BEFORE PARSE SALLES\n");
+	fflush(stdout);
 	salles = parse_salles(start_salle, end_salle, &line, &lines_end);
+	ft_putstr("AFTER PARSE SALLES\n");
+	fflush(stdout);
 	if (!salles)
 		return (NULL);
 	if (!(*start_salle) || !(*end_salle))

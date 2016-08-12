@@ -132,7 +132,9 @@ void					*my_mmap(size_t size);
 void					my_munmap(void *ptr, size_t size);
 size_t					ft_strlen(char *str);
 void					print_number(size_t number);
+void					print_number_fd(size_t number, int fd);
 void					print_address(void *ptr);
+void					print_address_fd(void *ptr, int fd);
 void					show_alloc_mem(void);
 void					print_debug_free_null(void);
 void					print_debug_free_raw(void *ptr, size_t size);
@@ -149,6 +151,7 @@ void					print_debug_realloc_tiny(t_malloc_data *data,
 								void *ptr, size_t start_size, size_t end_size);
 void					print_debug_malloc(size_t size, void *ptr);
 void					print_ft_ntoa_base(size_t n, char *base);
+void					print_ft_ntoa_base_fd(size_t n, char *base, int fd);
 void					quicksort_zones(t_sort_zone *array, int start, int end,
 							int (*cmp)(t_sort_zone *elt1, t_sort_zone *elt2));
 size_t					print_raw_zone(void *zone);
@@ -163,5 +166,6 @@ void					dump_hexa(void *ptr, size_t size);
 void					malloc_free_zones(void);
 void					malloc_dump_free(t_malloc_data *data);
 void					ft_putstr(char *str);
+void					ft_putstr_fd(char *str, int fd);
 
 #endif

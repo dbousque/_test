@@ -28,7 +28,9 @@ SOURCES		=	srcs/get_fourmiliere.c \
 				srcs/find_best_paths.c \
 				srcs/make_fourmi_travel.c \
 				srcs/get_flags.c \
-				srcs/print_fourmis.c
+				srcs/print_fourmis.c \
+				srcs/print_number.c \
+				srcs/ft_ntoa_base.c
 
 HEADERS	=	-I./includes/
 

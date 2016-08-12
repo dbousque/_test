@@ -64,8 +64,11 @@ void	free_small(t_malloc_data *data, void *ptr, void *prev_block,
 	if (prev_block && ((t_small_block*)prev_block)->free == 1)
 	{
 		if (next_block && ((t_small_block*)next_block)->free == 1)
+		{
 			((t_small_block*)prev_block)->size += (sizeof(t_small_block) * 2)
 			+ ((t_small_block*)next_block)->size + ((t_small_block*)ptr)->size;
+			remove_free_small_block(data, ind_of_small_block(data, next_block));
+		}
 		else
 			((t_small_block*)prev_block)->size += sizeof(t_small_block)
 												+ ((t_small_block*)ptr)->size;

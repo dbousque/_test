@@ -41,8 +41,15 @@ size_t			select_free_tiny_block(t_malloc_data *data, size_t size,
 		i = data->free_tiny_blocks.len - 1;
 		while (1)
 		{
-			if (((t_tiny_block*)data->free_tiny_blocks.elts[i])->size >=
-												size + sizeof(t_tiny_block))
+			ft_putstr("\nfree size : ");
+			print_number(((t_tiny_block*)data->free_tiny_blocks.elts[i])->size);
+			ft_putstr("\n");
+			ft_putstr("is_free : ");
+			if (((t_tiny_block*)data->free_tiny_blocks.elts[i])->free)
+				ft_putstr("true\n");
+			else
+				ft_putstr("false\n");
+			if (((t_tiny_block*)data->free_tiny_blocks.elts[i])->size >= size)
 				return (i);
 			if (i == 0)
 				break ;
@@ -79,17 +86,30 @@ t_tiny_block	*alloc_tiny_block_for_use(t_malloc_data *data, size_t size,
 	ft_putstr("selected block address : ");
 	print_address(block);
 	ft_putstr("\n");
+
+	ft_putstr("NEW SIZES : ");
+	print_number(block->size);
+	ft_putstr(" ; ");
+	print_number(((block->size - (size + sizeof(t_tiny_block)))));
+
 	if (block->size > size + (sizeof(t_tiny_block) * 2))
 	{
 		new_free_block = (void*)block + size + sizeof(t_tiny_block);
 		new_free_block->size = block->size - size - sizeof(t_tiny_block);
 		new_free_block->free = 1;
 		new_free = 1;
+		block->size = size;
 	}
-	block->size = size;
 	block->free = 0;
 	if (new_free)
+	{
+		ft_putstr("NEW FREE, block : ");
+		print_address(block);
+		ft_putstr(" ; new_block : ");
+		print_address(new_free_block);
+		ft_putstr("\n");
 		data->free_tiny_blocks.elts[ind] = new_free_block;
+	}
 	else
 	{
 		ft_putstr("REMOVING\n");

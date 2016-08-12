@@ -1,0 +1,864 @@
+
+-- MALLOC CALLED WITH 8
+
+NEW ZONE TINY SIZE FOR FREE BLOCK : 65531
+selected block address : 0x1059DF001
+Malloc of size 8 : 0x1059DF005
+RETURNING 
+-- MALLOC RETURNS 0x1059DF005
+
+
+-- MALLOC CALLED WITH 16
+
+selected block address : 0x1059DF00D
+Malloc of size 16 : 0x1059DF011
+RETURNING 
+-- MALLOC RETURNS 0x1059DF011
+
+
+-- FREE CALLED WITH 0x1059DF005
+
+zone start : 0x1059DF000
+block :0x1059DF001
+8
+0x1059DF005 == 0x1059DF005
+Freeing tiny block at 0x1059DF001 of size 8
+RETURNING 
+-- MALLOC CALLED WITH 32
+
+selected block address : 0x1059DF021
+Malloc of size 32 : 0x1059DF025
+RETURNING 
+-- MALLOC RETURNS 0x1059DF025
+
+
+-- FREE CALLED WITH 0x7FF898400090
+
+zone start : 0x1059DF000
+Free called on unallocated pointer : 0x7FF898400090
+RETURNING 
+-- FREE CALLED WITH 0x7FF898400080
+
+zone start : 0x1059DF000
+Free called on unallocated pointer : 0x7FF898400080
+RETURNING 
+-- FREE CALLED WITH 0x7FF8984000B0
+
+zone start : 0x1059DF000
+Free called on unallocated pointer : 0x7FF8984000B0
+RETURNING 
+-- MALLOC CALLED WITH 32
+
+selected block address : 0x1059DF045
+Malloc of size 32 : 0x1059DF049
+RETURNING 
+-- MALLOC RETURNS 0x1059DF049
+
+
+-- MALLOC CALLED WITH 32
+
+selected block address : 0x1059DF069
+Malloc of size 32 : 0x1059DF06D
+RETURNING 
+-- MALLOC RETURNS 0x1059DF06D
+
+
+-- FREE CALLED WITH 0x7FF8984003A0
+
+zone start : 0x1059DF000
+Free called on unallocated pointer : 0x7FF8984003A0
+RETURNING 
+-- MALLOC CALLED WITH 32
+
+selected block address : 0x1059DF08D
+Malloc of size 32 : 0x1059DF091
+RETURNING 
+-- MALLOC RETURNS 0x1059DF091
+
+
+-- FREE CALLED WITH 0x7FF898400710
+
+zone start : 0x1059DF000
+Free called on unallocated pointer : 0x7FF898400710
+RETURNING 
+-- FREE CALLED WITH 0x7FF898400100
+
+zone start : 0x1059DF000
+Free called on unallocated pointer : 0x7FF898400100
+RETURNING 
+-- FREE CALLED WITH 0x7FF898400730
+
+zone start : 0x1059DF000
+Free called on unallocated pointer : 0x7FF898400730
+RETURNING 
+-- FREE CALLED WITH 0x7FF898400A10
+
+zone start : 0x1059DF000
+Free called on unallocated pointer : 0x7FF898400A10
+RETURNING 
+-- FREE CALLED WITH 0x7FF898400A70
+
+zone start : 0x1059DF000
+Free called on unallocated pointer : 0x7FF898400A70
+RETURNING 
+-- FREE CALLED WITH 0x7FF898400B10
+
+zone start : 0x1059DF000
+Free called on unallocated pointer : 0x7FF898400B10
+RETURNING 
+-- FREE CALLED WITH 0x7FF898400DE0
+
+zone start : 0x1059DF000
+Free called on unallocated pointer : 0x7FF898400DE0
+RETURNING 
+-- FREE CALLED WITH 0x7FF898400EB0
+
+zone start : 0x1059DF000
+Free called on unallocated pointer : 0x7FF898400EB0
+RETURNING 
+-- FREE CALLED WITH 0x7FF898401110
+
+zone start : 0x1059DF000
+Free called on unallocated pointer : 0x7FF898401110
+RETURNING 
+-- FREE CALLED WITH 0x7FF8984011D0
+
+zone start : 0x1059DF000
+Free called on unallocated pointer : 0x7FF8984011D0
+RETURNING 
+-- FREE CALLED WITH 0x7FF898400290
+
+zone start : 0x1059DF000
+Free called on unallocated pointer : 0x7FF898400290
+RETURNING 
+-- FREE CALLED WITH 0x7FF8984011F0
+
+zone start : 0x1059DF000
+Free called on unallocated pointer : 0x7FF8984011F0
+RETURNING 
+-- FREE CALLED WITH 0x7FF898400FF0
+
+zone start : 0x1059DF000
+Free called on unallocated pointer : 0x7FF898400FF0
+RETURNING 
+-- FREE CALLED WITH 0x7FF898401770
+
+zone start : 0x1059DF000
+Free called on unallocated pointer : 0x7FF898401770
+RETURNING 
+-- FREE CALLED WITH 0x7FF898400E10
+
+zone start : 0x1059DF000
+Free called on unallocated pointer : 0x7FF898400E10
+RETURNING 
+-- FREE CALLED WITH 0x7FF898400F50
+
+zone start : 0x1059DF000
+Free called on unallocated pointer : 0x7FF898400F50
+RETURNING 
+-- FREE CALLED WITH 0x7FF898401540
+
+zone start : 0x1059DF000
+Free called on unallocated pointer : 0x7FF898401540
+RETURNING 
+-- FREE CALLED WITH 0x7FF898400CC0
+
+zone start : 0x1059DF000
+Free called on unallocated pointer : 0x7FF898400CC0
+RETURNING 
+-- FREE CALLED WITH 0x7FF898400180
+
+zone start : 0x1059DF000
+Free called on unallocated pointer : 0x7FF898400180
+RETURNING 
+-- FREE CALLED WITH 0x7FF898401560
+
+zone start : 0x1059DF000
+Free called on unallocated pointer : 0x7FF898401560
+RETURNING 
+-- FREE CALLED WITH 0x7FF898401790
+
+zone start : 0x1059DF000
+Free called on unallocated pointer : 0x7FF898401790
+RETURNING 
+-- FREE CALLED WITH 0x7FF898401810
+
+zone start : 0x1059DF000
+Free called on unallocated pointer : 0x7FF898401810
+RETURNING 
+-- FREE CALLED WITH 0x7FF898401420
+
+zone start : 0x1059DF000
+Free called on unallocated pointer : 0x7FF898401420
+RETURNING 
+-- FREE CALLED WITH 0x7FF8984024C0
+
+zone start : 0x1059DF000
+Free called on unallocated pointer : 0x7FF8984024C0
+RETURNING 
+-- FREE CALLED WITH 0x7FF8984024E0
+
+zone start : 0x1059DF000
+Free called on unallocated pointer : 0x7FF8984024E0
+RETURNING 
+-- FREE CALLED WITH 0x7FF898402500
+
+zone start : 0x1059DF000
+Free called on unallocated pointer : 0x7FF898402500
+RETURNING 
+-- FREE CALLED WITH 0x7FF898402540
+
+zone start : 0x1059DF000
+Free called on unallocated pointer : 0x7FF898402540
+RETURNING 
+-- FREE CALLED WITH 0x7FF898402560
+
+zone start : 0x1059DF000
+Free called on unallocated pointer : 0x7FF898402560
+RETURNING 
+-- FREE CALLED WITH 0x7FF8984025D0
+
+zone start : 0x1059DF000
+Free called on unallocated pointer : 0x7FF8984025D0
+RETURNING 
+-- FREE CALLED WITH 0x7FF8984018F0
+
+zone start : 0x1059DF000
+Free called on unallocated pointer : 0x7FF8984018F0
+RETURNING 
+-- FREE CALLED WITH 0x7FF898401A90
+
+zone start : 0x1059DF000
+Free called on unallocated pointer : 0x7FF898401A90
+RETURNING 
+-- FREE CALLED WITH 0x7FF898401400
+
+zone start : 0x1059DF000
+Free called on unallocated pointer : 0x7FF898401400
+RETURNING 
+-- FREE CALLED WITH 0x7FF898401E70
+
+zone start : 0x1059DF000
+Free called on unallocated pointer : 0x7FF898401E70
+RETURNING 
+-- FREE CALLED WITH 0x7FF898401F10
+
+zone start : 0x1059DF000
+Free called on unallocated pointer : 0x7FF898401F10
+RETURNING 
+-- FREE CALLED WITH 0x7FF898401D30
+
+zone start : 0x1059DF000
+Free called on unallocated pointer : 0x7FF898401D30
+RETURNING 
+-- FREE CALLED WITH 0x7FF898401A10
+
+zone start : 0x1059DF000
+Free called on unallocated pointer : 0x7FF898401A10
+RETURNING 
+-- FREE CALLED WITH 0x7FF898401FD0
+
+zone start : 0x1059DF000
+Free called on unallocated pointer : 0x7FF898401FD0
+RETURNING 
+-- FREE CALLED WITH 0x7FF898402090
+
+zone start : 0x1059DF000
+Free called on unallocated pointer : 0x7FF898402090
+RETURNING 
+-- FREE CALLED WITH 0x7FF898401210
+
+zone start : 0x1059DF000
+Free called on unallocated pointer : 0x7FF898401210
+RETURNING 
+-- FREE CALLED WITH 0x7FF8984020B0
+
+zone start : 0x1059DF000
+Free called on unallocated pointer : 0x7FF8984020B0
+RETURNING 
+-- FREE CALLED WITH 0x7FF898402580
+
+zone start : 0x1059DF000
+Free called on unallocated pointer : 0x7FF898402580
+RETURNING 
+-- FREE CALLED WITH 0x7FF8984017F0
+
+zone start : 0x1059DF000
+Free called on unallocated pointer : 0x7FF8984017F0
+RETURNING 
+-- FREE CALLED WITH 0x7FF898402B40
+
+zone start : 0x1059DF000
+Free called on unallocated pointer : 0x7FF898402B40
+RETURNING 
+-- FREE CALLED WITH 0x7FF898402B60
+
+zone start : 0x1059DF000
+Free called on unallocated pointer : 0x7FF898402B60
+RETURNING 
+-- FREE CALLED WITH 0x7FF898402B80
+
+zone start : 0x1059DF000
+Free called on unallocated pointer : 0x7FF898402B80
+RETURNING 
+-- FREE CALLED WITH 0x7FF898402BA0
+
+zone start : 0x1059DF000
+Free called on unallocated pointer : 0x7FF898402BA0
+RETURNING 
+-- FREE CALLED WITH 0x7FF898402C00
+
+zone start : 0x1059DF000
+Free called on unallocated pointer : 0x7FF898402C00
+RETURNING 
+-- FREE CALLED WITH 0x7FF898402BC0
+
+zone start : 0x1059DF000
+Free called on unallocated pointer : 0x7FF898402BC0
+RETURNING 
+-- FREE CALLED WITH 0x7FF898402BE0
+
+zone start : 0x1059DF000
+Free called on unallocated pointer : 0x7FF898402BE0
+RETURNING 
+-- FREE CALLED WITH 0x7FF898402C30
+
+zone start : 0x1059DF000
+Free called on unallocated pointer : 0x7FF898402C30
+RETURNING 
+-- FREE CALLED WITH 0x7FF898401FF0
+
+zone start : 0x1059DF000
+Free called on unallocated pointer : 0x7FF898401FF0
+RETURNING 
+-- FREE CALLED WITH 0x7FF898401D50
+
+zone start : 0x1059DF000
+Free called on unallocated pointer : 0x7FF898401D50
+RETURNING 
+-- FREE CALLED WITH 0x7FF8984017B0
+
+zone start : 0x1059DF000
+Free called on unallocated pointer : 0x7FF8984017B0
+RETURNING 
+-- FREE CALLED WITH 0x7FF898402700
+
+zone start : 0x1059DF000
+Free called on unallocated pointer : 0x7FF898402700
+RETURNING 
+-- FREE CALLED WITH 0x7FF898401A30
+
+zone start : 0x1059DF000
+Free called on unallocated pointer : 0x7FF898401A30
+RETURNING 
+-- FREE CALLED WITH 0x7FF898401F30
+
+zone start : 0x1059DF000
+Free called on unallocated pointer : 0x7FF898401F30
+RETURNING 
+-- FREE CALLED WITH 0x7FF8984017D0
+
+zone start : 0x1059DF000
+Free called on unallocated pointer : 0x7FF8984017D0
+RETURNING 
+-- FREE CALLED WITH 0x7FF898401580
+
+zone start : 0x1059DF000
+Free called on unallocated pointer : 0x7FF898401580
+RETURNING 
+-- FREE CALLED WITH 0x7FF898402730
+
+zone start : 0x1059DF000
+Free called on unallocated pointer : 0x7FF898402730
+RETURNING 
+-- FREE CALLED WITH 0x7FF898402600
+
+zone start : 0x1059DF000
+Free called on unallocated pointer : 0x7FF898402600
+RETURNING 
+-- FREE CALLED WITH 0x7FF898402CC0
+
+zone start : 0x1059DF000
+Free called on unallocated pointer : 0x7FF898402CC0
+RETURNING 
+-- FREE CALLED WITH 0x7FF8984025A0
+
+zone start : 0x1059DF000
+Free called on unallocated pointer : 0x7FF8984025A0
+RETURNING 
+-- FREE CALLED WITH 0x7FF8984026D0
+
+zone start : 0x1059DF000
+Free called on unallocated pointer : 0x7FF8984026D0
+RETURNING 
+-- FREE CALLED WITH 0x7FF898402C60
+
+zone start : 0x1059DF000
+Free called on unallocated pointer : 0x7FF898402C60
+RETURNING 
+-- FREE CALLED WITH 0x7FF898402D80
+
+zone start : 0x1059DF000
+Free called on unallocated pointer : 0x7FF898402D80
+RETURNING 
+-- FREE CALLED WITH 0x7FF898402DC0
+
+zone start : 0x1059DF000
+Free called on unallocated pointer : 0x7FF898402DC0
+RETURNING 
+-- FREE CALLED WITH 0x7FF898402E80
+
+zone start : 0x1059DF000
+Free called on unallocated pointer : 0x7FF898402E80
+RETURNING 
+-- FREE CALLED WITH 0x7FF898402EB0
+
+zone start : 0x1059DF000
+Free called on unallocated pointer : 0x7FF898402EB0
+RETURNING 
+-- FREE CALLED WITH 0x7FF898402F50
+
+zone start : 0x1059DF000
+Free called on unallocated pointer : 0x7FF898402F50
+RETURNING 
+-- FREE CALLED WITH 0x7FF898402F80
+
+zone start : 0x1059DF000
+Free called on unallocated pointer : 0x7FF898402F80
+RETURNING 
+-- FREE CALLED WITH 0x7FF898403140
+
+zone start : 0x1059DF000
+Free called on unallocated pointer : 0x7FF898403140
+RETURNING 
+-- FREE CALLED WITH 0x7FF898403180
+
+zone start : 0x1059DF000
+Free called on unallocated pointer : 0x7FF898403180
+RETURNING 
+-- FREE CALLED WITH 0x7FF898403220
+
+zone start : 0x1059DF000
+Free called on unallocated pointer : 0x7FF898403220
+RETURNING 
+-- FREE CALLED WITH 0x7FF898403260
+
+zone start : 0x1059DF000
+Free called on unallocated pointer : 0x7FF898403260
+RETURNING 
+-- FREE CALLED WITH 0x7FF898403030
+
+zone start : 0x1059DF000
+Free called on unallocated pointer : 0x7FF898403030
+RETURNING 
+-- FREE CALLED WITH 0x7FF898403070
+
+zone start : 0x1059DF000
+Free called on unallocated pointer : 0x7FF898403070
+RETURNING 
+-- FREE CALLED WITH 0x7FF898403320
+
+zone start : 0x1059DF000
+Free called on unallocated pointer : 0x7FF898403320
+RETURNING 
+-- FREE CALLED WITH 0x7FF898403360
+
+zone start : 0x1059DF000
+Free called on unallocated pointer : 0x7FF898403360
+RETURNING 
+-- FREE CALLED WITH 0x7FF898403410
+
+zone start : 0x1059DF000
+Free called on unallocated pointer : 0x7FF898403410
+RETURNING 
+-- FREE CALLED WITH 0x7FF898403450
+
+zone start : 0x1059DF000
+Free called on unallocated pointer : 0x7FF898403450
+RETURNING 
+-- FREE CALLED WITH 0x7FF898403630
+
+zone start : 0x1059DF000
+Free called on unallocated pointer : 0x7FF898403630
+RETURNING 
+-- FREE CALLED WITH 0x7FF898403680
+
+zone start : 0x1059DF000
+Free called on unallocated pointer : 0x7FF898403680
+RETURNING 
+-- FREE CALLED WITH 0x7FF898403780
+
+zone start : 0x1059DF000
+Free called on unallocated pointer : 0x7FF898403780
+RETURNING 
+-- FREE CALLED WITH 0x7FF898403730
+
+zone start : 0x1059DF000
+Free called on unallocated pointer : 0x7FF898403730
+RETURNING 
+-- MALLOC CALLED WITH 8
+
+selected block address : 0x1059DF0B1
+Malloc of size 8 : 0x1059DF0B5
+RETURNING 
+-- MALLOC RETURNS 0x1059DF0B5
+
+
+-- MALLOC CALLED WITH 27
+
+selected block address : 0x1059DF0BD
+Malloc of size 27 : 0x1059DF0C1
+RETURNING 
+-- MALLOC RETURNS 0x1059DF0C1
+
+
+-- MALLOC CALLED WITH 22
+
+selected block address : 0x1059DF0DC
+Malloc of size 22 : 0x1059DF0E0
+RETURNING 
+-- MALLOC RETURNS 0x1059DF0E0
+
+
+-- MALLOC CALLED WITH 12
+
+selected block address : 0x1059DF0F6
+Malloc of size 12 : 0x1059DF0FA
+RETURNING 
+-- MALLOC RETURNS 0x1059DF0FA
+
+
+-- MALLOC CALLED WITH 45
+
+selected block address : 0x1059DF106
+Malloc of size 45 : 0x1059DF10A
+RETURNING 
+-- MALLOC RETURNS 0x1059DF10A
+
+
+-- MALLOC CALLED WITH 99
+
+selected block address : 0x1059DF137
+Malloc of size 99 : 0x1059DF13B
+RETURNING 
+-- MALLOC RETURNS 0x1059DF13B
+
+
+-- MALLOC CALLED WITH 45
+
+selected block address : 0x1059DF19E
+Malloc of size 45 : 0x1059DF1A2
+RETURNING 
+-- MALLOC RETURNS 0x1059DF1A2
+
+
+-- MALLOC CALLED WITH 50
+
+selected block address : 0x1059DF1CF
+Malloc of size 50 : 0x1059DF1D3
+RETURNING 
+-- MALLOC RETURNS 0x1059DF1D3
+
+
+-- MALLOC CALLED WITH 47
+
+selected block address : 0x1059DF205
+Malloc of size 47 : 0x1059DF209
+RETURNING 
+-- MALLOC RETURNS 0x1059DF209
+
+
+-- MALLOC CALLED WITH 14
+
+selected block address : 0x1059DF238
+Malloc of size 14 : 0x1059DF23C
+RETURNING 
+-- MALLOC RETURNS 0x1059DF23C
+
+
+-- MALLOC CALLED WITH 64
+
+selected block address : 0x1059DF24A
+Malloc of size 64 : 0x1059DF24E
+RETURNING 
+-- MALLOC RETURNS 0x1059DF24E
+
+
+-- MALLOC CALLED WITH 49
+
+selected block address : 0x1059DF28E
+Malloc of size 49 : 0x1059DF292
+RETURNING 
+-- MALLOC RETURNS 0x1059DF292
+
+
+-- MALLOC CALLED WITH 67
+
+selected block address : 0x1059DF2C3
+Malloc of size 67 : 0x1059DF2C7
+RETURNING 
+-- MALLOC RETURNS 0x1059DF2C7
+
+
+-- MALLOC CALLED WITH 52
+
+selected block address : 0x1059DF30A
+Malloc of size 52 : 0x1059DF30E
+RETURNING 
+-- MALLOC RETURNS 0x1059DF30E
+
+
+-- MALLOC CALLED WITH 54
+
+selected block address : 0x1059DF342
+Malloc of size 54 : 0x1059DF346
+RETURNING 
+-- MALLOC RETURNS 0x1059DF346
+
+
+-- MALLOC CALLED WITH 12
+
+selected block address : 0x1059DF37C
+Malloc of size 12 : 0x1059DF380
+RETURNING 
+-- MALLOC RETURNS 0x1059DF380
+
+
+-- MALLOC CALLED WITH 45
+
+selected block address : 0x1059DF38C
+Malloc of size 45 : 0x1059DF390
+RETURNING 
+-- MALLOC RETURNS 0x1059DF390
+
+
+-- MALLOC CALLED WITH 32
+
+selected block address : 0x1059DF3BD
+Malloc of size 32 : 0x1059DF3C1
+RETURNING 
+-- MALLOC RETURNS 0x1059DF3C1
+
+
+-- FREE CALLED WITH 0x1059DF011
+
+zone start : 0x1059DF000
+block :0x1059DF001
+8
+0x1059DF011 == 0x1059DF005
+block :0x1059DF00D
+16
+0x1059DF011 == 0x1059DF011
+Freeing tiny block at 0x1059DF00D of size 16
+RETURNING 
+-- MALLOC CALLED WITH 98
+
+selected block address : 0x1059DF3E1
+Malloc of size 98 : 0x1059DF3E5
+RETURNING 
+-- MALLOC RETURNS 0x1059DF3E5
+
+
+-- MALLOC CALLED WITH 16
+
+selected block address : 0x1059DF001
+Malloc of size 16 : 0x1059DF005
+RETURNING 
+-- MALLOC RETURNS 0x1059DF005
+
+
+-- MALLOC CALLED WITH 64
+
+selected block address : 0x1059DF447
+Malloc of size 64 : 0x1059DF44B
+RETURNING 
+-- MALLOC RETURNS 0x1059DF44B
+
+
+-- MALLOC CALLED WITH 14
+
+selected block address : 0x1059DF48B
+Malloc of size 14 : 0x1059DF48F
+RETURNING 
+-- MALLOC RETURNS 0x1059DF48F
+
+
+-- REALLOC CALLED WITH 0x0 256
+
+Malloc of size 256 : 0x105C21009
+RETURNING 
+-- REALLOC RETURNS 0x105C21009
+
+
+-- FREE CALLED WITH 0x105C21009
+
+zone start : 0x105C21000
+Freeing small block at 0x105C21001 of size 256
+RETURNING 
+-- MALLOC CALLED WITH 16
+
+selected block address : 0x1059DF49D
+Malloc of size 16 : 0x1059DF4A1
+RETURNING 
+-- MALLOC RETURNS 0x1059DF4A1
+
+
+-- MALLOC CALLED WITH 3
+
+selected block address : 0x1059DF015
+REMOVING
+Malloc of size 3 : 0x1059DF019
+RETURNING 
+-- MALLOC RETURNS 0x1059DF019
+
+
+-- MALLOC CALLED WITH 16
+
+selected block address : 0x1059DF4B1
+Malloc of size 16 : 0x1059DF4B5
+RETURNING 
+-- MALLOC RETURNS 0x1059DF4B5
+
+
+-- MALLOC CALLED WITH 24
+
+selected block address : 0x1059DF4C5
+Malloc of size 24 : 0x1059DF4C9
+RETURNING 
+-- MALLOC RETURNS 0x1059DF4C9
+
+
+-- MALLOC CALLED WITH 24
+
+selected block address : 0x1059DF4E1
+Malloc of size 24 : 0x1059DF4E5
+RETURNING 
+-- MALLOC RETURNS 0x1059DF4E5
+
+
+-- MALLOC CALLED WITH 16
+
+selected block address : 0x1059DF4FD
+Malloc of size 16 : 0x1059DF501
+RETURNING 
+-- MALLOC RETURNS 0x1059DF501
+
+
+-- MALLOC CALLED WITH 24
+
+selected block address : 0x1059DF511
+Malloc of size 24 : 0x1059DF515
+RETURNING 
+-- MALLOC RETURNS 0x1059DF515
+
+
+-- MALLOC CALLED WITH 139
+
+selected block address : 0x1059DF52D
+Malloc of size 139 : 0x1059DF531
+RETURNING 
+-- MALLOC RETURNS 0x1059DF531
+
+
+-- MALLOC CALLED WITH 139
+
+selected block address : 0x1059DF5BC
+Malloc of size 139 : 0x1059DF5C0
+RETURNING 
+-- MALLOC RETURNS 0x1059DF5C0
+
+
+-- MALLOC CALLED WITH 3
+
+selected block address : 0x1059DF64B
+Malloc of size 3 : 0x1059DF64F
+RETURNING 
+-- MALLOC RETURNS 0x1059DF64F
+
+
+-- MALLOC CALLED WITH 136
+
+selected block address : 0x1059DF652
+Malloc of size 136 : 0x1059DF656
+RETURNING 
+-- MALLOC RETURNS 0x1059DF656
+
+
+-- FREE CALLED WITH 0x1059DF5C0
+
+zone start : 0x105C21000
+zone start : 0x1059DF000
+block :0x1059DF001
+16
+0x1059DF5C0 == 0x1059DF005
+block :0x1059DF015
+3
+0x1059DF5C0 == 0x1059DF019
+block :0x1059DF01C
+65422
+0x1059DF5C0 == 0x1059DF020
+block :0x1059EEFAE
+0
+0x1059DF5C0 == 0x1059EEFB2
+block :0x1059EEFB2
+0
+0x1059DF5C0 == 0x1059EEFB6
+block :0x1059EEFB6
+0
+0x1059DF5C0 == 0x1059EEFBA
+block :0x1059EEFBA
+0
+0x1059DF5C0 == 0x1059EEFBE
+block :0x1059EEFBE
+0
+0x1059DF5C0 == 0x1059EEFC2
+block :0x1059EEFC2
+0
+0x1059DF5C0 == 0x1059EEFC6
+block :0x1059EEFC6
+0
+0x1059DF5C0 == 0x1059EEFCA
+block :0x1059EEFCA
+0
+0x1059DF5C0 == 0x1059EEFCE
+block :0x1059EEFCE
+0
+0x1059DF5C0 == 0x1059EEFD2
+block :0x1059EEFD2
+0
+0x1059DF5C0 == 0x1059EEFD6
+block :0x1059EEFD6
+0
+0x1059DF5C0 == 0x1059EEFDA
+block :0x1059EEFDA
+0
+0x1059DF5C0 == 0x1059EEFDE
+block :0x1059EEFDE
+0
+0x1059DF5C0 == 0x1059EEFE2
+block :0x1059EEFE2
+0
+0x1059DF5C0 == 0x1059EEFE6
+block :0x1059EEFE6
+0
+0x1059DF5C0 == 0x1059EEFEA
+block :0x1059EEFEA
+0
+0x1059DF5C0 == 0x1059EEFEE
+block :0x1059EEFEE
+0
+0x1059DF5C0 == 0x1059EEFF2
+block :0x1059EEFF2
+0
+0x1059DF5C0 == 0x1059EEFF6
+block :0x1059EEFF6
+0
+0x1059DF5C0 == 0x1059EEFFA
+block :0x1059EEFFA
+0
+0x1059DF5C0 == 0x1059EEFFE
+block :0x1059EEFFE
+0
+0x1059DF5C0 == 0x1059EF002
+Free called on unallocated pointer : 0x1059DF5C0
+RETURNING 

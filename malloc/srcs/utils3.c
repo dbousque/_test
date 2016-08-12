@@ -101,7 +101,7 @@ size_t	ind_of_tiny_block(t_malloc_data *data, void *ptr)
 		if (i == 0)
 			break ;
 		if (data->free_tiny_blocks.elts[i - 1] == ptr)
-			return (i);
+			return (i - 1);
 		i--;
 	}
 	return (0);
@@ -117,7 +117,7 @@ size_t	ind_of_small_block(t_malloc_data *data, void *ptr)
 		if (i == 0)
 			break ;
 		if (data->free_small_blocks.elts[i - 1] == ptr)
-			return (i);
+			return (i - 1);
 		i--;
 	}
 	return (0);
