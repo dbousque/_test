@@ -25,6 +25,8 @@
 # define REALLOC 4
 # define DUMP_HEXA 5
 # define DUMP_FREE 6
+# define CALLOC 7
+# define REALLOCF 8
 # define NB_PAGES_PER_SMALL_ZONE 128
 # define NB_PAGES_PER_TINY_ZONE 16
 # define MAX_SMALL_BLOCK 4000
@@ -50,6 +52,9 @@ typedef struct			s_malloc_data
 	size_t				page_size;
 	char				debug_alloc;
 	char				debug_print;
+	char				print_calls;
+	char				show_free_at_each_turn;
+	char				show_alloc_at_each_turn;
 }						t_malloc_data;
 
 typedef struct			s_zone
@@ -81,8 +86,15 @@ pthread_mutex_t 		lock;
 
 char					get_debug(int opt);
 void					*malloc(size_t size);
+void					*calloc(size_t count, size_t size);
+void					*realloc(void *ptr, size_t size);
+void					free(void *ptr);
+void					*reallocf(void *ptr, size_t size);
 void					*my_realloc(t_malloc_data *data, void *ptr,
+										size_t size, char *invalid_pointer);
+void					*my_reallocf(t_malloc_data *data, void *ptr,
 																size_t size);
+void					*my_calloc(t_malloc_data *data, size_t size);
 void					*my_malloc(t_malloc_data *data, size_t size);
 void					my_free(t_malloc_data *data, void *ptr);
 void					*realloc_small(t_malloc_data *data, void *p_nx_b[2],
@@ -136,6 +148,8 @@ void					print_number_fd(size_t number, int fd);
 void					print_address(void *ptr);
 void					print_address_fd(void *ptr, int fd);
 void					show_alloc_mem(void);
+void					print_malloc_call(char option, void *ptr, size_t size);
+void					print_malloc_return(char option, void *ptr);
 void					print_debug_free_null(void);
 void					print_debug_free_raw(void *ptr, size_t size);
 void					print_debug_bad_free(void *ptr);

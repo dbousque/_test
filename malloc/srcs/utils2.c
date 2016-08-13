@@ -68,5 +68,11 @@ char	get_debug(int opt)
 		return (1);
 	if (opt == 2 && ft_strcmp(getenv("MALLOC_PRINT_DEBUG"), "1"))
 		return (1);
+	if (opt == 3 && ft_strcmp(getenv("MALLOC_PRINT_CALLS"), "1"))
+		return (1);
+	if (opt == 4 && ft_strcmp(getenv("MALLOC_ALWAYS_SHOW_ALLOC"), "1"))
+		return (1);
+	if (opt == 5 && ft_strcmp(getenv("MALLOC_ALWAYS_SHOW_FREE"), "1"))
+		return (1);
 	return (0);
 }

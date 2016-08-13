@@ -16,7 +16,7 @@ void	*new_raw(t_malloc_data *data, void *ptr, size_t size)
 {
 	void	*res;
 
-	res = malloc(size);
+	res = my_malloc(data, size);
 	memcopy(ptr, res, *((size_t*)(ptr - (sizeof(size_t)))));
 	my_free(data, ptr);
 	return (res);
@@ -41,27 +41,28 @@ void	*realloc_raw(t_malloc_data *data, void *prev_next_blocks[2],
 
 	# include <stdio.h>
 
-void	*my_realloc(t_malloc_data *data, void *ptr, size_t size)
+void	*return_invalid(char *invalid_pointer)
+{
+	*invalid_pointer = 1;
+	return (NULL);
+}
+
+void	*my_realloc(t_malloc_data *data, void *ptr, size_t size, char *invalid_pointer)
 {
 	size_t	zone_type;
 	void	*prev_next_blocks[2];
 
+	*invalid_pointer = 0;
 	if (!size)
-		return (NULL);
+		return (return_invalid(invalid_pointer));
 	if (!ptr)
 		return (my_malloc(data, size));
 	prev_next_blocks[0] = NULL;
 	prev_next_blocks[1] = NULL;
-	ft_putstr("BFORE GET_ZONE\n");
-	fflush(stdout);
 	zone_type = get_zone_type(data, ptr, &(prev_next_blocks[0]),
 													&(prev_next_blocks[1]));
 	if (zone_type == 3 || zone_type == 0)
-	{
-		ft_putstr("RETURNING NULL\n");
-		fflush(stdout);
-		return (my_malloc(data, size));
-	}
+		return (return_invalid(invalid_pointer));
 	if (zone_type == TINY)
 		return (realloc_tiny(data, prev_next_blocks, ptr, size));
 	if (zone_type == SMALL)

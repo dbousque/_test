@@ -44,6 +44,9 @@ void	remove_fourmis_at_end(t_list **fourmis, t_list **fourmis_end,
 	tmp = *fourmis;
 	while (tmp)
 	{
+		ft_putstr("current_salle : ");
+		print_number(((t_fourmi*)tmp->content)->current_salle);
+		ft_putstr("\n");
 		if (((t_fourmi*)tmp->content)->current_salle <= -1)
 		{
 			next = tmp->next;
@@ -58,6 +61,7 @@ void	remove_fourmis_at_end(t_list **fourmis, t_list **fourmis_end,
 		}
 		else
 		{
+			ft_putstr("else\n");
 			parent = tmp;
 			tmp = tmp->next;
 		}
@@ -95,11 +99,19 @@ int		make_fourmi_travel(int **best_paths, t_fourm *fourmiliere, int nb_paths,
 	t_list	*fourmis;
 
 	ft_putchar('\n');
+	ft_putstr("start make fourmi\n");
 	if (!(paths_len = get_paths_len(best_paths, nb_paths)))
 		return (ft_error());
+	ft_putstr("after get paths\n");
 	fourmis = NULL;
 	while (fourmiliere->nb_fourmis > 0 || fourmis)
 	{
+		ft_putstr("TOUR DE FOURMI, nb de fourmis : ");
+		print_number(fourmiliere->nb_fourmis);
+		ft_putstr("\n");
+		ft_putstr("fourmis : ");
+		print_address(fourmis);
+		ft_putstr("\n");
 		make_turn(fourmis, fourmiliere, 0);
 		if (fourmiliere->nb_fourmis > 0)
 		{

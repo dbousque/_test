@@ -12,6 +12,10 @@
 
 #include "malloc.h"
 
+
+
+	#  include <stdio.h>
+
 static int	ft_get_res_length(unsigned long long n, int base_length)
 {
 	int		i;

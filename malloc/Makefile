@@ -19,6 +19,7 @@ NAME		=	libft_malloc_$(HOSTTYPE).so
 SOURCES		=	srcs/alloc.c \
 				srcs/alloc_small.c \
 				srcs/alloc_tiny.c \
+				srcs/calloc_reallocf.c \
 				srcs/dump_malloc.c \
 				srcs/free.c \
 				srcs/free_small.c \

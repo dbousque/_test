@@ -26,7 +26,7 @@ void	print_debug_free_raw(void *ptr, size_t size)
 
 	tmp = "Freeing large block at ";
 	write(1, tmp, ft_strlen(tmp));
-	print_address(ptr);
+	print_address(ptr + (sizeof(size_t) * 2));
 	tmp = " of size ";
 	write(1, tmp, ft_strlen(tmp));
 	print_number(size);
@@ -41,7 +41,7 @@ void	print_debug_free_small(t_malloc_data *data, void *ptr, size_t size)
 	{
 		tmp = "Freeing small block at ";
 		write(1, tmp, ft_strlen(tmp));
-		print_address(ptr);
+		print_address(ptr + sizeof(t_small_block));
 		tmp = " of size ";
 		write(1, tmp, ft_strlen(tmp));
 		print_number(size);
@@ -57,7 +57,7 @@ void	print_debug_free_tiny(t_malloc_data *data, void *ptr, size_t size)
 	{
 		tmp = "Freeing tiny block at ";
 		write(1, tmp, ft_strlen(tmp));
-		print_address(ptr);
+		print_address(ptr + sizeof(t_tiny_block));
 		tmp = " of size ";
 		write(1, tmp, ft_strlen(tmp));
 		print_number(size);

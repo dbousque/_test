@@ -34,17 +34,17 @@ char	is_allocated_tiny_adress(t_malloc_data *data, void *ptr,
 	{
 		*(prev_next_block[1]) = block + ((size_t)((t_tiny_block*)block)->size
 													+ sizeof(t_tiny_block));
-		write(1, "block : ", 7);
+		/*write(1, "block : ", 7);
 		print_address(block);
 		write(1, "\n", 1);
 		print_number(((t_tiny_block*)block)->size);
-		ft_putstr("\n");
+		ft_putstr("\n");*/
 		//print_number(get_tiny_zone_size(data));
 		//ft_putstr("\n");
-		print_address(ptr);
+		/*print_address(ptr);
 		ft_putstr(" == ");
 		print_address(block + sizeof(t_tiny_block));
-		ft_putstr("\n");
+		ft_putstr("\n");*/
 		if (*(prev_next_block[1]) >= end)
 			*(prev_next_block[1]) = NULL;
 		if (ptr == (block + sizeof(t_tiny_block)))
@@ -90,7 +90,7 @@ void	free_tiny(t_malloc_data *data, void *ptr, void *prev_block,
 	{
 		if (next_block && ((t_tiny_block*)next_block)->free == 1)
 		{
-			ft_putstr("NEXT AND PREV, REMOVING NEXT\n");
+			/*ft_putstr("NEXT AND PREV, REMOVING NEXT\n");
 			print_address(prev_block);
 			ft_putstr(" ; ");
 			print_address(ptr);
@@ -98,7 +98,7 @@ void	free_tiny(t_malloc_data *data, void *ptr, void *prev_block,
 			print_address(next_block);
 			ft_putstr("\nind : ");
 			print_number(ind_of_tiny_block(data, next_block));
-			ft_putstr("\n");
+			ft_putstr("\n");*/
 			((t_tiny_block*)prev_block)->size += (sizeof(t_tiny_block) * 2)
 			+ ((t_tiny_block*)next_block)->size + ((t_tiny_block*)ptr)->size;
 			remove_free_tiny_block(data, ind_of_tiny_block(data, next_block));
@@ -115,9 +115,9 @@ void	free_tiny(t_malloc_data *data, void *ptr, void *prev_block,
 	}
 	else
 	{
-		ft_putstr("ADDING TO LIST!!\n");
-		print_address(ptr);
-		ft_putstr("\n");
+		//ft_putstr("ADDING TO LIST!!\n");
+		//print_address(ptr);
+		//ft_putstr("\n");
 		add_to_list(&(data->free_tiny_blocks), ptr);
 	}
 }

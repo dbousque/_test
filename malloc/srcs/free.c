@@ -49,9 +49,6 @@ void	free_raw_block(t_malloc_data *data, size_t ind)
 	data->raw_blocks.len--;
 }
 
-
-   # include <stdio.h>
-
 void	my_free(t_malloc_data *data, void *ptr)
 {
 	size_t	zone_type;

@@ -51,6 +51,7 @@ typedef struct		s_fourmi
 
 void				print_ft_ntoa_base(size_t n, char *base);
 void				print_ft_ntoa_base_fd(size_t n, char *base, int fd);
+void				print_number(size_t n);
 char				is_tube_description(char *line);
 char				is_comment(char *line);
 char				only_numbers(char *str);

@@ -41,8 +41,13 @@ int		**path_to_int_paths(t_list **best_paths, int nb_paths)
 	i = 0;
 	while (i < nb_paths)
 	{
-		if (!(res[i] = (int*)malloc(sizeof(int) * listlen(best_paths[i]) + 1)))
+		if (!(res[i] = (int*)malloc(sizeof(int) * (listlen(best_paths[i]) + 1))))
 			return (NULL);
+		ft_putstr("ALLOCING PATH : ");
+		print_number(listlen(best_paths[i]) + 1);
+		ft_putstr(" ; ");
+		print_address(res[i]);
+		ft_putstr("\n");
 		res[i][listlen(best_paths[i])] = -1;
 		x = 0;
 		tmp = best_paths[i];

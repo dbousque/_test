@@ -12,10 +12,13 @@
 
 #include "malloc.h"
 
+
+	 # include <stdio.h>
+
 void	print_number_fd(size_t number, int fd)
 {
-	char	numbers[100];
-	int		ind;
+	static char		numbers[100];
+	int				ind;
 
 	if (number == 0)
 	{

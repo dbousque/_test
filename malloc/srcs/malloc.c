@@ -20,37 +20,37 @@ void	*malloc(size_t size)
 {
 	void	*res;
 
-	ft_putstr("\n-- MALLOC CALLED WITH ");
+	/*ft_putstr("\n-- MALLOC CALLED WITH ");
 	print_number(size);
 	ft_putstr("\n\n");
 
-	show_alloc_mem();
-
 	malloc_free_zones();
+
+	show_alloc_mem();*/
 
 	/*ft_putstr_fd("\tmalloc(", 2);
 	print_number_fd(size, 2);
 	ft_putstr_fd(");\n", 2);*/
 
 	res = handle_malloc_option(size, ALLOC, NULL);
-	ft_putstr("\n-- MALLOC RETURNS ");
+	/*ft_putstr("\n-- MALLOC RETURNS ");
 	print_address(res);
 	ft_putstr("\n\n");
 
-	malloc_free_zones();
+	malloc_free_zones();*/
 
 	return (res);
 }
 
 void	free(void *ptr)
 {
-	ft_putstr("\n-- FREE CALLED WITH ");
+	/*ft_putstr("\n-- FREE CALLED WITH ");
 	print_address(ptr);
 	ft_putstr("\n\n");
 
 	malloc_free_zones();
 
-	show_alloc_mem();
+	show_alloc_mem();*/
 
 	/*ft_putstr_fd("\tvoid *to_free = ", 2);
 	print_address_fd(ptr, 2);
@@ -58,20 +58,20 @@ void	free(void *ptr)
 
 	handle_malloc_option(0, FREE, ptr);
 
-	malloc_free_zones();
+	//malloc_free_zones();
 }
 
 void	*realloc(void *ptr, size_t size)
 {
 	void	*res;
 
-	ft_putstr("\n-- REALLOC CALLED WITH ");
+	/*ft_putstr("\n-- REALLOC CALLED WITH ");
 	print_address(ptr);
 	ft_putstr(" ");
 	print_number(size);
 	ft_putstr("\n\n");
 
-	show_alloc_mem();
+	show_alloc_mem();*/
 
 	/*ft_putstr_fd("\tto_realloc = ", 2);
 	print_address_fd(ptr, 2);
@@ -80,10 +80,56 @@ void	*realloc(void *ptr, size_t size)
 	ft_putstr_fd(");\n", 2);*/
 
 	res = handle_malloc_option(size, REALLOC, ptr);
-	ft_putstr("\n-- REALLOC RETURNS ");
+	/*ft_putstr("\n-- REALLOC RETURNS ");
 	print_address(res);
-	ft_putstr("\n\n");
+	ft_putstr("\n\n");*/
 	return (res);
+}
+#   include <sys/resource.h>
+#   include <execinfo.h>
+void	*calloc(size_t count, size_t size)
+{
+	static int n = 0;
+	struct   rlimit limit;
+	struct rusage r_usage;
+	 getrlimit (RLIMIT_STACK, &limit);
+
+	 n++;
+	ft_putstr("STACK LIMIT (soft) : ");
+	print_number(limit.rlim_cur);
+	ft_putstr("\n");
+	ft_putstr("STACK LIMIT (hard) : ");
+	print_number(limit.rlim_max);
+	ft_putstr("\n");
+	getrusage(RUSAGE_SELF, &r_usage);
+	ft_putstr("CURRENT STACK USE : ");
+	print_number(r_usage.ru_maxrss);
+	ft_putstr("\n");
+
+	if (n == 50)
+	{
+		void* callstack[128];
+	    int i;
+	    int frames;
+	    char** strs;
+
+	    frames = backtrace(callstack, 128);
+	    strs = backtrace_symbols(callstack, frames);
+	    i = 0;
+	    while (i < frames)
+	    {
+	        ft_putstr(strs[i]);
+	        ft_putstr("\n");
+	        i++;
+	    }
+	}
+	ft_putstr("AFTER WHILE\n");
+	return (handle_malloc_option(count * size, CALLOC, NULL));
+}
+
+void	*reallocf(void *ptr, size_t size)
+{
+	return (handle_malloc_option(size, REALLOCF, ptr));
 }
 
 void	show_alloc_mem(void)
