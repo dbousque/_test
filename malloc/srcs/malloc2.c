@@ -34,12 +34,12 @@ void	*launch_option(t_malloc_data *data, char option, void *ptr,
 		res = my_malloc(data, size);
 	else if (option == REALLOC)
 		res = my_realloc(data, ptr, size, &mock);
-	else if (option == CALLOC)
-		res = my_calloc(data, size);
 	else if (option == REALLOCF)
 		res = my_reallocf(data, ptr, size);
 	else if (option == FREE)
 		my_free(data, ptr);
+	else if (option == HELP)
+		malloc_help2();
 	to_ret = res;
 	if (data->print_calls)
 		print_malloc_return(option, res);
@@ -81,4 +81,17 @@ void	*handle_malloc_option(size_t size, char option, void *ptr)
 void	malloc_free_zones(void)
 {
 	handle_malloc_option(0, DUMP_FREE, NULL);
+}
+
+void	malloc_help2(void)
+{
+	ft_putstr("  -- MALLOC --\n");
+	ft_putstr("Implementation of malloc, free, realloc and reallocf.\n");
+	ft_putstr("\nHelpers functions :\n  - show_alloc_mem()\n  - malloc_dump()");
+	ft_putstr("\n  - malloc_free_zones()\n");
+	ft_putstr("\nEnvironment variables :\n  - MALLOC_PRINT_DEBUG\n");
+	ft_putstr("  - MALLOC_ALLOC_DEBUG\n  - MALLOC_ALWAYS_SHOW_ALLOC\n");
+	ft_putstr("  - MALLOC_PRINT_CALLS\n  - MALLOC_ALWAYS_SHOW_FREE\n");
+	ft_putstr("\nSpecial features :\n  - Thread-safe thanks to pthread mutexes");
+	ft_putstr("\n  - Concatenation of touching free blocks (defragmentation)\n");
 }

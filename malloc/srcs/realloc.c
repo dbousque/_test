@@ -39,8 +39,6 @@ void	*realloc_raw(t_malloc_data *data, void *prev_next_blocks[2],
 	return (new_raw(data, ptr, size));
 }
 
-	# include <stdio.h>
-
 void	*return_invalid(char *invalid_pointer)
 {
 	*invalid_pointer = 1;

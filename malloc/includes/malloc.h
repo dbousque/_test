@@ -27,6 +27,7 @@
 # define DUMP_FREE 6
 # define CALLOC 7
 # define REALLOCF 8
+# define HELP 9
 # define NB_PAGES_PER_SMALL_ZONE 128
 # define NB_PAGES_PER_TINY_ZONE 16
 # define MAX_SMALL_BLOCK 4000
@@ -86,7 +87,9 @@ pthread_mutex_t 		lock;
 
 char					get_debug(int opt);
 void					*malloc(size_t size);
-void					*calloc(size_t count, size_t size);
+//void					*calloc(size_t count, size_t size);
+void					malloc_help(void);
+void					malloc_help2(void);
 void					*realloc(void *ptr, size_t size);
 void					free(void *ptr);
 void					*reallocf(void *ptr, size_t size);

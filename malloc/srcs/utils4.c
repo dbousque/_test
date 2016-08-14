@@ -12,10 +12,6 @@
 
 #include "malloc.h"
 
-
-
-	  # include <stdio.h>
-
 size_t	ft_strlen(char *str)
 {
 	size_t	i;
@@ -58,12 +54,6 @@ void	print_malloc_call(char option, void *ptr, size_t size)
 		print_address(ptr);
 		ft_putstr("\n");
 	}
-	else if (option == CALLOC)
-	{
-		ft_putstr("-- CALLOC CALLED WITH ");
-		print_number(size);
-		ft_putstr("\n");
-	}
 	else if (option == REALLOCF)
 	{
 		ft_putstr("-- REALLOCF CALLED WITH ");
@@ -87,12 +77,6 @@ void	print_malloc_return(char option, void *ptr)
 		ft_putstr("-- REALLOC RETURNS ");
 		print_address(ptr);
 		ft_putstr("\n");
-	}
-	else if (option == CALLOC)
-	{
-		ft_putstr("-- CALLOC RETURNS ");
-		print_address(ptr);
-		ft_putstr("\n");	
 	}
 	else if (option == REALLOCF)
 	{
