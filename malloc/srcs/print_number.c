@@ -6,14 +6,11 @@
 /*   By: dbousque <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/07/25 15:52:33 by dbousque          #+#    #+#             */
-/*   Updated: 2016/07/25 15:59:33 by dbousque         ###   ########.fr       */
+/*   Updated: 2016/08/15 12:31:54 by dbousque         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "malloc.h"
-
-
-	 # include <stdio.h>
 
 void	print_number_fd(size_t number, int fd)
 {

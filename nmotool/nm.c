@@ -2,9 +2,6 @@
 
 #include "nm.h"
 
-
- #   include <stdio.h>
-
 void	bad_executable(void)
 {
 	print_error("Unrecognized executable file format");
@@ -28,7 +25,16 @@ void	read_symtab_command(struct symtab_command *sym, char *ptr,
 			return (bad_executable());
 		if (((void*)(stringtable + symbol->n_un.n_strx)) >= (void*)ptr + file_size)
 			return (bad_executable());
-		printf("name : %s\n", &(stringtable[symbol->n_un.n_strx]));
+		if (symbol->n_value)
+		{
+			print_hexa_n(symbol->n_value, 16);
+			ft_putstr(" ");
+		}
+		else
+			print_n_char(' ', 17);
+		if (symbol->n_un.n_strx)
+			ft_putstr(&(stringtable[symbol->n_un.n_strx]));
+		ft_putstr("\n");
 		symbol = ((void*)symbol) + sizeof(struct nlist_64);
 		i++;
 	}

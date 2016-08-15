@@ -6,7 +6,7 @@
 /*   By: dbousque <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/07/25 15:53:02 by dbousque          #+#    #+#             */
-/*   Updated: 2016/07/25 16:00:04 by dbousque         ###   ########.fr       */
+/*   Updated: 2016/08/15 13:22:40 by dbousque         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,8 @@ void	*return_invalid(char *invalid_pointer)
 	return (NULL);
 }
 
-void	*my_realloc(t_malloc_data *data, void *ptr, size_t size, char *invalid_pointer)
+void	*my_realloc(t_malloc_data *data, void *ptr, size_t size,
+													char *invalid_pointer)
 {
 	size_t	zone_type;
 	void	*prev_next_blocks[2];

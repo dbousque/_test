@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "malloc.h"
+#include "nm.h"
 
 static int	ft_get_res_length(unsigned long long n, int base_length)
 {
@@ -60,4 +60,17 @@ void		print_ft_ntoa_base_fd(size_t n, char *base, int fd)
 void		print_ft_ntoa_base(size_t n, char *base)
 {
 	print_ft_ntoa_base_fd(n, base, 1);
+}
+
+void		print_hexa_n(size_t numb, int n)
+{
+	int		res_length;
+
+	res_length = ft_get_res_length(numb, 16);
+	while (n > res_length)
+	{
+		write(1, "0", 1);
+		n--;
+	}
+	print_ft_ntoa_base_fd2(numb, "0123456789abcdef", res_length, 1);
 }

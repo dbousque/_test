@@ -11,10 +11,22 @@
 # include <mach-o/loader.h>
 # include <mach-o/nlist.h>
 
-size_t		ft_strlen(char *str);
-void		ft_putstr(char *str);
-void		print_error(char *str);
-void		print_format(void);
-void		print_error_file(char *str, char *filename);
+# include "my_malloc.h"
+
+typedef struct	s_list
+{
+	void		**elts;
+	int			len;
+	int			size;
+}				t_list;
+
+size_t			ft_strlen(char *str);
+void			ft_putstr(char *str);
+void			print_error(char *str);
+void			print_format(void);
+void			print_error_file(char *str, char *filename);
+void			print_hexa_n(size_t numb, int n);
+void			print_n_char(char c, int n);
+void			*my_mmap(size_t size);
 
 #endif

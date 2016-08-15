@@ -6,15 +6,11 @@
 /*   By: dbousque <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/07/25 15:53:54 by dbousque          #+#    #+#             */
-/*   Updated: 2016/07/25 16:44:13 by dbousque         ###   ########.fr       */
+/*   Updated: 2016/08/15 12:30:51 by dbousque         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "malloc.h"
-
-
-
-	#  include <stdio.h>
 
 char	get_zone_type_ifs(void *ptr, void *start, t_malloc_data *data,
 													void **prev_next_block[2])
@@ -58,9 +54,6 @@ size_t	get_zone_type(t_malloc_data *data, void *ptr, void **prev_block,
 		while (1)
 		{
 			start = (void*)(data->zones.elts[i]);
-			/*ft_putstr("zone start : ");
-			print_address(start);
-			ft_putstr("\n");*/
 			res = get_zone_type_ifs(ptr, start, data, prev_next_block);
 			if (res != -1)
 				return (res);

@@ -6,7 +6,7 @@
 /*   By: dbousque <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/07/25 15:50:29 by dbousque          #+#    #+#             */
-/*   Updated: 2016/07/25 15:54:52 by dbousque         ###   ########.fr       */
+/*   Updated: 2016/08/15 12:26:07 by dbousque         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,8 +73,7 @@ void	my_free(t_malloc_data *data, void *ptr)
 	if (zone_type == TINY)
 		free_tiny(data, (ptr - sizeof(t_tiny_block)), prev_block, next_block);
 	else if (zone_type == SMALL)
-		free_small(data, (ptr - sizeof(t_small_block)),
-													prev_block, next_block);
+		free_small(data, (ptr - sizeof(t_small_block)), prev_block, next_block);
 	else
 		free_raw_block(data, zone_type - 4);
 }

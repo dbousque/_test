@@ -6,7 +6,7 @@
 /*   By: dbousque <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/07/25 15:51:43 by dbousque          #+#    #+#             */
-/*   Updated: 2016/07/25 16:49:19 by dbousque         ###   ########.fr       */
+/*   Updated: 2016/08/15 14:22:42 by dbousque         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,8 +54,7 @@ typedef struct			s_malloc_data
 	char				debug_alloc;
 	char				debug_print;
 	char				print_calls;
-	char				show_free_at_each_turn;
-	char				show_alloc_at_each_turn;
+	char				show_at_each_turn;
 }						t_malloc_data;
 
 typedef struct			s_zone
@@ -83,15 +82,15 @@ typedef struct			s_tiny_block
 
 typedef t_malloc_data	t_md;
 
-pthread_mutex_t 		lock;
+pthread_mutex_t			g_lock;
 
 char					get_debug(int opt);
 void					*malloc(size_t size);
-//void					*calloc(size_t count, size_t size);
 void					malloc_help(void);
 void					malloc_help2(void);
 void					*realloc(void *ptr, size_t size);
 void					free(void *ptr);
+void					malloc_dump(void);
 void					*reallocf(void *ptr, size_t size);
 void					*my_realloc(t_malloc_data *data, void *ptr,
 										size_t size, char *invalid_pointer);

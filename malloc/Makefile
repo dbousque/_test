@@ -6,7 +6,7 @@
 #    By: dbousque <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2016/01/12 18:40:30 by dbousque          #+#    #+#              #
-#    Updated: 2016/01/13 19:15:51 by dbousque         ###   ########.fr        #
+#    Updated: 2016/08/15 14:33:44 by dbousque         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -28,6 +28,7 @@ SOURCES		=	srcs/alloc.c \
 				srcs/linked_list.c \
 				srcs/malloc.c \
 				srcs/malloc2.c \
+				srcs/malloc3.c \
 				srcs/print_malloc.c \
 				srcs/print_malloc2.c \
 				srcs/print_number.c \
@@ -39,6 +40,7 @@ SOURCES		=	srcs/alloc.c \
 				srcs/utils2.c \
 				srcs/utils3.c \
 				srcs/utils4.c \
+				srcs/utils5.c \
 				srcs/utils_print.c \
 				srcs/utils_print2.c \
 				srcs/utils_print3.c
@@ -55,6 +57,7 @@ CC		=	gcc
 
 $(NAME): $(OBJECTS)
 	$(CC) $(WFLAGS) $(OBJECTS) -shared -o $(NAME)
+	rm -Rf libft_malloc.so
 	ln -s $(NAME) libft_malloc.so
 	printf "\e[32m----------------------------------\e[36m\n"
 	printf "\e[32m[✔]\e[36m $@"
