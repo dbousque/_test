@@ -1,9 +1,16 @@
-
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   my_malloc.c                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: dbousque <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2016/08/16 15:49:30 by dbousque          #+#    #+#             */
+/*   Updated: 2016/08/16 15:49:32 by dbousque         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
 #include "my_malloc.h"
-
-
-	 #include <stdio.h>
 
 char	alloc_new_zone(t_zone_list *allocs)
 {
@@ -12,14 +19,9 @@ char	alloc_new_zone(t_zone_list *allocs)
 	error = 0;
 	if (allocs->len == allocs->size)
 		double_allocs_size(allocs, &error);
-	if (error || !(allocs->elts[allocs->len].start = malloc(STD_ALLOC)))
-	{
-		printf("ERROR\n");
-		fflush(stdout);
+	if (error || !(allocs->elts[allocs->len].start =
+						MMAP_MODE ? my_mmap(STD_ALLOC) : malloc(STD_ALLOC)))
 		return (0);
-	}
-	printf("malloc : %p\n", allocs->elts[allocs->len].start);
-	fflush(stdout);
 	allocs->elts[allocs->len].current = allocs->elts[allocs->len].start;
 	allocs->elts[allocs->len].end = allocs->elts[allocs->len].start + STD_ALLOC;
 	allocs->len++;
@@ -30,12 +32,14 @@ void	*malloc_list(t_zone_list *allocs, size_t size)
 {
 	if (!allocs->size)
 	{
-		if (!(allocs->elts = malloc(sizeof(t_zone) * STD_NB_ZONES)))
+		allocs->elts = MMAP_MODE ? my_mmap(sizeof(t_zone) * STD_NB_ZONES)
+							: malloc(sizeof(t_zone) * STD_NB_ZONES);
+		if (!allocs->elts)
 			return (NULL);
 		allocs->len = 0;
 		allocs->size = STD_NB_ZONES;
 	}
-	if (allocs->elts[allocs->len - 1].current
+	if (allocs->len > 0 && allocs->elts[allocs->len - 1].current
 						+ size < allocs->elts[allocs->len - 1].end)
 	{
 		allocs->elts[allocs->len - 1].current += size;
@@ -59,6 +63,7 @@ void	*handle_malloc(char option, size_t size)
 
 void	*my_malloc(size_t size)
 {
+	//return (malloc(size));
 	return (handle_malloc(MALLOC, size));
 }
 
