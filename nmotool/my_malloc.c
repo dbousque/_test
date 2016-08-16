@@ -2,6 +2,9 @@
 
 #include "my_malloc.h"
 
+
+	 #include <stdio.h>
+
 char	alloc_new_zone(t_zone_list *allocs)
 {
 	char	error;
@@ -10,7 +13,13 @@ char	alloc_new_zone(t_zone_list *allocs)
 	if (allocs->len == allocs->size)
 		double_allocs_size(allocs, &error);
 	if (error || !(allocs->elts[allocs->len].start = malloc(STD_ALLOC)))
+	{
+		printf("ERROR\n");
+		fflush(stdout);
 		return (0);
+	}
+	printf("malloc : %p\n", allocs->elts[allocs->len].start);
+	fflush(stdout);
 	allocs->elts[allocs->len].current = allocs->elts[allocs->len].start;
 	allocs->elts[allocs->len].end = allocs->elts[allocs->len].start + STD_ALLOC;
 	allocs->len++;
