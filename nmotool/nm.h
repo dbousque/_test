@@ -13,6 +13,9 @@
 
 # include "my_malloc.h"
 
+# define BITS_64 1
+# define BITS_32 2
+
 typedef struct	s_list
 {
 	void		**elts;

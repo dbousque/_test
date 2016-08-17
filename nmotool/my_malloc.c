@@ -63,7 +63,6 @@ void	*handle_malloc(char option, size_t size)
 
 void	*my_malloc(size_t size)
 {
-	//return (malloc(size));
 	return (handle_malloc(MALLOC, size));
 }
 

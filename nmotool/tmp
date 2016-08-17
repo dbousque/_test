@@ -1,0 +1,754 @@
+0000000100001cd0 _ft_get_res_length e
+!
+0000000100000000 __mh_execute_header f
+!
+0000000100000d40 _bad_executable f
+!
+0000000100000d60 _bad_executable_null f
+!
+00000001000019a0 _ft_putstr f
+!
+00000001000019e0 _ft_putstrnl f
+!
+0000000100001160 _ft_streq f
+!
+0000000100001960 _ft_strlen f
+!
+0000000100001750 _get_file f
+!
+0000000100001110 _get_n_sect_32 f
+!
+0000000100000fe0 _get_n_sect_32_bis f
+!
+00000001000010c0 _get_n_sect_64 f
+!
+0000000100000e50 _get_n_sect_64_bis f
+cmd : 25
+looking for 14, currently 0, adding : 0
+cmd : 25
+looking for 14, currently 0, adding : 5
+cmd : 25
+looking for 14, currently 5, adding : 3
+cmd : 25
+looking for 14, currently 8, adding : 0
+cmd : 2147483682
+cmd : 2
+cmd : 11
+cmd : 14
+cmd : 27
+cmd : 36
+cmd : 42
+cmd : 2147483688
+cmd : 12
+cmd : 38
+cmd : 41
+
+RETURNING NULL
+cmd : 25
+looking for 14, currently 0, adding : 0
+cmd : 25
+looking for 14, currently 0, adding : 5
+cmd : 25
+looking for 14, currently 5, adding : 3
+cmd : 25
+looking for 14, currently 8, adding : 0
+cmd : 2147483682
+cmd : 2
+cmd : 11
+cmd : 14
+cmd : 27
+cmd : 36
+cmd : 42
+cmd : 2147483688
+cmd : 12
+cmd : 38
+cmd : 41
+
+RETURNING NULL
+cmd : 25
+looking for 14, currently 0, adding : 0
+cmd : 25
+looking for 14, currently 0, adding : 5
+cmd : 25
+looking for 14, currently 5, adding : 3
+cmd : 25
+looking for 14, currently 8, adding : 0
+cmd : 2147483682
+cmd : 2
+cmd : 11
+cmd : 14
+cmd : 27
+cmd : 36
+cmd : 42
+cmd : 2147483688
+cmd : 12
+cmd : 38
+cmd : 41
+
+RETURNING NULL
+cmd : 25
+looking for 14, currently 0, adding : 0
+cmd : 25
+looking for 14, currently 0, adding : 5
+cmd : 25
+looking for 14, currently 5, adding : 3
+cmd : 25
+looking for 14, currently 8, adding : 0
+cmd : 2147483682
+cmd : 2
+cmd : 11
+cmd : 14
+cmd : 27
+cmd : 36
+cmd : 42
+cmd : 2147483688
+cmd : 12
+cmd : 38
+cmd : 41
+
+RETURNING NULL
+cmd : 25
+looking for 14, currently 0, adding : 0
+cmd : 25
+looking for 14, currently 0, adding : 5
+cmd : 25
+looking for 14, currently 5, adding : 3
+cmd : 25
+looking for 14, currently 8, adding : 0
+cmd : 2147483682
+cmd : 2
+cmd : 11
+cmd : 14
+cmd : 27
+cmd : 36
+cmd : 42
+cmd : 2147483688
+cmd : 12
+cmd : 38
+cmd : 41
+
+RETURNING NULL
+cmd : 25
+looking for 14, currently 0, adding : 0
+cmd : 25
+looking for 14, currently 0, adding : 5
+cmd : 25
+looking for 14, currently 5, adding : 3
+cmd : 25
+looking for 14, currently 8, adding : 0
+cmd : 2147483682
+cmd : 2
+cmd : 11
+cmd : 14
+cmd : 27
+cmd : 36
+cmd : 42
+cmd : 2147483688
+cmd : 12
+cmd : 38
+cmd : 41
+
+RETURNING NULL
+cmd : 25
+looking for 14, currently 0, adding : 0
+cmd : 25
+looking for 14, currently 0, adding : 5
+cmd : 25
+looking for 14, currently 5, adding : 3
+cmd : 25
+looking for 14, currently 8, adding : 0
+cmd : 2147483682
+cmd : 2
+cmd : 11
+cmd : 14
+cmd : 27
+cmd : 36
+cmd : 42
+cmd : 2147483688
+cmd : 12
+cmd : 38
+cmd : 41
+
+RETURNING NULL
+cmd : 25
+looking for 14, currently 0, adding : 0
+cmd : 25
+looking for 14, currently 0, adding : 5
+cmd : 25
+looking for 14, currently 5, adding : 3
+cmd : 25
+looking for 14, currently 8, adding : 0
+cmd : 2147483682
+cmd : 2
+cmd : 11
+cmd : 14
+cmd : 27
+cmd : 36
+cmd : 42
+cmd : 2147483688
+cmd : 12
+cmd : 38
+cmd : 41
+
+RETURNING NULL
+cmd : 25
+looking for 14, currently 0, adding : 0
+cmd : 25
+looking for 14, currently 0, adding : 5
+cmd : 25
+looking for 14, currently 5, adding : 3
+cmd : 25
+looking for 14, currently 8, adding : 0
+cmd : 2147483682
+cmd : 2
+cmd : 11
+cmd : 14
+cmd : 27
+cmd : 36
+cmd : 42
+cmd : 2147483688
+cmd : 12
+cmd : 38
+cmd : 41
+
+RETURNING NULL
+cmd : 25
+looking for 14, currently 0, adding : 0
+cmd : 25
+looking for 14, currently 0, adding : 5
+cmd : 25
+looking for 14, currently 5, adding : 3
+cmd : 25
+looking for 14, currently 8, adding : 0
+cmd : 2147483682
+cmd : 2
+cmd : 11
+cmd : 14
+cmd : 27
+cmd : 36
+cmd : 42
+cmd : 2147483688
+cmd : 12
+cmd : 38
+cmd : 41
+
+RETURNING NULL
+cmd : 25
+looking for 14, currently 0, adding : 0
+cmd : 25
+looking for 14, currently 0, adding : 5
+cmd : 25
+looking for 14, currently 5, adding : 3
+cmd : 25
+looking for 14, currently 8, adding : 0
+cmd : 2147483682
+cmd : 2
+cmd : 11
+cmd : 14
+cmd : 27
+cmd : 36
+cmd : 42
+cmd : 2147483688
+cmd : 12
+cmd : 38
+cmd : 41
+
+RETURNING NULL
+cmd : 25
+looking for 14, currently 0, adding : 0
+cmd : 25
+looking for 14, currently 0, adding : 5
+cmd : 25
+looking for 14, currently 5, adding : 3
+cmd : 25
+looking for 14, currently 8, adding : 0
+cmd : 2147483682
+cmd : 2
+cmd : 11
+cmd : 14
+cmd : 27
+cmd : 36
+cmd : 42
+cmd : 2147483688
+cmd : 12
+cmd : 38
+cmd : 41
+
+RETURNING NULL
+cmd : 25
+looking for 14, currently 0, adding : 0
+cmd : 25
+looking for 14, currently 0, adding : 5
+cmd : 25
+looking for 14, currently 5, adding : 3
+cmd : 25
+looking for 14, currently 8,!
+0000000100001360 _get_type_of_n_sect_32 f
+!
+00000001000012d0 _get_type_of_n_sect_64 f
+!
+0000000100001630 _handle_64 f
+!
+0000000100001850 _launch_nm_for_file f
+!
+00000001000018c0 _main f
+!
+0000000100001210 _match_sect_name_with_type f
+!
+0000000100000f80 _n_sect_in_seg_32 f
+!
+0000000100000df0 _n_sect_in_seg_64 f
+!
+00000001000016f0 _nm f
+!
+0000000100001a20 _print_error f
+!
+0000000100001a70 _print_error_file f
+!
+0000000100001ad0 _print_format f
+!
+0000000100001d40 _print_ft_ntoa_base f
+ adding : 0
+cmd : 2147483682
+cmd : 2
+cmd : 11
+cmd : 14
+cmd : 27
+cmd : 36
+cmd : 42
+cmd : 2147483688
+cmd : 12
+cmd : 38
+cmd : 41
+
+RETURNING NULL
+cmd : 25
+looking for 14, currently 0, adding : 0
+cmd : 25
+looking for 14, currently 0, adding : 5
+cmd : 25
+looking for 14, currently 5, adding : 3
+cmd : 25
+looking for 14, currently 8, adding : 0
+cmd : 2147483682
+cmd : 2
+cmd : 11
+cmd : 14
+cmd : 27
+cmd : 36
+cmd : 42
+cmd : 2147483688
+cmd : 12
+cmd : 38
+cmd : 41
+
+RETURNING NULL
+cmd : 25
+looking for 14, currently 0, adding : 0
+cmd : 25
+looking for 14, currently 0, adding : 5
+cmd : 25
+looking for 14, currently 5, adding : 3
+cmd : 25
+looking for 14, currently 8, adding : 0
+cmd : 2147483682
+cmd : 2
+cmd : 11
+cmd : 14
+cmd : 27
+cmd : 36
+cmd : 42
+cmd : 2147483688
+cmd : 12
+cmd : 38
+cmd : 41
+
+RETURNING NULL
+cmd : 25
+looking for 14, currently 0, adding : 0
+cmd : 25
+looking for 14, currently 0, adding : 5
+cmd : 25
+looking for 14, currently 5, adding : 3
+cmd : 25
+looking for 14, currently 8, adding : 0
+cmd : 2147483682
+cmd : 2
+cmd : 11
+cmd : 14
+cmd : 27
+cmd : 36
+cmd : 42
+cmd : 2147483688
+cmd : 12
+cmd : 38
+cmd : 41
+
+RETURNING NULL
+cmd : 25
+looking for 14, currently 0, adding : 0
+cmd : 25
+looking for 14, currently 0, adding : 5
+cmd : 25
+looking for 14, currently 5, adding : 3
+cmd : 25
+looking for 14, currently 8, adding : 0
+cmd : 2147483682
+cmd : 2
+cmd : 11
+cmd : 14
+cmd : 27
+cmd : 36
+cmd : 42
+cmd : 2147483688
+cmd : 12
+cmd : 38
+cmd : 41
+
+RETURNING NULL
+cmd : 25
+looking for 14, currently 0, adding : 0
+cmd : 25
+looking for 14, currently 0, adding : 5
+cmd : 25
+looking for 14, currently 5, adding : 3
+cmd : 25
+looking for 14, currently 8, adding : 0
+cmd : 2147483682
+cmd : 2
+cmd : 11
+cmd : 14
+cmd : 27
+cmd : 36
+cmd : 42
+cmd : 2147483688
+cmd : 12
+cmd : 38
+cmd : 41
+
+RETURNING NULL
+cmd : 25
+looking for 14, currently 0, adding : 0
+cmd : 25
+looking for 14, currently 0, adding : 5
+cmd : 25
+looking for 14, currently 5, adding : 3
+cmd : 25
+looking for 14, currently 8, adding : 0
+cmd : 2147483682
+cmd : 2
+cmd : 11
+cmd : 14
+cmd : 27
+cmd : 36
+cmd : 42
+cmd : 2147483688
+cmd : 12
+cmd : 38
+cmd : 41
+
+RETURNING NULL
+cmd : 25
+looking for 14, currently 0, adding : 0
+cmd : 25
+looking for 14, currently 0, adding : 5
+cmd : 25
+looking for 14, currently 5, adding : 3
+cmd : 25
+looking for 14, currently 8, adding : 0
+cmd : 2147483682
+cmd : 2
+cmd : 11
+cmd : 14
+cmd : 27
+cmd : 36
+cmd : 42
+cmd : 2147483688
+cmd : 12
+cmd : 38
+cmd : 41
+
+RETURNING NULL
+cmd : 25
+looking for 14, currently 0, adding : 0
+cmd : 25
+looking for 14, currently 0, adding : 5
+cmd : 25
+looking for 14, currently 5, adding : 3
+cmd : 25
+looking for 14, currently 8, adding : 0
+cmd : 2147483682
+cmd : 2
+cmd : 11
+cmd : 14
+cmd : 27
+cmd : 36
+cmd : 42
+cmd : 2147483688
+cmd : 12
+cmd : 38
+cmd : 41
+
+RETURNING NULL
+cmd : 25
+looking for 14, currently 0, adding : 0
+cmd : 25
+looking for 14, currently 0, adding : 5
+cmd : 25
+looking for 14, currently 5, adding : 3
+cmd : 25
+looking for 14, currently 8, adding : 0
+cmd : 2147483682
+cmd : 2
+cmd : 11
+cmd : 14
+cmd : 27
+cmd : 36
+cmd : 42
+cmd : 2147483688
+cmd : 12
+cmd : 38
+cmd : 41
+
+RETURNING NULL
+cmd : 25
+looking for 14, currently 0, adding : 0
+cmd : 25
+looking for 14, currently 0, adding : 5
+cmd : 25
+looking for 14, currently 5, adding : 3
+cmd : 25
+looking for 14, currently 8, adding : 0
+cmd : 2147483682
+cmd : 2
+cmd : 11
+cmd : 14
+cmd : 27
+cmd : 36
+cmd : 42
+cmd : 2147483688
+cmd : 12
+cmd : 38
+cmd : 41
+
+RETURNING NULL
+cmd : 25
+looking for 14, currently 0, adding : 0
+cmd : 25
+looking for 14, currently 0, adding : 5
+cmd : 25
+looking for 14, currently 5, adding : 3
+cmd : 25
+looking for 14, currently 8, adding : 0
+cmd : 2147483682
+cmd : 2
+cmd : 11
+cmd : 14
+cmd : 27
+cmd : 36
+cmd : 42
+cmd : 2147483688
+cmd : 12
+cmd : 38
+cmd : 41
+
+RETURNING NULL
+cmd : 25
+looking for 14, currently 0, adding : 0
+cmd : 25
+looking for 14, currently 0, adding : 5
+cmd : 25
+looking for 14, currently 5, adding : 3
+cmd : 25
+looking for 14, currently 8, adding : 0
+cmd : 2147483682
+cmd : 2
+cmd : 11
+cmd : 14
+cmd : 27
+cmd : 36
+cmd : 42
+cmd : 2147483688
+cmd : 12
+cmd : 38
+cmd : 41
+
+RETURNING NULL
+cmd : 25
+looking for 14, currently 0, addi!
+0000000100001c70 _print_ft_ntoa_base_fd f
+!
+0000000100001b50 _print_ft_ntoa_base_fd2 f
+!
+0000000100001d70 _print_hexa_n f
+!
+0000000100000d70 _print_local_or_ext f
+!
+0000000100001af0 _print_n_char f
+!
+00000001000013f0 _read_symtab_command f
+!
+                 ___stack_chk_fail 1
+U
+                 ___stack_chk_guard 1
+U
+                 _fstat$INODE64 1
+U
+                 _mmap 1
+U
+                 _munmap 1
+U
+                 _open 1
+U
+                 _printf 1
+U
+                 _write 1
+U
+                 dyld_stub_binder 1
+U
+ng : 0
+cmd : 25
+looking for 14, currently 0, adding : 5
+cmd : 25
+looking for 14, currently 5, adding : 3
+cmd : 25
+looking for 14, currently 8, adding : 0
+cmd : 2147483682
+cmd : 2
+cmd : 11
+cmd : 14
+cmd : 27
+cmd : 36
+cmd : 42
+cmd : 2147483688
+cmd : 12
+cmd : 38
+cmd : 41
+
+RETURNING NULL
+cmd : 25
+looking for 14, currently 0, adding : 0
+cmd : 25
+looking for 14, currently 0, adding : 5
+cmd : 25
+looking for 14, currently 5, adding : 3
+cmd : 25
+looking for 14, currently 8, adding : 0
+cmd : 2147483682
+cmd : 2
+cmd : 11
+cmd : 14
+cmd : 27
+cmd : 36
+cmd : 42
+cmd : 2147483688
+cmd : 12
+cmd : 38
+cmd : 41
+
+RETURNING NULL
+cmd : 25
+looking for 14, currently 0, adding : 0
+cmd : 25
+looking for 14, currently 0, adding : 5
+cmd : 25
+looking for 14, currently 5, adding : 3
+cmd : 25
+looking for 14, currently 8, adding : 0
+cmd : 2147483682
+cmd : 2
+cmd : 11
+cmd : 14
+cmd : 27
+cmd : 36
+cmd : 42
+cmd : 2147483688
+cmd : 12
+cmd : 38
+cmd : 41
+
+RETURNING NULL
+cmd : 25
+looking for 14, currently 0, adding : 0
+cmd : 25
+looking for 14, currently 0, adding : 5
+cmd : 25
+looking for 14, currently 5, adding : 3
+cmd : 25
+looking for 14, currently 8, adding : 0
+cmd : 2147483682
+cmd : 2
+cmd : 11
+cmd : 14
+cmd : 27
+cmd : 36
+cmd : 42
+cmd : 2147483688
+cmd : 12
+cmd : 38
+cmd : 41
+
+RETURNING NULL
+cmd : 25
+looking for 14, currently 0, adding : 0
+cmd : 25
+looking for 14, currently 0, adding : 5
+cmd : 25
+looking for 14, currently 5, adding : 3
+cmd : 25
+looking for 14, currently 8, adding : 0
+cmd : 2147483682
+cmd : 2
+cmd : 11
+cmd : 14
+cmd : 27
+cmd : 36
+cmd : 42
+cmd : 2147483688
+cmd : 12
+cmd : 38
+cmd : 41
+
+RETURNING NULL
+cmd : 25
+looking for 14, currently 0, adding : 0
+cmd : 25
+looking for 14, currently 0, adding : 5
+cmd : 25
+looking for 14, currently 5, adding : 3
+cmd : 25
+looking for 14, currently 8, adding : 0
+cmd : 2147483682
+cmd : 2
+cmd : 11
+cmd : 14
+cmd : 27
+cmd : 36
+cmd : 42
+cmd : 2147483688
+cmd : 12
+cmd : 38
+cmd : 41
+
+RETURNING NULL
+cmd : 25
+looking for 14, currently 0, adding : 0
+cmd : 25
+looking for 14, currently 0, adding : 5
+cmd : 25
+looking for 14, currently 5, adding : 3
+cmd : 25
+looking for 14, currently 8, adding : 0
+cmd : 2147483682
+cmd : 2
+cmd : 11
+cmd : 14
+cmd : 27
+cmd : 36
+cmd : 42
+cmd : 2147483688
+cmd : 12
+cmd : 38
+cmd : 41
+
+RETURNING NULL

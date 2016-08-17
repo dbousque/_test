@@ -9,7 +9,7 @@
 # define FREE 2
 # define STD_ALLOC 4096 * 4096
 # define STD_NB_ZONES 64
-# define MMAP_MODE 1
+# define MMAP_MODE 0
 
 typedef struct	s_zone
 {
