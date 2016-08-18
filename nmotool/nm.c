@@ -21,7 +21,7 @@ void	print_local_or_ext(struct nlist_64 *symbol, char c)
 	char	to_print;
 
 	to_print = c;
-	if (c >= 'A' && c <= 'Z' && !symbol->n_type & N_EXT)
+	if (c >= 'A' && c <= 'Z' && !(symbol->n_type & N_EXT))
 		to_print = c - 'A' + 'a';
 	write(1, &to_print, 1);
 }
@@ -41,23 +41,30 @@ struct section_64	*n_sect_in_seg_64(struct segment_command_64 *seg, size_t n)
 	return (sect);
 }
 
-struct section_64	*get_n_sect_64_bis(struct load_command *lc, void *end_file,
-														int ncmds, size_t n)
+struct section_64	*get_n_sect_64(void *ptr, size_t file_size, size_t n,
+												struct segment_command_64 **seg)
 {
-	int		i;
-	int		nb_sect;
+	uint32_t				i;
+	int						nb_sect;
+	struct mach_header_64	*header;
+	struct load_command		*lc;
 
+	lc = (struct load_command*)(ptr + sizeof(struct mach_header_64));
+	header = (struct mach_header_64*)ptr;
 	nb_sect = 0;
 	i = 0;
-	while (i < ncmds)
+	while (i < header->ncmds)
 	{
-		if (((void*)lc) + sizeof(struct load_command) > end_file)
+		if (((void*)lc) + sizeof(struct load_command) > (void*)ptr + file_size)
 			return (bad_executable_null());
 		if (lc->cmd == LC_SEGMENT_64)
 		{
 			if (nb_sect + ((struct segment_command_64*)lc)->nsects >= n)
+			{
+				*seg = (struct segment_command_64*)lc;
 				return (n_sect_in_seg_64((struct segment_command_64*)lc,
 															n - nb_sect));
+			}
 			nb_sect += ((struct segment_command_64*)lc)->nsects;
 		}
 		i++;
@@ -81,46 +88,36 @@ struct section	*n_sect_in_seg_32(struct segment_command *seg, size_t n)
 	return (sect);
 }
 
-struct section	*get_n_sect_32_bis(struct load_command *lc, void *end_file,
-														int ncmds, size_t n)
+struct section	*get_n_sect_32(void *ptr, size_t file_size, size_t n,
+												struct segment_command **seg)
 {
-	int		i;
-	int		nb_sect;
+	uint32_t				i;
+	int						nb_sect;
+	struct mach_header		*header;
+	struct load_command		*lc;
 
+	lc = (struct load_command*)(ptr + sizeof(struct mach_header));
+	header = (struct mach_header*)ptr;
+	lc = ((struct load_command*)(void*)ptr + sizeof(struct mach_header));
 	nb_sect = 0;
 	i = 0;
-	while (i < ncmds)
+	while (i < header->ncmds)
 	{
-		if (((void*)lc) + sizeof(struct load_command) > end_file)
+		if (((void*)lc) + sizeof(struct load_command) > (void*)ptr + file_size)
 			return (bad_executable_null());
 		if (lc->cmd == LC_SEGMENT)
 		{
 			if (nb_sect + ((struct segment_command*)lc)->nsects >= n)
+			{
+				*seg = (struct segment_command*)lc;
 				return (n_sect_in_seg_32((struct segment_command*)lc, n - nb_sect));
+			}
 			nb_sect += ((struct segment_command*)lc)->nsects;
 		}
 		i++;
 		lc = ((void*)lc) + lc->cmdsize;
 	}
 	return (NULL);
-}
-
-struct section_64	*get_n_sect_64(char *ptr, size_t file_size, size_t n)
-{
-	struct mach_header_64	*header;
-
-	header = (struct mach_header_64*)ptr;
-	return (get_n_sect_64_bis((void*)ptr + sizeof(struct mach_header_64),
-								(void*)ptr + file_size, header->ncmds, n));
-}
-
-struct section	*get_n_sect_32(char *ptr, size_t file_size, size_t n)
-{
-	struct mach_header	*header;
-
-	header = (struct mach_header*)ptr;
-	return (get_n_sect_32_bis((void*)ptr + sizeof(struct mach_header),
-								(void*)ptr + file_size, header->ncmds, n));
 }
 
 char	ft_streq(char *str1, char *str2)
@@ -135,25 +132,28 @@ char	ft_streq(char *str1, char *str2)
 	return (0);
 }
 
-char	match_sect_name_with_type(char *name)
+char	match_sect_name_with_type(char *seg_name, char *sect_name)
 {
-	if (ft_streq(name, SECT_TEXT))
+	if (ft_streq(seg_name, SEG_TEXT) && ft_streq(sect_name, SECT_TEXT))
 		return ('T');
-	if (ft_streq(name, SECT_DATA))
+	if (ft_streq(seg_name, SEG_DATA) && ft_streq(sect_name, SECT_DATA))
 		return ('D');
-	if (ft_streq(name, SECT_BSS))
+	if (ft_streq(seg_name, SEG_DATA) && ft_streq(sect_name, SECT_BSS))
 		return ('B');
-	if (ft_streq(name, SECT_COMMON))
+	if (ft_streq(seg_name, SEG_DATA) && ft_streq(sect_name, SECT_COMMON))
 		return ('C');
 	return ('S');
 }
 
 char	get_type_of_n_sect_64(void *ptr, size_t file_size, size_t n)
 {
-	struct section_64	*sect;
-	char				*name;
+	struct section_64			*sect;
+	struct segment_command_64	*seg;
+	char						*sect_name;
+	char						*seg_name;
 
-	sect = get_n_sect_64(ptr, file_size, n);
+	seg = NULL;
+	sect = get_n_sect_64(ptr, file_size, n, &seg);
 	if (!sect)
 		return ('!');
 	if (((void*)sect) + sizeof(struct section_64) > ptr + file_size)
@@ -161,16 +161,20 @@ char	get_type_of_n_sect_64(void *ptr, size_t file_size, size_t n)
 		bad_executable();
 		return ('!');
 	}
-	name = sect->sectname;
-	return (match_sect_name_with_type(name));
+	seg_name = seg->segname;
+	sect_name = sect->sectname;
+	return (match_sect_name_with_type(seg_name, sect_name));
 }
 
 char	get_type_of_n_sect_32(void *ptr, size_t file_size, size_t n)
 {
-	struct section	*sect;
-	char			*name;
+	struct section			*sect;
+	struct segment_command	*seg;
+	char					*sect_name;
+	char					*seg_name;
 
-	sect = get_n_sect_32(ptr, file_size, n);
+	seg = NULL;
+	sect = get_n_sect_32(ptr, file_size, n, &seg);
 	if (!sect)
 		return ('!');
 	if (((void*)sect) + sizeof(struct section_64) > ptr + file_size)
@@ -178,8 +182,9 @@ char	get_type_of_n_sect_32(void *ptr, size_t file_size, size_t n)
 		bad_executable();
 		return ('!');
 	}
-	name = sect->sectname;
-	return (match_sect_name_with_type(name));
+	seg_name = seg->segname;
+	sect_name = sect->sectname;
+	return (match_sect_name_with_type(seg_name, sect_name));
 }
 
 void	read_symtab_command(struct symtab_command *sym, void *ptr,
