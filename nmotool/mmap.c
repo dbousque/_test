@@ -12,7 +12,7 @@
 
 #include "nm.h"
 
-size_t	ft_strlen(char *str)
+size_t	ft_strlen2(char *str)
 {
 	size_t	i;
 
@@ -27,7 +27,7 @@ void	mmap_failed(void)
 	char	*str;
 
 	str = "allocation failed\n";
-	write(2, str, ft_strlen(str));
+	write(2, str, ft_strlen2(str));
 }
 
 void	munmap_failed(void)
@@ -35,7 +35,7 @@ void	munmap_failed(void)
 	char	*str;
 
 	str = "deallocation failed\n";
-	write(2, str, ft_strlen(str));
+	write(2, str, ft_strlen2(str));
 }
 
 void	*my_mmap(size_t size)

@@ -15,21 +15,51 @@
 
 # define BITS_64 1
 # define BITS_32 2
+# define MACH_O_64 1
+# define MACH_O_32 2
+# define FAT
 
-typedef struct	s_list
+typedef struct		s_list
 {
-	void		**elts;
-	int			len;
-	int			size;
-}				t_list;
+	void			**elts;
+	int				len;
+	int				size;
+}					t_list;
 
-size_t			ft_strlen(char *str);
-void			ft_putstr(char *str);
-void			print_error(char *str);
-void			print_format(void);
-void			print_error_file(char *str, char *filename);
-void			print_hexa_n(size_t numb, int n);
-void			print_n_char(char c, int n);
-void			*my_mmap(size_t size);
+typedef struct		s_symbol
+{
+	char			exec_type;
+	void			*symbol;
+	void			*sect;
+	void			*seg;
+}					t_symbol;
+
+size_t				ft_strlen(char *str);
+void				ft_putstr(char *str);
+void				print_error(char *str);
+void				print_format(void);
+void				print_error_file(char *str, char *filename);
+void				print_hexa_n(size_t numb, int n);
+void				print_n_char(char c, int n);
+t_list				*new_list(void);
+void				add_to_list(t_list *lst, void *elt);
+struct section_64	*get_n_sect_64(void *ptr, size_t n,
+											struct segment_command_64 **seg);
+struct section		*get_n_sect_32(void *ptr, size_t n,
+												struct segment_command **seg);
+void				*bad_executable_null(void);
+void				set_valid_pointer(void *start, void *end);
+char				valid_pointer(void *ptr);
+void				reset_valid_pointer(void);
+void				bad_executable(void);
+void				handle_file(char *ptr, char type);
+void				print_symbol_64(t_symbol *symb, char *stringtable);
+void				print_symbol_32(t_symbol *symb, char *stringtable);
+char				match_sect_name_with_type(char *seg_name, char *sect_name);
+void				print_local_or_ext_64(struct nlist_64 *symbol, char c);
+void				print_local_or_ext_32(struct nlist *symbol, char c);
+t_list				*get_mach_o_32_symbols(void *ptr, char **stringtable);
+t_list				*get_mach_o_64_symbols(void *ptr, char **stringtable);
+t_list				*get_fat_symbols(void *ptr, char **stringtable);
 
 #endif
