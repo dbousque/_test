@@ -27,6 +27,42 @@ void	handle_fat(void *ptr, size_t size)
 	nm(start, res_size);
 }
 
+void	handle_ranlib(void *ptr, size_t size)
+{
+	struct ar_hdr	*header;
+	struct ranlib	*ran;
+	size_t			ar_size;
+
+	(void)size;
+	header = ptr;
+	ft_putstrn(header->ar_name, 16);
+	ft_putstr("\n");
+	ft_putstrn(header->ar_date, 12);
+	ft_putstr("\n");
+	ft_putstrn(header->ar_uid, 6);
+	ft_putstr("\n");
+	ft_putstrn(header->ar_gid, 6);
+	ft_putstr("\n");
+	ft_putstrn(header->ar_mode, 8);
+	ft_putstr("\n");
+	ft_putstrn(header->ar_size, 10);
+	ft_putstr("\n");
+	ar_size = ft_atoi(header->ar_size);
+	ran = ((void*)header) + sizeof(struct ar_hdr);
+	size_t i = 0;
+	while (1)
+	{
+		if ((void*)ran >= ptr + size || (void*)ran >= ptr + sizeof(struct ar_hdr) + ar_size)
+			break ;
+		print_hexa_n(ran->ran_off, 0);
+		ft_putstr("\n");
+		if (i > 1)
+			nm(ptr + ran->ran_off, size);
+		ran = ((void*)ran) + sizeof(struct ranlib);
+		i++;
+	}
+}
+
 void	nm(char *ptr, size_t size)
 {
 	unsigned int	magic;
@@ -36,6 +72,12 @@ void	nm(char *ptr, size_t size)
 				&& ptr + sizeof(struct fat_header) < ptr + size)
 	{
 		handle_fat(ptr, size);
+		return ;
+	}
+	else if (size >= 8 && ptr[0] == '!' && ptr[1] == '<' && ptr[2] == 'a'
+		&& ptr[3] == 'r' && ptr[4] == 'c' && ptr[5] == 'h' && ptr[6] == '>' && ptr[7] == '\n')
+	{
+		handle_ranlib(ptr + 8, size);
 		return ;
 	}
 	set_valid_pointer(ptr, ptr + size);

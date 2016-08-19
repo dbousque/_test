@@ -12,6 +12,8 @@
 # include <mach-o/nlist.h>
 # include <mach-o/fat.h>
 # include <mach/machine.h>
+# include <mach-o/ranlib.h>
+# include <ar.h>
 
 # include "my_malloc.h"
 
@@ -65,5 +67,8 @@ t_list				*get_mach_o_64_symbols(void *ptr, char **stringtable);
 t_list				*get_fat_symbols(void *ptr, char **stringtable);
 void				*get_fat_start(void *ptr, size_t *res_size, size_t size);
 void				nm(char *ptr, size_t size);
+char				ft_streq(char *str1, char *str2);
+void				ft_putstrn(char *str, int n);
+int					ft_atoi(const char *str);
 
 #endif

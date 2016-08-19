@@ -13,3 +13,8 @@ void	print_n_char(char c, int n)
 		i++;
 	}
 }
+
+void	ft_putstrn(char *str, int n)
+{
+	write(1, str, n);
+}
