@@ -40,6 +40,7 @@ char	valid_pointer(void *ptr)
 
 void	set_valid_pointer(void *start, void *end)
 {
+	reset_valid_pointer();
 	valid_pointer(start);
 	valid_pointer(end);
 }

@@ -28,8 +28,6 @@ void	handle_file(char *ptr, char type)
 		symbols = get_mach_o_64_symbols(ptr, &stringtable);
 	else if (type == MACH_O_32)
 		symbols = get_mach_o_32_symbols(ptr, &stringtable);
-	else if (type == FAT)
-		symbols = get_fat_symbols(ptr, &stringtable);
 	if (symbols)
 		print_symbols(symbols, stringtable);
 }

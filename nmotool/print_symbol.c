@@ -39,6 +39,8 @@ void	print_symbol_64(t_symbol *symb, char *stringtable)
 	symbol = (struct nlist_64*)symb->symbol;
 	sect = (struct section*)symb->sect;
 	seg = (struct segment_command*)symb->seg;
+	if (symbol->n_type & N_STAB)
+		return ;
 	if ((symbol->n_type & N_TYPE) == N_UNDF)
 	{
 		print_n_char(' ', 17);
@@ -65,6 +67,8 @@ void	print_symbol_32(t_symbol *symb, char *stringtable)
 	symbol = (struct nlist*)symb->symbol;
 	sect = (struct section*)symb->sect;
 	seg = (struct segment_command*)symb->seg;
+	if (symbol->n_type & N_STAB)
+		return ;
 	if ((symbol->n_type & N_TYPE) == N_UNDF)
 	{
 		print_n_char(' ', 9);

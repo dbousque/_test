@@ -12,23 +12,44 @@
 
 #include "nm.h"
 
+void	handle_fat(void *ptr, size_t size)
+{
+	void	*start;
+	size_t	res_size;
+
+	start = get_fat_start(ptr, &res_size, size);
+	if (!start)
+	{
+		ft_putstr("NO START\n");
+		bad_executable();
+		return ;
+	}
+	nm(start, res_size);
+}
+
 void	nm(char *ptr, size_t size)
 {
 	unsigned int	magic;
 
-	set_valid_pointer(ptr, ptr + size);
 	magic = *(int*)ptr;
+	if (magic == FAT_CIGAM
+				&& ptr + sizeof(struct fat_header) < ptr + size)
+	{
+		handle_fat(ptr, size);
+		return ;
+	}
+	set_valid_pointer(ptr, ptr + size);
 	if (magic == MH_MAGIC_64
 				&& valid_pointer(ptr + sizeof(struct mach_header_64)))
 		handle_file(ptr, MACH_O_64);
 	else if (magic == MH_MAGIC
 				&& valid_pointer(ptr + sizeof(struct mach_header)))
 		handle_file(ptr, MACH_O_32);
-	else if (magic == FAT_MAGIC
-				&& valid_pointer(ptr + sizeof(struct fat_header)))
-		handle_file(ptr, FAT);
 	else
+	{
+		ft_putstr("NOT RECOGNIZED\n");
 		bad_executable();
+	}
 	reset_valid_pointer();
 }
 

@@ -10,6 +10,8 @@
 # include <unistd.h>
 # include <mach-o/loader.h>
 # include <mach-o/nlist.h>
+# include <mach-o/fat.h>
+# include <mach/machine.h>
 
 # include "my_malloc.h"
 
@@ -17,7 +19,7 @@
 # define BITS_32 2
 # define MACH_O_64 1
 # define MACH_O_32 2
-# define FAT
+# define FAT 3
 
 typedef struct		s_list
 {
@@ -61,5 +63,7 @@ void				print_local_or_ext_32(struct nlist *symbol, char c);
 t_list				*get_mach_o_32_symbols(void *ptr, char **stringtable);
 t_list				*get_mach_o_64_symbols(void *ptr, char **stringtable);
 t_list				*get_fat_symbols(void *ptr, char **stringtable);
+void				*get_fat_start(void *ptr, size_t *res_size, size_t size);
+void				nm(char *ptr, size_t size);
 
 #endif

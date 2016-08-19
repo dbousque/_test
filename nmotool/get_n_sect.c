@@ -9,7 +9,7 @@ struct section_64	*n_sect_in_seg_64(struct segment_command_64 *seg, size_t n)
 
 	sect = ((void*)seg) + sizeof(struct segment_command_64);
 	i = 0;
-	while (i < n - 1)
+	while (n > 0 && i < n - 1)
 	{
 		sect += sizeof(struct section_64);
 		i++;
@@ -54,7 +54,7 @@ struct section	*n_sect_in_seg_32(struct segment_command *seg, size_t n)
 
 	sect = ((void*)seg) + sizeof(struct segment_command);
 	i = 0;
-	while (i < n - 1)
+	while (n > 0 && i < n - 1)
 	{
 		sect += sizeof(struct section);
 		i++;
