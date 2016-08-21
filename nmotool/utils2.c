@@ -4,7 +4,7 @@
 
 void	bad_executable(void)
 {
-	print_error("Unrecognized executable file format");
+	print_error("Unrecognized file format");
 }
 
 void	*bad_executable_null(void)

@@ -36,3 +36,23 @@ void	add_to_list(t_list *lst, void *elt)
 	lst->elts[lst->len] = elt;
 	lst->len++;
 }
+
+void	sort_list(t_list *list, int (*cmp)(void *elt1, void *elt2))
+{
+	quicksort(list->elts, 0, list->len, cmp);
+}
+
+void	reverse_list(t_list *list)
+{
+	int		i;
+	void	*tmp;
+
+	i = 0;
+	while (i < list->len / 2)
+	{
+		tmp = list->elts[i];
+		list->elts[i] = list->elts[list->len - 1 - i];
+		list->elts[list->len - 1 - i] = tmp;
+		i++;
+	}
+}

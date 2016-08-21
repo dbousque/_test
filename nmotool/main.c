@@ -12,7 +12,7 @@
 
 #include "nm.h"
 
-void	handle_fat(void *ptr, size_t size)
+void	handle_fat(void *ptr, size_t size, char *file_name)
 {
 	void	*start;
 	size_t	res_size;
@@ -20,50 +20,13 @@ void	handle_fat(void *ptr, size_t size)
 	start = get_fat_start(ptr, &res_size, size);
 	if (!start)
 	{
-		ft_putstr("NO START\n");
 		bad_executable();
 		return ;
 	}
-	nm(start, res_size);
+	nm(start, res_size, file_name);
 }
 
-void	handle_ranlib(void *ptr, size_t size)
-{
-	struct ar_hdr	*header;
-	struct ranlib	*ran;
-	size_t			ar_size;
-
-	(void)size;
-	header = ptr;
-	ft_putstrn(header->ar_name, 16);
-	ft_putstr("\n");
-	ft_putstrn(header->ar_date, 12);
-	ft_putstr("\n");
-	ft_putstrn(header->ar_uid, 6);
-	ft_putstr("\n");
-	ft_putstrn(header->ar_gid, 6);
-	ft_putstr("\n");
-	ft_putstrn(header->ar_mode, 8);
-	ft_putstr("\n");
-	ft_putstrn(header->ar_size, 10);
-	ft_putstr("\n");
-	ar_size = ft_atoi(header->ar_size);
-	ran = ((void*)header) + sizeof(struct ar_hdr);
-	size_t i = 0;
-	while (1)
-	{
-		if ((void*)ran >= ptr + size || (void*)ran >= ptr + sizeof(struct ar_hdr) + ar_size)
-			break ;
-		print_hexa_n(ran->ran_off, 0);
-		ft_putstr("\n");
-		if (i > 1)
-			nm(ptr + ran->ran_off, size);
-		ran = ((void*)ran) + sizeof(struct ranlib);
-		i++;
-	}
-}
-
-void	nm(char *ptr, size_t size)
+void	nm(char *ptr, size_t size, char *file_name)
 {
 	unsigned int	magic;
 
@@ -71,27 +34,24 @@ void	nm(char *ptr, size_t size)
 	if (magic == FAT_CIGAM
 				&& ptr + sizeof(struct fat_header) < ptr + size)
 	{
-		handle_fat(ptr, size);
+		handle_fat(ptr, size, file_name);
 		return ;
 	}
 	else if (size >= 8 && ptr[0] == '!' && ptr[1] == '<' && ptr[2] == 'a'
 		&& ptr[3] == 'r' && ptr[4] == 'c' && ptr[5] == 'h' && ptr[6] == '>' && ptr[7] == '\n')
 	{
-		handle_ranlib(ptr + 8, size);
+		handle_ranlib(ptr + 8, size, file_name);
 		return ;
 	}
 	set_valid_pointer(ptr, ptr + size);
 	if (magic == MH_MAGIC_64
 				&& valid_pointer(ptr + sizeof(struct mach_header_64)))
-		handle_file(ptr, MACH_O_64);
+		handle_file(ptr, MACH_O_64, file_name);
 	else if (magic == MH_MAGIC
 				&& valid_pointer(ptr + sizeof(struct mach_header)))
-		handle_file(ptr, MACH_O_32);
+		handle_file(ptr, MACH_O_32, file_name);
 	else
-	{
-		ft_putstr("NOT RECOGNIZED\n");
 		bad_executable();
-	}
 	reset_valid_pointer();
 }
 
@@ -128,29 +88,54 @@ void	launch_nm_for_file(char *filename)
 
 	if (!(get_file(filename, &ptr, &size)))
 		return ;
-	nm(ptr, size);
+	nm(ptr, size, filename);
 	if (munmap(ptr, size) < 0)
 		print_error_file("munmap failed", filename);
+}
+
+int		display_help(void)
+{
+	ft_putstr("             -- nm --\n  displays content of Mach O files\n\n");
+	ft_putstr("implemented options :\n");
+	ft_putstr("  -g : Display only global (external) symbols.\n");
+	ft_putstr("  -n : Sort numerically rather than alphabetically.\n");
+	ft_putstr("  -o : Prepend file or archive element name to each output ");
+	ft_putstr("line rather than only once.\n");
+	ft_putstr("  -p : Don't sort; display in symbol-table order.\n");
+	ft_putstr("  -r : Sort in reverse order.\n");
+	ft_putstr("  -u : Display only undefined symbols.\n");
+	ft_putstr("  -U : Don't display undefined symbols.\n");
+	clear_options();
+	free_all();
+	return (0);
 }
 
 int		main(int argc, char **argv)
 {
 	int		i;
+	int		start;
+	t_flags	options;
 
-	if (argc < 2)
+	if (argc > 1 && ft_streq(argv[1], "-help"))
+		return (display_help());
+	void_options(&options);
+	set_current_options(&options);
+	start = read_options(argc, argv, &options);
+	if (start > argc - 1)
 		launch_nm_for_file("a.out");
-	i = 1;
-	while (i < argc)
+	i = 0;
+	while (i + start < argc)
 	{
-		if (argc > 2)
+		if (argc - start > 1)
 		{
 			ft_putstr("\n");
-			ft_putstr(argv[i]);
+			ft_putstr(argv[i + start]);
 			ft_putstr(":\n");
 		}
-		launch_nm_for_file(argv[i]);
+		launch_nm_for_file(argv[i + start]);
 		i++;
 	}
+	clear_options();
 	free_all();
 	return (0);
 }
