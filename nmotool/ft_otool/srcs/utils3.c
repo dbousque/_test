@@ -30,3 +30,18 @@ char	ft_streq(char *str1, char *str2)
 		return (1);
 	return (0);
 }
+
+void	print_n_bytes(unsigned char *start, size_t i, int nb_bytes,
+																	size_t end)
+{
+	size_t	x;
+
+	(void)end;
+	x = i;
+	while (x < i + nb_bytes && x < end)
+	{
+		print_hexa_n(start[x], 2);
+		ft_putstr(" ");
+		x++;
+	}
+}

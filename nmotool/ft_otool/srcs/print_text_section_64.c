@@ -2,27 +2,19 @@
 
 #include "otool.h"
 
-static void	print_n_bytes(unsigned char *start, size_t i, int nb_bytes,
-																	size_t end)
-{
-	size_t	x;
-
-	(void)end;
-	x = i;
-	while (x < i + nb_bytes && x < end)
-	{
-		print_hexa_n(start[x], 2);
-		ft_putstr(" ");
-		x++;
-	}
-}
-
 void	print_section_64(void *ptr, size_t offset, size_t size, char *file_name)
 {
-	size_t	decal;
-	size_t	i;
+	long		decal;
+	size_t		i;
+	uint32_t	filetype;
 
-	decal = 0x100000000;
+	filetype = get_filetype();
+	if (filetype == MH_OBJECT)
+		decal = -((long)offset);
+	else if (filetype == MH_DYLIB)
+		decal = 0;
+	else
+		decal = 0x100000000;
 	(void)ptr;
 	(void)size;
 	(void)file_name;
@@ -73,6 +65,7 @@ void	print_text_section_64(void *ptr, t_flags *options, char *file_name)
 	struct load_command		*lc;
 
 	header = (struct mach_header_64*)ptr;
+	set_filetype(header->filetype);
 	ncmds = header->ncmds;
 	lc = ptr + sizeof(struct mach_header_64);
 	i = 0;
@@ -81,7 +74,8 @@ void	print_text_section_64(void *ptr, t_flags *options, char *file_name)
 		if (!valid_pointer(((void*)lc) + sizeof(struct load_command)))
 			return ;
 		if (lc->cmd == LC_SEGMENT_64
-			&& ft_streq(((struct segment_command_64*)lc)->segname, SEG_TEXT))
+			&& (ft_streq(((struct segment_command_64*)lc)->segname, SEG_TEXT)
+				|| header->filetype == MH_OBJECT))
 			print_text_64(ptr, (struct segment_command_64*)lc, options, file_name);
 		i++;
 		lc = ((void*)lc) + lc->cmdsize;

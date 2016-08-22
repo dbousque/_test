@@ -23,14 +23,35 @@ void	handle_fat(void *ptr, size_t size, char *file_name)
 		bad_executable();
 		return ;
 	}
-	otool(start, res_size, file_name);
+	otool(start, res_size, file_name, 0);
 }
 
-void	otool(char *ptr, size_t size, char *file_name)
+void	print_file_name(char *file_name, unsigned int magic, char *ptr,
+																	size_t size)
+{
+	(void)magic;
+	if (size >= 8 && ptr[0] == '!' && ptr[1] == '<' && ptr[2] == 'a'
+		&& ptr[3] == 'r' && ptr[4] == 'c' && ptr[5] == 'h'
+		&& ptr[6] == '>' && ptr[7] == '\n')
+	{
+		ft_putstr("Archive : ");
+		ft_putstr(file_name);
+		ft_putstr("\n");
+	}
+	else
+	{
+		ft_putstr(file_name);
+		ft_putstr(":\n");
+	}
+}
+
+void	otool(char *ptr, size_t size, char *file_name, char print_file)
 {
 	unsigned int	magic;
 
 	magic = *(int*)ptr;
+	if (print_file)
+		print_file_name(file_name, magic, ptr, size);
 	if (magic == FAT_CIGAM
 				&& ptr + sizeof(struct fat_header) < ptr + size)
 	{
@@ -88,7 +109,7 @@ void	launch_otool_for_file(char *filename)
 
 	if (!(get_file(filename, &ptr, &size)))
 		return ;
-	otool(ptr, size, filename);
+	otool(ptr, size, filename, 1);
 	if (munmap(ptr, size) < 0)
 		print_error_file("munmap failed", filename);
 }
@@ -116,8 +137,6 @@ int		main(int argc, char **argv)
 	i = 0;
 	while (i + start < argc)
 	{
-		ft_putstr(argv[i + start]);
-		ft_putstr(":\n");
 		launch_otool_for_file(argv[i + start]);
 		i++;
 	}

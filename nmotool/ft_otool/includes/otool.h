@@ -73,7 +73,8 @@ t_list				*get_mach_o_32_symbols(void *ptr, char **stringtable);
 t_list				*get_mach_o_64_symbols(void *ptr, char **stringtable);
 t_list				*get_fat_symbols(void *ptr, char **stringtable);
 void				*get_fat_start(void *ptr, size_t *res_size, size_t size);
-void				otool(char *ptr, size_t size, char *file_name);
+void				otool(char *ptr, size_t size, char *file_name,
+															char print_file);
 char				ft_streq(char *str1, char *str2);
 void				ft_putstrn(char *str, int n);
 int					ft_atoi(const char *str);
@@ -96,5 +97,9 @@ void				print_text_section_32(void *ptr, t_flags *options,
 															char *file_name);
 void				print_text_section_64(void *ptr, t_flags *options,
 															char *file_name);
+void				print_n_bytes(unsigned char *start, size_t i, int nb_bytes,
+																	size_t end);
+uint32_t			get_filetype(void);
+void				set_filetype(uint32_t type);
 
 #endif

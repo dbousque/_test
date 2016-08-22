@@ -32,7 +32,6 @@ void	read_ranlib(void *ptr, struct ranlib *ran, size_t size)
 
 	(void)size;
 	header = ptr + ran->ran_off - 8;
-	ft_putstr("\n");
 	ft_putstr(get_current_ar_name(NULL));
 	ft_putstr("(");
 	ft_putstr(((char*)((void*)header + sizeof(struct ar_hdr))));
@@ -40,7 +39,7 @@ void	read_ranlib(void *ptr, struct ranlib *ran, size_t size)
 	otool((void*)header + sizeof(struct ar_hdr) + end_of_name((void*)header
 		+ sizeof(struct ar_hdr)), ft_atoi(header->ar_size),
 		ft_strjoin(ft_strjoin(get_current_ar_name(NULL), ":"),
-			(void*)header + sizeof(struct ar_hdr)));
+			(void*)header + sizeof(struct ar_hdr)), 0);
 }
 
 void	read_all_ranlibs(void *ptr, t_list *rans, size_t size)
