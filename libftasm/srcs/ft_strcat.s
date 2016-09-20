@@ -2,17 +2,15 @@
 
 global _ft_strcat
 
-exit:
-	ret
-
 goto_end_of_rdi:
 	cmp byte [rdi], 0
-	je exit
+	je fill_at_end
 	inc rdi
 	jmp goto_end_of_rdi
 
 exit_fill:
 	mov byte [rdi], 0
+	pop r8
 	ret
 
 fill_at_end:
@@ -26,7 +24,5 @@ fill_at_end:
 
 _ft_strcat:
 	push r8
-	call goto_end_of_rdi
-	call fill_at_end
-	pop r8
-	ret
+	mov rax, rdi
+	jmp goto_end_of_rdi

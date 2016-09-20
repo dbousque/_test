@@ -14,21 +14,21 @@ NAME=	libfts.a
 
 RM=		rm -f
 
-SRCS=	srcs/bzero.s \
-		srcs/cat.s \
-		srcs/isalnum.s \
-		srcs/isalpha.s \
-		srcs/isascii.s \
-		srcs/isdigit.s \
-		srcs/isprint.s \
-		srcs/memcpy.s \
-		srcs/memset.s \
-		srcs/puts.s \
-		srcs/strcat.s \
-		srcs/strdup.s \
-		srcs/strlen.s \
-		srcs/tolower.s \
-		srcs/toupper.s
+SRCS=	srcs/ft_bzero.s \
+		srcs/ft_cat.s \
+		srcs/ft_isalnum.s \
+		srcs/ft_isalpha.s \
+		srcs/ft_isascii.s \
+		srcs/ft_isdigit.s \
+		srcs/ft_isprint.s \
+		srcs/ft_memcpy.s \
+		srcs/ft_memset.s \
+		srcs/ft_puts.s \
+		srcs/ft_strcat.s \
+		srcs/ft_strdup.s \
+		srcs/ft_strlen.s \
+		srcs/ft_tolower.s \
+		srcs/ft_toupper.s
 
 OBJS=	$(subst .s,.o,$(SRCS))
 
@@ -43,7 +43,7 @@ $(NAME): $(OBJS)
 all: $(NAME)
 
 %.o: %.s
-	$(NASM) $(FLAGS) $^
+		$(NASM) $(FLAGS) $^
 
 clean:
 		$(RM) $(OBJS)

@@ -313,22 +313,30 @@ void	test_puts(void)
 	printf("  ft_puts called with \"%s\" : \"", tmp);
 	fflush(stdout);
 	ft_puts(tmp);
+	fflush(stdout);
 	printf("\"\n");
+	fflush(stdout);
 	tmp = "";
 	printf("  ft_puts called with \"%s\" : \"", tmp);
 	fflush(stdout);
 	ft_puts(tmp);
+	fflush(stdout);
 	printf("\"\n");
+	fflush(stdout);
 	tmp = "a";
 	printf("  ft_puts called with \"%s\" : \"", tmp);
 	fflush(stdout);
 	ft_puts(tmp);
+	fflush(stdout);
 	printf("\"\n");
+	fflush(stdout);
 	tmp = "é";
 	printf("  ft_puts called with \"%s\" : \"", tmp);
 	fflush(stdout);
 	ft_puts(tmp);
+	fflush(stdout);
 	printf("\"\n");
+	fflush(stdout);
 }
 
 void	test_strlen(void)
@@ -370,6 +378,12 @@ char	ft_strequ(char *str1, char *str2)
 	if (str1[i] != str2[i])
 		return (0);
 	return (1);
+}
+
+void	mt_assert(char c)
+{
+	if (!c)
+		printf("ASSERT FAILED\n");
 }
 
 void	test_memset(void)
@@ -419,6 +433,17 @@ void	test_memset(void)
 	tmp[size] = '\0';
 	tmp2[size] = '\0';
 	printf(ft_strequ(tmp, tmp2) ? "ok\n" : "not ok\n");
+
+	char	b1[100], b2[100];
+
+	ft_memset(b1, 42, 100);
+	memset(b2, 42, 100);
+	mt_assert(memset(b1, 99, 0) == ft_memset(b1, 99, 0));
+	mt_assert(memcmp(b1, b2, 100) == 0);
+	b1[0] = 1;
+	ft_memset(b1, 0, 0);
+	mt_assert(b1[0] == 1);
+
 }
 
 void	test_memcpy(void)
@@ -463,7 +488,7 @@ void	test_strdup(void)
 	res = ft_strdup(tmp);
 	printf("  ret for \"%s\" at address %p : address %p, value \"%s\"\n", tmp, tmp, res, res);
 }
-
+#include <unistd.h>
 int		main(void)
 {
 	printf(" -- BEGINNING TESTS\n");
