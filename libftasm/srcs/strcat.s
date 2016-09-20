@@ -25,6 +25,8 @@ fill_at_end:
 	jmp fill_at_end
 
 _ft_strcat:
+	push r8
 	call goto_end_of_rdi
 	call fill_at_end
+	pop r8
 	ret

@@ -14,7 +14,9 @@ int			ft_isprint(int c);
 int			ft_toupper(int c);
 int			ft_tolower(int c);
 int			ft_puts(const char *str);
-
-
-
-int			get_len(const char *str);
+size_t		ft_strlen(const char *str);
+size_t		ft_my_strlen(const char *str);
+void		ft_memset(void *ptr, int c, size_t len);
+void		*ft_memcpy(void *dest, void *src, size_t n);
+char		*ft_strdup(const char *str);
+void		ft_cat(int fd);
