@@ -12,44 +12,48 @@ data:
 section .text
 	global _ft_puts
 
-	exit:
-		mov rsp, rbp
-		pop rbp
-		ret
+exit_error:
+	mov rax, -1
+	jmp exit
 
-	print_newline:
-		mov rax, MACH_SYSCALL(WRITE)
-		mov rdi, STDOUT
-		lea rsi, [rel data.newline]
-		mov rdx, 1
-		syscall
-		jmp exit
+exit:
+	mov rsp, rbp
+	pop rbp
+	ret
 
-	make_call:
-		syscall
-		cmp rax, -1
-		je exit
-		jmp print_newline
+print_newline:
+	mov rax, MACH_SYSCALL(WRITE)
+	mov rdi, STDOUT
+	lea rsi, [rel data.newline]
+	mov rdx, 1
+	syscall
+	jc exit_error
+	jmp exit
 
-	get_len:
-		cmp byte [r11], 0
-		je make_call
-		inc rdx
-		inc r11
-		jmp get_len
+make_call:
+	syscall
+	jc exit_error
+	jmp print_newline
 
-	print_null:
-		lea rdi, [rel data.null]
-		jmp _ft_puts
+get_len:
+	cmp byte [r11], 0
+	je make_call
+	inc rdx
+	inc r11
+	jmp get_len
 
-	_ft_puts:
-		cmp rdi, 0
-		je print_null
-		push rbp
-		mov rbp, rsp
-		mov rax, MACH_SYSCALL(WRITE)
-		mov rsi, rdi
-		mov rdi, STDOUT
-		mov r11, rsi
-		mov rdx, 0
-		jmp get_len
+print_null:
+	lea rdi, [rel data.null]
+	jmp _ft_puts
+
+_ft_puts:
+	cmp rdi, 0
+	je print_null
+	push rbp
+	mov rbp, rsp
+	mov rax, MACH_SYSCALL(WRITE)
+	mov rsi, rdi
+	mov rdi, STDOUT
+	mov r11, rsi
+	mov rdx, 0
+	jmp get_len

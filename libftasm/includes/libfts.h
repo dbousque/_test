@@ -3,6 +3,8 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+#include <fcntl.h>
+#include <unistd.h>
 
 void		ft_bzero(void *ptr, size_t size);
 char		*ft_strcat(char *s1, const char *s2);
@@ -19,4 +21,5 @@ size_t		ft_my_strlen(const char *str);
 void		*ft_memset(void *ptr, int c, size_t len);
 void		*ft_memcpy(void *dest, void *src, size_t n);
 char		*ft_strdup(const char *str);
+//void		ft_cat(int fd);
 void		ft_cat(int fd);

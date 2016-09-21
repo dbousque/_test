@@ -48,6 +48,7 @@ _ft_strdup:
 	; has malloc failed ?
 	cmp rax, 0
 	je exit_error
+	jc exit_error
 	; getting len back and put as third argument
 	pop rdx
 	; getting arg back and put as second argument
