@@ -1,4 +1,14 @@
-
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   print_text_section_64.c                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: dbousque <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2016/09/22 18:36:27 by dbousque          #+#    #+#             */
+/*   Updated: 2016/09/22 18:36:53 by dbousque         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
 #include "otool.h"
 
@@ -76,7 +86,10 @@ void	print_text_section_64(void *ptr, t_flags *options, char *file_name)
 		if (lc->cmd == LC_SEGMENT_64
 			&& (ft_streq(((struct segment_command_64*)lc)->segname, SEG_TEXT)
 				|| header->filetype == MH_OBJECT))
-			print_text_64(ptr, (struct segment_command_64*)lc, options, file_name);
+		{
+			print_text_64(ptr, (struct segment_command_64*)lc,
+														options, file_name);
+		}
 		i++;
 		lc = ((void*)lc) + lc->cmdsize;
 	}

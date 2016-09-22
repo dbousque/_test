@@ -1,4 +1,14 @@
-
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ran.c                                              :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: dbousque <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2016/09/22 17:58:46 by dbousque          #+#    #+#             */
+/*   Updated: 2016/09/22 18:01:01 by dbousque         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
 #include "nm.h"
 
@@ -28,7 +38,7 @@ char	*ft_strjoin(char *str1, char *str2)
 
 void	read_ranlib(void *ptr, struct ranlib *ran, size_t size)
 {
-	struct	ar_hdr	*header;
+	struct ar_hdr	*header;
 
 	(void)size;
 	header = ptr + ran->ran_off - 8;
@@ -56,6 +66,20 @@ void	read_all_ranlibs(void *ptr, t_list *rans, size_t size)
 	}
 }
 
+char	already_in_rans(t_list *rans, struct ranlib *ran)
+{
+	int		i;
+
+	i = 0;
+	while (i < rans->len)
+	{
+		if (cmp_rans(rans->elts[i], ran) == 0)
+			return (1);
+		i++;
+	}
+	return (0);
+}
+
 void	read_ranlibs(void *ptr, struct ranlib *ran, int rans_len, size_t size)
 {
 	int		i;
@@ -71,7 +95,7 @@ void	read_ranlibs(void *ptr, struct ranlib *ran, int rans_len, size_t size)
 	{
 		if ((void*)ran + sizeof(struct ranlib) > end)
 			return (bad_executable());
-		if (ran->ran_off)
+		if (ran->ran_off && !already_in_rans(rans, ran))
 			add_to_list(rans, ran);
 		ran = (void*)ran + sizeof(struct ranlib);
 		i += sizeof(struct ranlib);

@@ -103,5 +103,19 @@ void				simple_sort(void **elts, int start, int end,
 									int (*cmp)(void *elt1, void *elt2));
 void				my_mergesort(void **elts, int start, int end,
 									int (*cmp)(void *elt1, void *elt2));
+int					display_help(void);
+char				is_ranlib(char *ptr);
+void				clear_options_and_free_all(void);
+void				set_current_options(void *ptr);
+void				*get_current_options(void);
+void				*get_set_options_handler(void *ptr, char option);
+void				print_symbols(t_list *symbols, char *stringtable,
+									t_flags *options, char *file_name);
+void				maybe_launch_32(t_symbol *symbol, char *stringtable,
+										char *file_name, t_flags *options);
+void				maybe_launch_64(t_symbol *symbol, char *stringtable,
+										char *file_name, t_flags *options);
+void				sort_symbols(t_list *symbols, t_flags *options);
+char				*handle_stringtable(char *ptr, char option);
 
 #endif

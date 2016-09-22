@@ -1,4 +1,14 @@
-
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   utils.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: dbousque <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2016/09/22 18:37:11 by dbousque          #+#    #+#             */
+/*   Updated: 2016/09/22 18:38:12 by dbousque         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
 #include "otool.h"
 
@@ -10,11 +20,6 @@ size_t	ft_strlen(char *str)
 	while (str[i])
 		i++;
 	return (i);
-}
-
-void	ft_putstr(char *str)
-{
-	write(1, str, ft_strlen(str));
 }
 
 void	ft_putstrnl(char *str)
@@ -43,5 +48,8 @@ void	print_error_file(char *str, char *filename)
 
 void	print_format(void)
 {
-	print_error("Bad format. Expected \"ft_nm <filename1> [<filename2] [...]\"");
+	char	*t;
+
+	t = "Bad format. Expected \"ft_nm <filename1> [<filename2] [...]\"";
+	print_error(t);
 }

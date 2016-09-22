@@ -1,4 +1,14 @@
-
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   print_symbol2.c                                    :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: dbousque <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2016/09/22 17:50:59 by dbousque          #+#    #+#             */
+/*   Updated: 2016/09/22 17:51:07 by dbousque         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
 #include "nm.h"
 
@@ -22,8 +32,6 @@ char	match_sect_name_with_type(char *seg_name, char *sect_name)
 		return ('D');
 	if (ft_streq(seg_name, SEG_DATA) && ft_streq(sect_name, SECT_BSS))
 		return ('B');
-	//if (ft_streq(seg_name, SEG_DATA) && ft_streq(sect_name, SECT_COMMON))
-	//	return ('C');
 	return ('S');
 }
 

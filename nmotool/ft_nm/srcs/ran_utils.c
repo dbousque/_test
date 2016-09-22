@@ -1,4 +1,14 @@
-
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ran_utils.c                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: dbousque <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2016/09/22 17:53:15 by dbousque          #+#    #+#             */
+/*   Updated: 2016/09/22 17:53:18 by dbousque         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
 #include "nm.h"
 
@@ -32,7 +42,9 @@ int		cmp_rans(void *elt1, void *elt2)
 
 	ran1 = elt1;
 	ran2 = elt2;
-	if (ran1->ran_off <= ran2->ran_off)
+	if (ran1->ran_off < ran2->ran_off)
 		return (-1);
+	if (ran1->ran_off == ran2->ran_off)
+		return (0);
 	return (1);
 }

@@ -1,4 +1,14 @@
-
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   read_options.c                                     :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: dbousque <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2016/09/22 17:58:55 by dbousque          #+#    #+#             */
+/*   Updated: 2016/09/22 17:58:58 by dbousque         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
 #include "nm.h"
 
@@ -9,16 +19,6 @@ void	*get_set_options_handler(void *ptr, char option)
 	if (option == 1)
 		data = ptr;
 	return (data);
-}
-
-void	set_current_options(void *ptr)
-{
-	get_set_options_handler(ptr, 1);
-}
-
-void	*get_current_options(void)
-{
-	return (get_set_options_handler(NULL, 2));
 }
 
 void	clear_options(void)

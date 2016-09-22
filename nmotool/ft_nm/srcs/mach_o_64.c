@@ -1,4 +1,14 @@
-
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   mach_o_64.c                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: dbousque <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2016/09/22 17:33:46 by dbousque          #+#    #+#             */
+/*   Updated: 2016/09/22 17:34:48 by dbousque         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
 #include "nm.h"
 
@@ -20,7 +30,7 @@ t_symbol	*build_symb_from_symbol_64(struct nlist_64 *symbol, void *ptr)
 	return (symb);
 }
 
-t_list	*read_symtab_command_64(struct symtab_command *sym, void *ptr,
+t_list		*read_symtab_command_64(struct symtab_command *sym, void *ptr,
 														char **stringtable)
 {
 	uint32_t		i;
@@ -46,7 +56,7 @@ t_list	*read_symtab_command_64(struct symtab_command *sym, void *ptr,
 	return (symbols);
 }
 
-t_list	*get_mach_o_64_symbols(void *ptr, char **stringtable)
+t_list		*get_mach_o_64_symbols(void *ptr, char **stringtable)
 {
 	int						ncmds;
 	int						i;
@@ -62,8 +72,10 @@ t_list	*get_mach_o_64_symbols(void *ptr, char **stringtable)
 		if (!valid_pointer(((void*)lc) + sizeof(struct load_command)))
 			return (NULL);
 		if (lc->cmd == LC_SYMTAB)
+		{
 			return (read_symtab_command_64((struct symtab_command*)lc,
 														ptr, stringtable));
+		}
 		i++;
 		lc = ((void*)lc) + lc->cmdsize;
 	}

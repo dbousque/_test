@@ -6,7 +6,7 @@
 #    By: dbousque <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2016/01/12 18:40:30 by dbousque          #+#    #+#              #
-#    Updated: 2016/01/13 12:25:10 by dbousque         ###   ########.fr        #
+#    Updated: 2016/09/22 18:40:41 by dbousque         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -20,16 +20,17 @@ SOURCES		=	srcs/fat.c \
 				srcs/mach_o_32.c \
 				srcs/mach_o_64.c \
 				srcs/main.c \
+				srcs/mergesort.c \
 				srcs/mmap.c \
 				srcs/my_malloc.c \
 				srcs/my_malloc2.c \
 				srcs/otool.c \
 				srcs/print_text_section_32.c \
 				srcs/print_text_section_64.c \
-				srcs/quicksort.c \
 				srcs/ran.c \
 				srcs/ran_utils.c \
 				srcs/read_options.c \
+				srcs/read_options2.c \
 				srcs/utils.c \
 				srcs/utils2.c \
 				srcs/utils3.c \

@@ -1,4 +1,14 @@
-
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   list.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: dbousque <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2016/09/22 17:33:36 by dbousque          #+#    #+#             */
+/*   Updated: 2016/09/22 17:33:38 by dbousque         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
 #include "nm.h"
 
@@ -39,7 +49,7 @@ void	add_to_list(t_list *lst, void *elt)
 
 void	sort_list(t_list *list, int (*cmp)(void *elt1, void *elt2))
 {
-	quicksort(list->elts, 0, list->len, cmp);
+	my_mergesort(list->elts, 0, list->len, cmp);
 }
 
 void	reverse_list(t_list *list)

@@ -6,7 +6,7 @@
 #    By: dbousque <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2016/01/12 18:40:30 by dbousque          #+#    #+#              #
-#    Updated: 2016/01/13 12:25:10 by dbousque         ###   ########.fr        #
+#    Updated: 2016/09/22 18:04:45 by dbousque         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -27,14 +27,16 @@ SOURCES		=	srcs/fat.c \
 				srcs/nm.c \
 				srcs/print_symbol.c \
 				srcs/print_symbol2.c \
-				srcs/quicksort.c \
+				srcs/print_symbols.c \
 				srcs/ran.c \
 				srcs/ran_utils.c \
 				srcs/read_options.c \
+				srcs/read_options2.c \
 				srcs/simple_sort.c \
 				srcs/utils.c \
 				srcs/utils2.c \
-				srcs/utils3.c
+				srcs/utils3.c \
+				srcs/utils4.c
 
 
 HEADERS	=	-I./includes/

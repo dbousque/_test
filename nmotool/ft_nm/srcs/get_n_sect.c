@@ -1,4 +1,14 @@
-
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   get_n_sect.c                                       :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: dbousque <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2016/09/22 17:36:04 by dbousque          #+#    #+#             */
+/*   Updated: 2016/09/22 17:37:09 by dbousque         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
 #include "nm.h"
 
@@ -47,7 +57,7 @@ struct section_64	*get_n_sect_64(void *ptr, size_t n,
 	return (NULL);
 }
 
-struct section	*n_sect_in_seg_32(struct segment_command *seg, size_t n)
+struct section		*n_sect_in_seg_32(struct segment_command *seg, size_t n)
 {
 	void		*sect;
 	size_t		i;
@@ -62,7 +72,7 @@ struct section	*n_sect_in_seg_32(struct segment_command *seg, size_t n)
 	return (sect);
 }
 
-struct section	*get_n_sect_32(void *ptr, size_t n,
+struct section		*get_n_sect_32(void *ptr, size_t n,
 												struct segment_command **seg)
 {
 	uint32_t				i;
@@ -81,7 +91,8 @@ struct section	*get_n_sect_32(void *ptr, size_t n,
 			if (nb_sect + ((struct segment_command*)lc)->nsects >= n)
 			{
 				*seg = (struct segment_command*)lc;
-				return (n_sect_in_seg_32((struct segment_command*)lc, n - nb_sect));
+				return (n_sect_in_seg_32((struct segment_command*)lc,
+															n - nb_sect));
 			}
 			nb_sect += ((struct segment_command*)lc)->nsects;
 		}

@@ -6,7 +6,7 @@
 /*   By: dbousque <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/08/18 14:42:44 by dbousque          #+#    #+#             */
-/*   Updated: 2016/08/18 14:42:46 by dbousque         ###   ########.fr       */
+/*   Updated: 2016/09/22 17:50:19 by dbousque         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,8 +37,7 @@ void	nm(char *ptr, size_t size, char *file_name)
 		handle_fat(ptr, size, file_name);
 		return ;
 	}
-	else if (size >= 8 && ptr[0] == '!' && ptr[1] == '<' && ptr[2] == 'a'
-		&& ptr[3] == 'r' && ptr[4] == 'c' && ptr[5] == 'h' && ptr[6] == '>' && ptr[7] == '\n')
+	else if (size >= 8 && is_ranlib(ptr))
 	{
 		handle_ranlib(ptr + 8, size, file_name);
 		return ;
@@ -93,23 +92,6 @@ void	launch_nm_for_file(char *filename)
 		print_error_file("munmap failed", filename);
 }
 
-int		display_help(void)
-{
-	ft_putstr("             -- nm --\n  displays content of Mach O files\n\n");
-	ft_putstr("implemented options :\n");
-	ft_putstr("  -g : Display only global (external) symbols.\n");
-	ft_putstr("  -n : Sort numerically rather than alphabetically.\n");
-	ft_putstr("  -o : Prepend file or archive element name to each output ");
-	ft_putstr("line rather than only once.\n");
-	ft_putstr("  -p : Don't sort; display in symbol-table order.\n");
-	ft_putstr("  -r : Sort in reverse order.\n");
-	ft_putstr("  -u : Display only undefined symbols.\n");
-	ft_putstr("  -U : Don't display undefined symbols.\n");
-	clear_options();
-	free_all();
-	return (0);
-}
-
 int		main(int argc, char **argv)
 {
 	int		i;
@@ -135,7 +117,6 @@ int		main(int argc, char **argv)
 		launch_nm_for_file(argv[i + start]);
 		i++;
 	}
-	clear_options();
-	free_all();
+	clear_options_and_free_all();
 	return (0);
 }

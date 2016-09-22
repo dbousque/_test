@@ -1,4 +1,14 @@
-
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   mach_o_32.c                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: dbousque <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2016/09/22 18:25:25 by dbousque          #+#    #+#             */
+/*   Updated: 2016/09/22 18:26:56 by dbousque         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
 #include "otool.h"
 
@@ -20,7 +30,7 @@ t_symbol	*build_symb_from_symbol_32(struct nlist *symbol, void *ptr)
 	return (symb);
 }
 
-t_list	*read_symtab_command_32(struct symtab_command *sym, void *ptr,
+t_list		*read_symtab_command_32(struct symtab_command *sym, void *ptr,
 														char **stringtable)
 {
 	uint32_t		i;
@@ -35,15 +45,9 @@ t_list	*read_symtab_command_32(struct symtab_command *sym, void *ptr,
 	while (i < sym->nsyms)
 	{
 		if (!valid_pointer(((void*)symbol) + sizeof(struct nlist)))
-		{
-			ft_putstr("VALID1\n");
 			return (NULL);
-		}
 		if (!valid_pointer((void*)(*stringtable + symbol->n_un.n_strx)))
-		{
-			ft_putstr("VALID2\n");
 			return (NULL);
-		}
 		to_store_symb = build_symb_from_symbol_32(symbol, ptr);
 		add_to_list(symbols, to_store_symb);
 		symbol = ((void*)symbol) + sizeof(struct nlist);
@@ -52,7 +56,7 @@ t_list	*read_symtab_command_32(struct symtab_command *sym, void *ptr,
 	return (symbols);
 }
 
-t_list	*get_mach_o_32_symbols(void *ptr, char **stringtable)
+t_list		*get_mach_o_32_symbols(void *ptr, char **stringtable)
 {
 	int						ncmds;
 	int						i;
@@ -68,8 +72,10 @@ t_list	*get_mach_o_32_symbols(void *ptr, char **stringtable)
 		if (!valid_pointer(((void*)lc) + sizeof(struct load_command)))
 			return (NULL);
 		if (lc->cmd == LC_SYMTAB)
+		{
 			return (read_symtab_command_32((struct symtab_command*)lc,
 														ptr, stringtable));
+		}
 		i++;
 		lc = ((void*)lc) + lc->cmdsize;
 	}

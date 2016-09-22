@@ -6,7 +6,7 @@
 /*   By: dbousque <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/07/25 15:52:44 by dbousque          #+#    #+#             */
-/*   Updated: 2016/07/25 15:52:46 by dbousque         ###   ########.fr       */
+/*   Updated: 2016/09/22 17:51:58 by dbousque         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ static void	swap_arr(void **array, int a, int z)
 	array[z] = tmp;
 }
 
-void	quicksort(void **array, int start, int end,
+void		quicksort(void **array, int start, int end,
 										int (*cmp)(void *elt1, void *elt2))
 {
 	int		nb_smaller;

@@ -1,4 +1,14 @@
-
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ran.c                                              :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: dbousque <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2016/09/22 18:40:59 by dbousque          #+#    #+#             */
+/*   Updated: 2016/09/22 18:41:12 by dbousque         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
 #include "otool.h"
 
@@ -28,7 +38,7 @@ char	*ft_strjoin(char *str1, char *str2)
 
 void	read_ranlib(void *ptr, struct ranlib *ran, size_t size)
 {
-	struct	ar_hdr	*header;
+	struct ar_hdr	*header;
 
 	(void)size;
 	header = ptr + ran->ran_off - 8;

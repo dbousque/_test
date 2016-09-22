@@ -80,7 +80,7 @@ void				ft_putstrn(char *str, int n);
 int					ft_atoi(const char *str);
 void				*get_big_endian(char *ptr, size_t size);
 void				sort_list(t_list *list, int (*cmp)(void *elt1, void *elt2));
-void				quicksort(void **array, int start, int end,
+void				my_mergesort(void **array, int start, int end,
 										int (*cmp)(void *elt1, void *elt2));
 void				handle_ranlib(void *ptr, size_t size, char *file_name);
 size_t				end_of_name(char *str);
@@ -101,5 +101,10 @@ void				print_n_bytes(unsigned char *start, size_t i, int nb_bytes,
 																	size_t end);
 uint32_t			get_filetype(void);
 void				set_filetype(uint32_t type);
+void				otool(char *ptr, size_t size, char *file_name,
+															char print_file);
+void				set_current_options(void *ptr);
+void				*get_current_options(void);
+void				*get_set_options_handler(void *ptr, char option);
 
 #endif
