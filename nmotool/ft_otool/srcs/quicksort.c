@@ -10,8 +10,6 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "otool.h"
-
 static int	get_nb_smaller(void **array, int start, int end,
 										int (*cmp)(void *elt1, void *elt2))
 {
@@ -57,7 +55,7 @@ void	quicksort(void **array, int start, int end,
 			a++;
 		if (a >= start + nb_smaller)
 			break ;
-		while (z > start + nb_smaller && cmp(array[z], array[start + nb_smaller]) > 0)
+		while (z > start + nb_smaller && cmp(array[z], array[start + nb_smaller]) >= 0)
 			z--;
 		if (z <= start + nb_smaller)
 			break;

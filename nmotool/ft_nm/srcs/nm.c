@@ -125,9 +125,9 @@ int 	cmp_by_name(void *elt1, void *elt2)
 
 void	sort_symbols(t_list *symbols, t_flags *options)
 {
-	if (!options->p && options->n)
+	if (!options->p)
 		quicksort(symbols->elts, 0, symbols->len, cmp_by_numeric);
-	else if (!options->p)
+	if (!options->p && !options->n)
 		quicksort(symbols->elts, 0, symbols->len, cmp_by_name);
 	if (!options->p && options->r)
 		reverse_list(symbols);

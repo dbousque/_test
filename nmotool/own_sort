@@ -198,6 +198,7 @@ _start_accel_module
 _stat$INODE64
 _stricasecmp
 _stricmp
+_stridup
 _strierror
 _strilen
 _strincmp
@@ -206,7 +207,6 @@ _time
 _tsrm_realpath
 _uninitialized_bucket
 _uninitialized_bucket
-_stridup
 _unlink
 _update_op1_const
 _update_op2_const
