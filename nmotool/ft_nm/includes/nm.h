@@ -99,5 +99,9 @@ void				*get_current_options(void);
 void				set_current_options(void *ptr);
 char				*get_stringtable(void);
 void				reverse_list(t_list *list);
+void				simple_sort(void **elts, int start, int end,
+									int (*cmp)(void *elt1, void *elt2));
+void				my_mergesort(void **elts, int start, int end,
+									int (*cmp)(void *elt1, void *elt2));
 
 #endif

@@ -20,6 +20,7 @@ SOURCES		=	srcs/fat.c \
 				srcs/mach_o_32.c \
 				srcs/mach_o_64.c \
 				srcs/main.c \
+				srcs/mergesort.c \
 				srcs/mmap.c \
 				srcs/my_malloc.c \
 				srcs/my_malloc2.c  \
@@ -30,6 +31,7 @@ SOURCES		=	srcs/fat.c \
 				srcs/ran.c \
 				srcs/ran_utils.c \
 				srcs/read_options.c \
+				srcs/simple_sort.c \
 				srcs/utils.c \
 				srcs/utils2.c \
 				srcs/utils3.c

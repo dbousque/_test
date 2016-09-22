@@ -123,14 +123,36 @@ int 	cmp_by_name(void *elt1, void *elt2)
 	return (cmp_strs(name1, name2));
 }
 
+#include <time.h>
+#include <stdio.h>
+
 void	sort_symbols(t_list *symbols, t_flags *options)
 {
+	clock_t start = clock();
+
 	if (!options->p)
 		quicksort(symbols->elts, 0, symbols->len, cmp_by_numeric);
 	if (!options->p && !options->n)
 		quicksort(symbols->elts, 0, symbols->len, cmp_by_name);
 	if (!options->p && options->r)
 		reverse_list(symbols);
+
+	clock_t diff = clock() - start;
+	int msec = diff * 1000 / CLOCKS_PER_SEC;
+	fprintf(stderr, "len %d Time taken %d seconds %d milliseconds\n", symbols->len, msec/1000, msec%1000);
+
+	/*if (!options->p)
+		simple_sort(symbols->elts, 0, symbols->len, cmp_by_numeric);
+	if (!options->p && !options->n)
+		simple_sort(symbols->elts, 0, symbols->len, cmp_by_name);
+	if (!options->p && options->r)
+		reverse_list(symbols);*/
+	/*if (!options->p)
+		my_mergesort(symbols->elts, 0, symbols->len, cmp_by_numeric);
+	if (!options->p && !options->n)
+		my_mergesort(symbols->elts, 0, symbols->len, cmp_by_name);
+	if (!options->p && options->r)
+		reverse_list(symbols);*/
 }
 
 char	*handle_stringtable(char *ptr, char option)
@@ -158,6 +180,7 @@ void	handle_file(char *ptr, char type, char *file_name)
 	char	*stringtable;
 	t_flags		*options;
 
+	fprintf(stderr, "start\n");
 	stringtable = NULL;
 	symbols = NULL;
 	options = (t_flags*)get_current_options();
@@ -171,4 +194,5 @@ void	handle_file(char *ptr, char type, char *file_name)
 		sort_symbols(symbols, options);
 		print_symbols(symbols, stringtable, options, file_name);
 	}
+	fprintf(stderr, "end\n");
 }
