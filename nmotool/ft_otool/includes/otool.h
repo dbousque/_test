@@ -1,7 +1,17 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   otool.h                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: dbousque <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2016/09/26 18:19:02 by dbousque          #+#    #+#             */
+/*   Updated: 2016/09/26 18:19:26 by dbousque         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
-
-#ifndef NM_H
-# define NM_H
+#ifndef OTOOL_H
+# define OTOOL_H
 
 # include <stdlib.h>
 # include <fcntl.h>
@@ -106,5 +116,6 @@ void				otool(char *ptr, size_t size, char *file_name,
 void				set_current_options(void *ptr);
 void				*get_current_options(void);
 void				*get_set_options_handler(void *ptr, char option);
+char				*ft_strjoin(char *str1, char *str2);
 
 #endif

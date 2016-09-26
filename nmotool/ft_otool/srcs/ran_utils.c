@@ -42,7 +42,9 @@ int		cmp_rans(void *elt1, void *elt2)
 
 	ran1 = elt1;
 	ran2 = elt2;
-	if (ran1->ran_off <= ran2->ran_off)
+	if (ran1->ran_off < ran2->ran_off)
 		return (-1);
+	if (ran1->ran_off == ran2->ran_off)
+		return (0);
 	return (1);
 }

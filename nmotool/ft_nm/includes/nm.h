@@ -1,4 +1,14 @@
-
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   nm.h                                               :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: dbousque <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2016/09/26 18:15:54 by dbousque          #+#    #+#             */
+/*   Updated: 2016/09/26 18:15:56 by dbousque         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
 #ifndef NM_H
 # define NM_H
@@ -117,5 +127,10 @@ void				maybe_launch_64(t_symbol *symbol, char *stringtable,
 										char *file_name, t_flags *options);
 void				sort_symbols(t_list *symbols, t_flags *options);
 char				*handle_stringtable(char *ptr, char option);
+char				already_in_rans(t_list *rans, struct ranlib *ran);
+void				print_defined_symb_64(struct nlist_64 *symbol,
+														struct section *sect);
+void				print_defined_symbol_type_64(struct nlist_64 *symbol,
+														struct section *sect);
 
 #endif

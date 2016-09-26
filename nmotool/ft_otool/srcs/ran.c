@@ -12,30 +12,6 @@
 
 #include "otool.h"
 
-char	*ft_strjoin(char *str1, char *str2)
-{
-	char	*str_res;
-	int		i;
-	int		tmp;
-
-	str_res = my_malloc(sizeof(char) * (ft_strlen(str1) + ft_strlen(str2) + 1));
-	i = 0;
-	while (str1[i])
-	{
-		str_res[i] = str1[i];
-		i++;
-	}
-	tmp = i;
-	i = 0;
-	while (str2[i])
-	{
-		str_res[tmp + i] = str2[i];
-		i++;
-	}
-	str_res[i] = '\0';
-	return (str_res);
-}
-
 void	read_ranlib(void *ptr, struct ranlib *ran, size_t size)
 {
 	struct ar_hdr	*header;
@@ -118,7 +94,7 @@ void	handle_ranlib(void *ptr, size_t size, char *file_name)
 								+ ft_strlen(SYMDEF_SORTED) + sizeof(long);
 	else if (ft_streq(((void*)header) + sizeof(struct ar_hdr), SYMDEF))
 		ran_start = ((void*)header) + sizeof(struct ar_hdr)
-									+ ft_strlen(SYMDEF) + sizeof(long);
+									+ ft_strlen(SYMDEF_SORTED) + sizeof(long);
 	else
 		return (bad_executable());
 	rans_len = *((int*)(ran_start - sizeof(int)));

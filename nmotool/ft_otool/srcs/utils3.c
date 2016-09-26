@@ -55,3 +55,27 @@ void	print_n_bytes(unsigned char *start, size_t i, int nb_bytes,
 		x++;
 	}
 }
+
+char	*ft_strjoin(char *str1, char *str2)
+{
+	char	*str_res;
+	int		i;
+	int		tmp;
+
+	str_res = my_malloc(sizeof(char) * (ft_strlen(str1) + ft_strlen(str2) + 1));
+	i = 0;
+	while (str1[i])
+	{
+		str_res[i] = str1[i];
+		i++;
+	}
+	tmp = i;
+	i = 0;
+	while (str2[i])
+	{
+		str_res[tmp + i] = str2[i];
+		i++;
+	}
+	str_res[i] = '\0';
+	return (str_res);
+}

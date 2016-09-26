@@ -6,7 +6,7 @@
 /*   By: dbousque <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/09/22 17:53:31 by dbousque          #+#    #+#             */
-/*   Updated: 2016/09/22 18:20:48 by dbousque         ###   ########.fr       */
+/*   Updated: 2016/09/26 18:10:32 by dbousque         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,55 +44,61 @@ void	print_symbol_64(t_symbol *symb, char *stringtable, t_flags *options)
 {
 	struct nlist_64			*symbol;
 	struct section			*sect;
-	struct segment_command	*seg;
 
 	symbol = (struct nlist_64*)symb->symbol;
 	sect = (struct section*)symb->sect;
-	seg = (struct segment_command*)symb->seg;
 	if (symbol->n_type & N_STAB)
 		return ;
-	if ((symbol->n_type & N_TYPE) == N_UNDF && !options->u)
+	if ((symbol->n_type & N_TYPE) == N_UNDF && symbol->n_type & N_EXT
+			&& symbol->n_value != 0)
+	{
+		print_hexa_n(symbol->n_value, 16);
+		ft_putstr(" C ");
+	}
+	else if ((symbol->n_type & N_TYPE) == N_UNDF && !options->u)
 	{
 		print_n_char(' ', 17);
 		print_local_or_ext_64(symb->symbol, 'U');
 		ft_putstr(" ");
 	}
 	else if ((symbol->n_type & N_TYPE) != N_UNDF)
-	{
-		print_hexa_n(symbol->n_value, 16);
-		ft_putstr(" ");
-		print_defined_symbol_type_64(symbol, sect);
-		ft_putstr(" ");
-	}
+		print_defined_symb_64(symbol, sect);
 	if (symbol->n_un.n_strx)
 		ft_putstr(&(stringtable[symbol->n_un.n_strx]));
 	ft_putstr("\n");
+}
+
+void	print_defined_symb_32(struct nlist *symbol, struct section *sect)
+{
+	print_hexa_n(symbol->n_value, 8);
+	ft_putstr(" ");
+	print_defined_symbol_type_32(symbol, sect);
+	ft_putstr(" ");
 }
 
 void	print_symbol_32(t_symbol *symb, char *stringtable, t_flags *options)
 {
 	struct nlist			*symbol;
 	struct section			*sect;
-	struct segment_command	*seg;
 
 	symbol = (struct nlist*)symb->symbol;
 	sect = (struct section*)symb->sect;
-	seg = (struct segment_command*)symb->seg;
 	if (symbol->n_type & N_STAB)
 		return ;
-	if ((symbol->n_type & N_TYPE) == N_UNDF && !options->u)
+	if ((symbol->n_type & N_TYPE) == N_UNDF && symbol->n_type & N_EXT
+			&& symbol->n_value != 0)
+	{
+		print_hexa_n(symbol->n_value, 8);
+		ft_putstr(" C ");
+	}
+	else if ((symbol->n_type & N_TYPE) == N_UNDF && !options->u)
 	{
 		print_n_char(' ', 9);
 		print_local_or_ext_32(symb->symbol, 'U');
 		ft_putstr(" ");
 	}
 	else if ((symbol->n_type & N_TYPE) != N_UNDF)
-	{
-		print_hexa_n(symbol->n_value, 8);
-		ft_putstr(" ");
-		print_defined_symbol_type_32(symbol, sect);
-		ft_putstr(" ");
-	}
+		print_defined_symb_32(symbol, sect);
 	if (symbol->n_un.n_strx)
 		ft_putstr(&(stringtable[symbol->n_un.n_strx]));
 	ft_putstr("\n");

@@ -21,7 +21,7 @@ void	print_section_32(void *ptr, size_t offset, size_t size, char *file_name)
 	filetype = get_filetype();
 	if (filetype == MH_OBJECT)
 		decal = -((long)offset);
-	else if (filetype == MH_DYLIB)
+	else if (filetype == MH_DYLIB || filetype == MH_BINDATLOAD)
 		decal = 0;
 	else
 		decal = 0x1000;

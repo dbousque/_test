@@ -12,27 +12,28 @@
 
 #include "otool.h"
 
-char	get_file(char *filename, char **ptr, size_t *size)
+char	get_file(char *filename, char **ptr, size_t *size, int *fd)
 {
-	int			fd;
 	struct stat	buf;
 
-	fd = open(filename, O_RDONLY);
-	if (fd < 0)
+	*fd = open(filename, O_RDONLY);
+	if (*fd < 0)
 	{
 		print_error_file("open failed", filename);
 		return (0);
 	}
-	if (fstat(fd, &buf) < 0)
+	if (fstat(*fd, &buf) < 0)
 	{
 		print_error_file("fstat failed", filename);
+		close(*fd);
 		return (0);
 	}
 	*size = buf.st_size;
-	if ((*ptr = mmap(0, buf.st_size, PROT_READ, MAP_PRIVATE, fd, 0))
+	if ((*ptr = mmap(0, buf.st_size, PROT_READ, MAP_PRIVATE, *fd, 0))
 				== MAP_FAILED)
 	{
 		print_error_file("mmap failed", filename);
+		close(*fd);
 		return (0);
 	}
 	return (1);
@@ -42,12 +43,15 @@ void	launch_otool_for_file(char *filename)
 {
 	char	*ptr;
 	size_t	size;
+	int		fd;
 
-	if (!(get_file(filename, &ptr, &size)))
+	fd = 0;
+	if (!(get_file(filename, &ptr, &size, &fd)))
 		return ;
 	otool(ptr, size, filename, 1);
 	if (munmap(ptr, size) < 0)
 		print_error_file("munmap failed", filename);
+	close(fd);
 }
 
 int		display_help(void)

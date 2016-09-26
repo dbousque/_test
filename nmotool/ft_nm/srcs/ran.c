@@ -6,7 +6,7 @@
 /*   By: dbousque <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/09/22 17:58:46 by dbousque          #+#    #+#             */
-/*   Updated: 2016/09/22 18:01:01 by dbousque         ###   ########.fr       */
+/*   Updated: 2016/09/26 17:52:39 by dbousque         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,20 +66,6 @@ void	read_all_ranlibs(void *ptr, t_list *rans, size_t size)
 	}
 }
 
-char	already_in_rans(t_list *rans, struct ranlib *ran)
-{
-	int		i;
-
-	i = 0;
-	while (i < rans->len)
-	{
-		if (cmp_rans(rans->elts[i], ran) == 0)
-			return (1);
-		i++;
-	}
-	return (0);
-}
-
 void	read_ranlibs(void *ptr, struct ranlib *ran, int rans_len, size_t size)
 {
 	int		i;
@@ -119,7 +105,7 @@ void	handle_ranlib(void *ptr, size_t size, char *file_name)
 								+ ft_strlen(SYMDEF_SORTED) + sizeof(long);
 	else if (ft_streq(((void*)header) + sizeof(struct ar_hdr), SYMDEF))
 		ran_start = ((void*)header) + sizeof(struct ar_hdr)
-									+ ft_strlen(SYMDEF) + sizeof(long);
+									+ ft_strlen(SYMDEF_SORTED) + sizeof(long);
 	else
 		return (bad_executable());
 	rans_len = *((int*)(ran_start - sizeof(int)));
