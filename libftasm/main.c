@@ -282,24 +282,24 @@ void	test_tolower(void)
 {
 	int		tmp;
 
-	printf("ft_toupper :");
+	printf("ft_tolower :");
 	printf("\n  testing with 'A' :           ");
-	tmp = ft_toupper('A');
+	tmp = ft_tolower('A');
 	printf("'%c'", tmp);
 	printf("\n  testing with 'A' - 1 ('@') : ");
-	tmp = ft_toupper('A' - 1);
+	tmp = ft_tolower('A' - 1);
 	printf("'%c'", tmp);
 	printf("\n  testing with 'A' + 1 :       ");
-	tmp = ft_toupper('A' + 1);
+	tmp = ft_tolower('A' + 1);
 	printf("'%c'", tmp);
 	printf("\n  testing with 'Z' :           ");
-	tmp = ft_toupper('Z');
+	tmp = ft_tolower('Z');
 	printf("'%c'", tmp);
 	printf("\n  testing with 'Z' + 1 ('[') : ");
-	tmp = ft_toupper('Z' + 1);
+	tmp = ft_tolower('Z' + 1);
 	printf("'%c'", tmp);
 	printf("\n  testing with 'Z' - 1 :       ");
-	tmp = ft_toupper('Z' - 1);
+	tmp = ft_tolower('Z' - 1);
 	printf("'%c'", tmp);
 	printf("\n");
 }
@@ -501,19 +501,14 @@ void	test_cat(void)
 	ft_cat(-1);
 	fflush(stdout);
 	printf("\"\n");
-	printf("  ft_cat(1) : \"");
+	printf("  ft_cat(-42) : \"");
 	fflush(stdout);
-	ft_cat(1);
-	fflush(stdout);
-	printf("\"\n");
-	printf("  ft_cat(2) : \"");
-	fflush(stdout);
-	ft_cat(2);
+	ft_cat(-42);
 	fflush(stdout);
 	printf("\"\n");
-	printf("  ft_cat(255) : \"");
+	printf("  ft_cat(42) : \"");
 	fflush(stdout);
-	ft_cat(255);
+	ft_cat(42);
 	fflush(stdout);
 	printf("\"\n");
 	printf("  ft_cat(0) (entrez du texte) : \n");
