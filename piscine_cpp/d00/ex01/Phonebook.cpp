@@ -136,9 +136,7 @@ void	Phonebook::launch(void)
 		if (command == "ADD")
 			this->_addContact();
 		else if (command == "SEARCH")
-		{
 			this->_displayContacts();
-		}
 		else
 			std::cout << "Unexpected command" << std::endl;
 	}

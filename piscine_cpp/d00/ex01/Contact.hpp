@@ -1,5 +1,8 @@
 
 
+#ifndef CONTACT_H
+# define CONTACT_H
+
 #include <iostream>
 #include <string>
 
@@ -41,3 +44,5 @@ private:
 	std::string	_darkest_secret;
 
 };
+
+#endif

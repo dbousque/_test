@@ -1,5 +1,8 @@
 
 
+#ifndef PHONEBOOK_H
+# define PHONEBOOK_H
+
 #include <iostream>
 #include <iomanip>
 #include "Contact.hpp"
@@ -22,3 +25,5 @@ private:
 	void		_setField(void (Contact::*setter)(std::string), std::string name);
 
 };
+
+#endif
