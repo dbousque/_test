@@ -85,7 +85,7 @@ let print_testing_xor str key =
 	print_endline (xor key str)
 
 let crypt_tests () =
-	let str1 = "salut" in
+	let str1 = "string" in
 	let str2 = "uclwt" in
 	let funcs1 = [caesar 1; xor 1] in
 	let funcs2 = [xor 1; Uncipher.uncaesar 1] in
@@ -100,28 +100,28 @@ let crypt_tests () =
 
 let () =
 	print_testing_rot "radar" ;
-	print_testing_rot "salut" ;
+	print_testing_rot "string" ;
 	print_testing_rot "salu" ;
 	print_testing_rot "" ;
 	print_testing_rot "a" ;
 	print_testing_rot "bknkb" ;
 	print_testing_rot "ckved" ;
 	print_testing_caesar 42 "ckved" ;
-	print_testing_caesar 1 "salut" ;
-	print_testing_caesar 0 "salut" ;
-	print_testing_xor "salut" 0 ;
-	print_testing_xor "salut" 5 ;
+	print_testing_caesar 1 "string" ;
+	print_testing_caesar 0 "string" ;
+	print_testing_xor "string" 0 ;
+	print_testing_xor "string" 5 ;
 	print_testing_xor "vdipq" 5 ;
 	crypt_tests () ;
 	print_endline "-- uncipher :" ;
 	Uncipher.print_testing_rot "radar" ;
-	Uncipher.print_testing_rot "salut" ;
+	Uncipher.print_testing_rot "string" ;
 	Uncipher.print_testing_rot "salu" ;
 	Uncipher.print_testing_rot "" ;
 	Uncipher.print_testing_rot "a" ;
 	Uncipher.print_testing_rot "hqtqh" ;
 	Uncipher.print_testing_rot "iqbkj" ;
 	Uncipher.print_testing_caesar 42 "iqbkj" ;
-	Uncipher.print_testing_caesar 1 "salut" ;
-	Uncipher.print_testing_caesar 0 "salut" ;
+	Uncipher.print_testing_caesar 1 "string" ;
+	Uncipher.print_testing_caesar 0 "string" ;
 	Uncipher.uncrypt_tests ()

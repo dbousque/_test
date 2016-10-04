@@ -69,8 +69,8 @@ let print_testing_caesar n str =
 	print_endline (uncaesar n str)
 
 let uncrypt_tests () =
-	let str1 = "salut" in
-	let str2 = "salut" in
+	let str1 = "string" in
+	let str2 = "string" in
 	let funcs1 = [uncaesar 0; uncaesar 1] in
 	let funcs2 = [uncaesar 5; uncaesar 2] in
 	print_string "testing crypt with \"" ;

@@ -48,5 +48,5 @@ let draw_tree_node node =
 let () =
 	Graphics.open_graph " 800x600" ;
 	draw_square 70 70 100 ;
-	draw_tree_node (Node ("salut", Nil, Nil)) ;
+	draw_tree_node (Node ("string", Nil, Nil)) ;
 	ignore (read_line ())

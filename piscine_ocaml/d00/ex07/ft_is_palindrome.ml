@@ -29,7 +29,7 @@ let print_testing str =
 let main () =
 	print_testing "bob" ;
 	print_testing "" ;
-	print_testing "salut" ;
+	print_testing "string" ;
 	print_testing "radar" ;
 	print_testing " ok " ;
 	print_testing "beeb"

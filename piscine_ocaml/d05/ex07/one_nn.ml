@@ -66,7 +66,7 @@ let convert_to_radar csv_lines =
     !res_radars
 
 let interpret_as_csv lines =
-    let res_lines = ref (Array.make 0 (Array.make 0 "salut")) in
+    let res_lines = ref (Array.make 0 (Array.make 0 "string")) in
     for i = 0 to (Array.length lines) - 1 do
         res_lines := (add_to_array !res_lines (split_string (lines.(i)) ','))
     done ;
@@ -75,8 +75,8 @@ let interpret_as_csv lines =
 let read_lines filename =
     try
         begin
-            let tmp_line = ref "salut" in
-            let res_lines = ref (Array.make 0 "salut") in
+            let tmp_line = ref "string" in
+            let res_lines = ref (Array.make 0 "string") in
             let ic = open_in filename in
             while (
                 try
@@ -92,7 +92,7 @@ let read_lines filename =
             !res_lines
         end
     with
-    | _ -> Array.make 0 "salut"
+    | _ -> Array.make 0 "string"
 
 let print_float_array a =
     print_string "[|" ;

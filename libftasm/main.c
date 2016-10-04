@@ -38,8 +38,8 @@ void	test_strcat(void)
 {
 	char	*str1;
 
-	printf("ft_strcat :\n  feeding with \"salut \" and \"les gars\"\n");
-	str1 = (char*)malloc(sizeof(char) * (strlen("salut les gars") + 1));
+	printf("ft_strcat :\n  feeding with \"string \" and \"les gars\"\n");
+	str1 = (char*)malloc(sizeof(char) * (strlen("string les gars") + 1));
 	str1[0] = 's';
 	str1[1] = 'a';
 	str1[2] = 'l';
@@ -47,18 +47,18 @@ void	test_strcat(void)
 	str1[4] = 't';
 	str1[5] = ' ';
 	str1[6] = '\0';
-	str1[strlen("salut les gars")] = 'o';
+	str1[strlen("string les gars")] = 'o';
 	ft_strcat(str1, "les gars");
 	printf("  res : \"%s\"\n", str1);
-	printf("  feeding with \"\" and \"salut\"\n");
+	printf("  feeding with \"\" and \"string\"\n");
 	str1[0] = '\0';
-	ft_strcat(str1, "salut");
+	ft_strcat(str1, "string");
 	printf("  res : \"%s\"\n", str1);
 	printf("  feeding with \"\" and \"\"\n");
 	str1[0] = '\0';
 	ft_strcat(str1, "");
 	printf("  res : \"%s\"\n", str1);
-	printf("  feeding with \"salut\" and \"\"\n");
+	printf("  feeding with \"string\" and \"\"\n");
 	str1[0] = 's';
 	str1[1] = 'a';
 	str1[2] = 'l';
@@ -309,7 +309,7 @@ void	test_puts(void)
 	char	*tmp;
 
 	printf("ft_puts :\n");
-	tmp = "salut";
+	tmp = "string";
 	printf("  ft_puts called with \"%s\" : \"", tmp);
 	fflush(stdout);
 	ft_puts(tmp);
@@ -351,7 +351,7 @@ void	test_strlen(void)
 	char	*tmp;
 
 	printf("ft_strlen :\n");
-	tmp = "salut";
+	tmp = "string";
 	printf("  ft_strlen of \"%s\" : %ld\n", tmp, ft_strlen(tmp));
 	tmp = "";
 	printf("  ft_strlen of \"%s\" : %ld\n", tmp, ft_strlen(tmp));
@@ -444,7 +444,7 @@ void	test_memcpy(void)
 
 	printf("ft_memcpy :\n");
 	tmp2 = (char*)malloc(sizeof(char) * 100);
-	tmp = "salut";
+	tmp = "string";
 	printf("  checking for \"%s\" : ", tmp);
 	tmp3 = ft_memcpy(tmp2, tmp, strlen(tmp) + 1);
 	printf("ret value %s, copy %s, ret : \"%s\"\n", tmp3 == tmp2 ? "ok" : "not ok", ft_strequ(tmp2, tmp) ? "ok" : "not ok", tmp3);
@@ -468,7 +468,7 @@ void	test_strdup(void)
 	char	*tmp;
 
 	printf("ft_strdup :\n");
-	tmp = "salut";
+	tmp = "string";
 	res = ft_strdup(tmp);
 	printf("  ret for \"%s\" at address %p : address %p, value \"%s\"\n", tmp, tmp, res, res);
 	tmp = "";

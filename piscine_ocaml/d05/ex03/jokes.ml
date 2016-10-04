@@ -10,9 +10,9 @@ let add_to_array arr elt =
 let read_jokes filename =
     try
         begin
-            let arr = Array.make 0 "salut" in
+            let arr = Array.make 0 "string" in
             let res_arr = ref arr in
-            let line_ref = ref "salut" in
+            let line_ref = ref "string" in
             let ic = open_in filename in
             while (try
                     begin
@@ -26,7 +26,7 @@ let read_jokes filename =
             !res_arr
         end
     with
-        | _ -> Array.make 0 "salut"
+        | _ -> Array.make 0 "string"
 
 let () =
     try
