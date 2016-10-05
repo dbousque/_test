@@ -13,6 +13,9 @@ class Brain
 		Brain(int iq, int weight, long nb_neurons);
 		~Brain();
 		std::string	identify(void) const;
+		int const	&getIq(void) const;
+		int const	&getWeight(void) const;
+		long		getNbNeurons(void) const;
 
 	private:
 		int const	_iq;

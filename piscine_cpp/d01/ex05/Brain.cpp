@@ -20,6 +20,19 @@ Brain::~Brain()
 {
 }
 
+int const	&Brain::getIq(void) const
+{
+	return this->_iq;
+}
+int const	&Brain::getWeight(void) const
+{
+	return this->_weight;
+}
+long		Brain::getNbNeurons(void) const
+{
+	return this->_nb_neurons;
+}
+
 std::string	Brain::identify(void) const
 {
 	std::ostringstream	out;
