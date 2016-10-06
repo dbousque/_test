@@ -7,35 +7,29 @@
 Fixed::Fixed(void) :
 	_val(0)
 {
-	std::cout << "Default constructor called" << std::endl;
 }
 
 Fixed::~Fixed()
 {
-	std::cout << "Destructor called" << std::endl;
 }
 
 Fixed::Fixed(Fixed const &other) :
 	_val(other.getRawBits())
 {
-	std::cout << "Copy constructor called" << std::endl;
 }
 
 Fixed::Fixed(int const n) :
 	_val(n << Fixed::_fractional_bits)
 {
-	std::cout << "Int constructor called" << std::endl;
 }
 
 Fixed::Fixed(float const n) :
 	_val(roundf(n * pow(2, Fixed::_fractional_bits)))
 {
-	std::cout << "Float constructor called" << std::endl;
 }
 
 Fixed	&Fixed::operator=(Fixed const &other)
 {
-	std::cout << "Assignation operator called" << std::endl;
 	this->_val = other.getRawBits();
 	return *this;
 }
