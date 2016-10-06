@@ -92,7 +92,7 @@ Fixed	Fixed::operator/(Fixed const &other) const
 {
 	Fixed	res;
 
-	res.setRawBits((this->_val / other.getRawBits()) << Fixed::_fractional_bits);
+	res.setRawBits(((this->_val << Fixed::_fractional_bits) / other.getRawBits()));
 	return res;
 }
 
@@ -129,13 +129,11 @@ Fixed	Fixed::operator--(int)
 
 int		Fixed::getRawBits(void) const
 {
-	std::cout << "getRawBits member function called" << std::endl;
 	return this->_val;
 }
 
 void	Fixed::setRawBits(int const raw)
 {
-	std::cout << "setRawBits member function called" << std::endl;
 	this->_val = raw;
 }
 

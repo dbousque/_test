@@ -5,13 +5,15 @@
 
 ExprStack::ExprStack() :
 	_postfix(*(new List())),
-	_parse_stack(*(new Stack()))
+	_parse_stack(*(new Stack())),
+	_open_parenthese(0)
 {
 }
 
 ExprStack::ExprStack(ExprStack &other) :
 	_postfix(other.getPostfix()),
-	_parse_stack(other.getParseStack())
+	_parse_stack(other.getParseStack()),
+	_open_parenthese(0)
 {
 }
 
@@ -28,15 +30,23 @@ void	ExprStack::openBracket()
 {
 	char	*to_push;
 
+	this->_open_parenthese++;
 	to_push = new char[1];
 	to_push[0] = '(';
 	this->_parse_stack.push(to_push);
 }
 
-void	ExprStack::closeBracket()
+void	ExprStack::closeBracket(bool *error)
 {
 	char	*top_elt;
 
+	if (this->_open_parenthese == 0)
+	{
+		*error = true;
+		std::cout << "Unbalanced parentheses" << std::endl;
+		return ;
+	}
+	this->_open_parenthese--;
 	while (this->_parse_stack.length() != 0
 			&& *(top_elt = (char*)this->_parse_stack.pop()) != '(')
 		this->_postfix.add(new ExprElt(*top_elt));
@@ -44,7 +54,7 @@ void	ExprStack::closeBracket()
 
 bool	inferior_or_egal_precedence(char op1, char op2)
 {
-	if (op1 == '+' || op2 == '-')
+	if (op1 == '+' || op1 == '-')
 		return true;
 	if (op2 == '+' || op2 == '-')
 		return false;
@@ -56,7 +66,6 @@ void	ExprStack::newOperator(char op)
 	char	*to_push;
 	char	*top_elt;
 
-	std::cout << "New operator" << std::endl;
 	while (this->_parse_stack.length() != 0
 			&& *(top_elt = (char*)this->_parse_stack.getTop()) != '('
 			&& inferior_or_egal_precedence(op, *top_elt))
@@ -68,23 +77,65 @@ void	ExprStack::newOperator(char op)
 
 void	ExprStack::newVal(float val)
 {
-	std::cout << "New val" << std::endl;
 	this->_postfix.add(new ExprElt(val));
 }
 
 void	print_postfix(List &postfix)
 {
 	for (size_t i=0; i < postfix.length(); i++)
-	{
 		std::cout << *((ExprElt*)postfix.get(i)) << ' ';
-	}
 	std::cout << std::endl;
 }
 
-Fixed	ExprStack::resolve()
+Fixed	ExprStack::resolve(bool print_post, bool *error)
 {
-	print_postfix(this->_postfix);
-	return Fixed();
+	ExprElt	*tmp_elt;
+	char	*top_elt;
+	ExprElt	*val1;
+	ExprElt	*val2;
+	Stack	*elts_stack = new Stack();
+
+	while (this->_parse_stack.length() != 0
+			&& *(top_elt = (char*)this->_parse_stack.pop()) != '(')
+		this->_postfix.add(new ExprElt(*top_elt));
+	if (this->_parse_stack.length() != 0)
+	{
+		*error = true;
+		std::cout << "Unbalanced parentheses" << std::endl;
+		delete elts_stack;
+		return Fixed();
+	}
+	if (print_post)
+		print_postfix(this->_postfix);
+	for (size_t i = 0; i < this->_postfix.length(); i++)
+	{
+		tmp_elt = ((ExprElt*)this->_postfix.get(i));
+		if (tmp_elt->isVal())
+			elts_stack->push(tmp_elt);
+		else
+		{
+			val1 = (ExprElt*)elts_stack->pop();
+			val2 = (ExprElt*)elts_stack->pop();
+			if (!val1 || !val2)
+			{
+				*error = true;
+				std::cout << "Syntax error" << std::endl;
+				return Fixed();
+			}
+			if (tmp_elt->getOp() == '+')
+				tmp_elt = new ExprElt(new Fixed((*val2).getVal() + (*val1).getVal()));
+			else if (tmp_elt->getOp() == '-')
+				tmp_elt = new ExprElt(new Fixed((*val2).getVal() - (*val1).getVal()));
+			else if (tmp_elt->getOp() == '*')
+				tmp_elt = new ExprElt(new Fixed((*val2).getVal() * (*val1).getVal()));
+			else
+				tmp_elt = new ExprElt(new Fixed((*val2).getVal() / (*val1).getVal()));
+			elts_stack->push(tmp_elt);
+		}
+	}
+	Fixed	&to_ret = (*((ExprElt*)elts_stack->pop())).getVal();
+	delete elts_stack;
+	return to_ret;
 }
 
 List	&ExprStack::getPostfix()

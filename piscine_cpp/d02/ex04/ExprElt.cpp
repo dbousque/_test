@@ -19,6 +19,13 @@ ExprElt::ExprElt(float val) :
 {
 }
 
+ExprElt::ExprElt(Fixed *fix) :
+	_op(default_op),
+	_val(*fix),
+	_is_val(true)
+{
+}
+
 ExprElt::ExprElt(char op) :
 	_op(op),
 	_val(default_val),

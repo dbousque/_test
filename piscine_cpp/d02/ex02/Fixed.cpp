@@ -98,7 +98,7 @@ Fixed	Fixed::operator/(Fixed const &other) const
 {
 	Fixed	res;
 
-	res.setRawBits((this->_val / other.getRawBits()) << Fixed::_fractional_bits);
+	res.setRawBits(((this->_val << Fixed::_fractional_bits) / other.getRawBits()));
 	return res;
 }
 

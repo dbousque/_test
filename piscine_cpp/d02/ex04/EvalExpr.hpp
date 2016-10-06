@@ -8,7 +8,7 @@
 
 namespace EvalExpr
 {
-	Fixed	parse_expr(std::string const &expr, bool *error);
+	Fixed	parse_expr(std::string const &expr, bool print_postfix, bool *error);
 }
 
 #endif

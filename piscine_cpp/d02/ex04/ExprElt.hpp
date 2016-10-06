@@ -11,6 +11,7 @@ class ExprElt
 	public:
 		ExprElt();
 		ExprElt(float val);
+		ExprElt(Fixed *fix);
 		ExprElt(char op);
 		ExprElt(ExprElt &other);
 		~ExprElt();
