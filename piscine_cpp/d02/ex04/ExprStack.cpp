@@ -56,6 +56,7 @@ void	ExprStack::newOperator(char op)
 	char	*to_push;
 	char	*top_elt;
 
+	std::cout << "New operator" << std::endl;
 	while (this->_parse_stack.length() != 0
 			&& *(top_elt = (char*)this->_parse_stack.getTop()) != '('
 			&& inferior_or_egal_precedence(op, *top_elt))
@@ -67,6 +68,7 @@ void	ExprStack::newOperator(char op)
 
 void	ExprStack::newVal(float val)
 {
+	std::cout << "New val" << std::endl;
 	this->_postfix.add(new ExprElt(val));
 }
 

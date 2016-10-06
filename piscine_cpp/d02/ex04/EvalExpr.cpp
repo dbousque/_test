@@ -26,10 +26,13 @@ Fixed	EvalExpr::parse_expr(std::string const &expr_str, bool *error)
 	char				tmp_char[1];
 	ExprStack			&expr_stack = *(new ExprStack());
 
+	if (expr_str.length() == 0)
+		return ret_error("Void expression", error);
 	while (expr)
 	{
 		expr.read(tmp_char, 1);
-		if (tmp_char[0] == EOF)
+		std::cout << "tmp_char : " << tmp_char << " gcount " << expr.gcount() << std::endl;
+		if (tmp_char[0] == '\0')
 			break ;
 		if (!allowed_char(tmp_char[0]))
 			return ret_error(std::string("Unexpected character : ") + tmp_char, error);
@@ -43,6 +46,7 @@ Fixed	EvalExpr::parse_expr(std::string const &expr_str, bool *error)
 		else if (isdigit(tmp_char[0]))
 		{
 			expr.unget();
+			std::cout << "expr : " << expr << std::endl;
 			expr >> tmp_val;
 			expr_stack.newVal(tmp_val);
 		}
