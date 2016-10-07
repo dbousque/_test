@@ -3,6 +3,7 @@
 #include "FragTrap.hpp"
 #include "ScavTrap.hpp"
 #include "NinjaTrap.hpp"
+#include "SuperTrap.hpp"
 #include <iostream>
 
 void	test_fragtrap()
@@ -144,6 +145,33 @@ void	test_ninjatrap()
 	ninja.ninjaShoebox(claptrap);
 	std::cout << std::endl << "displaying ninja info :" << std::endl;
 	ninja.displayInfos();
+
+	delete &ninja;
+	delete &ninjatrap;
+	delete &claptrap;
+	delete &scavtrap;
+	delete &fragtrap;
+}
+
+void	test_supertrap()
+{
+	std::cout << "Creating SuperTrap" << std::endl;
+	SuperTrap	*bobby = new SuperTrap("SuperMutant");
+	ScavTrap	*scavtrap = new ScavTrap("Bobby");
+
+	bobby->displayInfos();
+	std::cout << "Calling ninjaShoebox on SuperTrap : " << std::endl;
+	bobby->ninjaShoebox(*scavtrap);
+	std::cout << std::endl << "Calling vaulthunter_dot_exe on SuperTrap : " << std::endl;
+	bobby->vaulthunter_dot_exe(scavtrap->getName());
+	bobby->beRepaired(100);
+	std::cout << std::endl;
+	std::cout << "Calling rangedAttack on SuperTrap : " << std::endl;
+	bobby->rangedAttack(scavtrap->getName());
+	std::cout << std::endl << "Calling meleeAttack on SuperTrap : " << std::endl;
+	bobby->meleeAttack(scavtrap->getName());
+	std::cout << std::endl;
+	delete bobby;
 }
 
 int		main(void)
@@ -154,5 +182,7 @@ int		main(void)
 	test_scavtrap();
 	std::cout << std::endl << "TESTING NINJATRAP :" << std::endl << std::endl;
 	test_ninjatrap();
+	std::cout << std::endl << "TESTING SUPERTRAP :" << std::endl << std::endl;
+	test_supertrap();
 	return (0);
 }

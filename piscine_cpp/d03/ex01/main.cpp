@@ -1,7 +1,7 @@
 
 
 #include "FragTrap.hpp"
-#include "Scavtrap.hpp"
+#include "ScavTrap.hpp"
 #include <iostream>
 
 void	test_fragtrap()
