@@ -1,27 +1,27 @@
 
 
-#ifndef FRAGTRAP_H
-# define FRAGTRAP_H
+#ifndef SCAVTRAP_H
+# define SCAVTRAP_H
 
 #include <string>
 
-class FragTrap
+class ScavTrap
 {
 	public:
-		FragTrap();
-		FragTrap(std::string const &name);
-		FragTrap(FragTrap &other);
-		~FragTrap();
-		FragTrap	&operator=(FragTrap &other);
+		ScavTrap();
+		ScavTrap(std::string const &name);
+		ScavTrap(ScavTrap &other);
+		~ScavTrap();
+		ScavTrap	&operator=(ScavTrap &other);
 
 		void				rangedAttack(std::string const & target);
 		void				meleeAttack(std::string const & target);
-		void				snore(std::string const & target);
-		void				myAttack2(std::string const & target);
-		void				myAttack3(std::string const & target);
+		void				challenge1();
+		void				challenge2();
+		void				challenge3();
 		void				takeDamage(unsigned int amount);
 		void				beRepaired(unsigned int amount);
-		void				vaulthunter_dot_exe(std::string const & target);
+		void				challengeNewcomer();
 		void				displayInfos();
 		unsigned int		getHitPoints();
 		unsigned int		getMaxHitPoints();

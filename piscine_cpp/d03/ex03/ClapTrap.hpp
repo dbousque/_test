@@ -1,27 +1,32 @@
 
 
-#ifndef FRAGTRAP_H
-# define FRAGTRAP_H
+#ifndef CLAPTRAP_H
+# define CLAPTRAP_H
 
 #include <string>
 
-class FragTrap
+class ClapTrap
 {
 	public:
-		FragTrap();
-		FragTrap(std::string const &name);
-		FragTrap(FragTrap &other);
-		~FragTrap();
-		FragTrap	&operator=(FragTrap &other);
+		ClapTrap();
+		ClapTrap(std::string const &name,
+			unsigned int hit_points,
+			unsigned int max_hit_points,
+			unsigned int energy_points,
+			unsigned int max_energy_points,
+			unsigned int level,
+			unsigned int melee_attack_damage,
+			unsigned int ranged_attack_damage,
+			unsigned int carmor_damage_reduction,
+			std::string &class_name);
+		ClapTrap(ClapTrap &other);
+		~ClapTrap();
+		ClapTrap	&operator=(ClapTrap &other);
 
 		void				rangedAttack(std::string const & target);
 		void				meleeAttack(std::string const & target);
-		void				snore(std::string const & target);
-		void				myAttack2(std::string const & target);
-		void				myAttack3(std::string const & target);
 		void				takeDamage(unsigned int amount);
 		void				beRepaired(unsigned int amount);
-		void				vaulthunter_dot_exe(std::string const & target);
 		void				displayInfos();
 		unsigned int		getHitPoints();
 		unsigned int		getMaxHitPoints();
@@ -32,8 +37,9 @@ class FragTrap
 		unsigned int		getMeleeAttackDamage();
 		unsigned int		getRangedAttackDamage();
 		unsigned int		getArmorDamageReduction();
+		std::string			&getClassName();
 
-	private:
+	protected:
 		unsigned int		_hit_points;
 		unsigned int		_max_hit_points;
 		unsigned int		_energy_points;
@@ -43,6 +49,9 @@ class FragTrap
 		unsigned int		_melee_attack_damage;
 		unsigned int		_ranged_attack_damage;
 		unsigned int		_armor_damage_reduction;
+		std::string			_class_name;
+
+	private:
 };
 
 #endif

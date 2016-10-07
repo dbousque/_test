@@ -1,39 +1,40 @@
 
 
-#include "FragTrap.hpp"
+#include "ScavTrap.hpp"
 #include <iostream>
 
 std::string const	default_name = "default_name";
 
-FragTrap::FragTrap() :
+ScavTrap::ScavTrap() :
 	_hit_points(100),
 	_max_hit_points(100),
-	_energy_points(100),
-	_max_energy_points(100),
+	_energy_points(50),
+	_max_energy_points(50),
 	_level(1),
 	_name(default_name),
-	_melee_attack_damage(30),
-	_ranged_attack_damage(20),
-	_armor_damage_reduction(5)
+	_melee_attack_damage(20),
+	_ranged_attack_damage(15),
+	_armor_damage_reduction(3)
 {
-	std::cout << "No no no no! Cancel directive three!" << std::endl;
+	std::cout << "Jack: Nonono, you're not dead, you're --" << std::endl;
+	std::cout << "ScavTrap: I'M DEAD I'M DEAD OHMYGOD I'M DEAD!" << std::endl;
 }
 
-FragTrap::FragTrap(std::string const &name) :
+ScavTrap::ScavTrap(std::string const &name) :
 	_hit_points(100),
 	_max_hit_points(100),
-	_energy_points(100),
-	_max_energy_points(100),
+	_energy_points(50),
+	_max_energy_points(50),
 	_level(1),
 	_name(name),
-	_melee_attack_damage(30),
-	_ranged_attack_damage(20),
-	_armor_damage_reduction(5)
+	_melee_attack_damage(20),
+	_ranged_attack_damage(15),
+	_armor_damage_reduction(3)
 {
-	std::cout << "Directive one: Protect humanity! Directive two: Obey Jack at all costs. Directive three: Dance!" << std::endl;
+	std::cout << "ScavTrap: -- Are you god? Am I dead?" << std::endl;
 }
 
-FragTrap::FragTrap(FragTrap &other) :
+ScavTrap::ScavTrap(ScavTrap &other) :
 	_hit_points(other.getHitPoints()),
 	_max_hit_points(other.getMaxHitPoints()),
 	_energy_points(other.getEnergyPoints()),
@@ -47,12 +48,12 @@ FragTrap::FragTrap(FragTrap &other) :
 	std::cout << "Copy constructor called for " << other.getName() << std::endl;
 }
 
-FragTrap::~FragTrap()
+ScavTrap::~ScavTrap()
 {
-	std::cout << "FragTrap " << this->_name << " deleted" << std::endl;
+	std::cout << "ScavTrap " << this->_name << " deleted" << std::endl;
 }
 
-FragTrap	&FragTrap::operator=(FragTrap &other)
+ScavTrap	&ScavTrap::operator=(ScavTrap &other)
 {
 	this->_hit_points = other.getHitPoints();
 	this->_max_hit_points = other.getMaxHitPoints();
@@ -66,73 +67,35 @@ FragTrap	&FragTrap::operator=(FragTrap &other)
 	return *this;
 }
 
-void				FragTrap::rangedAttack(std::string const & target)
+void				ScavTrap::rangedAttack(std::string const & target)
 {
 	if (this->_energy_points < this->_ranged_attack_damage)
 	{
 		std::cout << "Not enough energy to perform rangedAttack" << std::endl;
 		return ;
 	}
-	std::cout << "FR4G-TP " << this->_name << " attacks " << target;
+	std::cout << "ScavTrap " << this->_name << " attacks " << target;
 	std::cout << " with rangedAttack, causing " << this->_ranged_attack_damage;
 	std::cout << " points of damage !" << std::endl;
 	this->_energy_points -= this->_ranged_attack_damage;
 }
 
-void				FragTrap::meleeAttack(std::string const & target)
+void				ScavTrap::meleeAttack(std::string const & target)
 {
 	if (this->_energy_points < this->_melee_attack_damage)
 	{
 		std::cout << "Not enough energy to perform meleeAttack" << std::endl;
 		return ;
 	}
-	std::cout << "FR4G-TP " << this->_name << " attacks " << target;
+	std::cout << "ScavTrap " << this->_name << " attacks " << target;
 	std::cout << " with meleeAttack, causing " << this->_melee_attack_damage;
 	std::cout << " points of damage !" << std::endl;
 	this->_energy_points -= this->_melee_attack_damage;
 }
 
-// make the attacker loose no energy, but weak attack
-void				FragTrap::snore(std::string const & target)
+void				ScavTrap::takeDamage(unsigned int amount)
 {
-	std::cout << "FR4G-TP " << this->_name << " attacks " << target;
-	std::cout << " with snore, causing " << 5;
-	std::cout << " points of damage !" << std::endl;
-}
-
-// restores some HP, but costs a lot of energy
-void				FragTrap::myAttack2(std::string const & target)
-{
-	if (this->_energy_points < 50)
-	{
-		std::cout << "Not enough energy to perform meleeAttack" << std::endl;
-		return ;
-	}
-	std::cout << "FR4G-TP " << this->_name << " attacks " << target;
-	std::cout << " with myAttack2, causing " << 50;
-	std::cout << " points of damage !" << std::endl;
-	this->_energy_points -= 50;
-	this->beRepaired(10);
-}
-
-// makes big damage, but costs some HP and some energy
-void				FragTrap::myAttack3(std::string const & target)
-{
-	if (this->_energy_points < 40)
-	{
-		std::cout << "Not enough energy to perform meleeAttack" << std::endl;
-		return ;
-	}
-	std::cout << "FR4G-TP " << this->_name << " attacks " << target;
-	std::cout << " with myAttack3, causing " << 70;
-	std::cout << " points of damage !" << std::endl;
-	this->_energy_points -= 40;
-	this->takeDamage(20);
-}
-
-void				FragTrap::takeDamage(unsigned int amount)
-{
-	std::cout << "FragTrap " << this->_name << " takes " << amount << " damage" << std::endl;
+	std::cout << "ScavTrap " << this->_name << " takes " << amount << " damage" << std::endl;
 	amount -= this->_armor_damage_reduction;
 	if (amount > this->_hit_points)
 		this->_hit_points = 0;
@@ -140,9 +103,9 @@ void				FragTrap::takeDamage(unsigned int amount)
 		this->_hit_points -= amount;
 }
 
-void				FragTrap::beRepaired(unsigned int amount)
+void				ScavTrap::beRepaired(unsigned int amount)
 {
-	std::cout << "FragTrap " << this->_name << " is repaired : " << amount << std::endl;
+	std::cout << "ScavTrap " << this->_name << " is repaired : " << amount << std::endl;
 	if (amount + this->_hit_points > this->_max_hit_points)
 		this->_hit_points = this->_max_hit_points;
 	else
@@ -153,15 +116,28 @@ void				FragTrap::beRepaired(unsigned int amount)
 		this->_energy_points += amount;
 }
 
-void	(FragTrap::*attack_funcs[5])(std::string const &) = {
-	&FragTrap::rangedAttack,
-	&FragTrap::meleeAttack,
-	&FragTrap::snore,
-	&FragTrap::myAttack2,
-	&FragTrap::myAttack3
+void	ScavTrap::challenge1()
+{
+	std::cout << "[challenge] : " << "Eat 10 pounds of dirt" << std::endl;
+}
+
+void	ScavTrap::challenge2()
+{
+	std::cout << "[challenge] : " << "Make 142 pushups" << std::endl;
+}
+
+void	ScavTrap::challenge3()
+{
+	std::cout << "[challenge] : " << "Tell world's funniest joke" << std::endl;
+}
+
+void	(ScavTrap::*challenges[3])(void) = {
+	&ScavTrap::challenge1,
+	&ScavTrap::challenge2,
+	&ScavTrap::challenge3
 };
 
-void	FragTrap::vaulthunter_dot_exe(std::string const & target)
+void	ScavTrap::challengeNewcomer()
 {
 	static bool	already_called = false;
 
@@ -170,16 +146,12 @@ void	FragTrap::vaulthunter_dot_exe(std::string const & target)
 		srand(time(NULL));
 		already_called = true;
 	}
-	if (25 > this->_energy_points)
-		this->_energy_points = 0;
-	else
-		this->_energy_points -= 25;
-	(this->*attack_funcs[rand() % 5])(target);
+	(this->*challenges[rand() % 3])();
 }
 
-void	FragTrap::displayInfos()
+void	ScavTrap::displayInfos()
 {
-	std::cout << "FR4G-TP " << this->_name << " :" << std::endl;
+	std::cout << "ScavTrap " << this->_name << " :" << std::endl;
 	std::cout << "  hit_points             : " << this->_hit_points << std::endl;
 	std::cout << "  max_hit_points         : " << this->_max_hit_points << std::endl;
 	std::cout << "  energy_points          : " << this->_energy_points << std::endl;
@@ -190,47 +162,47 @@ void	FragTrap::displayInfos()
 	std::cout << "  armor_damage_reduction : " << this->_armor_damage_reduction << std::endl;
 }
 
-unsigned int		FragTrap::getHitPoints()
+unsigned int		ScavTrap::getHitPoints()
 {
 	return this->_hit_points;
 }
 
-unsigned int		FragTrap::getMaxHitPoints()
+unsigned int		ScavTrap::getMaxHitPoints()
 {
 	return this->_max_hit_points;
 }
 
-unsigned int		FragTrap::getEnergyPoints()
+unsigned int		ScavTrap::getEnergyPoints()
 {
 	return this->_energy_points;
 }
 
-unsigned int		FragTrap::getMaxEnergyPoints()
+unsigned int		ScavTrap::getMaxEnergyPoints()
 {
 	return this->_max_energy_points;
 }
 
-unsigned int		FragTrap::getLevel()
+unsigned int		ScavTrap::getLevel()
 {
 	return this->_level;
 }
 
-std::string const	&FragTrap::getName()
+std::string const	&ScavTrap::getName()
 {
 	return this->_name;
 }
 
-unsigned int		FragTrap::getMeleeAttackDamage()
+unsigned int		ScavTrap::getMeleeAttackDamage()
 {
 	return this->_melee_attack_damage;
 }
 
-unsigned int		FragTrap::getRangedAttackDamage()
+unsigned int		ScavTrap::getRangedAttackDamage()
 {
 	return this->_ranged_attack_damage;
 }
 
-unsigned int		FragTrap::getArmorDamageReduction()
+unsigned int		ScavTrap::getArmorDamageReduction()
 {
 	return this->_armor_damage_reduction;
 }
