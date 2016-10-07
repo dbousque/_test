@@ -27,6 +27,11 @@ AWeapon::~AWeapon()
 {
 }
 
+AWeapon				&AWeapon::operator=(AWeapon &other)
+{
+	return other;
+}
+
 std::string const	&AWeapon::getName() const
 {
 	return this->_name;

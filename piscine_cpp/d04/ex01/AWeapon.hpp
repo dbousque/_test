@@ -10,8 +10,9 @@ class AWeapon
 	public:
 		AWeapon(std::string const &name, int apcost, int damage);
 		AWeapon(AWeapon &other);
-		~AWeapon();
+		virtual ~AWeapon();
 
+		AWeapon				&operator=(AWeapon &other);
 		std::string const	&getName() const;
 		int					getAPCost() const;
 		int					getDamage() const;
@@ -19,6 +20,8 @@ class AWeapon
 
 	private:
 		AWeapon();
+
+	protected:
 		std::string const	&_name;
 		int					_apcost;
 		int					_damage;
