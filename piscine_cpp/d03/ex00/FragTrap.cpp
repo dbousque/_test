@@ -54,16 +54,7 @@ FragTrap::~FragTrap()
 
 FragTrap	&FragTrap::operator=(FragTrap &other)
 {
-	this->_hit_points = other.getHitPoints();
-	this->_max_hit_points = other.getMaxHitPoints();
-	this->_energy_points = other.getEnergyPoints();
-	this->_max_energy_points = other.getMaxEnergyPoints();
-	this->_level = other.getLevel();
-	this->_name = other.getName();
-	this->_melee_attack_damage = other.getMeleeAttackDamage();
-	this->_ranged_attack_damage = other.getRangedAttackDamage();
-	this->_armor_damage_reduction = other.getArmorDamageReduction();
-	return *this;
+	return *(new FragTrap(other));
 }
 
 void				FragTrap::rangedAttack(std::string const & target)
