@@ -15,6 +15,7 @@ class Character
 		Character(Character &other);
 		~Character();
 
+		Character			&operator=(Character &other);
 		void				recoverAP();
 		void				equip(AWeapon* weapon);
 		void				attack(Enemy* enemy);

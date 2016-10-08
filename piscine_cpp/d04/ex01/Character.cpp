@@ -20,6 +20,11 @@ Character::~Character()
 {
 }
 
+Character			&Character::operator=(Character &other)
+{
+	return other;
+}
+
 void				Character::recoverAP()
 {
 	this->_ap += 10;
