@@ -36,6 +36,8 @@ void				Character::attack(Enemy* enemy)
 {
 	if (!this->_weapon || !enemy)
 		return ;
+	if (this->_ap < this->_weapon->getAPCost())
+		return ;
 	std::cout << this->_name << " attacks " << enemy->getType();
 	std::cout << " with a " << this->_weapon->getName() << std::endl;
 	this->_weapon->attack();

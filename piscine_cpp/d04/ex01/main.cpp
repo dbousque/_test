@@ -45,5 +45,15 @@ int main()
 	zaz->attack(b);
 	std::cout << *zaz;
 
+	std::cout << std::endl << "Testing some other weapons and ennemies : " << std::endl;
+	testWeaponsEnemies();
+	std::cout << "Calling recoverAP() 3 times on Character zaz : " << std::endl;
+	std::cout <<* zaz;
+	zaz->recoverAP();
+	std::cout << *zaz;
+	zaz->recoverAP();
+	std::cout << *zaz;
+	zaz->recoverAP();
+	std::cout << *zaz;
 	return 0;
 }
