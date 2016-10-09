@@ -4,8 +4,8 @@
 
 std::string		bullet_repr[1] = {std::string("--")};
 
-Bullet::Bullet(int x, int y, bool is_character_bullet) :
-	GameEntity(x, y, bullet_repr, 1),
+Bullet::Bullet(int x, int y, bool is_character_bullet, int color) :
+	GameEntity(x, y, bullet_repr, 1, is_character_bullet ? color : COLOR_RED),
 	_is_character_bullet(is_character_bullet)
 {
 }

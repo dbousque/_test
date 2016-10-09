@@ -13,6 +13,9 @@ class Background : public GameEntity
 		virtual ~Background();
 
 		Background	&operator=(Background &other);
+		void		move(int dx, int dy);
+		bool		outOfBounds();
+		void		display() const;
 
 	private:
 		Background();

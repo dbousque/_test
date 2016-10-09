@@ -8,7 +8,7 @@
 class Bullet : public GameEntity
 {
 	public:
-		Bullet(int x, int y, bool is_character_bullet);
+		Bullet(int x, int y, bool is_character_bullet, int color);
 		Bullet(Bullet &other);
 		virtual ~Bullet();
 

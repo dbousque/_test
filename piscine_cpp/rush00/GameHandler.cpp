@@ -21,6 +21,20 @@ void		GameHandler::_init_ncurses()
 	keypad(stdscr, TRUE);
 	curs_set(0);
 	noecho();
+	start_color();
+	attron(A_BOLD);
+	init_color(COLOR_YELLOW, 500, 500, 500);
+	init_pair(1, COLOR_BLACK, COLOR_BLACK);
+	init_pair(2, COLOR_RED, COLOR_BLACK);
+	init_pair(3, COLOR_GREEN, COLOR_BLACK);
+	init_pair(4, COLOR_YELLOW, COLOR_BLACK);
+	init_pair(5, COLOR_BLUE, COLOR_BLACK);
+	init_pair(6, COLOR_MAGENTA, COLOR_BLACK);
+	init_pair(7, COLOR_CYAN, COLOR_BLACK);
+	init_pair(8, COLOR_WHITE, COLOR_BLACK);
+	init_pair(9, COLOR_RED, COLOR_RED);
+	init_pair(10, COLOR_YELLOW, COLOR_YELLOW);
+	init_pair(11, COLOR_GREEN, COLOR_GREEN);
 	char	title[] = "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\
                                                                                      ____  _            _       \n\
                                                                                     | __ )| | __ _  ___| | __   \n\
@@ -80,7 +94,6 @@ void	GameHandler::_showContainer()
 		mvaddch(i, 29, '|');
 	for (int i = 11; i < 58; i++)
 		mvaddch(i, 160, '|');
-	refresh();
 }
 
 bool	GameHandler::_handleKey(int ch)
@@ -98,6 +111,13 @@ bool	GameHandler::_handleKey(int ch)
 	return true;
 }
 
+void	gameOver()
+{
+	clear();
+	endwin();
+	exit(0);
+}
+
 void	GameHandler::mainLoop()
 {
 	unsigned long	start;
@@ -110,19 +130,26 @@ void	GameHandler::mainLoop()
 		start = getCurrentMillis();
 		if (!this->_handleKey(ch))
 			break ;
+		if (!this->_retro.updateVars())
+			gameOver();
 		erase();
 		this->_showContainer();
-		this->_retro.updateVars();
 		this->_retro.displayStuff();
+		this->_retro.displayGameInfos();
 		refresh();
 		end = getCurrentMillis();
+		this->_retro.adduTime(end - start);
 		if (start + TO_WAIT_PER_FRAME > end)
 		{
 			timeout(start + TO_WAIT_PER_FRAME - end);
 			ch = getch();
 			end2 = getCurrentMillis();
+			this->_retro.adduTime(end2 - end);
 			if (end2 < start + TO_WAIT_PER_FRAME)
+			{
 				usleep((TO_WAIT_PER_FRAME - (end2 - start)) * 1000);
+				this->_retro.adduTime((suseconds_t)(TO_WAIT_PER_FRAME - (end2 - start)));
+			}
 		}
 	}
 }

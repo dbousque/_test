@@ -13,7 +13,7 @@ class GameHandler
 	public:
 		GameHandler();
 		GameHandler(GameHandler &other);
-		~GameHandler();
+		virtual ~GameHandler();
 
 		GameHandler			&operator=(GameHandler &other);
 		void				mainLoop();
