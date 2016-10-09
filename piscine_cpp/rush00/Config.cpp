@@ -1,10 +1,10 @@
 
 
-#include "Config.h"
+#include "Config.hpp"
 
-Config::win_width = 128;
-Config::win_height = 45;
-Config::start_x = 31;
-Config::start_y = 12;
-Config::scale_x = 10;
-Config::scale_y = 25;
+int Config::win_width = 128;
+int Config::win_height = 47;
+int Config::start_x = 31;
+int Config::start_y = 11;
+int Config::scale_x = 10;
+int Config::scale_y = 25;

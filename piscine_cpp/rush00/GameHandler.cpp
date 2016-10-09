@@ -2,9 +2,18 @@
 
 #include "GameHandler.hpp"
 #include <iostream>
+#include <sys/time.h>
+#include <unistd.h>
 
-int		TARGET_FRAMERATE = 15;
-size_t	TO_WAIT_PER_FRAME = 1000 / TARGET_FRAMERATE;
+int				TARGET_FRAMERATE = 60;
+unsigned long	TO_WAIT_PER_FRAME = 1000 / TARGET_FRAMERATE;
+
+unsigned long	getCurrentMillis()
+{
+	struct timeval	t;
+	gettimeofday(&t, NULL);
+	return t.tv_sec * 1000 + t.tv_usec / 1000;
+}
 
 void		GameHandler::_init_ncurses()
 {
@@ -12,8 +21,22 @@ void		GameHandler::_init_ncurses()
 	keypad(stdscr, TRUE);
 	curs_set(0);
 	noecho();
-	printw("Welcome to the my game.");
+	char	title[] = "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\
+                                                                                     ____  _            _       \n\
+                                                                                    | __ )| | __ _  ___| | __   \n\
+                                                                                    |  _ \\| |/ _` |/ __| |/ /   \n\
+                                                                                    | |_) | | (_| | (__|   <    \n\
+                                                                                ___ |____/|_|\\__,_|\\___|_|\\_\\   \n\
+                                                                               / _ \\ _ __ __ _ _ __   __ _  ___ \n\
+                                                                              | | | | '__/ _` | '_ \\ / _` |/ _ \\\n\
+                                                                              | |_| | | | (_| | | | | (_| |  __/\n\
+                                                                               \\___/|_|  \\__,_|_| |_|\\__, |\\___|\n\
+                                                                                                     |___/      ";
+ 	printw(title);
 	timeout(1000);
+	getch();
+	printw("\n\n                                                                                      dbousque and gschroed");
+	timeout(2100);
 	getch();
 	// Clear the screen
 	clear();
@@ -77,21 +100,29 @@ bool	GameHandler::_handleKey(int ch)
 
 void	GameHandler::mainLoop()
 {
-	clock_t	start;
-	clock_t	end;
-	int		ch;
+	unsigned long	start;
+	unsigned long	end;
+	unsigned long	end2;
+	int				ch;
 
-	this->_showContainer();
 	ch = -1;
 	for(;;) {
-		start = clock();
+		start = getCurrentMillis();
 		if (!this->_handleKey(ch))
 			break ;
-		end = clock();
+		erase();
+		this->_showContainer();
+		this->_retro.updateVars();
+		this->_retro.displayStuff();
+		refresh();
+		end = getCurrentMillis();
 		if (start + TO_WAIT_PER_FRAME > end)
 		{
 			timeout(start + TO_WAIT_PER_FRAME - end);
 			ch = getch();
+			end2 = getCurrentMillis();
+			if (end2 < start + TO_WAIT_PER_FRAME)
+				usleep((TO_WAIT_PER_FRAME - (end2 - start)) * 1000);
 		}
 	}
 }

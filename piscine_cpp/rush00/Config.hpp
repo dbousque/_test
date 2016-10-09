@@ -5,12 +5,13 @@
 
 namespace Config
 {
-	int		win_width;
-	int		win_height;
-	int		start_x;
-	int		start_y;
-	int		scale_x;
-	int		scale_y;
-}
+	extern int		win_width;
+	extern int		win_height;
+	extern int		start_x;
+	extern int		start_y;
+	extern int		scale_x;
+	extern int		scale_y;
+	void		setConfig();
+};
 
 #endif

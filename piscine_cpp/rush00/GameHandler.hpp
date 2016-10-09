@@ -4,6 +4,7 @@
 # define GAMEHANDLER_H
 
 #include "RetroWorld.hpp"
+#include "Config.hpp"
 #include <ctime>
 #include <ncurses.h>
 
