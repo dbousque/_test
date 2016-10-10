@@ -3,20 +3,22 @@
 #ifndef BUREAUCRAT_H
 # define BUREAUCRAT_H
 
-#include <exception>
 #include <string>
 #include <iostream>
+#include "Form.hpp"
 
 class Bureaucrat
 {
 	public:
-		Bureaucrat(std::string const name, int grade) throw(std::exception);
-		Bureaucrat(Bureaucrat &other) throw(std::exception);
+		Bureaucrat(std::string const name, int grade);
+		Bureaucrat(Bureaucrat &other);
 		virtual ~Bureaucrat();
 
 		Bureaucrat			&operator=(Bureaucrat &other);
 		void				incrementGrade();
 		void				decrementGrade();
+		void				signForm(Form &form);
+		void				executeForm(Form const &form);
 		std::string const	getName() const;
 		int					getGrade() const;
 

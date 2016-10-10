@@ -2,6 +2,9 @@
 
 #include "Bureaucrat.hpp"
 #include "Form.hpp"
+#include "ShrubberyCreationForm.hpp"
+#include "RobotomyRequestForm.hpp"
+#include "PresidentialPardonForm.hpp"
 
 int		main(void)
 {
@@ -60,14 +63,30 @@ int		main(void)
 		std::cout << e.what() << std::endl;
 	}
 
-	std::cout << std::endl << "Creating form with name 'Impot sur la fortune', grade to sign : 10, grade to execute : 20" << std::endl;
-	Form fortune("Impot sur la fortune", 10, 20);
-	std::cout << fortune;
-	std::cout << std::endl << "signing the form by Bernard : " << std::endl;
-	bernard.signForm(fortune);
-	std::cout << fortune;
-	std::cout << std::endl << "signing the form by Jose : " << std::endl;
-	jose.signForm(fortune);
-	std::cout << fortune;
+	std::cout << std::endl << "Creating ShrubberyCreationForm : " << std::endl;
+	ShrubberyCreationForm	schrub("target_file");
+	RobotomyRequestForm		robot("pony");
+	PresidentialPardonForm	pardon("Olivier");
+	std::cout << schrub;
+	std::cout << std::endl << "Executing form by Bernard : " << std::endl;
+	bernard.executeForm(schrub);
+	std::cout << std::endl << "Signing form by Jose : " << std::endl;
+	jose.signForm(schrub);
+	std::cout << schrub;
+	std::cout << std::endl << "Executing form by Bernard : " << std::endl;
+	bernard.executeForm(schrub);
+	std::cout << std::endl << "Executing form by Jose : " << std::endl;
+	jose.executeForm(schrub);
+
+	std::cout << std::endl << "executing RobotomyRequestForm 4 times : " << std::endl;
+	jose.signForm(robot);
+	jose.executeForm(robot);
+	jose.executeForm(robot);
+	jose.executeForm(robot);
+	jose.executeForm(robot);
+
+	std::cout << std::endl << "Making some excuses and being pardoned" << std::endl;
+	jose.signForm(pardon);
+	jose.executeForm(pardon);
 	return (0);
 }
