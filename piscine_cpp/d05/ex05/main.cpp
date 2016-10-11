@@ -7,6 +7,7 @@
 #include "PresidentialPardonForm.hpp"
 #include "Intern.hpp"
 #include "OfficeBlock.hpp"
+#include "CentralBureaucracy.hpp"
 
 void	test_do_bureaucracy(OfficeBlock *ob, std::string form_name)
 {
@@ -97,5 +98,18 @@ int		main(void)
 	ob.setExecutingBureaucrat(&jose);
 	std::cout << std::endl << "Testing doBureaucracy with ok grades" << std::endl;
 	test_do_bureaucracy(&ob, "presidential pardon");
+
+	std::cout << std::endl << "TESTING CENTRALBUREAUCRACY : " << std::endl;
+	std::cout << "Creating CentralBureaucracy and adding 50 bureaucrats (10 too much)" << std::endl;
+	CentralBureaucracy	central;
+	for (int i = 0; i < 20; i++)
+		central.feedBureaucrat(&bernard);
+	for (int i = 0; i < 30; i++)
+		central.feedBureaucrat(&jose);
+	std::cout << "Adding 100 targets to handle" << std::endl;
+	for (int i = 0; i < 100; i++)
+		central.queueUp("target n" + std::to_string(i));
+	std::cout << "Ready for some weird magic ?" << std::endl << std::endl;
+	central.doBureaucracy();
 	return (0);
 }
