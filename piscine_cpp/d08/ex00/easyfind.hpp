@@ -6,9 +6,9 @@
 #include <algorithm>
 
 template <typename T>
-int		*easyfind(T const &container, int val)
+typename T::iterator easyfind(T &container, int val)
 {
-	return std::find(container, container + container.size(), val);
+	return std::find(container.begin(), container.end(), val);
 }
 
 #endif
