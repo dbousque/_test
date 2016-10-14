@@ -6,7 +6,7 @@ OutputByte::OutputByte()
 {
 }
 
-OutputByte::OutputByte(OutputByte &other)
+OutputByte::OutputByte(OutputByte &)
 {
 }
 
@@ -14,18 +14,15 @@ OutputByte::~OutputByte()
 {
 }
 
-OutputByte	&OutputByte::operator=(OutputByte &other)
+OutputByte	&OutputByte::operator=(OutputByte &)
 {
+	return *this;
 }
 
-void		OutputByte::execute(Environment &env)
+void		OutputByte::execute(ExecutionHandler &exec)
 {
-	unsigned char	*data_pointer;
+	unsigned char	*data_ptr;
 
-	data_pointer = *(env.getDataPointer());
-	if (data_pointer - env.getDataStart() >= env.getN())
-		data_pointer = env.getDataStart();
-	else
-		data_pointer += 1;
-}
+	data_ptr = *(exec.getEnviron().getDataPointer());
+	std::cout << *data_ptr;
 }

@@ -3,11 +3,13 @@
 #ifndef IINSTRUCTION_H
 # define IINSTRUCTION_H
 
-#include "Environment.hpp"
+#include "ExecutionHandler.hpp"
 
 class IInstruction
 {
-	virtual void	execute(Environment &env) = 0;
-}
+	public:
+		virtual void	execute(ExecutionHandler &exec) = 0;
+		virtual			~IInstruction() {}
+};
 
 #endif

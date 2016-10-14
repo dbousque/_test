@@ -6,7 +6,7 @@ Increment::Increment()
 {
 }
 
-Increment::Increment(Increment &other)
+Increment::Increment(Increment &)
 {
 }
 
@@ -14,17 +14,20 @@ Increment::~Increment()
 {
 }
 
-Increment	&Increment::operator=(Increment &other)
+Increment	&Increment::operator=(Increment &)
 {
+	return *this;
 }
 
-void		Increment::execute(Environment &env)
+void		Increment::execute(ExecutionHandler &exec)
 {
-	unsigned char	*data_pointer;
+	unsigned char	**data_ptr;
+	unsigned char	*data_start;
 
-	data_pointer = *(env.getDataPointer());
-	if (data_pointer - env.getDataStart() >= env.getN())
-		data_pointer = env.getDataStart();
+	data_ptr = exec.getEnviron().getDataPointer();
+	data_start = exec.getEnviron().getDataStart();
+	if (*data_ptr == data_start + exec.getEnviron().getN() - 1)
+		*data_ptr = data_start;
 	else
-		data_pointer += 1;
+		(*data_ptr)++;
 }

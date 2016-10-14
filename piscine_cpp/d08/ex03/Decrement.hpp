@@ -13,7 +13,7 @@ class Decrement : public IInstruction
 		virtual ~Decrement();
 
 		Decrement	&operator=(Decrement &other);
-		void		execute(Environment &env);
-}
+		void		execute(ExecutionHandler &exec);
+};
 
 #endif

@@ -6,7 +6,7 @@ DecrementByte::DecrementByte()
 {
 }
 
-DecrementByte::DecrementByte(DecrementByte &other)
+DecrementByte::DecrementByte(DecrementByte &)
 {
 }
 
@@ -14,17 +14,18 @@ DecrementByte::~DecrementByte()
 {
 }
 
-DecrementByte	&DecrementByte::operator=(DecrementByte &other)
+DecrementByte	&DecrementByte::operator=(DecrementByte &)
 {
+	return *this;
 }
 
-void		DecrementByte::execute(Environment &env)
+void		DecrementByte::execute(ExecutionHandler &exec)
 {
-	unsigned char	*data_pointer;
+	unsigned char	*data_ptr;
 
-	data_pointer = *(env.getDataPointer());
-	if (data_pointer - env.getDataStart() >= env.getN())
-		data_pointer = env.getDataStart();
+	data_ptr = *(exec.getEnviron().getDataPointer());
+	if (*data_ptr == 0)
+		(*data_ptr) = UCHAR_MAX;
 	else
-		data_pointer += 1;
+		(*data_ptr)--;
 }

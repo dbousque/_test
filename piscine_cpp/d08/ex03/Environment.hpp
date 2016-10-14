@@ -3,6 +3,8 @@
 #ifndef ENVIRONMENT_H
 # define ENVIRONMENT_H
 
+#include <cstdlib>
+
 class Environment
 {
 	public:
@@ -18,7 +20,7 @@ class Environment
 
 	private:
 		unsigned char	*_data_start;
-		unsigned char	*_data_pointer;
+		unsigned char	**_data_pointer;
 		size_t			_n;
 };
 

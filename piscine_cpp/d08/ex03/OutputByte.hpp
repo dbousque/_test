@@ -4,6 +4,7 @@
 # define OUTPUTBYTE_H
 
 #include "IInstruction.hpp"
+#include <iostream>
 
 class OutputByte : public IInstruction
 {
@@ -13,7 +14,7 @@ class OutputByte : public IInstruction
 		virtual ~OutputByte();
 
 		OutputByte	&operator=(OutputByte &other);
-		void		execute(Environment &env);
-}
+		void		execute(ExecutionHandler &exec);
+};
 
 #endif

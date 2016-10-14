@@ -4,6 +4,7 @@
 # define ACCEPTBYTE_H
 
 #include "IInstruction.hpp"
+#include <stdio.h>
 
 class AcceptByte : public IInstruction
 {
@@ -13,7 +14,7 @@ class AcceptByte : public IInstruction
 		virtual ~AcceptByte();
 
 		AcceptByte	&operator=(AcceptByte &other);
-		void		execute(Environment &env);
-}
+		void		execute(ExecutionHandler &exec);
+};
 
 #endif

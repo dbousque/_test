@@ -6,7 +6,7 @@ IncrementByte::IncrementByte()
 {
 }
 
-IncrementByte::IncrementByte(IncrementByte &other)
+IncrementByte::IncrementByte(IncrementByte &)
 {
 }
 
@@ -14,17 +14,18 @@ IncrementByte::~IncrementByte()
 {
 }
 
-IncrementByte	&IncrementByte::operator=(IncrementByte &other)
+IncrementByte	&IncrementByte::operator=(IncrementByte &)
 {
+	return *this;
 }
 
-void		IncrementByte::execute(Environment &env)
+void		IncrementByte::execute(ExecutionHandler &exec)
 {
-	unsigned char	*data_pointer;
+	unsigned char	*data_ptr;
 
-	data_pointer = *(env.getDataPointer());
-	if (data_pointer - env.getDataStart() >= env.getN())
-		data_pointer = env.getDataStart();
+	data_ptr = *(exec.getEnviron().getDataPointer());
+	if (*data_ptr == UCHAR_MAX)
+		(*data_ptr) = 0;
 	else
-		data_pointer += 1;
+		(*data_ptr)++;
 }

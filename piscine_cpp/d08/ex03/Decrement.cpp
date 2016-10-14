@@ -6,7 +6,7 @@ Decrement::Decrement()
 {
 }
 
-Decrement::Decrement(Decrement &other)
+Decrement::Decrement(Decrement &)
 {
 }
 
@@ -14,17 +14,20 @@ Decrement::~Decrement()
 {
 }
 
-Decrement	&Decrement::operator=(Decrement &other)
+Decrement	&Decrement::operator=(Decrement &)
 {
+	return *this;
 }
 
-void		Decrement::execute(Environment &env)
+void		Decrement::execute(ExecutionHandler &exec)
 {
-	unsigned char	*data_pointer;
+	unsigned char	**data_ptr;
+	unsigned char	*data_start;
 
-	data_pointer = *(env.getDataPointer());
-	if (data_pointer - env.getDataStart() >= env.getN())
-		data_pointer = env.getDataStart();
+	data_ptr = exec.getEnviron().getDataPointer();
+	data_start = exec.getEnviron().getDataStart();
+	if (*data_ptr == data_start)
+		*data_ptr = data_start + exec.getEnviron().getN();
 	else
-		data_pointer += 1;
+		(*data_ptr)--;
 }

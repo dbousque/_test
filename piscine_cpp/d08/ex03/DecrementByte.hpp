@@ -4,6 +4,7 @@
 # define DECREMENTBYTE_H
 
 #include "IInstruction.hpp"
+#include <climits>
 
 class DecrementByte : public IInstruction
 {
@@ -13,7 +14,7 @@ class DecrementByte : public IInstruction
 		virtual ~DecrementByte();
 
 		DecrementByte	&operator=(DecrementByte &other);
-		void		execute(Environment &env);
-}
+		void		execute(ExecutionHandler &exec);
+};
 
 #endif

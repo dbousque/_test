@@ -13,7 +13,7 @@ class Increment : public IInstruction
 		virtual ~Increment();
 
 		Increment	&operator=(Increment &other);
-		void		execute(Environment &env);
-}
+		void		execute(ExecutionHandler &exec);
+};
 
 #endif

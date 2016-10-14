@@ -5,14 +5,14 @@
 Environment::Environment()
 {
 	this->_data_start = new unsigned char[2048];
-	this->_data_pointer = this->_data_start;
+	this->_data_pointer = &(this->_data_start);
 	this->_n = 2048;
 }
 
 Environment::Environment(size_t n)
 {
 	this->_data_start = new unsigned char[n];
-	this->_data_pointer = this->_data_start;
+	this->_data_pointer = &(this->_data_start);
 	this->_n = n;
 }
 
@@ -36,9 +36,9 @@ Environment		&Environment::operator=(Environment &other)
 	return *this;
 }
 
-unsigned char	*Environment::getDataPointer() const
+unsigned char	**Environment::getDataPointer() const
 {
-	return &(this->_data_pointer);
+	return this->_data_pointer;
 }
 
 unsigned char	*Environment::getDataStart() const

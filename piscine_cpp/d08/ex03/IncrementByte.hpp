@@ -4,6 +4,7 @@
 # define INCREMENTBYTE_H
 
 #include "IInstruction.hpp"
+#include <climits>
 
 class IncrementByte : public IInstruction
 {
@@ -13,7 +14,7 @@ class IncrementByte : public IInstruction
 		virtual ~IncrementByte();
 
 		IncrementByte	&operator=(IncrementByte &other);
-		void		execute(Environment &env);
-}
+		void			execute(ExecutionHandler &exec);
+};
 
 #endif
