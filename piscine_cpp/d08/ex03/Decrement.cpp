@@ -27,7 +27,7 @@ void		Decrement::execute(ExecutionHandler &exec)
 	data_ptr = exec.getEnviron().getDataPointer();
 	data_start = exec.getEnviron().getDataStart();
 	if (*data_ptr == data_start)
-		*data_ptr = data_start + exec.getEnviron().getN();
+		*data_ptr = data_start + exec.getEnviron().getN() - 1;
 	else
 		(*data_ptr)--;
 }

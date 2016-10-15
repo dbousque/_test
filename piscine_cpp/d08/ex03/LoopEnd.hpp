@@ -4,6 +4,7 @@
 # define LOOPEND_H
 
 #include "IInstruction.hpp"
+#include <queue>
 
 class LoopEnd : public IInstruction
 {

@@ -3,7 +3,7 @@
 #ifndef EXECUTIONHANDLER_H
 # define EXECUTIONHANDLER_H
 
-#include <queue>
+#include <vector>
 #include "Environment.hpp"
 
 class IInstruction;
@@ -11,21 +11,24 @@ class IInstruction;
 class ExecutionHandler
 {
 	public:
-		ExecutionHandler(std::queue<IInstruction*> &instructions, Environment &eviron);
+		ExecutionHandler(std::vector<IInstruction*> &instructions, Environment &eviron);
 		ExecutionHandler(ExecutionHandler const &other);
 		virtual ~ExecutionHandler();
 
 		ExecutionHandler			&operator=(ExecutionHandler &other);
 		void						launch();
-		std::queue<IInstruction*>	&getInstructions() const;
-		std::queue<IInstruction*>	&getPassedInstructions() const;
+		void						decrInstructionPointer();
+		void						incrInstructionPointer();
+		std::vector<IInstruction*>	&getInstructions() const;
 		Environment					&getEnviron() const;
+		size_t						getInstructionPointer() const;
+		IInstruction				*getCurrentInstruction() const;
 
 	private:
 		ExecutionHandler();
 		
-		std::queue<IInstruction*>	&_instructions;
-		std::queue<IInstruction*>	_passed_instructions;
+		std::vector<IInstruction*>	&_instructions;
+		size_t						_instruction_pointer;
 		Environment					&_environ;
 };
 
