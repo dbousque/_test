@@ -1,23 +1,44 @@
-NAME = test
-SRC = main.cpp
-OBJ = $(SRC:.cpp=.o)
-INC= -I ~/.brew/include 
-LIBS= -L ~/.brew/lib -lsfml-system -lsfml-window -lsfml-graphics -lsfml-network -lsfml-audio -Wl
 
-.PHONY= all re fclean clean
+export CC = clang++
+export CFLAGS = -Wall -Wextra -Werror
 
-all: $(NAME) 
+NAME =	ft_gkrellm
 
-$(NAME): $(OBJ) 
-	clang++ -Wall -Werror -Wextra -o $@ $(OBJ) $(LIBS) $(INC) 
+SRC = 	main.cpp \
+		CpuModule.cpp \
+		DateModule.cpp \
+		Field.cpp \
+	 	HostnameModule.cpp \
+		NetworkModule.cpp \
+		OsInfosModule.cpp \
+		RamModule.cpp \
+		monitorGraphic.cpp \
+		monitorShell.cpp \
+		CatModule.cpp
 
-%.o: %.cpp 
-	clang++ -g -Wall -Werror -Wextra -o $@ -c $< $(INC)
+NCURSES = -lncurses
+BREW = -I ~/.brew/include/
+SFML = -L ~/.brew/lib -lsfml-graphics -lsfml-window -lsfml-system -lsfml-audio -lsfml-network -rpath ~/.brew/lib
+
+SRCO = $(SRC:.cpp=.o)
+
+all: $(NAME)
+
+$(NAME): $(SRCO)
+	$(CC) $(CFLAGS) $(NCURSES) $(SFML) -o $(NAME) $(SRCO)
+	@echo "\033[0;36m"$(NAME)" created\033[m"
+
+clean:
+	@rm -f $(SRCO)
+	@echo "\033[0;32m"$(NAME)" objects cleaned\033[m"
+
+fclean: clean
+	@rm -f $(NAME)
+	@echo "\033[0;31m"$(NAME)" cleaned\033[m"
 
 re: fclean all
 
-fclean: clean
-	rm $(NAME)
-	
-clean:
-	rm $(OBJ)
+%.o: %.cpp
+	$(CC) $(CFLAGS) $(BREW) -o $@ -c $<
+
+.PHONY: all clean fclean re

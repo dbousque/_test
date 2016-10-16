@@ -25,6 +25,11 @@ Field	&Field::operator=(Field &other)
 	return *this;
 }
 
+void	Field::setId(int id)
+{
+	this->_id = id;
+}
+
 void	*Field::getData() const
 {
 	return this->_data;
@@ -33,4 +38,9 @@ void	*Field::getData() const
 char	Field::getType() const
 {
 	return this->_type;
+}
+
+int		Field::getId() const
+{
+	return this->_id;
 }

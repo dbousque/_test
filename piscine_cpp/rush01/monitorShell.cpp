@@ -1,5 +1,3 @@
-
-
 #include "monitorShell.hpp"
 #include <fstream>
 
@@ -84,10 +82,12 @@ std::string	monitorShell::_getFieldStr(std::vector<Field*> &fields, int i)
 {
 	if (fields[i]->getType() == Field::STRING)
 		return *(static_cast<std::string*>(fields[i]->getData()));
-	if (fields[i]->getType() == Field::INTEGER)
+	if (fields[i]->getType() == Field::INTEGER || fields[i]->getType() == Field::GRAPH_INT)
 		return std::to_string(*(static_cast<int*>(fields[i]->getData())));
 	if (fields[i]->getType() == Field::INTEGER_PERCENT)
 		return std::to_string(*(static_cast<int*>(fields[i]->getData()))) + "%%";
+	if (fields[i]->getType() == Field::FLOATING)
+		return std::to_string(*(static_cast<float*>(fields[i]->getData())));
 	return "";
 }
 

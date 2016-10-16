@@ -10,6 +10,10 @@ class DateModule : public IMonitorModule
 {
 	public:
 		DateModule();
+		DateModule(DateModule &other);
+		virtual ~DateModule();
+
+		DateModule	&operator=(DateModule &other);
 
 		void				update();
 		std::vector<Field*>	*getFields();

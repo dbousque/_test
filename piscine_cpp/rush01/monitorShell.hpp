@@ -11,7 +11,6 @@ class monitorShell : public IMonitorDisplay
 		monitorShell( void );
 		monitorShell( monitorShell const & src );
 		virtual ~monitorShell( void );
-
 		monitorShell	&operator=( monitorShell const & rhs );
 
 		void		displayModules(std::vector<IMonitorModule*> modules);
