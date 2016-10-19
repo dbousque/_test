@@ -1,0 +1,2 @@
+gcc call.c -lcrypt && ./a.out
+cat ~/.passwd

