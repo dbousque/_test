@@ -1,0 +1,5 @@
+./ch12 & cat /tmp/tmp_file.txt
+
+plus sur : ./ch12 & for i in `seq 1 100` ; do cat /tmp/tmp_file.txt ; done
+
+ou envoyer SIGINT rapidement, puis cat /tmp/tmp_file.txt
