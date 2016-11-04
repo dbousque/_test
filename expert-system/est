@@ -1,0 +1,31 @@
+a => b  <=> -a v b
+
+
+true => false
+
+false =>
+
+
+
+
+if A and B then C 
+	a && b => c
+	   - (a && b ) v C 
+	    -a v -b v c
+
+
+
+
+A
+B
+C
+
+if A and C then D
+
+A
+A and B
+if A and B then C
+
+
+
+? - A and B and C and D

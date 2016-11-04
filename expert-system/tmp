@@ -1,0 +1,41 @@
+(* A
+B
+
+A
+B
+!C
+
+a => b <=> !a v b
+ T           T
+ F           F
+
+
+Suffisant   Necessaire
+S'il pleut, je viens
+
+
+S'il est vert, il est une grenouille
+S'il est une grenouille, il est vert
+
+
+a => b
+
+
+a        b     |   a => b  |  -a |  -a v b 
+T        T     |   T       |   F |  T
+T        F     |   F       |   F |  F
+F        T     |   T       |   T |  T
+F        F     |   T       |   T |  T
+
+
+Factexpr ("A", True)
+Implies (And (Factexpr fa, Factexpr fb), (Factexpr fc))
+a :: int
+
+f b =  a + b -- 
+*)
+(*
+a b c d e
+a,b,c,d |= e
+a,b,c,d |= -e
+*)
