@@ -61,9 +61,50 @@ let rand_board size =
 		size = size
 	}
 
-let manhattan_distance board =
-	let _distance val x y =
-		let res_x = 
+(*1  2  3  4
+12 13 14 5
+11 16 15 6
+10 9  8  7
+
+4 4 4 3 3 2 2
+
+1  2  3  4  5
+16 17 18 19 6
+15 24 25 20 7
+14 23 22 21 8
+13 12 11 10 9
+
+5 5 5 4 4 3 3 2 2
+5 4 4 3 3 2 2 1 1
+
+1  2  3  4  5  6
+20 21 22 23 24 7
+19 32 33 34 25 8
+18 31 36 35 26 9
+17 30 29 28 27 10
+16 15 14 13 12 11
+
+6 6 6 5 5 4 4 3 3 2 2
+
+6 5 5 4 4 3 3 2 2 1 1
+
+5 + 4 + 3
+sig 5
+5!
+
+n * (n + 1) / 2
+
+horizon / vertical = mod 2
+decal x = / 4*)
+
+let manhattan_distance board end_positions =
+	let _distance value x y =
+		abs ((fst end_positions.(value)) - x) + abs ((snd end_positions.(value)) - y)
+	in
+	let _distance_row y row =
+		List.fold_left (fun acc val -> (fst acc + _distance value (snd acc) y, snd acc + 1)) (0, 0) row
+	in
+	List.fold_left (fun acc row -> (fst acc + _distance_row (snd acc) row, snd acc + 1)) (0, 0) board.tiles
 
 let print_board board =
 	let max_nb = (board.size * board.size - 1) in
