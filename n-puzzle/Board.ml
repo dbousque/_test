@@ -44,15 +44,15 @@ let shuffle_square_list_list lst =
 
 let make_list func n =
 	let rec _make_list func acc = function
-		| i when i <= 0 -> acc
+		| i when i < 0 -> acc
 		| i -> _make_list func ((func i)::acc) (i - 1)
 	in
-	_make_list func [] n
+	_make_list func [] (n - 1)
 
 (* build a list list, shuffle it, and replace the highest number by the empty cell *)
 let rand_board size =
 	Random.self_init () ;
-	let tiles = make_list (fun row -> make_list (fun column -> if row = size - 1 && column = size - 1 then 0 else (row - 1) * size + column) size) size in
+	let tiles = make_list (fun row -> make_list (fun column -> row * size + column) size) size in
 	let tiles = shuffle_square_list_list tiles in
 	let empty = index_of_list tiles 0 in
 	{
@@ -97,14 +97,47 @@ n * (n + 1) / 2
 horizon / vertical = mod 2
 decal x = / 4*)
 
+let make_end_positions board =
+	let end_positions = Array.make (board.size * board.size) (0,0) in
+	let _make_step x y direction =
+		match direction with
+			| d when d mod 4 = 0 -> (x + 1, y)
+			| d when d mod 4 = 1 -> (x, y + 1)
+			| d when d mod 4 = 2 -> (x - 1, y)
+			| _ -> (x, y - 1)
+	in
+	let rec _fill start_val x y direction n =
+		Array.set end_positions start_val (x, y) ;
+		match n with
+		| 1 -> _make_step x y (direction + 1)
+		| _ ->  let new_x, new_y = _make_step x y direction in
+				_fill (start_val + 1) new_x new_y direction (n - 1)
+	in
+	let rec _fill_until_full start_val x y direction n =
+		let x, y = _fill start_val x y direction n in
+		let start_val = start_val + n in
+		let direction = direction + 1 in
+		match n with
+		| 1 -> _fill 0 x y direction 1
+		| _ ->  let x, y = _fill start_val x y direction n in
+				let start_val = start_val + n in
+				let direction = direction + 1 in
+				_fill_until_full start_val x y direction (n - 1)
+	in
+	let x, y = _fill 1 0 0 0 board.size in
+	ignore (_fill_until_full (board.size + 1) x y 1 (board.size - 1)) ;
+	end_positions
+
 let manhattan_distance board end_positions =
 	let _distance value x y =
 		abs ((fst end_positions.(value)) - x) + abs ((snd end_positions.(value)) - y)
 	in
 	let _distance_row y row =
-		List.fold_left (fun acc val -> (fst acc + _distance value (snd acc) y, snd acc + 1)) (0, 0) row
+		let total, i = List.fold_left (fun acc value -> (fst acc + _distance value (snd acc) y, snd acc + 1)) (0, 0) row in
+		total
 	in
-	List.fold_left (fun acc row -> (fst acc + _distance_row (snd acc) row, snd acc + 1)) (0, 0) board.tiles
+	let total, i = List.fold_left (fun acc row -> (fst acc + _distance_row (snd acc) row, snd acc + 1)) (0, 0) board.tiles in
+	total
 
 let print_board board =
 	let max_nb = (board.size * board.size - 1) in

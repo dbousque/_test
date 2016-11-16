@@ -40,7 +40,6 @@ let get_available_moves board =
 
 let solve_board board =
 	let available_moves = get_available_moves board in
-	print_moves available_moves ;
 	{
 		nb_states_selected = 1 ;
 		max_nb_states_in_mem = 4 ;
