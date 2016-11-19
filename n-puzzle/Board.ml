@@ -97,6 +97,19 @@ n * (n + 1) / 2
 horizon / vertical = mod 2
 decal x = / 4*)
 
+let make_move board dx dy =
+	let y = fst board.empty_cell in
+	let x = snd board.empty_cell in
+	let arr = Array.of_list (List.map Array.of_list board.tiles) in
+	let tmp = arr.(y).(x) in
+	Array.set arr.(y) x (arr.(y + dy).(x + dx)) ;
+	Array.set arr.(y + dy) (x + dx) tmp ;
+	{
+		tiles = Array.to_list (Array.map Array.to_list arr) ;
+		empty_cell = (y + dy, x + dx) ;
+		size = board.size
+	}
+
 let make_end_positions board =
 	let end_positions = Array.make (board.size * board.size) (0,0) in
 	let _make_step x y direction =
