@@ -152,13 +152,16 @@ let manhattan_distance board end_positions =
 	let total, i = List.fold_left (fun acc row -> (fst acc + _distance_row (snd acc) row, snd acc + 1)) (0, 0) board.tiles in
 	total
 
-let print_board board =
+let print_raw_board board =
 	let max_nb = (board.size * board.size - 1) in
 	let nb_max_width = String.length (string_of_int max_nb) in
 	let _print_row row =
 		List.iter (Printf.printf "%*d " (nb_max_width + 1)) row ;
 		print_endline ""
 	in
+	List.iter _print_row board.tiles
+
+let print_board board =
 	print_endline ("Board of size " ^ (string_of_int board.size) ^ " :") ;
-	List.iter _print_row board.tiles ;
+	print_raw_board board ;
 	Printf.printf "Empty cell : (%d, %d)\n" (fst board.empty_cell) (snd board.empty_cell)
