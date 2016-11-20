@@ -142,7 +142,12 @@ let solve_board board score_func end_positions =
 	let priority_queue2 = NodesPriorityQueue.add priority_queue2 ({ board = (_change_solvability board) ; done_moves = [] }) 0 in
 	_solve_board priority_queue1 priority_queue2 [] [] 0 0 0 0
 
-let make_moves board search_res =
+let make_moves ?(in_place=false) board search_res =
+	if in_place then ignore (Unix.system "tput civis") ;
+	let rec _n_times_str str = function
+		| n when n <= 0 -> ""
+		| n -> str ^ (_n_times_str str (n - 1))
+	in
 	let rec _print_moves board = function
 		| [] -> ()
 		| move::rest -> let board = { board = board ; done_moves = [] } in
@@ -156,8 +161,8 @@ let make_moves board search_res =
 						) in
 						print_endline ("Making move : " ^ move_str) ;
 						Board.print_raw_board board ;
+						if in_place && List.length rest > 0 then (Unix.sleepf 0.7 ; ignore (Unix.system ((_n_times_str "tput cuu1 && tput el && " (board.Board.size + 3)) ^ "echo \"\""))) ;
 						_print_moves board rest
 	in
-	print_endline "Starting position : " ;
-	Board.print_raw_board board ;
-	_print_moves board (List.rev search_res.moves)
+	_print_moves board (List.rev search_res.moves) ;
+	if in_place then ignore (Unix.system "tput cnorm")

@@ -8,6 +8,6 @@ let () =
 	if Solve.is_solvable res = false then
 		print_endline "unsolvable"
 	else (
-		Solve.make_moves board res ;
+		Solve.make_moves ~in_place:true board res ;
 		Solve.print_result res
 	)
