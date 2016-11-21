@@ -152,6 +152,19 @@ let manhattan_distance board end_positions =
 	let total, i = List.fold_left (fun acc row -> (fst acc + _distance_row (snd acc) row, snd acc + 1)) (0, 0) board.tiles in
 	total
 
+let misplaced board end_positions =
+	let rec _misplaced_row y x = function
+		| [] -> 0
+		| tile::rest -> let exp_x, exp_y = end_positions.(tile) in
+						let to_add = if exp_y <> y || exp_x <> x then 1 else 0 in
+						to_add + _misplaced_row y (x + 1) rest
+	in
+	let rec _misplaced_board y = function
+		| [] -> 0
+		| row::rest -> (_misplaced_row y 0 row) + (_misplaced_board (y + 1) rest)
+	in
+	_misplaced_board 0 board.tiles
+
 let print_raw_board board =
 	let max_nb = (board.size * board.size - 1) in
 	let nb_max_width = String.length (string_of_int max_nb) in
