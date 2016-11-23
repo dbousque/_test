@@ -21,9 +21,10 @@ def is_solved(tiles):
 	for row in tiles:
 		fil.write(row + "\n")
 	fil.close()
-	res = system_call("./a.out out -greedy false -h crow")
+	res = system_call("./n-puzzle out")
 	res = res.decode('utf-8')
 	res = res.split('\n')
+	res = res[-2]
 	return "unsolvable" not in res
 
 for i in range(100):
