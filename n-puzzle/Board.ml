@@ -49,11 +49,7 @@ let make_list func n =
 	in
 	_make_list func [] (n - 1)
 
-(* build a list list, shuffle it, and replace the highest number by the empty cell *)
-let rand_board size =
-	Random.self_init () ;
-	let tiles = make_list (fun row -> make_list (fun column -> row * size + column) size) size in
-	let tiles = shuffle_square_list_list tiles in
+let board_from_tiles size tiles =
 	let empty = index_of_list tiles 0 in
 	{
 		tiles = tiles ;
@@ -61,41 +57,12 @@ let rand_board size =
 		size = size
 	}
 
-(*1  2  3  4
-12 13 14 5
-11 16 15 6
-10 9  8  7
-
-4 4 4 3 3 2 2
-
-1  2  3  4  5
-16 17 18 19 6
-15 24 25 20 7
-14 23 22 21 8
-13 12 11 10 9
-
-5 5 5 4 4 3 3 2 2
-5 4 4 3 3 2 2 1 1
-
-1  2  3  4  5  6
-20 21 22 23 24 7
-19 32 33 34 25 8
-18 31 36 35 26 9
-17 30 29 28 27 10
-16 15 14 13 12 11
-
-6 6 6 5 5 4 4 3 3 2 2
-
-6 5 5 4 4 3 3 2 2 1 1
-
-5 + 4 + 3
-sig 5
-5!
-
-n * (n + 1) / 2
-
-horizon / vertical = mod 2
-decal x = / 4*)
+(* build a list list and shuffle it *)
+let rand_board size =
+	Random.self_init () ;
+	let tiles = make_list (fun row -> make_list (fun column -> row * size + column) size) size in
+	let tiles = shuffle_square_list_list tiles in
+	board_from_tiles size tiles
 
 let make_move board dx dy =
 	let y = fst board.empty_cell in
@@ -144,6 +111,20 @@ let make_end_positions board =
 let manhattan_distance board end_positions =
 	let _distance value x y =
 		abs ((fst end_positions.(value)) - x) + abs ((snd end_positions.(value)) - y)
+	in
+	let _distance_row y row =
+		let total, i = List.fold_left (fun acc value -> (fst acc + _distance value (snd acc) y, snd acc + 1)) (0, 0) row in
+		total
+	in
+	let total, i = List.fold_left (fun acc row -> (fst acc + _distance_row (snd acc) row, snd acc + 1)) (0, 0) board.tiles in
+	total
+
+let as_the_crow_flies_distance board end_positions =
+	let _distance value x y =
+		let len_x = abs ((fst end_positions.(value)) - x) in
+		let len_y = abs ((snd end_positions.(value)) - y) in
+		let len_distance = (len_x * len_x) + (len_y * len_y) in
+		int_of_float (sqrt (float_of_int len_distance))
 	in
 	let _distance_row y row =
 		let total, i = List.fold_left (fun acc value -> (fst acc + _distance value (snd acc) y, snd acc + 1)) (0, 0) row in
