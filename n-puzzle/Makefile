@@ -10,7 +10,7 @@
 #                                                                              #
 # **************************************************************************** #
 
-NAME		=	../n-puzzle
+NAME		=	n-puzzle
 
 SOURCES		=	Board.ml \
 				Parse.ml \
@@ -21,7 +21,7 @@ INTERF	=	$(subst .ml,.mli,$(SOURCES))
 
 OBJS1	=	$(subst .ml,.cmi,$(SOURCES))
 
-OBJS2	=	$(subst .ml,.cmo,$(SOURCES))
+OBJS2	=	$(subst .ml,.cmx,$(SOURCES))
 
 OBJS3	=	$(subst .ml,.o,$(SOURCES))
 
@@ -36,24 +36,31 @@ $(NAME):
 	for inter in $(INTERF) ; do \
 		$(CC) $$inter ; \
 	done && \
-	$(CC) unix.cmxa $(SOURCES) Main.ml -o $(NAME)
+	$(CC) unix.cmxa $(SOURCES) Main.ml -o ../$(NAME)
 	printf "\e[32m----------------------------------\e[36m\n"
 	printf "\e[32m[✔]\e[36m $@"
 	printf "\n\e[32m----------------------------------\e[36m"
+	printf "\033[0m\n"
+
+%.mli: %.ml
+	cd srcs && \
+	$(CC) $^
+	printf "\e[32m[✔]\e[36m $@ "
 	printf "\033[0m\n"
 
 clean:
 	cd srcs && \
 	rm -Rf $(OBJS1) && \
 	rm -Rf $(OBJS2) && \
-	rm -Rf $(OBJS3)
+	rm -Rf $(OBJS3) && \
+	rm -Rf Main.cmi && \
+	rm -Rf Main.cmx
 	printf "\e[31m----------------------------------\n"
 	printf "[✔]\e[36m $(NAME): Objects deleted\n"
 	printf "\e[31m----------------------------------\e[36m"
 	printf "\033[0m\n"
 
 fclean: clean
-	cd srcs && \
 	rm -Rf $(NAME)
 	printf "\e[31m----------------------------------\n"
 	printf "[✔]\e[36m $(NAME): All deleted\n"

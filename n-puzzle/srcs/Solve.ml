@@ -204,7 +204,7 @@ let make_moves ?(in_place=false) board search_res =
 						) in
 						print_endline ("Making move : " ^ move_str) ;
 						Board.print_raw_board board ;
-						if in_place && List.length rest > 0 then (Unix.sleepf 0.7 ; ignore (Unix.system ((_n_times_str "tput cuu1 && tput el && " (board.Board.size + 2)) ^ "echo \"\""))) ;
+						if in_place && List.length rest > 0 then (Unix.sleepf 0.7 ; ignore (Unix.system ((_n_times_str "tput cuu1 && tput el && " (board.Board.size + 3)) ^ "echo \"\""))) ;
 						_print_moves board rest
 	in
 	_print_moves board (List.rev search_res.moves) ;
