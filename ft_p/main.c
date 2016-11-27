@@ -39,7 +39,7 @@ void	could_not_create_server(void)
 	exit(-1);
 }
 
-int		main(int argc, char **argv)
+int		main(int argc, char **argv, char **env)
 {
 	t_options	options;
 	int			server;
@@ -52,6 +52,6 @@ int		main(int argc, char **argv)
 	server = create_server(options.port);
 	if (server == -1)
 		could_not_create_server();
-	launch_server(server, &options);
+	launch_server(server, &options, env);
 	return (0);
 }

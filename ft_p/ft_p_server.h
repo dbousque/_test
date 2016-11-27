@@ -10,6 +10,9 @@
 # include <arpa/inet.h>
 # include <wordexp.h>
 # include <sys/wait.h>
+# include <sys/stat.h>
+# include <dirent.h>
+# include <fcntl.h>
 
 # define NB_CONNECTIONS 100
 # define READ_BUFF_LEN 32768
@@ -32,6 +35,7 @@ typedef struct			s_client_data
 	unsigned int		len;
 	char				*ip_name;
 	char				*launch_dir;
+	char				**env;
 }						t_client_data;
 
 typedef struct			s_packet_header
@@ -48,7 +52,17 @@ void					log_closing(t_client_data *client);
 char					*ft_strcpy(char *str);
 char					*ft_strconcat(char *str1, char *str2, size_t size1,
 																size_t size2);
+char					*build_file_path(char *dir_path, char *file_name);
+char					ft_strcmp(char *str1, char *str2);
+void					ft_client_error(t_client_data *client, char *msg);
+void					ft_client_success(t_client_data *client);
 void					parse_options(int argc, char **argv, t_options *opt);
-void					launch_server(int server, t_options *options);
+void					launch_server(int server, t_options *options,
+																char **env);
+char					*find_executable(char *name, char **env);
+void					handle_put(t_client_data *client, t_options *options,
+											unsigned char *data, size_t len);
+void					interpret_command(t_client_data *client,
+						t_options *options, unsigned char *data, size_t len);
 
 #endif
