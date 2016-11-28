@@ -2,38 +2,29 @@
 
 #include "ft_p_server.h"
 
-void	execute_command2(char *executable, wordexp_t *cmd_and_args,
-												int link[2], int res_pipe[2])
+void	redirect_output(int link[2])
 {
-	char	c;
-
 	close(link[0]);
-	close(res_pipe[1]);
 	dup2(link[1], 1);
-	dup2(res_pipe[0], 0);
+	dup2(link[1], 0);
 	close(link[1]);
-	close(res_pipe[0]);
-	if (execv(executable, cmd_and_args->we_wordv) == -1)
-	{
-		c = RET_ERROR;
-		ft_putstr("command execution failed");
-	}
-	else
-		c = RET_SUCCESS;
-	write(res_pipe[1], &c, 1);
 }
 
-void	handle_output_from_parent(t_client_data *client, t_options *options,
-												int link[2], int res_pipe[2])
+void	execute_command2(char *executable, wordexp_t *cmd_and_args)
 {
-	char	c;
+	if (execv(executable, cmd_and_args->we_wordv) == -1)
+		ft_putstr("command execution failed");
+}
+  #    include <stdio.h>
+void	handle_output_from_parent(t_client_data *client, t_options *options,
+												int link[2])
+{
 	char	buffer[512];
 	char	*output;
 	int		ret;
 	int		size;
 
 	close(link[1]);
-	close(res_pipe[0]);
 	(void)options;
 	size = 0;
 	if (!(output = (char*)malloc(sizeof(char))))
@@ -58,15 +49,12 @@ void	handle_output_from_parent(t_client_data *client, t_options *options,
 		ft_client_error(client, "read error");
 		return ;
 	}
-
-	// PROBLEM !, c doesnt come from forked child 
-
-	read(res_pipe[0], &c, 1);
 	wait(NULL);
-	if (c == RET_ERROR)
+	if (ft_strcmp("command execution failed", output) == 0
+		|| ft_strcmp("command not found", output) == 0)
 		ft_client_error(client, output);
-	else if (c == RET_SUCCESS)
-		ft_client_success(client, output, size + 1);
+	else
+		ft_client_success(client, output, size);
 }
 
 char	execute_command(t_client_data *client, t_options *options,
@@ -75,10 +63,9 @@ char	execute_command(t_client_data *client, t_options *options,
 	pid_t	pid;
 	char	*executable;
 	int		link[2];
-	int		res_pipe[2];
 
 	(void)options;
-	if (pipe(link) == -1 || pipe(res_pipe) == -1)
+	if (pipe(link) == -1)
 	{
 		ft_client_error(client, "error");
 		return (0);
@@ -91,18 +78,19 @@ char	execute_command(t_client_data *client, t_options *options,
 	}
 	if (pid == 0)
 	{
+		redirect_output(link);
 		executable = find_executable(cmd_and_args->we_wordv[0], client->env);
 		if (!executable)
-			ft_client_error(client, "command not found");
+			ft_putstr("command not found");
 		else
 		{
-			execute_command2(executable, cmd_and_args, link, res_pipe);
+			execute_command2(executable, cmd_and_args);
 			free(executable);
 		}
 		exit(0);
 	}
 	else
-		handle_output_from_parent(client, options, link, res_pipe);
+		handle_output_from_parent(client, options, link);
 	return (1);
 }
 
