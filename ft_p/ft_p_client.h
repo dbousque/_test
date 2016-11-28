@@ -9,10 +9,13 @@
 # include <netdb.h>
 # include <arpa/inet.h>
 
+# define READ_BUFF_LEN 12 //32768
 # define CMD_RAW_COMMAND 1
 # define CMD_CD 2
 # define CMD_GET 3
 # define CMD_PUT 4
+# define RET_ERROR 1
+# define RET_SUCCESS 2
 
 typedef struct			s_options
 {
@@ -25,8 +28,20 @@ typedef struct			s_options
 typedef struct			s_packet_header
 {
 	uint8_t				type;
-	uint64_t			tot_data_len;
+	uint32_t			tot_data_len;
 }						t_packet_header;
+
+typedef struct			s_ret_packet_header
+{
+	uint8_t				status;
+	uint32_t			tot_data_len;
+}						t_ret_packet_header;
+
+typedef struct			s_response_type
+{
+	char				type;
+	char				*filename;
+}						t_response_type;
 
 size_t					ft_strlen(char *str);
 void					ft_putstr(char *str);

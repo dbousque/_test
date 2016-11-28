@@ -3,11 +3,11 @@
 #include "ft_p_server.h"
 
 char	complete_command(t_client_data *client, unsigned char **data,
-											size_t *len, uint64_t cmd_len)
+											int *len, uint32_t cmd_len)
 {
 	unsigned char	*tmp_data;
 	unsigned char	*new_data;
-	size_t			ret;
+	int				ret;
 	int				i;
 
 	if (!(tmp_data = (unsigned char*)malloc(READ_BUFF_LEN)))
@@ -29,17 +29,17 @@ char	complete_command(t_client_data *client, unsigned char **data,
 			free(*data);
 		*data = new_data;
 		*len += ret;
-		if (*len > cmd_len)
+		if (((size_t)*len) > cmd_len)
 		{
 			ft_client_error(client, "weird size error");
 			return (0);
 		}
-		if (*len == cmd_len)
+		if ((size_t)(*len) == cmd_len)
 			break ;
 		i++;
 	}
 	free(tmp_data);
-	if (ret == (size_t)-1)
+	if (ret == -1)
 	{
 		ft_client_error(client, "read failed");
 		return (0);
@@ -48,12 +48,13 @@ char	complete_command(t_client_data *client, unsigned char **data,
 }
 
 void	interpret_data(t_client_data *client, t_options *options,
-											unsigned char *data, size_t len)
+											unsigned char *data, int len)
 {
 	t_packet_header	*header;
 
 	header = (t_packet_header*)data;
-	if (len > header->tot_data_len)
+	header->tot_data_len = ntohl(header->tot_data_len);
+	if ((size_t)len > header->tot_data_len)
 	{
 		ft_client_error(client, "weird size error");
 		return ;
@@ -63,7 +64,7 @@ void	interpret_data(t_client_data *client, t_options *options,
 		handle_put(client, options, data, len);
 		return ;
 	}
-	if (len < header->tot_data_len)
+	if ((size_t)len < header->tot_data_len)
 	{
 		if (!complete_command(client, &data, &len, header->tot_data_len))
 			return ;
@@ -73,8 +74,8 @@ void	interpret_data(t_client_data *client, t_options *options,
 
 void	communicate(t_client_data *client, t_options *options)
 {
-	size_t					ret;
-	unsigned char			*data;
+	int				ret;
+	unsigned char	*data;
 
 	data = (unsigned char*)malloc(READ_BUFF_LEN);
 	if (!data)
@@ -94,7 +95,7 @@ void	communicate(t_client_data *client, t_options *options)
 		if (ret > 0 && data[ret - 1] != '\n')
 			ft_putstr("\n");*/
 	}
-	if (ret == (size_t)-1)
+	if (ret == -1)
 	{
 		ft_client_error(client, "read failed");
 		return ;

@@ -20,6 +20,8 @@
 # define CMD_CD 2
 # define CMD_GET 3
 # define CMD_PUT 4
+# define RET_ERROR 1
+# define RET_SUCCESS 2
 
 typedef struct			s_options
 {
@@ -41,8 +43,14 @@ typedef struct			s_client_data
 typedef struct			s_packet_header
 {
 	uint8_t				type;
-	uint64_t			tot_data_len;
+	uint32_t			tot_data_len;
 }						t_packet_header;
+
+typedef struct			s_ret_packet_header
+{
+	uint8_t				status;
+	uint32_t			tot_data_len;
+}						t_ret_packet_header;
 
 size_t					ft_strlen(char *str);
 void					ft_putstr(char *str);
@@ -55,14 +63,15 @@ char					*ft_strconcat(char *str1, char *str2, size_t size1,
 char					*build_file_path(char *dir_path, char *file_name);
 char					ft_strcmp(char *str1, char *str2);
 void					ft_client_error(t_client_data *client, char *msg);
-void					ft_client_success(t_client_data *client);
+void					ft_client_success(t_client_data *client, char *msg,
+																size_t len);
 void					parse_options(int argc, char **argv, t_options *opt);
 void					launch_server(int server, t_options *options,
 																char **env);
 char					*find_executable(char *name, char **env);
 void					handle_put(t_client_data *client, t_options *options,
-											unsigned char *data, size_t len);
+											unsigned char *data, int len);
 void					interpret_command(t_client_data *client,
-						t_options *options, unsigned char *data, size_t len);
+						t_options *options, unsigned char *data, int len);
 
 #endif

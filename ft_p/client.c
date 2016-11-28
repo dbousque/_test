@@ -36,14 +36,14 @@ char	send_raw_command(int server, char type, char *command)
 {
 	t_packet_header	*header;
 	unsigned char	*to_send;
-	uint64_t		size;
+	uint32_t		size;
 
 	size = (sizeof(char) * ft_strlen(command)) + sizeof(t_packet_header);
 	if (!(to_send = (unsigned char*)malloc(size)))
 		return (0);
 	header = (t_packet_header*)to_send;
 	header->type = type;
-	header->tot_data_len = size;
+	header->tot_data_len = htonl(size);
 	ft_strcat((char*)to_send, command, sizeof(t_packet_header),
 														ft_strlen(command));
 	write(server, to_send, size);
@@ -83,28 +83,106 @@ char	*get_input(void)
 	return (inp);
 }
 
-#  include <stdio.h>
-// NEED TO CHANGE WITH PROPER PROTOCOL FOR GET. NOW !!!
-void	read_response(int server)
+void	handle_ret(int server, char *resp, int len,
+												t_response_type *resp_type)
 {
-	char	buffer[512];
-	int		ret;
+	t_ret_packet_header	*header;
 
-	while ((ret = read(server, buffer, 511)))
+	(void)server;
+	(void)resp_type;
+	header = (t_ret_packet_header*)resp;
+	write(1, resp + sizeof(t_ret_packet_header),
+										len - sizeof(t_ret_packet_header));
+	ft_putstr("\n");
+	if (header->status == RET_ERROR)
+		ft_putstr("ERROR\n");
+	else
+		ft_putstr("SUCCESS\n");
+}
+
+char	complete_ret(int server, char **to_complete, int *size)
+{
+	t_ret_packet_header	*header;
+	int					ret;
+	char				*buffer;
+	char				*tmp;
+
+	if (!(buffer = (char*)malloc(sizeof(char) * READ_BUFF_LEN)))
+	{
+		ft_putstr("malloc error\n");
+		return (0);
+	}
+	header = (t_ret_packet_header*)*to_complete;
+	while ((ret = read(server, buffer, READ_BUFF_LEN - 1)))
 	{
 		buffer[ret] = '\0';
-		ft_putstr(buffer);
-		printf("\n (nb)%d %s", ret, buffer);
-		fflush(stdout);
-		if ((ret == 5 && ft_strcmp(buffer, "ERROR") == 0)
-			|| (ret == 7 && ft_strcmp(buffer, "SUCCESS") == 0))
+		tmp = ft_strconcat(*to_complete, buffer, *size, ret + 1);
+		if (!tmp)
 		{
-			ft_putstr("\n");
-			break ;
+			ft_putstr("malloc error\n");
+			return (0);
 		}
+		free(*to_complete);
+		*to_complete = tmp;
+		header = (t_ret_packet_header*)*to_complete;
+		*size += ret;
+		if ((size_t)(*size) > header->tot_data_len)
+		{
+			ft_putstr("weird size error\n");
+			return (0);
+		}
+		if ((size_t)(*size) == header->tot_data_len)
+			break ;
 	}
 	if (ret == -1)
+	{
 		ft_putstr("read error\n");
+		return (0);
+	}
+	return (1);
+}
+
+void	interpret_ret(int server, char *buffer, int ret,
+												t_response_type *resp_type)
+{
+	t_ret_packet_header	*header;
+
+	header = (t_ret_packet_header*)buffer;
+	header->tot_data_len = ntohl(header->tot_data_len);
+	if ((size_t)ret > header->tot_data_len)
+	{
+		ft_putstr("weird size error\nERROR\n");
+		return ;
+	}
+	if ((size_t)ret < header->tot_data_len && resp_type->type != CMD_GET)
+	{
+		if (!(complete_ret(server, &buffer, &ret)))
+			return ;
+	}
+	handle_ret(server, buffer, ret, resp_type);
+}
+
+void	read_response(int server, char type, char *filename)
+{
+	char			*buffer;
+	int				ret;
+	t_response_type	resp_type;
+
+	resp_type.type = type;
+	resp_type.filename = filename;
+	if (!(buffer = (char*)malloc(sizeof(char) * READ_BUFF_LEN)))
+	{
+		ft_putstr("malloc error\n");
+		return ;
+	}
+	ret = read(server, buffer, READ_BUFF_LEN - 1);
+	if (ret == -1)
+	{
+		ft_putstr("read error\n");
+		return ;
+	}
+	buffer[ret] = '\0';
+	interpret_ret(server, buffer, ret, &resp_type);
 }
 
 void	launch_client(t_options *options)
@@ -132,7 +210,7 @@ void	launch_client(t_options *options)
 		if (!(send_raw_command(server, CMD_RAW_COMMAND, command)))
 			ft_putstr("Could not send command\n");
 		free(command);
-		read_response(server);
+		read_response(server, CMD_RAW_COMMAND, NULL);
 	}
 	close(server);
 }
