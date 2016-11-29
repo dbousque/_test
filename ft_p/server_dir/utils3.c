@@ -31,7 +31,6 @@ void	ft_respond_to_client(t_client_data *client, char type, char *msg,
 
 void	ft_client_error(t_client_data *client, char *msg)
 {
-	ft_putstr("CLIENT ERROR\n");
 	char	*to_ret;
 	char	*expl;
 	int		i;
@@ -64,6 +63,14 @@ void	ft_client_error(t_client_data *client, char *msg)
 
 void	ft_client_success(t_client_data *client, char *msg, size_t len)
 {
-	ft_putstr("CLIENT SUCCESS\n");
 	ft_respond_to_client(client, RET_SUCCESS, msg, len);
+}
+
+void	redirect_output(int link[2])
+{
+	close(link[0]);
+	dup2(link[1], 2);
+	dup2(link[1], 1);
+	dup2(link[1], 0);
+	close(link[1]);
 }

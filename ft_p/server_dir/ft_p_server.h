@@ -65,6 +65,7 @@ char					ft_strcmp(char *str1, char *str2);
 void					ft_client_error(t_client_data *client, char *msg);
 void					ft_client_success(t_client_data *client, char *msg,
 																size_t len);
+void					redirect_output(int link[2]);
 void					parse_options(int argc, char **argv, t_options *opt);
 void					launch_server(int server, t_options *options,
 																char **env);
@@ -73,5 +74,9 @@ void					handle_put(t_client_data *client, t_options *options,
 											unsigned char *data, int len);
 void					interpret_command(t_client_data *client,
 						t_options *options, unsigned char *data, int len);
+char					execute_command(t_client_data *client,
+								t_options *options, wordexp_t *cmd_and_args);
+char					complete_command(t_client_data *client,
+							unsigned char **data, int *len, uint32_t cmd_len);
 
 #endif

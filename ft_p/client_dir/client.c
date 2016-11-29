@@ -65,15 +65,15 @@ char	*get_input(void)
 	int		ret;
 
 	size = 0;
-	while ((ret = read(0, buffer, 512)))
+	while ((ret = read(0, buffer, 511)))
 	{
-		if (!(tmp = ft_strconcat(inp, buffer, size, ret)))
+		buffer[ret] = '\0';
+		if (!(tmp = ft_strconcat(inp, buffer, size, ret + 1)))
 			return (inp_error("malloc error\n"));
 		if (size > 0)
 			free(inp);
 		inp = tmp;
 		size += ret;
-		buffer[ret] = '\0';
 		if (char_in_str(buffer, '\n'))
 			break ;
 	}
@@ -192,7 +192,7 @@ void	launch_client(t_options *options)
 
 	ft_putstr("  --- FTP client ---\n");
 	server = connect_to_server(options);
-	if (!server)
+	if (server == -1)
 	{
 		ft_putstr("Could not establish connection with server.\nExiting.\n");
 		return ;
@@ -202,7 +202,7 @@ void	launch_client(t_options *options)
 	{
 		ft_putstr(" $> ");
 		command = get_input();
-		if (!command || ft_strcmp(command, "quit") == 0)
+		if (!command || ft_strcmp(command, "quit\n") == 0)
 		{
 			ft_putstr("Bye\n");
 			break ;

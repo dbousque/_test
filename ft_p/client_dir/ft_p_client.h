@@ -9,7 +9,7 @@
 # include <netdb.h>
 # include <arpa/inet.h>
 
-# define READ_BUFF_LEN 12 //32768
+# define READ_BUFF_LEN 32768
 # define CMD_RAW_COMMAND 1
 # define CMD_CD 2
 # define CMD_GET 3
