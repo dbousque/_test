@@ -15,3 +15,15 @@ char	char_in_str(char *str, char c)
 	}
 	return (0);
 }
+
+void	ft_strcpy(char *str1, char *str2, int len)
+{
+	int		i;
+
+	i = 0;
+	while (i < len)
+	{
+		str1[i] = str2[i];
+		i++;
+	}
+}

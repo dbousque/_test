@@ -16,7 +16,7 @@ void	interpret_data(t_client_data *client, t_options *options,
 	}
 	if (header->type == CMD_PUT)
 	{
-		handle_put(client, options, data, len);
+		handle_put(client, options, (char*)data, len);
 		return ;
 	}
 	if ((size_t)len < header->tot_data_len)

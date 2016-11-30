@@ -71,7 +71,7 @@ void					launch_server(int server, t_options *options,
 																char **env);
 char					*find_executable(char *name, char **env);
 void					handle_put(t_client_data *client, t_options *options,
-											unsigned char *data, int len);
+														char *data, int len);
 void					interpret_command(t_client_data *client,
 						t_options *options, unsigned char *data, int len);
 char					execute_command(t_client_data *client,

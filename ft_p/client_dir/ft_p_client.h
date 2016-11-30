@@ -8,6 +8,8 @@
 # include <sys/socket.h>
 # include <netdb.h>
 # include <arpa/inet.h>
+# include <sys/stat.h>
+# include <fcntl.h>
 
 # define READ_BUFF_LEN 32768
 # define CMD_RAW_COMMAND 1
@@ -51,6 +53,9 @@ char					ft_strcmp(char *str1, char *str2);
 char					*ft_strconcat(char *str1, char *str2, size_t size1,
 																size_t size2);
 char					char_in_str(char *str, char c);
+void					ft_strcpy(char *str1, char *str2, int len);
 void					parse_options(int argc, char **argv, t_options *opt);
+void					read_response(int server, char type, char *filename);
+char					send_command(int server, t_options *options, char *command);
 
 #endif
