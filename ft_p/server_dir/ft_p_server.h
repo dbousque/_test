@@ -66,6 +66,8 @@ void					ft_client_error(t_client_data *client, char *msg);
 void					ft_client_success(t_client_data *client, char *msg,
 																size_t len);
 void					redirect_output(int link[2]);
+int						ind_of_char(char *str, char c, int len);
+void					ft_strcpy2(char *str1, char *str2, int len);
 void					parse_options(int argc, char **argv, t_options *opt);
 void					launch_server(int server, t_options *options,
 																char **env);
@@ -78,5 +80,10 @@ char					execute_command(t_client_data *client,
 								t_options *options, wordexp_t *cmd_and_args);
 char					complete_command(t_client_data *client,
 							unsigned char **data, int *len, uint32_t cmd_len);
+char					put_file(t_client_data *client, t_options *options,
+									char *data_filename_file[3], int file_len);
+char					*make_res_filename(char *filename);
+char					find_start_of_file(t_client_data *client, char **data,
+											int *len, char **start_of_file);
 
 #endif

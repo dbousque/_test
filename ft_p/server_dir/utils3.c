@@ -74,3 +74,17 @@ void	redirect_output(int link[2])
 	dup2(link[1], 0);
 	close(link[1]);
 }
+
+int		ind_of_char(char *str, char c, int len)
+{
+	int		i;
+
+	i = 0;
+	while (i < len)
+	{
+		if (str[i] == c)
+			return (i);
+		i++;
+	}
+	return (-1);
+}

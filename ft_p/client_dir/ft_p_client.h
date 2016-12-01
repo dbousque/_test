@@ -54,8 +54,13 @@ char					*ft_strconcat(char *str1, char *str2, size_t size1,
 																size_t size2);
 char					char_in_str(char *str, char c);
 void					ft_strcpy(char *str1, char *str2, int len);
+int						ind_of_char(char *str, char c, int len);
+char					get_type_of_command(char *command);
+char					is_space(char c);
+char					command_is(char *command, char *is);
 void					parse_options(int argc, char **argv, t_options *opt);
 void					read_response(int server, char type, char *filename);
 char					send_command(int server, t_options *options, char *command);
+void					handle_get(int server, char *data, int len);
 
 #endif

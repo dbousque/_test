@@ -7,9 +7,12 @@ void	handle_ret(int server, char *resp, int len,
 {
 	t_ret_packet_header	*header;
 
-	(void)server;
-	(void)resp_type;
 	header = (t_ret_packet_header*)resp;
+	if (header->status == RET_SUCCESS && resp_type->type == CMD_GET)
+	{
+		handle_get(server, resp, len);
+		return ;
+	}
 	write(1, resp + sizeof(t_ret_packet_header),
 										len - sizeof(t_ret_packet_header));
 	ft_putstr("\n");

@@ -23,61 +23,27 @@ char	send_raw_command(int server, char type, char *command)
 	return (1);
 }
 
-char	is_space(char c)
+char	return_error(char *error)
 {
-	return (c == ' ' || c == '\t' || c == '\r' || c == '\f');
+	ft_putstr(error);
+	return (0);
 }
 
-char	command_is(char *command, char *is)
+char	send_put_command2(int server, char *buffer, char *command_plus_i,
+																		int fd)
 {
-	int		i;
-
-	i = 0;
-	while (command[i] && is[i] && command[i] == is[i])
-		i++;
-	return ((size_t)i == ft_strlen(is) && is_space(command[i]));
-}
-
-char	send_put_command(int server, char *command)
-{
-	int				fd;
-	int				i;
-	char			*buffer;
-	struct stat		st;
-	t_packet_header	*header;
-	int				ret;
 	int				file_start_at;
 	int				already_read;
+	t_packet_header	*header;
+	struct stat		st;
+	int				ret;
 
-	if (command[ft_strlen(command) - 1] == '\n')
-		command[ft_strlen(command) - 1] = '\0';
-	i = 3;
-	while (is_space(command[i]))
-		i++;
-	if ((fd = open(command + i, O_RDONLY)) == -1)
-	{
-		ft_putstr("could not open file\n");
-		return (0);
-	}
-	if (!(buffer = (char*)malloc(sizeof(char) * READ_BUFF_LEN)))
-	{
-		ft_putstr("malloc error\n");
-		return (0);
-	}
 	if (fstat(fd, &st) == -1)
-	{
-		ft_putstr("fstat failed\n");
-		return (0);
-	}
-	ft_strcpy(buffer + sizeof(t_packet_header), command + i,
-												ft_strlen(command + i) + 1);
-	file_start_at = sizeof(t_packet_header) + ft_strlen(command + i) + 1;
+		return (return_error("fstat failed\n"));
+	file_start_at = sizeof(t_packet_header) + ft_strlen(command_plus_i) + 1;
 	if ((ret = read(fd, buffer + file_start_at, READ_BUFF_LEN
 													- file_start_at)) == -1)
-	{
-		ft_putstr("read failed\n");
-		return (0);
-	}
+		return (return_error("read failed\n"));
 	header = (t_packet_header*)buffer;
 	header->type = CMD_PUT;
 	header->tot_data_len = htonl(file_start_at + st.st_size);
@@ -89,15 +55,55 @@ char	send_put_command(int server, char *command)
 		write(server, buffer, ret);
 	}
 	if (ret == -1)
-	{
-		ft_putstr("read error\n");
-		return (0);
-	}
+		return (return_error("read error\n"));
 	if (already_read != st.st_size)
-	{
-		ft_putstr("weird size error\n");
-		return (0);
-	}
+		return (return_error("weird size error\n"));
+	return (1);
+}
+
+char	send_put_command(int server, char *command)
+{
+	int		fd;
+	int		i;
+	char	*buffer;
+
+	if (command[ft_strlen(command) - 1] == '\n')
+		command[ft_strlen(command) - 1] = '\0';
+	i = 3;
+	while (is_space(command[i]))
+		i++;
+	if ((fd = open(command + i, O_RDONLY)) == -1)
+		return (return_error("could not open file\n"));
+	if (!(buffer = (char*)malloc(sizeof(char) * READ_BUFF_LEN)))
+		return (return_error("malloc error\n"));
+	ft_strcpy(buffer + sizeof(t_packet_header), command + i,
+												ft_strlen(command + i) + 1);
+	return (send_put_command2(server, buffer, command + i, fd));
+}
+
+char	send_get_command(int server, char *command)
+{
+	char			*to_send;
+	t_packet_header	*header;
+	int 			tot_len;
+	int				i;
+
+	if (command[ft_strlen(command) - 1] == '\n')
+		command[ft_strlen(command) - 1] = '\0';
+	i = 3;
+	while (is_space(command[i]))
+		i++;
+	tot_len = sizeof(t_packet_header)
+							+ (sizeof(char) * (ft_strlen(command + i) + 1));
+	if (!(to_send = (char*)malloc(tot_len)))
+		return (return_error("malloc error\n"));
+	header = (t_packet_header*)to_send;
+	header->type = CMD_GET;
+	header->tot_data_len = htonl(tot_len);
+	ft_strcpy(to_send + sizeof(t_packet_header), command + i,
+												ft_strlen(command + i) + 1);
+	write(server, to_send, tot_len);
+	free(to_send);
 	return (1);
 }
 
@@ -106,6 +112,8 @@ char	send_command(int server, t_options *options, char *command)
 	(void)options;
 	if (command_is(command, "put"))
 		return (send_put_command(server, command));
+	else if (command_is(command, "get"))
+		return (send_get_command(server, command));
 	else
 		return (send_raw_command(server, CMD_RAW_COMMAND, command));
 }
