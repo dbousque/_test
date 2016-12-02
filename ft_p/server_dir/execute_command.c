@@ -49,7 +49,8 @@ void	handle_output_from_parent(t_client_data *client, t_options *options,
 	}
 	wait(NULL);
 	if (ft_strcmp("command execution failed", output) == 0
-		|| ft_strcmp("command not found", output) == 0)
+		|| ft_strcmp("command not found", output) == 0
+		|| ft_strcmp("command not allowed", output) == 0)
 		ft_client_error(client, output);
 	else
 		ft_client_success(client, output, size);
@@ -66,14 +67,16 @@ void	execute_command2(t_client_data *client, t_options *options,
 {
 	char	*executable;
 
-	(void)options;
 	redirect_output(link);
 	executable = find_executable(cmd_and_args->we_wordv[0], client->env);
 	if (!executable)
 		ft_putstr("command not found");
 	else
 	{
-		execute_command3(executable, cmd_and_args);
+		if (!options->strict || always_executable(cmd_and_args->we_wordv[0]))
+			execute_command3(executable, cmd_and_args);
+		else
+			ft_putstr("command not allowed");
 		free(executable);
 	}
 	exit(0);

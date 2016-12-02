@@ -58,6 +58,7 @@ int						ind_of_char(char *str, char c, int len);
 char					get_type_of_command(char *command);
 char					is_space(char c);
 char					command_is(char *command, char *is);
+char					*ft_strdup(char *str);
 void					parse_options(int argc, char **argv, t_options *opt);
 void					read_response(int server, char type, char *filename);
 char					send_command(int server, t_options *options, char *command);

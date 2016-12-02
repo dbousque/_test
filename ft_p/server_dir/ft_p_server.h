@@ -28,6 +28,7 @@ typedef struct			s_options
 	int					port;
 	char				log;
 	char				error;
+	char				strict;
 }						t_options;
 
 typedef struct			s_client_data
@@ -68,6 +69,9 @@ void					ft_client_success(t_client_data *client, char *msg,
 void					redirect_output(int link[2]);
 int						ind_of_char(char *str, char c, int len);
 void					ft_strcpy2(char *str1, char *str2, int len);
+void					get_current_dir(char **res);
+char					ft_startswith(char *base, char *start);
+char					always_executable(char *command);
 void					parse_options(int argc, char **argv, t_options *opt);
 void					launch_server(int server, t_options *options,
 																char **env);

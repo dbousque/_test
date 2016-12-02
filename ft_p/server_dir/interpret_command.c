@@ -2,12 +2,53 @@
 
 #include "ft_p_server.h"
 
+char	return_client_error(t_client_data *client, char *error)
+{
+	ft_client_error(client, error);
+	return (0);
+}
+
+char	return_cd_error(t_client_data *client, char *dir, char *current_dir,
+																char *error)
+{
+	chdir(current_dir);
+	free(dir);
+	free(current_dir);
+	return (return_client_error(client, error));
+}
+
+char	handle_cd(t_client_data *client, t_options *options, char **args)
+{
+	char	*dir;
+	char	*current_dir;
+
+	(void)options;
+	if (!args[1])
+		return (return_client_error(client, "cd requires an argument"));
+	current_dir = NULL;
+	get_current_dir(&current_dir);
+	if (!current_dir)
+		return (return_client_error(client, "malloc error"));
+	dir = args[1];
+	if (chdir(dir) == -1)
+		return (return_client_error(client, "bad dir"));
+	get_current_dir(&dir);
+	if (!dir)
+		return (return_cd_error(client, dir, current_dir, "malloc error"));
+	if (!ft_startswith(dir, client->launch_dir))
+		return (return_cd_error(client, dir, current_dir, "no rights"));
+	free(dir);
+	free(current_dir);
+	ft_client_success(client, "changed dir", ft_strlen("changed dir"));
+	return (1);
+}
 
 char	handle_raw_command(t_client_data *client, t_options *options,
 											unsigned char *data, int len)
 {
 	char			*command;
 	wordexp_t		cmd_and_args;
+	char			to_ret;
 
 	command = (char*)((void*)data) + sizeof(t_packet_header);
 	if ((size_t)len > sizeof(t_packet_header)
@@ -18,9 +59,13 @@ char	handle_raw_command(t_client_data *client, t_options *options,
 		ft_client_error(client, "invalid command");
 		return (0);
 	}
-	execute_command(client, options, &cmd_and_args);
+	to_ret = 1;
+	if (ft_strcmp(cmd_and_args.we_wordv[0], "cd") == 0)
+		to_ret = handle_cd(client, options, cmd_and_args.we_wordv);
+	else
+		execute_command(client, options, &cmd_and_args);
 	wordfree(&cmd_and_args);
-	return (1);
+	return (to_ret);
 }
 
 void	handle_put(t_client_data *client, t_options *options,
@@ -43,17 +88,6 @@ void	handle_put(t_client_data *client, t_options *options,
 	if (put_file(client, options, data_filename_file,
 												len - (start_of_file - data)))
 		ft_client_success(client, "file saved", ft_strlen("file saved"));
-}
-
-void	handle_cd(t_client_data *client)
-{
-	(void)client;
-}
-
-char	return_client_error(t_client_data *client, char *error)
-{
-	ft_client_error(client, error);
-	return (0);
 }
 
 char	handle_get2(t_client_data *client, char *buffer, char *filename,
@@ -120,8 +154,6 @@ void	interpret_command(t_client_data *client, t_options *options,
 	header = (t_packet_header*)data;
 	if (header->type == CMD_RAW_COMMAND)
 		handle_raw_command(client, options, data, len);
-	else if (header->type == CMD_CD)
-		handle_cd(client);
 	else if (header->type == CMD_GET)
 		handle_get(client, options, (char*)data, len);
 }

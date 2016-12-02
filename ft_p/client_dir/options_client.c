@@ -36,5 +36,8 @@ void	parse_options(int argc, char **argv, t_options *options)
 		return ;
 	}
 	options->log = 1;
-	options->host = argv[1];
+	if (ft_strcmp(argv[1], "localhost") == 0)
+		options->host = ft_strdup("127.0.0.1");
+	else
+		options->host = argv[1];
 }

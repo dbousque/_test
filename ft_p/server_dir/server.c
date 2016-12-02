@@ -52,16 +52,8 @@ void	communicate(t_client_data *client, t_options *options)
 
 void	handle_client(t_client_data *client, t_options *options)
 {
-	size_t	size;
-
-	size = 256;
-	client->launch_dir = (char*)malloc(sizeof(char) * size);
-	while (!(getcwd(client->launch_dir, size)))
-	{
-		free(client->launch_dir);
-		size *= 2;
-		client->launch_dir = (char*)malloc(sizeof(char) * size);
-	}
+	client->launch_dir = NULL;
+	get_current_dir(&(client->launch_dir));
 	communicate(client, options);
 	if (options->log)
 		log_closing(client);

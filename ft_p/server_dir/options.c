@@ -24,10 +24,22 @@ int		parse_port(char *port)
 
 void	parse_options(int argc, char **argv, t_options *options)
 {
-	if (argc > 2)
+	options->strict = 0;
+	if (argc > 4)
 	{
 		options->error = 1;
 		return ;
+	}
+	if (argc > 2)
+	{
+		if (chdir(argv[2]) == -1)
+		{
+			ft_putstr("invalid start directory\n");
+			options->error = 1;
+			return ;
+		}
+		if (argc == 4 && ft_strcmp(argv[3], "strict") == 0)
+			options->strict = 1;
 	}
 	options->port = parse_port(argv[1]);
 	if (options->port < 1 || options->port > 65535)

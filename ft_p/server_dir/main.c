@@ -29,7 +29,7 @@ void	usage(char *command)
 {
 	ft_putstr("Usage : ");
 	ft_putstr(command);
-	ft_putstr(" <port[1-65535]>\n");
+	ft_putstr(" <port[1-65535]> ?<start_dir> ?<[strict]>\n");
 	exit(-1);
 }
 
