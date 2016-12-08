@@ -6,7 +6,7 @@
 /*   By: dbousque <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/12/08 16:28:03 by dbousque          #+#    #+#             */
-/*   Updated: 2016/12/08 16:30:57 by dbousque         ###   ########.fr       */
+/*   Updated: 2016/12/08 18:53:40 by dbousque         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,7 +89,7 @@ void	launch_client(t_options *options)
 			ft_putstr("Bye\n");
 			break ;
 		}
-		if (send_command(server, options, command))
+		if (ft_strlen(command) > 1 && send_command(server, options, command))
 			read_response(server, get_type_of_command(command), NULL);
 		free(command);
 	}
