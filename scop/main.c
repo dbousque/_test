@@ -1,93 +1,51 @@
 
-#define GLEW_STATIC
-#include <GL/glew.h>
-#include <GLFW/glfw3.h>
-#include <stdio.h>
+#include "myopengl.h"
 
-void    key_callback(GLFWwindow *window, int key, int scancode, int action, int mode)
+GLfloat		vertices3[] = {
+	-0.5f, 0.5f, 0.0f, 1.0f, 0.0f, 0.0f,
+	0.0f,  -0.5f,  0.0f, 0.0f, 1.0f, 0.0f,
+	0.5f, 0.5f,  0.0f, 0.0f, 0.0f, 1.0f
+};
+int		attribs_struct3[] = {3, 3};
+int		nb_attribs3 = 2;
+int		nb_vertices3 = 3;
+
+int		main(void)
 {
-	(void)window;
-	(void)scancode;
-	(void)action;
-	(void)mode;
-	printf("key : %d\n", key);
-}
+	t_window			*window;
+	t_shader_program	*program;
+	t_globj				*obj;
 
-void    render_triangle(GLFWwindow *window)
-{
-	(void)window;
-	GLfloat		vertices[] = {
-		-0.5f, -0.5f, 0.0f,
-		0.0f, 0.5f, 0.0f,
-		0.5f, -0.5f, 0.0f
-	};
-	GLuint	VBO;
-
-	glGenBuffers(1, &VBO);
-	glBindBuffer(GL_ARRAY_BUFFER, VBO);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-	char	shader[] =
-"	#version 330 code"
-""
-"	layout (location = 0) vin ec3 position;"
-""
-"	void main()"
-"	{"
-"		gl_Position = vec4(position.x, position.y, position.z, 1.0);"
-"	}";
-	GLuint	shader_object;
-
-	shader_object = glCreateShader(GL_VERTEX_SHADER);
-	glShaderSource(shader_object, 1, &shader, NULL);
-	glCompileShader(shader_object);
-
-	GLint success;
-	GLchar infoLog[512];
-	glGetShaderiv(shader_object, GL_COMPILE_STATUS, &success);
-
-	
-	(void)shader_object;
-	(void)shader;
-}
-
-int main(void)
-{
-	glfwInit();
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-	glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
-	// macos
-	// glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
-	GLFWwindow *window = glfwCreateWindow(800, 600, "LearnOpenGL", NULL, NULL);
+	window = setup_window(1600, 1200, "My window!");
 	if (!window)
+		return (-1);
+	program = new_shader_program("shaders/test1.vs", "shaders/test1.fs");
+	if (!program)
+		return (-1);
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	obj = new_object(vertices3, attribs_struct3, nb_attribs3, nb_vertices3);
+	if (!obj)
+		return (-1);
+	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+	while (!glfwWindowShouldClose(window->win))
 	{
-	    printf("Failed to create GLFW window\n");
-	    glfwTerminate();
-	    return -1;
-	}
-	glfwMakeContextCurrent(window);
-	glewExperimental = GL_TRUE;
-	if (glewInit() != GLEW_OK)
-	{
-	    printf("Failed to initialize GLEW\n");
-	    return -1;
-	}
-	int     width;
-	int     height;
+		glfwPollEvents();
 
-	glfwGetFramebufferSize(window, &width, &height);
-	glViewport(0, 0, width, height);
-	glfwSetKeyCallback(window, key_callback);
-	while (!glfwWindowShouldClose(window))
-	{
-	    glfwPollEvents();
+		glClearColor(0.01f, 0.0f, 0.20f, 1.0f);
+		glClear(GL_COLOR_BUFFER_BIT);
 
-	    glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
-	    glClear(GL_COLOR_BUFFER_BIT);
+		GLfloat		time = glfwGetTime();
+		GLfloat		alpha = (sin(time * 4) / 2) + 0.5;
+		GLint		loc = glGetUniformLocation(program->program, "alpha");
+		GLint		loc2 = glGetUniformLocation(program->program, "offset");
+		glUseProgram(program->program);
+		glUniform1f(loc, alpha);
+		glUniform1f(loc2, alpha);
 
-	    glfwSwapBuffers(window);
+		draw_object(program, obj);
+		glfwSwapBuffers(window->win);
 	}
 	glfwTerminate();
-	return 0;
+	return (0);
 }
