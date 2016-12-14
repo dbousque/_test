@@ -6,6 +6,7 @@
 # define GLEW_STATIC
 # include <GL/glew.h>
 # include <GLFW/glfw3.h>
+# include "SOIL.h"
 # include <stdio.h>
 # include <math.h>
 # include <unistd.h>
@@ -26,7 +27,12 @@ typedef struct	s_globj
 {
 	GLuint		VAO;
 	GLuint		VBO;
+	GLuint		EBO;
 	int			nb_vertices;
+	int			nb_indices;
+	char		has_indices;
+	char		has_texture;
+	GLuint		texture;
 }				t_globj;
 
 typedef struct	s_window
@@ -44,5 +50,8 @@ void				draw_object(t_shader_program *shader_program,
 																t_globj *obj);
 t_globj				*new_object(GLfloat *vertices, int attribs_struct[],
 											int nb_attribs, int nb_vertices);
+void				load_texture_to_obj(t_globj *obj, char *img_path);
+void				attach_indices_to_obj(t_globj *obj, GLuint indices[],
+															int nb_indices);
 
 #endif

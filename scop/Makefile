@@ -12,7 +12,7 @@ OBJECTS	=	$(subst .c,.o,$(SOURCES))
 
 WFLAGS	=	-Wall -Werror -Wextra
 
-FLAGS	=	-lGL -lGLU -lglut -lglfw3 -lX11 -lXxf86vm -lXrandr -pthread -lXi -ldl -lXinerama -lXcursor -lrt -lm -lGLEW
+FLAGS	=	-lSOIL -lGL -lGLU -lglut -lglfw3 -lX11 -lXxf86vm -lXrandr -pthread -lXi -ldl -lXinerama -lXcursor -lrt -lm -lGLEW
 
 CC		=	gcc
 

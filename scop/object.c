@@ -2,6 +2,29 @@
 
 #include "myopengl.h"
 
+GLuint	make_texture(char *img_path)
+{
+	int				width;
+	int				height;
+	unsigned char	*img;
+	GLuint			texture;
+
+	img = SOIL_load_image(img_path, &width, &height, 0, SOIL_LOAD_RGB);
+	glGenTextures(1, &texture);
+	glBindTexture(GL_TEXTURE_2D, texture);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, img);
+	glGenerateMipmap(GL_TEXTURE_2D);
+	SOIL_free_image_data(img);
+	glBindTexture(GL_TEXTURE_2D, 0);
+    return (texture);
+}
+
+void	load_texture_to_obj(t_globj *obj, char *img_path)
+{
+	obj->texture = make_texture(img_path);
+	obj->has_texture = 1;
+}
+
 int		int_arr_sum(int arr[], int nb)
 {
 	int		i;
@@ -33,7 +56,6 @@ void	init_vertex_attributes(int attribs_struct[], int nb_attribs,
 		seen_vars += attribs_struct[i];
 		i++;
 	}
-	glBindVertexArray(0);
 }
 
 t_globj		*new_object(GLfloat *vertices, int attribs_struct[],
@@ -48,6 +70,8 @@ t_globj		*new_object(GLfloat *vertices, int attribs_struct[],
 		return (NULL);
 	}
 	obj->nb_vertices = nb_vertices;
+	obj->has_texture = 0;
+	obj->has_indices = 0;
 	glGenVertexArrays(1, &(obj->VAO));
 	glBindVertexArray(obj->VAO);
 	glGenBuffers(1, &(obj->VBO));
@@ -58,13 +82,32 @@ t_globj		*new_object(GLfloat *vertices, int attribs_struct[],
 									(GLfloat const*)vertices, GL_STATIC_DRAW);
 	init_vertex_attributes(attribs_struct, nb_attribs, nb_vertices,
 																tot_data_len);
+	glBindVertexArray(0);
 	return (obj);
+}
+
+void	attach_indices_to_obj(t_globj *obj, GLuint indices[], int nb_indices)
+{
+	glBindVertexArray(obj->VAO);
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+	glGenBuffers(1, &(obj->EBO));
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, obj->EBO);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(GLuint) * nb_indices, indices,
+															GL_STATIC_DRAW);
+	glBindVertexArray(0);
+	obj->has_indices = 1;
+	obj->nb_indices = nb_indices;
 }
 
 void	draw_object(t_shader_program *shader_program, t_globj *obj)
 {
+	if (obj->has_texture)
+		glBindTexture(GL_TEXTURE_2D, obj->texture);
 	glUseProgram(shader_program->program);
 	glBindVertexArray(obj->VAO);
-	glDrawArrays(GL_TRIANGLES, 0, obj->nb_vertices);
+	if (obj->has_indices)
+		glDrawElements(GL_TRIANGLES, obj->nb_indices, GL_UNSIGNED_INT, 0);
+	else
+		glDrawArrays(GL_TRIANGLES, 0, obj->nb_vertices);
 	glBindVertexArray(0);
 }
