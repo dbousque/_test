@@ -31,8 +31,9 @@ typedef struct	s_globj
 	int			nb_vertices;
 	int			nb_indices;
 	char		has_indices;
-	char		has_texture;
-	GLuint		texture;
+	char		has_textures;
+	GLuint		*textures;
+	int			nb_textures;
 }				t_globj;
 
 typedef struct	s_window
@@ -42,7 +43,11 @@ typedef struct	s_window
 
 size_t				ft_strlen(char *str);
 void				ft_putstr(char *str);
+char				*ft_itoa(int n);
+char				*ft_strconcat(char *st1, char *st2);
 char				*read_file(char *filename, size_t max_size);
+void    			key_callback(GLFWwindow *window, int key, int scancode,
+														int action, int mode);
 t_shader_program	*new_shader_program(char *vertex_shader_path,
 												char *fragment_shader_path);
 t_window			*setup_window(int width, int height, char *title_name);

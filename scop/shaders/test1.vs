@@ -11,5 +11,5 @@ void main()
 {
 	gl_Position = vec4(position.x, position.y, position.z, 1.0);
 	ourColor = color;
-	TextCoords = textCoords;
+	TextCoords = vec2(textCoords.x, textCoords.y);
 }

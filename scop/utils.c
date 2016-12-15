@@ -74,3 +74,27 @@ char	*read_file(char *filename, size_t max_size)
 	close(fd);
 	return (res);
 }
+
+char	*ft_strconcat(char *st1, char *st2)
+{
+	char	*res;
+	size_t	i;
+	size_t	start;
+
+	if (!(res = malloc(sizeof(char) * (ft_strlen(st1) + ft_strlen(st2) + 1))))
+		return (NULL);
+	i = 0;
+	while (st1[i])
+	{
+		res[i] = st1[i];
+		i++;
+	}
+	start = 0;
+	while (st2[start])
+	{
+		res[i + start] = st2[start];
+		start++;
+	}
+	res[i + start] = '\0';
+	return (res);
+}

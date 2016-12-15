@@ -2,6 +2,43 @@
 
 #include "myopengl.h"
 
+int		get_texture_nb(int nb)
+{
+	if (nb == 0)
+		return (GL_TEXTURE0);
+	if (nb == 1)
+		return (GL_TEXTURE1);
+	if (nb == 2)
+		return (GL_TEXTURE2);
+	if (nb == 3)
+		return (GL_TEXTURE3);
+	if (nb == 4)
+		return (GL_TEXTURE4);
+	if (nb == 5)
+		return (GL_TEXTURE5);
+	if (nb == 6)
+		return (GL_TEXTURE6);
+	if (nb == 7)
+		return (GL_TEXTURE7);
+	if (nb == 8)
+		return (GL_TEXTURE8);
+	if (nb == 9)
+		return (GL_TEXTURE9);
+	if (nb == 10)
+		return (GL_TEXTURE10);
+	if (nb == 11)
+		return (GL_TEXTURE11);
+	if (nb == 12)
+		return (GL_TEXTURE12);
+	if (nb == 13)
+		return (GL_TEXTURE13);
+	if (nb == 14)
+		return (GL_TEXTURE14);
+	if (nb == 15)
+		return (GL_TEXTURE15);
+	return (0);
+}
+
 GLuint	make_texture(char *img_path)
 {
 	int				width;
@@ -12,7 +49,8 @@ GLuint	make_texture(char *img_path)
 	img = SOIL_load_image(img_path, &width, &height, 0, SOIL_LOAD_RGB);
 	glGenTextures(1, &texture);
 	glBindTexture(GL_TEXTURE_2D, texture);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, img);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB,
+													GL_UNSIGNED_BYTE, img);
 	glGenerateMipmap(GL_TEXTURE_2D);
 	SOIL_free_image_data(img);
 	glBindTexture(GL_TEXTURE_2D, 0);
@@ -21,8 +59,29 @@ GLuint	make_texture(char *img_path)
 
 void	load_texture_to_obj(t_globj *obj, char *img_path)
 {
-	obj->texture = make_texture(img_path);
-	obj->has_texture = 1;
+	GLuint	texture;
+	GLuint	*new_textures;
+	int		i;
+
+	texture = make_texture(img_path);
+	if (!(new_textures = (GLuint*)malloc(sizeof(GLuint)
+												* (obj->nb_textures + 1))))
+	{
+		ft_putstr("malloc error, could not load texture\n");
+		return ;
+	}
+	i = 0;
+	while (i < obj->nb_textures)
+	{
+		new_textures[i] = obj->textures[i];
+		i++;
+	}
+	new_textures[i] = texture;
+	if (i > 0)
+		free(obj->textures);
+	obj->textures = new_textures;
+	obj->has_textures = 1;
+	obj->nb_textures++;
 }
 
 int		int_arr_sum(int arr[], int nb)
@@ -70,8 +129,10 @@ t_globj		*new_object(GLfloat *vertices, int attribs_struct[],
 		return (NULL);
 	}
 	obj->nb_vertices = nb_vertices;
-	obj->has_texture = 0;
+	obj->has_textures = 0;
 	obj->has_indices = 0;
+	obj->nb_textures = 0;
+	obj->textures = NULL;
 	glGenVertexArrays(1, &(obj->VAO));
 	glBindVertexArray(obj->VAO);
 	glGenBuffers(1, &(obj->VBO));
@@ -99,10 +160,31 @@ void	attach_indices_to_obj(t_globj *obj, GLuint indices[], int nb_indices)
 	obj->nb_indices = nb_indices;
 }
 
+void	activate_textures(t_shader_program *shader_program, t_globj *obj)
+{
+	int		i;
+	char	*tmp_text_name;
+	char	*i_str;
+
+	i = 0;
+	while (i < obj->nb_textures)
+	{
+		i_str = ft_itoa(i);
+		tmp_text_name = ft_strconcat("ourTexture", i_str);
+		glActiveTexture(get_texture_nb(i));
+		glBindTexture(GL_TEXTURE_2D, obj->textures[i]);
+		glUniform1i(glGetUniformLocation(shader_program->program,
+														tmp_text_name), i);
+		free(i_str);
+		free(tmp_text_name);
+		i++;
+	}
+}
+
 void	draw_object(t_shader_program *shader_program, t_globj *obj)
 {
-	if (obj->has_texture)
-		glBindTexture(GL_TEXTURE_2D, obj->texture);
+	if (obj->has_textures)
+		activate_textures(shader_program, obj);
 	glUseProgram(shader_program->program);
 	glBindVertexArray(obj->VAO);
 	if (obj->has_indices)
