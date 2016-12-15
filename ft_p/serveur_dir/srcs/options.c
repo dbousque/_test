@@ -6,7 +6,7 @@
 /*   By: dbousque <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/12/08 15:55:08 by dbousque          #+#    #+#             */
-/*   Updated: 2016/12/08 15:55:10 by dbousque         ###   ########.fr       */
+/*   Updated: 2016/12/15 18:34:32 by dbousque         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ int		parse_port(char *port)
 
 void	parse_options(int argc, char **argv, t_options *options)
 {
-	options->strict = 0;
+	options->strict = 1;
 	if (argc > 4)
 	{
 		options->error = 1;
@@ -48,8 +48,8 @@ void	parse_options(int argc, char **argv, t_options *options)
 			options->error = 1;
 			return ;
 		}
-		if (argc == 4 && ft_strcmp(argv[3], "strict") == 0)
-			options->strict = 1;
+		if (argc == 4 && ft_strcmp(argv[3], "any") == 0)
+			options->strict = 0;
 	}
 	options->port = parse_port(argv[1]);
 	if (options->port < 1 || options->port > 65535)
