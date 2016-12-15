@@ -26,7 +26,7 @@ t_window	*setup_window(int width, int height, char *title_name)
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 	glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
 	// macos
-	// glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
+	glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 	window->win = glfwCreateWindow(width, height, title_name, NULL, NULL);
 	if (!window->win)
 		return (init_error("Failed to create GLFW window\n"));

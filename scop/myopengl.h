@@ -6,6 +6,11 @@
 # define GLEW_STATIC
 # include <GL/glew.h>
 # include <GLFW/glfw3.h>
+# ifdef __APPLE__
+#  include <OpenGL/gl.h>
+#  include <GLUT/glut.h>
+#  include <OpenGL/glu.h>
+# endif
 # include "SOIL.h"
 # include <stdio.h>
 # include <math.h>

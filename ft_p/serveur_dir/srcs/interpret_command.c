@@ -22,8 +22,10 @@ char	handle_raw_command(t_client_data *client, t_options *options,
 	command = (char*)((void*)data) + sizeof(t_packet_header);
 	if ((size_t)len > sizeof(t_packet_header)
 		&& command[len - sizeof(t_packet_header) - 1] == '\n')
+	{
 		command[len - sizeof(t_packet_header) - 1] = '\0';
-	if (wordexp(command, &cmd_and_args, 0) != 0)
+	}
+	if (wordexp(command, &cmd_and_args, 0) != 0 || !cmd_and_args.we_wordv[0])
 	{
 		ft_client_error(client, "invalid command");
 		return (0);

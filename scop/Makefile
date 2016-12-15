@@ -13,11 +13,15 @@ OBJECTS	=	$(subst .c,.o,$(SOURCES))
 
 WFLAGS	=	-Wall -Werror -Wextra
 
+OS := $(shell uname)
+ifneq ($(OS), Darwin)
 FLAGS	=	-lSOIL -lGL -lGLU -lglut -lglfw3 -lX11 -lXxf86vm -lXrandr -pthread -lXi -ldl -lXinerama -lXcursor -lrt -lm -lGLEW
+else
+FLAGS	=	-framework OpenGL -lglfw -lGLEW -lSOIL
+endif
 
 CC		=	gcc
 
-.SILENT:
 
 $(NAME): $(OBJECTS)
 	$(CC) $(WFLAGS) $(OBJECTS) -o $(NAME) $(FLAGS)
@@ -29,7 +33,7 @@ $(NAME): $(OBJECTS)
 all: $(NAME)
 
 %.o: %.c
-	$(CC) $(WFLAGS) -c -o $@ $^ $(FLAGS)
+	$(CC) $(WFLAGS) -c -o $@ $^
 	printf "\e[32m[✔]\e[36m $@ "
 	printf "\033[0m\n"
 
