@@ -17,6 +17,7 @@
 # include <unistd.h>
 # include <stdlib.h>
 # include <fcntl.h>
+# include "matrices.h"
 
 # define MAX_SHADER_SIZE 32768
 # define READ_BUFFER_LEN 4096

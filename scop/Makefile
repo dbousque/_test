@@ -7,6 +7,7 @@ SOURCES		=	shader_program.c \
 				main.c \
 				window.c \
 				ft_itoa.c \
+				matrices.c \
 				utils.c
 
 OBJECTS	=	$(subst .c,.o,$(SOURCES))

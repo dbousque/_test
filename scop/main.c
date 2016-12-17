@@ -81,6 +81,21 @@ int		main(void)
 		glUseProgram(program->program);
 		glUniform1f(glGetUniformLocation(program->program, "mixVal"), mixVal);
 
+		t_mat	*scal;
+		t_mat	*trans;
+		t_mat	*rot;
+		t_mat	*transf;
+		
+		scal = scale(new_vec3(0.5, 0.5, 0.5));
+		trans = translate(new_vec3(-0.5, -0.5, 0.0));
+		rot = rotate(new_vec3(deg_to_rad(glfwGetTime() * 50.0f), deg_to_rad(65.0), 0.0));
+		transf = mat_mult(scal, trans);
+		transf = mat_mult(transf, rot);
+
+		GLuint	loc = glGetUniformLocation(program->program, "transf");
+
+		glUniformMatrix4fv(loc, 1, GL_TRUE, transf->elts);
+
 		draw_object(program, obj);
 
 		glfwSwapBuffers(window->win);
