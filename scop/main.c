@@ -3,21 +3,63 @@
 #include "myopengl.h"
 
 GLfloat vertices[] = {
-    // Positions          // Colors           // Texture Coords
-     0.5f,  0.5f, 0.0f,   1.0f, 0.0f, 0.0f,   1.0f, 1.0f,   // Top Right
-     0.5f, -0.5f, 0.0f,   0.0f, 1.0f, 0.0f,   1.0f, 0.0f,   // Bottom Right
-    -0.5f, -0.5f, 0.0f,   0.0f, 0.0f, 1.0f,   0.0f, 0.0f,   // Bottom Left
-    -0.5f,  0.5f, 0.0f,   1.0f, 1.0f, 0.0f,   0.0f, 1.0f    // Top Left 
-};
-int		attribs_struct[] = {3, 3, 2};
-int		nb_attribs = 3;
-int		nb_vertices = 4;
+    -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
+     0.5f, -0.5f, -0.5f,  1.0f, 0.0f,
+     0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+     0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+    -0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
+    -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
 
-GLuint indices[] = {  // Note that we start from 0!
-    0, 1, 3,   // First Triangle
-    1, 2, 3    // Second Triangle
+    -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+     0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
+     0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
+     0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
+    -0.5f,  0.5f,  0.5f,  0.0f, 1.0f,
+    -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+
+    -0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+    -0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+    -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+    -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+    -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+    -0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+
+     0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+     0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+     0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+     0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+     0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+     0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+
+    -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+     0.5f, -0.5f, -0.5f,  1.0f, 1.0f,
+     0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
+     0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
+    -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+    -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+
+    -0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
+     0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+     0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+     0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+    -0.5f,  0.5f,  0.5f,  0.0f, 0.0f,
+    -0.5f,  0.5f, -0.5f,  0.0f, 1.0f
 };
-int		nb_indices = 6;
+int		attribs_struct[] = {3, 2};
+int		nb_attribs = 2;
+int		nb_vertices = 36;
+
+/*GLuint indices[] = {  // Note that we start from 0!
+    0, 1, 3,   // First Triangle
+    1, 2, 3,   // Second Triangle
+
+    4, 5, 7,   // First Triangle
+    5, 6, 7,    // Second Triangle
+
+    8, 9, 10,
+    9, 10, 11
+};
+int		nb_indices = 18;*/
 
 /*
 GLint		loc = glGetUniformLocation(program->program, "alpha");
@@ -59,6 +101,7 @@ int		main(void)
 	window = setup_window(1200, 900, "My window!");
 	if (!window)
 		return (-1);
+	glEnable(GL_DEPTH_TEST);
 	program = new_shader_program("shaders/test1.vs", "shaders/test1.fs");
 	if (!program)
 		return (-1);
@@ -67,7 +110,7 @@ int		main(void)
 	obj = new_object(vertices, attribs_struct, nb_attribs, nb_vertices);
 	if (!obj)
 		return (-1);
-	attach_indices_to_obj(obj, indices, nb_indices);
+	//attach_indices_to_obj(obj, indices, nb_indices);
 	load_texture_to_obj(obj, "container.jpg");
 	load_texture_to_obj(obj, "awesomeface.png");
 	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
@@ -76,25 +119,28 @@ int		main(void)
 		glfwPollEvents();
 
 		glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
-		glClear(GL_COLOR_BUFFER_BIT);
+		//glClear(GL_COLOR_BUFFER_BIT);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		glUseProgram(program->program);
 		glUniform1f(glGetUniformLocation(program->program, "mixVal"), mixVal);
 
-		t_mat	*scal;
-		t_mat	*trans;
-		t_mat	*rot;
-		t_mat	*transf;
-		
-		scal = scale(new_vec3(0.5, 0.5, 0.5));
-		trans = translate(new_vec3(-0.5, -0.5, 0.0));
-		rot = rotate(new_vec3(deg_to_rad(glfwGetTime() * 50.0f), deg_to_rad(65.0), 0.0));
-		transf = mat_mult(scal, trans);
-		transf = mat_mult(transf, rot);
+		t_mat	*model;
+		t_mat	*view;
+		t_mat	*projection;
 
-		GLuint	loc = glGetUniformLocation(program->program, "transf");
+		model = rotate(new_vec3(0.0, deg_to_rad((GLfloat)glfwGetTime() * 25.0f), deg_to_rad((GLfloat)glfwGetTime() * 50.0f)));
+		view = translate(new_vec3(0.0, 0.0, -3.0 + (mixVal * 4)));
+		projection = perspective(deg_to_rad(15.0), 900.0 / 1200.0, 0.1, 100.0);
 
-		glUniformMatrix4fv(loc, 1, GL_TRUE, transf->elts);
+		GLuint	loc = glGetUniformLocation(program->program, "model");
+		glUniformMatrix4fv(loc, 1, GL_TRUE, model->elts);
+
+		GLuint	loc2 = glGetUniformLocation(program->program, "view");
+		glUniformMatrix4fv(loc2, 1, GL_TRUE, view->elts);
+
+		GLuint	loc3 = glGetUniformLocation(program->program, "projection");
+		glUniformMatrix4fv(loc3, 1, GL_TRUE, projection->elts);
 
 		draw_object(program, obj);
 

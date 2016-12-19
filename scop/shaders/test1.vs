@@ -1,17 +1,17 @@
 #version 330 core
 
 layout (location = 0) in vec3 position;
-layout (location = 1) in vec3 color;
-layout (location = 2) in vec2 textCoords;
+layout (location = 1) in vec2 textCoords;
 
-out vec3 ourColor;
 out vec2 TextCoords;
 
-uniform mat4 transf;
+uniform mat4 model;
+uniform mat4 view;
+uniform mat4 projection;
 
 void main()
 {
-	gl_Position = transf * vec4(position, 1.0);
-	ourColor = color;
-	TextCoords = vec2(textCoords.x, textCoords.y);
+	vec4 tmp = projection * view * model * vec4(position, 1.0);
+	gl_Position = vec4(tmp.x, tmp.y, -tmp.z, tmp.w);
+	TextCoords = vec2(textCoords.x, 1.0 - textCoords.y);
 }

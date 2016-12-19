@@ -272,6 +272,37 @@ t_mat	*rotate(t_vec *vec)
 	return (ret);
 }
 
+/*t_mat	*perspective(float x_width, float y_height, float near, float far)
+{
+	t_mat	*ret;
+
+	ret = new_mat4();
+	ret->elts[0] = near / x_width;
+	ret->elts[5] = near / y_height;
+	ret->elts[10] = (-(far + near) / (far - near));
+	ret->elts[11] = (-2.0 * (far * near)) / (far - near);
+	ret->elts[14] = -1.0;
+	ret->elts[15] = 0.0;
+	return (ret);
+}*/
+
+t_mat	*perspective(float fov, float ratio, float near, float far)
+{
+	t_mat	*ret;
+	float	fov_norm;
+
+	far /= (far - near);
+	fov_norm = 1.0 - tanf(fov / 2.0);
+	ret = new_mat4();
+	ret->elts[0] = fov_norm;
+	ret->elts[5] = fov_norm / ratio;
+	ret->elts[10] = far;
+	ret->elts[11] = near * far;
+	ret->elts[14] = -1.0;
+	ret->elts[15] = 0.0;
+	return (ret);
+}
+
 void	print_mat(t_mat *mat)
 {
 	int		i;
