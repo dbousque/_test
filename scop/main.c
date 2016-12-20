@@ -49,6 +49,23 @@ int		attribs_struct[] = {3, 2};
 int		nb_attribs = 2;
 int		nb_vertices = 36;
 
+t_vec *cubePositions[10];
+int		nb_cubes = 10;
+
+void	setup_cube_positions()
+{
+	cubePositions[0] = new_vec3( 0.0f,  0.0f,  0.0f);
+	cubePositions[1] = new_vec3( 2.0f,  5.0f, -15.0f);
+	cubePositions[2] = new_vec3(-1.5f, -2.2f, -2.5f);
+	cubePositions[3] = new_vec3(-3.8f, -2.0f, -12.3f);
+	cubePositions[4] = new_vec3( 2.4f, -0.4f, -3.5f);
+	cubePositions[5] = new_vec3(-1.7f,  3.0f, -7.5f);
+	cubePositions[6] = new_vec3( 1.3f, -2.0f, -2.5f);
+	cubePositions[7] = new_vec3( 1.5f,  2.0f, -2.5f);
+	cubePositions[8] = new_vec3( 1.5f,  0.2f, -1.5f);
+	cubePositions[9] = new_vec3(-1.3f,  1.0f, -1.5f);
+}
+
 /*GLuint indices[] = {  // Note that we start from 0!
     0, 1, 3,   // First Triangle
     1, 2, 3,   // Second Triangle
@@ -97,7 +114,9 @@ int		main(void)
 	t_window			*window;
 	t_shader_program	*program;
 	t_globj				*obj;
+	int					i;
 
+	setup_cube_positions();
 	window = setup_window(1200, 900, "My window!");
 	if (!window)
 		return (-1);
@@ -128,13 +147,11 @@ int		main(void)
 		t_mat	*model;
 		t_mat	*view;
 		t_mat	*projection;
+		t_mat	*rot;
 
-		model = rotate(new_vec3(0.0, deg_to_rad((GLfloat)glfwGetTime() * 25.0f), deg_to_rad((GLfloat)glfwGetTime() * 50.0f)));
+		//model = rotate(new_vec3(0.0, deg_to_rad((GLfloat)glfwGetTime() * 25.0f), deg_to_rad((GLfloat)glfwGetTime() * 50.0f)));
 		view = translate(new_vec3(0.0, 0.0, -3.0 + (mixVal * 4)));
-		projection = perspective(deg_to_rad(15.0), 900.0 / 1200.0, 0.1, 100.0);
-
-		GLuint	loc = glGetUniformLocation(program->program, "model");
-		glUniformMatrix4fv(loc, 1, GL_TRUE, model->elts);
+		projection = perspective(0.0, 900.0 / 1200.0, 0.1, 100.0);
 
 		GLuint	loc2 = glGetUniformLocation(program->program, "view");
 		glUniformMatrix4fv(loc2, 1, GL_TRUE, view->elts);
@@ -142,7 +159,18 @@ int		main(void)
 		GLuint	loc3 = glGetUniformLocation(program->program, "projection");
 		glUniformMatrix4fv(loc3, 1, GL_TRUE, projection->elts);
 
-		draw_object(program, obj);
+		i = 0;
+		while (i < nb_cubes)
+		{
+			model = translate(cubePositions[i]);
+			rot = rotate(new_vec3(0.0, i * 5.0, i % 3 == 0 ? i * glfwGetTime() : i * 20.0));
+			model = mat_mult(model, rot);
+			GLuint	loc = glGetUniformLocation(program->program, "model");
+			glUniformMatrix4fv(loc, 1, GL_TRUE, model->elts);
+
+			draw_object(program, obj);
+			i++;
+		}
 
 		glfwSwapBuffers(window->win);
 	}
