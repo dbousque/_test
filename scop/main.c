@@ -117,7 +117,7 @@ int		main(void)
 	int					i;
 
 	setup_cube_positions();
-	window = setup_window(1200, 900, "My window!");
+	window = setup_window(1000, 800, "My window!");
 	if (!window)
 		return (-1);
 	glEnable(GL_DEPTH_TEST);
@@ -148,10 +148,44 @@ int		main(void)
 		t_mat	*view;
 		t_mat	*projection;
 		t_mat	*rot;
+		t_vec	*camera_pos;
+		t_vec	*camera_target;
+		t_vec	*camera_direction;
+		t_vec	*up;
+		t_vec	*camera_right;
+		t_vec	*camera_up;
+		t_mat	*tmp1;
+		t_mat	*tmp2;
 
+		GLfloat radius = 10.0f;
+		GLfloat camX = sin(glfwGetTime()) * radius;
+		GLfloat camZ = cos(glfwGetTime()) * radius;
+
+		camera_pos = new_vec3(camX, 0.0, camZ);
+		camera_target = new_vec3(0.0, 0.0, 0.0);
+		camera_direction = vec3_normalize(vec3_sub(camera_pos, camera_target));
+		up = new_vec3(0.0, 1.0, 0.0);
+		camera_right = vec3_normalize(vec3_cross(up, camera_direction));
+		camera_up = vec3_cross(camera_direction, camera_right);
+		tmp1 = new_mat4();
+		tmp1->elts[0] = camera_right->elts[0];
+		tmp1->elts[1] = camera_right->elts[1];
+		tmp1->elts[2] = camera_right->elts[2];
+		tmp1->elts[4] = camera_up->elts[0];
+		tmp1->elts[5] = camera_up->elts[1];
+		tmp1->elts[6] = camera_up->elts[2];
+		tmp1->elts[8] = camera_direction->elts[0];
+		tmp1->elts[9] = camera_direction->elts[1];
+		tmp1->elts[10] = camera_direction->elts[2];
+
+		tmp2 = new_mat4();
+		tmp2->elts[3] = -(camera_pos->elts[0]);
+		tmp2->elts[7] = -(camera_pos->elts[1]);
+		tmp2->elts[11] = -(camera_pos->elts[2]);
+		view = mat_mult(tmp1, tmp2);
 		//model = rotate(new_vec3(0.0, deg_to_rad((GLfloat)glfwGetTime() * 25.0f), deg_to_rad((GLfloat)glfwGetTime() * 50.0f)));
-		view = translate(new_vec3(0.0, 0.0, -3.0 + (mixVal * 4)));
-		projection = perspective(0.0, 900.0 / 1200.0, 0.1, 100.0);
+		//view = translate(new_vec3(0.0, 0.0, -3.0 + (mixVal * 4)));
+		projection = perspective(200.0, 800.0 / 1000.0, 0.1, 100.0);
 
 		GLuint	loc2 = glGetUniformLocation(program->program, "view");
 		glUniformMatrix4fv(loc2, 1, GL_TRUE, view->elts);
@@ -163,7 +197,7 @@ int		main(void)
 		while (i < nb_cubes)
 		{
 			model = translate(cubePositions[i]);
-			rot = rotate(new_vec3(0.0, i * 5.0, i % 3 == 0 ? i * glfwGetTime() : i * 20.0));
+			rot = rotate(new_vec3(0.0, i * 5.0, i % 3 == 0 ? (i + 0.0) * glfwGetTime() : i * 20.0));
 			model = mat_mult(model, rot);
 			GLuint	loc = glGetUniformLocation(program->program, "model");
 			glUniformMatrix4fv(loc, 1, GL_TRUE, model->elts);

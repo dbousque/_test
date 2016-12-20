@@ -98,6 +98,44 @@ t_vec	*new_vec4(float elt1, float elt2, float elt3, float elt4)
 	return (vec);
 }
 
+t_vec	*vec3_normalize(t_vec *vec)
+{
+	t_vec	*res;
+	float	total;
+
+	total = 0;
+	total += powf(vec->elts[0], 2.0);
+	total += powf(vec->elts[1], 2.0);
+	total += powf(vec->elts[2], 2.0);
+	total = sqrt(total);
+	res = new_vec3(vec->elts[0] / total, vec->elts[1] / total,
+														vec->elts[2] / total);
+	return (res);
+}
+
+t_vec	*vec3_sub(t_vec *vec1, t_vec *vec2)
+{
+	t_vec	*res;
+
+	res = new_vec3(0.0, 0.0, 0.0);
+	res->elts[0] = vec1->elts[0] - vec2->elts[0];
+	res->elts[1] = vec1->elts[1] - vec2->elts[1];
+	res->elts[2] = vec1->elts[2] - vec2->elts[2];
+	return (res);
+}
+
+t_vec	*vec3_cross(t_vec *vec1, t_vec *vec2)
+{
+	float	one;
+	float	two;
+	float	three;
+
+	one = (vec1->elts[1] * vec2->elts[2]) - (vec1->elts[2] * vec2->elts[1]);
+	two = (vec1->elts[2] * vec2->elts[0]) - (vec1->elts[0] * vec2->elts[2]);
+	three = (vec1->elts[0] * vec2->elts[1]) - (vec1->elts[1] * vec2->elts[0]);
+	return (new_vec3(one, two, three));
+}
+
 /*void	translate(t_mat *mat, t_vec *vec)
 {
 	int		i;
