@@ -47,6 +47,23 @@ typedef struct	s_window
 	GLFWwindow	*win;
 }				t_window;
 
+typedef struct	s_camera
+{
+	float		x;
+	float		y;
+	float		z;
+	float		front_x;
+	float		front_y;
+	float		front_z;
+	float		up_x;
+	float		up_y;
+	float		up_z;
+	float		speed;
+	float		fov;
+}				t_camera;
+
+t_camera			g_cam;
+
 size_t				ft_strlen(char *str);
 void				ft_putstr(char *str);
 char				*ft_itoa(int n);

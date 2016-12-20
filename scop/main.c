@@ -84,7 +84,12 @@ glUseProgram(program->program);
 glUniform1f(loc, alpha);
 */
 
-float	mixVal = 0.2;
+void	front_up_cross(float *x, float *y, float *z)
+{
+	*x = (g_cam.front_y * g_cam.up_z) - (g_cam.front_z * g_cam.up_y);
+	*y = (g_cam.front_z * g_cam.up_x) - (g_cam.front_x * g_cam.up_z);
+	*z = (g_cam.front_x * g_cam.up_y) - (g_cam.front_y * g_cam.up_x);
+}
 
 void    key_callback(GLFWwindow *window, int key, int scancode, int action, int mode)
 {
@@ -92,21 +97,94 @@ void    key_callback(GLFWwindow *window, int key, int scancode, int action, int 
 	(void)scancode;
 	(void)action;
 	(void)mode;
+	int		norm;
+	float	tmp_x;
+	float	tmp_y;
+	float	tmp_z;
+
 	printf("key : %d, action : %d\n", key, action);
-	if (key == GLFW_KEY_UP && (action == GLFW_PRESS || action == GLFW_REPEAT))
+	//if (key == GLFW_KEY_UP && (action == GLFW_PRESS || action == GLFW_REPEAT))
+
+	if (key == GLFW_KEY_W)
 	{
-		mixVal += 0.05;
-		if (mixVal > 1.0)
-			mixVal = 1.0;
+		g_cam.x += g_cam.speed * g_cam.front_x;
+		g_cam.y += g_cam.speed * g_cam.front_y;
+		g_cam.z += g_cam.speed * g_cam.front_z;
 	}
-	else if (key == GLFW_KEY_DOWN && (action == GLFW_PRESS || action == GLFW_REPEAT))
+	if (key == GLFW_KEY_S)
 	{
-		mixVal -= 0.05;
-		if (mixVal < 0.0)
-			mixVal = 0.0;
+		g_cam.x -= g_cam.speed * g_cam.front_x;
+		g_cam.y -= g_cam.speed * g_cam.front_y;
+		g_cam.z -= g_cam.speed * g_cam.front_z;
 	}
-	else if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
+	if (key == GLFW_KEY_A)
+	{
+		front_up_cross(&tmp_x, &tmp_y, &tmp_z);
+		norm = get_norm(tmp_x, tmp_y, tmp_z);
+		g_cam.x -= tmp_x / norm * g_cam.speed;
+		g_cam.y -= tmp_y / norm * g_cam.speed;
+		g_cam.z -= tmp_z / norm * g_cam.speed;
+	}
+	if (key == GLFW_KEY_D)
+	{
+		front_up_cross(&tmp_x, &tmp_y, &tmp_z);
+		norm = get_norm(tmp_x, tmp_y, tmp_z);
+		g_cam.x += tmp_x / norm * g_cam.speed;
+		g_cam.y += tmp_y / norm * g_cam.speed;
+		g_cam.z += tmp_z / norm * g_cam.speed;
+	}
+	if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
 		glfwSetWindowShouldClose(window, GL_TRUE);
+}
+
+void	init_camera(void)
+{
+	g_cam.x = 0.0;
+	g_cam.y = 0.0;
+	g_cam.z = 3.0;
+	g_cam.front_x = 0.0;
+	g_cam.front_y = 0.0;
+	g_cam.front_z = -1.0;
+	g_cam.up_x = 0.0;
+	g_cam.up_y = 1.0;
+	g_cam.up_z = 0.0;
+	g_cam.speed = 0.05;
+	g_cam.fov = 200.0;
+}
+
+t_mat	*build_view(void)
+{
+	t_vec	*camera_pos;
+	t_vec	*camera_target;
+	t_vec	*camera_direction;
+	t_vec	*up;
+	t_vec	*camera_right;
+	t_vec	*camera_up;
+	t_mat	*tmp1;
+	t_mat	*tmp2;
+
+	camera_pos = new_vec3(g_cam.x, g_cam.y, g_cam.z);
+	camera_target = new_vec3(g_cam.x + g_cam.front_x, g_cam.y + g_cam.front_y,
+														g_cam.z + g_cam.front_z);
+	camera_direction = vec3_normalize(vec3_sub(camera_pos, camera_target));
+	up = new_vec3(g_cam.up_x, g_cam.up_y, g_cam.up_z);
+	camera_right = vec3_normalize(vec3_cross(up, camera_direction));
+	camera_up = vec3_cross(camera_direction, camera_right);
+	tmp1 = new_mat4();
+	tmp1->elts[0] = camera_right->elts[0];
+	tmp1->elts[1] = camera_right->elts[1];
+	tmp1->elts[2] = camera_right->elts[2];
+	tmp1->elts[4] = camera_up->elts[0];
+	tmp1->elts[5] = camera_up->elts[1];
+	tmp1->elts[6] = camera_up->elts[2];
+	tmp1->elts[8] = camera_direction->elts[0];
+	tmp1->elts[9] = camera_direction->elts[1];
+	tmp1->elts[10] = camera_direction->elts[2];
+	tmp2 = new_mat4();
+	tmp2->elts[3] = -(camera_pos->elts[0]);
+	tmp2->elts[7] = -(camera_pos->elts[1]);
+	tmp2->elts[11] = -(camera_pos->elts[2]);
+	return (mat_mult(tmp1, tmp2));
 }
 
 int		main(void)
@@ -117,6 +195,7 @@ int		main(void)
 	int					i;
 
 	setup_cube_positions();
+	init_camera();
 	window = setup_window(1000, 800, "My window!");
 	if (!window)
 		return (-1);
@@ -142,50 +221,17 @@ int		main(void)
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		glUseProgram(program->program);
-		glUniform1f(glGetUniformLocation(program->program, "mixVal"), mixVal);
+		//glUniform1f(glGetUniformLocation(program->program, "mixVal"), mixVal);
 
 		t_mat	*model;
 		t_mat	*view;
 		t_mat	*projection;
 		t_mat	*rot;
-		t_vec	*camera_pos;
-		t_vec	*camera_target;
-		t_vec	*camera_direction;
-		t_vec	*up;
-		t_vec	*camera_right;
-		t_vec	*camera_up;
-		t_mat	*tmp1;
-		t_mat	*tmp2;
 
-		GLfloat radius = 10.0f;
-		GLfloat camX = sin(glfwGetTime()) * radius;
-		GLfloat camZ = cos(glfwGetTime()) * radius;
-
-		camera_pos = new_vec3(camX, 0.0, camZ);
-		camera_target = new_vec3(0.0, 0.0, 0.0);
-		camera_direction = vec3_normalize(vec3_sub(camera_pos, camera_target));
-		up = new_vec3(0.0, 1.0, 0.0);
-		camera_right = vec3_normalize(vec3_cross(up, camera_direction));
-		camera_up = vec3_cross(camera_direction, camera_right);
-		tmp1 = new_mat4();
-		tmp1->elts[0] = camera_right->elts[0];
-		tmp1->elts[1] = camera_right->elts[1];
-		tmp1->elts[2] = camera_right->elts[2];
-		tmp1->elts[4] = camera_up->elts[0];
-		tmp1->elts[5] = camera_up->elts[1];
-		tmp1->elts[6] = camera_up->elts[2];
-		tmp1->elts[8] = camera_direction->elts[0];
-		tmp1->elts[9] = camera_direction->elts[1];
-		tmp1->elts[10] = camera_direction->elts[2];
-
-		tmp2 = new_mat4();
-		tmp2->elts[3] = -(camera_pos->elts[0]);
-		tmp2->elts[7] = -(camera_pos->elts[1]);
-		tmp2->elts[11] = -(camera_pos->elts[2]);
-		view = mat_mult(tmp1, tmp2);
 		//model = rotate(new_vec3(0.0, deg_to_rad((GLfloat)glfwGetTime() * 25.0f), deg_to_rad((GLfloat)glfwGetTime() * 50.0f)));
 		//view = translate(new_vec3(0.0, 0.0, -3.0 + (mixVal * 4)));
-		projection = perspective(200.0, 800.0 / 1000.0, 0.1, 100.0);
+		view = build_view();
+		projection = perspective(g_cam.fov, 800.0 / 1000.0, 0.1, 100.0);
 
 		GLuint	loc2 = glGetUniformLocation(program->program, "view");
 		glUniformMatrix4fv(loc2, 1, GL_TRUE, view->elts);

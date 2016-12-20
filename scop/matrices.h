@@ -25,6 +25,7 @@ t_vec			*new_vec2(float elt1, float elt2);
 t_vec			*new_vec3(float elt1, float elt2, float elt3);
 t_vec			*new_vec4(float elt1, float elt2, float elt3, float elt4);
 t_vec			*vec3_normalize(t_vec *vec);
+float			get_norm(float x, float y, float z);
 t_vec			*vec3_sub(t_vec *vec1, t_vec *vec2);
 t_vec			*vec3_cross(t_vec *vec1, t_vec *vec2);
 t_mat			*mat_mult(t_mat *mat1, t_mat *mat2);

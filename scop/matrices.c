@@ -103,7 +103,7 @@ t_vec	*vec3_normalize(t_vec *vec)
 	t_vec	*res;
 	float	total;
 
-	total = 0;
+	total = 0.0;
 	total += powf(vec->elts[0], 2.0);
 	total += powf(vec->elts[1], 2.0);
 	total += powf(vec->elts[2], 2.0);
@@ -111,6 +111,17 @@ t_vec	*vec3_normalize(t_vec *vec)
 	res = new_vec3(vec->elts[0] / total, vec->elts[1] / total,
 														vec->elts[2] / total);
 	return (res);
+}
+
+float	get_norm(float x, float y, float z)
+{
+	float	total;
+
+	total = 0.0;
+	total += powf(x, 2.0);
+	total += powf(y, 2.0);
+	total += powf(z, 2.0);
+	return (sqrt(total));
 }
 
 t_vec	*vec3_sub(t_vec *vec1, t_vec *vec2)
