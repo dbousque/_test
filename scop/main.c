@@ -52,6 +52,11 @@ int		nb_vertices = 36;
 t_vec *cubePositions[10];
 int		nb_cubes = 10;
 
+char	keys[1024];
+
+int		win_width = 1300;
+int		win_height = 1000;
+
 void	setup_cube_positions()
 {
 	cubePositions[0] = new_vec3( 0.0f,  0.0f,  0.0f);
@@ -64,6 +69,18 @@ void	setup_cube_positions()
 	cubePositions[7] = new_vec3( 1.5f,  2.0f, -2.5f);
 	cubePositions[8] = new_vec3( 1.5f,  0.2f, -1.5f);
 	cubePositions[9] = new_vec3(-1.3f,  1.0f, -1.5f);
+}
+
+void	setup_keys()
+{
+	int		i;
+
+	i = 0;
+	while (i < 1024)
+	{
+		keys[i] = 0;
+		i++;
+	}
 }
 
 /*GLuint indices[] = {  // Note that we start from 0!
@@ -97,42 +114,10 @@ void    key_callback(GLFWwindow *window, int key, int scancode, int action, int 
 	(void)scancode;
 	(void)action;
 	(void)mode;
-	int		norm;
-	float	tmp_x;
-	float	tmp_y;
-	float	tmp_z;
-
-	printf("key : %d, action : %d\n", key, action);
-	//if (key == GLFW_KEY_UP && (action == GLFW_PRESS || action == GLFW_REPEAT))
-
-	if (key == GLFW_KEY_W)
-	{
-		g_cam.x += g_cam.speed * g_cam.front_x;
-		g_cam.y += g_cam.speed * g_cam.front_y;
-		g_cam.z += g_cam.speed * g_cam.front_z;
-	}
-	if (key == GLFW_KEY_S)
-	{
-		g_cam.x -= g_cam.speed * g_cam.front_x;
-		g_cam.y -= g_cam.speed * g_cam.front_y;
-		g_cam.z -= g_cam.speed * g_cam.front_z;
-	}
-	if (key == GLFW_KEY_A)
-	{
-		front_up_cross(&tmp_x, &tmp_y, &tmp_z);
-		norm = get_norm(tmp_x, tmp_y, tmp_z);
-		g_cam.x -= tmp_x / norm * g_cam.speed;
-		g_cam.y -= tmp_y / norm * g_cam.speed;
-		g_cam.z -= tmp_z / norm * g_cam.speed;
-	}
-	if (key == GLFW_KEY_D)
-	{
-		front_up_cross(&tmp_x, &tmp_y, &tmp_z);
-		norm = get_norm(tmp_x, tmp_y, tmp_z);
-		g_cam.x += tmp_x / norm * g_cam.speed;
-		g_cam.y += tmp_y / norm * g_cam.speed;
-		g_cam.z += tmp_z / norm * g_cam.speed;
-	}
+	if (action == GLFW_PRESS)
+		keys[key] = 1;
+	if (action == GLFW_RELEASE)
+		keys[key] = 0;
 	if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
 		glfwSetWindowShouldClose(window, GL_TRUE);
 }
@@ -148,8 +133,95 @@ void	init_camera(void)
 	g_cam.up_x = 0.0;
 	g_cam.up_y = 1.0;
 	g_cam.up_z = 0.0;
-	g_cam.speed = 0.05;
-	g_cam.fov = 200.0;
+	g_cam.speed = 4.0;
+	g_cam.fov = -10.0;
+	g_cam.pitch = 0.0;
+	g_cam.yaw = -90.0;
+	g_cam.roll = 0.0;
+}
+
+void	update_camera()
+{
+	float	norm;
+
+	if (g_cam.fov > 50.0)
+		g_cam.fov = 50.0;
+	if (g_cam.fov < -150.0)
+		g_cam.fov = -150.0;
+	if (g_cam.pitch > 89.0)
+		g_cam.pitch = 89.0;
+	if (g_cam.pitch < -89.0)
+		g_cam.pitch = -89.0;
+	if (g_cam.roll > 89.0)
+		g_cam.roll = 89.0;
+	if (g_cam.roll < -89.0)
+		g_cam.roll = -89.0;
+	g_cam.front_x = cosf(deg_to_rad(g_cam.yaw)) * cos(deg_to_rad(g_cam.pitch));
+	g_cam.front_y = sinf(deg_to_rad(g_cam.pitch));
+	g_cam.front_z = sinf(deg_to_rad(g_cam.yaw)) * cos(deg_to_rad(g_cam.pitch));
+	norm = get_norm(g_cam.front_x, g_cam.front_y, g_cam.front_z);
+	g_cam.front_x /= norm;
+	g_cam.front_y /= norm;
+	g_cam.front_z /= norm;
+
+	g_cam.up_x = sinf(deg_to_rad(g_cam.roll));
+	g_cam.up_y = cosf(deg_to_rad(g_cam.roll));
+	norm = get_norm(g_cam.up_x, g_cam.up_y, g_cam.up_z);
+	g_cam.up_x /= norm;
+	g_cam.up_y /= norm;
+}
+
+void	do_movement(GLfloat delta_time)
+{
+	float	norm;
+	float	tmp_x;
+	float	tmp_y;
+	float	tmp_z;
+
+	if (keys[GLFW_KEY_W])
+	{
+		g_cam.x += g_cam.speed * g_cam.front_x * delta_time;
+		g_cam.y += g_cam.speed * g_cam.front_y * delta_time;
+		g_cam.z += g_cam.speed * g_cam.front_z * delta_time;
+	}
+	if (keys[GLFW_KEY_S])
+	{
+		g_cam.x -= g_cam.speed * g_cam.front_x * delta_time;
+		g_cam.y -= g_cam.speed * g_cam.front_y * delta_time;
+		g_cam.z -= g_cam.speed * g_cam.front_z * delta_time;
+	}
+	if (keys[GLFW_KEY_A])
+	{
+		front_up_cross(&tmp_x, &tmp_y, &tmp_z);
+		norm = get_norm(tmp_x, tmp_y, tmp_z);
+		g_cam.x -= tmp_x / norm * g_cam.speed * delta_time;
+		g_cam.y -= tmp_y / norm * g_cam.speed * delta_time;
+		g_cam.z -= tmp_z / norm * g_cam.speed * delta_time;
+	}
+	if (keys[GLFW_KEY_D])
+	{
+		front_up_cross(&tmp_x, &tmp_y, &tmp_z);
+		norm = get_norm(tmp_x, tmp_y, tmp_z);
+		g_cam.x += tmp_x / norm * g_cam.speed * delta_time;
+		g_cam.y += tmp_y / norm * g_cam.speed * delta_time;
+		g_cam.z += tmp_z / norm * g_cam.speed * delta_time;
+	}
+	if (keys[GLFW_KEY_Z])
+		g_cam.fov += 80.0 * g_cam.speed * delta_time;
+	if (keys[GLFW_KEY_X])
+		g_cam.fov -= 80.0 * g_cam.speed * delta_time;
+	if (keys[GLFW_KEY_C])
+		g_cam.roll -= 20 * g_cam.speed * delta_time;
+	if (keys[GLFW_KEY_V])
+		g_cam.roll += 20 * g_cam.speed * delta_time;
+	if (keys[GLFW_KEY_UP])
+		g_cam.pitch += 20 * g_cam.speed * delta_time;
+	if (keys[GLFW_KEY_DOWN])
+		g_cam.pitch -= 20 * g_cam.speed * delta_time;
+	if (keys[GLFW_KEY_RIGHT])
+		g_cam.yaw += 20 * g_cam.speed * delta_time;
+	if (keys[GLFW_KEY_LEFT])
+		g_cam.yaw -= 20 * g_cam.speed * delta_time;
 }
 
 t_mat	*build_view(void)
@@ -193,10 +265,15 @@ int		main(void)
 	t_shader_program	*program;
 	t_globj				*obj;
 	int					i;
+	GLfloat				current_frame;
+	GLfloat				last_frame;
+	GLfloat				delta_time;
 
+	current_frame = 0.0;
+	setup_keys();
 	setup_cube_positions();
 	init_camera();
-	window = setup_window(1000, 800, "My window!");
+	window = setup_window(win_width, win_height, "My window!");
 	if (!window)
 		return (-1);
 	glEnable(GL_DEPTH_TEST);
@@ -209,11 +286,15 @@ int		main(void)
 	if (!obj)
 		return (-1);
 	//attach_indices_to_obj(obj, indices, nb_indices);
-	load_texture_to_obj(obj, "container.jpg");
+	load_texture_to_obj(obj, "wooden.jpg");
 	load_texture_to_obj(obj, "awesomeface.png");
 	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+	g_cam.front_x += cosf(deg_to_rad(4950.0));
 	while (!glfwWindowShouldClose(window->win))
 	{
+		last_frame = current_frame;
+		current_frame = glfwGetTime();
+		delta_time = current_frame - last_frame;
 		glfwPollEvents();
 
 		glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
@@ -221,6 +302,10 @@ int		main(void)
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		glUseProgram(program->program);
+
+		do_movement(delta_time);
+		update_camera();
+
 		//glUniform1f(glGetUniformLocation(program->program, "mixVal"), mixVal);
 
 		t_mat	*model;
@@ -231,7 +316,7 @@ int		main(void)
 		//model = rotate(new_vec3(0.0, deg_to_rad((GLfloat)glfwGetTime() * 25.0f), deg_to_rad((GLfloat)glfwGetTime() * 50.0f)));
 		//view = translate(new_vec3(0.0, 0.0, -3.0 + (mixVal * 4)));
 		view = build_view();
-		projection = perspective(g_cam.fov, 800.0 / 1000.0, 0.1, 100.0);
+		projection = perspective(deg_to_rad(g_cam.fov), ((float)win_height) / win_width, 0.1, 100.0);
 
 		GLuint	loc2 = glGetUniformLocation(program->program, "view");
 		glUniformMatrix4fv(loc2, 1, GL_TRUE, view->elts);

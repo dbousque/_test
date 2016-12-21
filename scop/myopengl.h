@@ -60,6 +60,9 @@ typedef struct	s_camera
 	float		up_z;
 	float		speed;
 	float		fov;
+	float		pitch;
+	float		yaw;
+	float		roll;
 }				t_camera;
 
 t_camera			g_cam;
