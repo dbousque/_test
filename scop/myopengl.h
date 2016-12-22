@@ -65,8 +65,27 @@ typedef struct	s_camera
 	float		roll;
 }				t_camera;
 
+typedef struct	s_list
+{
+	void		*elts;
+	size_t		size;
+	size_t		len;
+	size_t		elt_size;
+}				t_list;
+
+typedef struct	s_objfile
+{
+	char		*objname;
+	t_list		*vertices;
+	t_list		*texture;
+	t_list		*normals;
+	t_list		*faces;
+}				t_objfile;
+
 t_camera			g_cam;
 
+t_list				*new_list(size_t elt_size);
+void				add_to_list(t_list *lst, void *elt);
 size_t				ft_strlen(char *str);
 void				ft_putstr(char *str);
 char				*ft_itoa(int n);
@@ -84,5 +103,6 @@ t_globj				*new_object(GLfloat *vertices, int attribs_struct[],
 void				load_texture_to_obj(t_globj *obj, char *img_path);
 void				attach_indices_to_obj(t_globj *obj, GLuint indices[],
 															int nb_indices);
+t_objfile			*parse_objfile(char *path);
 
 #endif

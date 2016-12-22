@@ -289,7 +289,6 @@ int		main(void)
 	load_texture_to_obj(obj, "wooden.jpg");
 	load_texture_to_obj(obj, "awesomeface.png");
 	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-	g_cam.front_x += cosf(deg_to_rad(4950.0));
 	while (!glfwWindowShouldClose(window->win))
 	{
 		last_frame = current_frame;
