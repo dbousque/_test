@@ -139,7 +139,7 @@ int		main(void)
 		return (-1);
 	//glEnable(GL_BLEND);
 	//glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-	t_objfile	*objfile = parse_objfile("ressources/blackhawk/uh60.obj");
+	t_objfile	*objfile = parse_objfile("ressources/bunny.obj");
 	if (!objfile)
 	{
 		printf("could not parse .obj\n");
