@@ -38,7 +38,6 @@ char	valid_float(char *line, char **end)
 
 char	valid_vertex_line(char *line, size_t line_nb)
 {
-	line += 2;
 	if (!(valid_float(line, &line)))
 		return (return_vertex_error("invalid float on line", line, line_nb));
 	if (*line != ' ')
@@ -60,9 +59,11 @@ char	add_vertex(t_objfile *objfile, char *line, size_t line_nb)
 {
 	float	tmp;
 
+	line += 2;
+	while (*line == ' ')
+		line++;
 	if (!(valid_vertex_line(line, line_nb)))
 		return (0);
-	line += 2;
 	tmp = strtof(line, &line);
 	if (tmp == HUGE_VALF || tmp == -HUGE_VALF)
 		return (return_vertex_error("float overflow", line, line_nb));

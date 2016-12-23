@@ -37,6 +37,7 @@ char	valid_face_point(char *line, char **end, size_t line_nb)
 		}
 		if (*line != '/' || i >= 2)
 			return (return_face_error("separator is not /", line, line_nb));
+		line++;
 		i++;
 	}
 	return (return_face_error("invalid int", line, line_nb));
@@ -44,7 +45,6 @@ char	valid_face_point(char *line, char **end, size_t line_nb)
 
 char	valid_face_line(char *line, size_t line_nb)
 {
-	line += 2;
 	while (valid_face_point(line, &line, line_nb))
 	{
 		if (*line == '\n' || !(*line))
@@ -67,7 +67,7 @@ char	add_face_point(t_objfile *objfile, char *line, char **end,
 		tmp = 0;
 	else
 	{
-		tmp = strtol(line, &line, 10);
+		tmp = strtol(line + 1, &line, 10);
 		if (tmp <= 0)
 			return (return_face_error("an index is <= 0", line, line_nb));
 	}
@@ -76,7 +76,7 @@ char	add_face_point(t_objfile *objfile, char *line, char **end,
 		tmp = 0;
 	else
 	{
-		tmp = strtol(line, &line, 10);
+		tmp = strtol(line + 1, &line, 10);
 		if (tmp <= 0)
 			return (return_face_error("an index is <= 0", line, line_nb));
 	}
@@ -90,9 +90,11 @@ char	add_face(t_objfile *objfile, char *line, size_t line_nb)
 	int		zero;
 
 	zero = 0;
+	line += 2;
+	while (*line == ' ')
+		line++;
 	if (!(valid_face_line(line, line_nb)))
 		return (0);
-	line += 2;
 	while (1)
 	{
 		if (!(add_face_point(objfile, line, &line, line_nb)))
