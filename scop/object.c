@@ -117,8 +117,8 @@ void	init_vertex_attributes(int attribs_struct[], int nb_attribs,
 	}
 }
 
-t_globj		*new_object(GLfloat *vertices, int attribs_struct[],
-											int nb_attribs, int nb_vertices)
+t_globj		*new_object(GLfloat *vertices, int nb_vertices,
+										int attribs_struct[], int nb_attribs)
 {
 	t_globj	*obj;
 	size_t	tot_data_len;

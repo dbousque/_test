@@ -82,7 +82,17 @@ typedef struct	s_objfile
 	t_list		*faces;
 }				t_objfile;
 
+typedef struct	s_config
+{
+	char		lines;
+	float		obj_scale;
+	int			win_width;
+	int			win_height;
+}				t_config;
+
 t_camera			g_cam;
+char				g_keys[1024];
+t_config			g_conf;
 
 t_list				*new_list(size_t elt_size);
 void				add_to_list(t_list *lst, void *elt);
@@ -98,11 +108,21 @@ t_shader_program	*new_shader_program(char *vertex_shader_path,
 t_window			*setup_window(int width, int height, char *title_name);
 void				draw_object(t_shader_program *shader_program,
 																t_globj *obj);
-t_globj				*new_object(GLfloat *vertices, int attribs_struct[],
-											int nb_attribs, int nb_vertices);
+t_globj				*new_object(GLfloat *vertices, int nb_vertices,
+										int attribs_struct[], int nb_attribs);
 void				load_texture_to_obj(t_globj *obj, char *img_path);
 void				attach_indices_to_obj(t_globj *obj, GLuint indices[],
 															int nb_indices);
 t_objfile			*parse_objfile(char *path);
+char				add_vertex(t_objfile *objfile, char *line, size_t line_nb);
+char				add_face(t_objfile *objfile, char *line, size_t line_nb);
+void				update_camera(void);
+void				init_camera(void);
+void				do_movement(GLfloat delta_time);
+void    			key_callback(GLFWwindow *window, int key, int scancode,
+														int action, int mode);
+void				setup_keys(void);
+char				objfile_to_vertices(t_objfile *objfile, GLfloat **vertices,
+															int *nb_vertices);
 
 #endif

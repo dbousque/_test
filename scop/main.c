@@ -2,226 +2,12 @@
 
 #include "myopengl.h"
 
-GLfloat vertices[] = {
-    -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
-     0.5f, -0.5f, -0.5f,  1.0f, 0.0f,
-     0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-     0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-    -0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
-    -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
-
-    -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-     0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
-     0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
-     0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
-    -0.5f,  0.5f,  0.5f,  0.0f, 1.0f,
-    -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-
-    -0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-    -0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-    -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-    -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-    -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-    -0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-
-     0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-     0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-     0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-     0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-     0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-     0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-
-    -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-     0.5f, -0.5f, -0.5f,  1.0f, 1.0f,
-     0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
-     0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
-    -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-    -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-
-    -0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
-     0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-     0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-     0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-    -0.5f,  0.5f,  0.5f,  0.0f, 0.0f,
-    -0.5f,  0.5f, -0.5f,  0.0f, 1.0f
-};
-int		attribs_struct[] = {3, 2};
-int		nb_attribs = 2;
-int		nb_vertices = 36;
-
-t_vec *cubePositions[10];
-int		nb_cubes = 10;
-
-char	keys[1024];
-
-int		win_width = 1300;
-int		win_height = 1000;
-
-void	setup_cube_positions()
+void	setup_conf()
 {
-	cubePositions[0] = new_vec3( 0.0f,  0.0f,  0.0f);
-	cubePositions[1] = new_vec3( 2.0f,  5.0f, -15.0f);
-	cubePositions[2] = new_vec3(-1.5f, -2.2f, -2.5f);
-	cubePositions[3] = new_vec3(-3.8f, -2.0f, -12.3f);
-	cubePositions[4] = new_vec3( 2.4f, -0.4f, -3.5f);
-	cubePositions[5] = new_vec3(-1.7f,  3.0f, -7.5f);
-	cubePositions[6] = new_vec3( 1.3f, -2.0f, -2.5f);
-	cubePositions[7] = new_vec3( 1.5f,  2.0f, -2.5f);
-	cubePositions[8] = new_vec3( 1.5f,  0.2f, -1.5f);
-	cubePositions[9] = new_vec3(-1.3f,  1.0f, -1.5f);
-}
-
-void	setup_keys()
-{
-	int		i;
-
-	i = 0;
-	while (i < 1024)
-	{
-		keys[i] = 0;
-		i++;
-	}
-}
-
-/*GLuint indices[] = {  // Note that we start from 0!
-    0, 1, 3,   // First Triangle
-    1, 2, 3,   // Second Triangle
-
-    4, 5, 7,   // First Triangle
-    5, 6, 7,    // Second Triangle
-
-    8, 9, 10,
-    9, 10, 11
-};
-int		nb_indices = 18;*/
-
-/*
-GLint		loc = glGetUniformLocation(program->program, "alpha");
-glUseProgram(program->program);
-glUniform1f(loc, alpha);
-*/
-
-void	front_up_cross(float *x, float *y, float *z)
-{
-	*x = (g_cam.front_y * g_cam.up_z) - (g_cam.front_z * g_cam.up_y);
-	*y = (g_cam.front_z * g_cam.up_x) - (g_cam.front_x * g_cam.up_z);
-	*z = (g_cam.front_x * g_cam.up_y) - (g_cam.front_y * g_cam.up_x);
-}
-
-void    key_callback(GLFWwindow *window, int key, int scancode, int action, int mode)
-{
-	(void)window;
-	(void)scancode;
-	(void)action;
-	(void)mode;
-	if (action == GLFW_PRESS)
-		keys[key] = 1;
-	if (action == GLFW_RELEASE)
-		keys[key] = 0;
-	if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
-		glfwSetWindowShouldClose(window, GL_TRUE);
-}
-
-void	init_camera(void)
-{
-	g_cam.x = 0.0;
-	g_cam.y = 0.0;
-	g_cam.z = 3.0;
-	g_cam.front_x = 0.0;
-	g_cam.front_y = 0.0;
-	g_cam.front_z = -1.0;
-	g_cam.up_x = 0.0;
-	g_cam.up_y = 1.0;
-	g_cam.up_z = 0.0;
-	g_cam.speed = 4.0;
-	g_cam.fov = -10.0;
-	g_cam.pitch = 0.0;
-	g_cam.yaw = -90.0;
-	g_cam.roll = 0.0;
-}
-
-void	update_camera()
-{
-	float	norm;
-
-	if (g_cam.fov > 50.0)
-		g_cam.fov = 50.0;
-	if (g_cam.fov < -150.0)
-		g_cam.fov = -150.0;
-	if (g_cam.pitch > 89.0)
-		g_cam.pitch = 89.0;
-	if (g_cam.pitch < -89.0)
-		g_cam.pitch = -89.0;
-	if (g_cam.roll > 89.0)
-		g_cam.roll = 89.0;
-	if (g_cam.roll < -89.0)
-		g_cam.roll = -89.0;
-	g_cam.front_x = cosf(deg_to_rad(g_cam.yaw)) * cos(deg_to_rad(g_cam.pitch));
-	g_cam.front_y = sinf(deg_to_rad(g_cam.pitch));
-	g_cam.front_z = sinf(deg_to_rad(g_cam.yaw)) * cos(deg_to_rad(g_cam.pitch));
-	norm = get_norm(g_cam.front_x, g_cam.front_y, g_cam.front_z);
-	g_cam.front_x /= norm;
-	g_cam.front_y /= norm;
-	g_cam.front_z /= norm;
-
-	g_cam.up_x = sinf(deg_to_rad(g_cam.roll));
-	g_cam.up_y = cosf(deg_to_rad(g_cam.roll));
-	norm = get_norm(g_cam.up_x, g_cam.up_y, g_cam.up_z);
-	g_cam.up_x /= norm;
-	g_cam.up_y /= norm;
-}
-
-void	do_movement(GLfloat delta_time)
-{
-	float	norm;
-	float	tmp_x;
-	float	tmp_y;
-	float	tmp_z;
-
-	if (keys[GLFW_KEY_W])
-	{
-		g_cam.x += g_cam.speed * g_cam.front_x * delta_time;
-		g_cam.y += g_cam.speed * g_cam.front_y * delta_time;
-		g_cam.z += g_cam.speed * g_cam.front_z * delta_time;
-	}
-	if (keys[GLFW_KEY_S])
-	{
-		g_cam.x -= g_cam.speed * g_cam.front_x * delta_time;
-		g_cam.y -= g_cam.speed * g_cam.front_y * delta_time;
-		g_cam.z -= g_cam.speed * g_cam.front_z * delta_time;
-	}
-	if (keys[GLFW_KEY_A])
-	{
-		front_up_cross(&tmp_x, &tmp_y, &tmp_z);
-		norm = get_norm(tmp_x, tmp_y, tmp_z);
-		g_cam.x -= tmp_x / norm * g_cam.speed * delta_time;
-		g_cam.y -= tmp_y / norm * g_cam.speed * delta_time;
-		g_cam.z -= tmp_z / norm * g_cam.speed * delta_time;
-	}
-	if (keys[GLFW_KEY_D])
-	{
-		front_up_cross(&tmp_x, &tmp_y, &tmp_z);
-		norm = get_norm(tmp_x, tmp_y, tmp_z);
-		g_cam.x += tmp_x / norm * g_cam.speed * delta_time;
-		g_cam.y += tmp_y / norm * g_cam.speed * delta_time;
-		g_cam.z += tmp_z / norm * g_cam.speed * delta_time;
-	}
-	if (keys[GLFW_KEY_Z])
-		g_cam.fov += 80.0 * g_cam.speed * delta_time;
-	if (keys[GLFW_KEY_X])
-		g_cam.fov -= 80.0 * g_cam.speed * delta_time;
-	if (keys[GLFW_KEY_C])
-		g_cam.roll -= 20 * g_cam.speed * delta_time;
-	if (keys[GLFW_KEY_V])
-		g_cam.roll += 20 * g_cam.speed * delta_time;
-	if (keys[GLFW_KEY_UP])
-		g_cam.pitch += 20 * g_cam.speed * delta_time;
-	if (keys[GLFW_KEY_DOWN])
-		g_cam.pitch -= 20 * g_cam.speed * delta_time;
-	if (keys[GLFW_KEY_RIGHT])
-		g_cam.yaw += 20 * g_cam.speed * delta_time;
-	if (keys[GLFW_KEY_LEFT])
-		g_cam.yaw -= 20 * g_cam.speed * delta_time;
+	g_conf.lines = 0;
+	g_conf.obj_scale = 1.0;
+	g_conf.win_width = 1300;
+	g_conf.win_height = 1000;
 }
 
 t_mat	*build_view(void)
@@ -237,7 +23,7 @@ t_mat	*build_view(void)
 
 	camera_pos = new_vec3(g_cam.x, g_cam.y, g_cam.z);
 	camera_target = new_vec3(g_cam.x + g_cam.front_x, g_cam.y + g_cam.front_y,
-														g_cam.z + g_cam.front_z);
+													g_cam.z + g_cam.front_z);
 	camera_direction = vec3_normalize(vec3_sub(camera_pos, camera_target));
 	up = new_vec3(g_cam.up_x, g_cam.up_y, g_cam.up_z);
 	camera_right = vec3_normalize(vec3_cross(up, camera_direction));
@@ -259,21 +45,92 @@ t_mat	*build_view(void)
 	return (mat_mult(tmp1, tmp2));
 }
 
+float	max(float f1, float f2)
+{
+	return (f1 >= f2 ? f1 : f2);
+}
+
+void	center_vertices(GLfloat *vertices, int nb_vertices,
+														GLfloat x_y_z_mmax[6])
+{
+	int			i;
+	GLfloat		x_diff;
+	GLfloat		y_diff;
+	GLfloat		z_diff;
+
+	x_diff = (x_y_z_mmax[0] + x_y_z_mmax[1]) / 2.0;
+	y_diff = (x_y_z_mmax[2] + x_y_z_mmax[3]) / 2.0;
+	z_diff = (x_y_z_mmax[4] + x_y_z_mmax[5]) / 2.0;
+	i = 0;
+	while (i < nb_vertices)
+	{
+		vertices[i * 8] -= x_diff;
+		vertices[i * 8 + 1] -= y_diff;
+		vertices[i * 8 + 2] -= z_diff;
+		i++;
+	}
+}
+
+void	adjust_scale(GLfloat x_y_z_mmax[6])
+{
+	GLfloat		x_diff;
+	GLfloat		y_diff;
+	GLfloat		z_diff;
+	GLfloat		biggest_diff;
+
+	x_diff = (x_y_z_mmax[0] - x_y_z_mmax[1]);
+	y_diff = (x_y_z_mmax[2] - x_y_z_mmax[3]);
+	z_diff = (x_y_z_mmax[4] - x_y_z_mmax[5]);
+	biggest_diff = max(fabs(x_diff), fabs(y_diff));
+	biggest_diff = max(biggest_diff, fabs(z_diff));
+	printf("diff : %f\n", biggest_diff);
+	g_conf.obj_scale = 3.0 / biggest_diff;
+}
+
+void	adjust_obj(GLfloat *vertices, int nb_vertices)
+{
+	GLfloat		x_y_z_mmax[6];
+	int			i;
+
+	i = 0;
+	while (i < nb_vertices)
+	{
+		if (i == 0 || vertices[i * 8] < x_y_z_mmax[0])
+			x_y_z_mmax[0] = vertices[i * 8];
+		if (i == 0 || vertices[i * 8] > x_y_z_mmax[1])
+			x_y_z_mmax[1] = vertices[i * 8];
+		if (i == 0 || vertices[i * 8 + 1] < x_y_z_mmax[2])
+			x_y_z_mmax[2] = vertices[i * 8 + 1];
+		if (i == 0 || vertices[i * 8 + 1] > x_y_z_mmax[3])
+			x_y_z_mmax[3] = vertices[i * 8 + 1];
+		if (i == 0 || vertices[i * 8 + 2] < x_y_z_mmax[4])
+			x_y_z_mmax[4] = vertices[i * 8 + 2];
+		if (i == 0 || vertices[i * 8 + 2] > x_y_z_mmax[5])
+			x_y_z_mmax[5] = vertices[i * 8 + 2];
+		i++;
+	}
+	center_vertices(vertices, nb_vertices, x_y_z_mmax);
+	adjust_scale(x_y_z_mmax);
+}
+
 int		main(void)
 {
 	t_window			*window;
 	t_shader_program	*program;
 	t_globj				*obj;
-	int					i;
 	GLfloat				current_frame;
 	GLfloat				last_frame;
 	GLfloat				delta_time;
+	int					attribs_struct[] = {3, 2, 3};
+	int					nb_attribs = 3;
+	GLfloat				*vertices;
+	int					nb_vertices;
 
 	current_frame = 0.0;
 	setup_keys();
-	setup_cube_positions();
+	setup_conf();
 	init_camera();
-	window = setup_window(win_width, win_height, "My window!");
+	window = setup_window(g_conf.win_width, g_conf.win_height, "My window!");
 	if (!window)
 		return (-1);
 	glEnable(GL_DEPTH_TEST);
@@ -282,13 +139,24 @@ int		main(void)
 		return (-1);
 	//glEnable(GL_BLEND);
 	//glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-	obj = new_object(vertices, attribs_struct, nb_attribs, nb_vertices);
+	t_objfile	*objfile = parse_objfile("ressources/teapot2.obj");
+	if (!objfile)
+	{
+		printf("could not parse .obj\n");
+		return (-1);
+	}
+	if (!(objfile_to_vertices(objfile, &vertices, &nb_vertices)))
+	{
+		printf("error in .obj\n");
+		return (-1);
+	}
+	adjust_obj(vertices, nb_vertices);
+	obj = new_object(vertices, nb_vertices, attribs_struct, nb_attribs);
 	if (!obj)
 		return (-1);
 	//attach_indices_to_obj(obj, indices, nb_indices);
-	load_texture_to_obj(obj, "wooden.jpg");
-	load_texture_to_obj(obj, "awesomeface.png");
-	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+	//load_texture_to_obj(obj, "wooden.jpg");
+	//load_texture_to_obj(obj, "awesomeface.png");
 	while (!glfwWindowShouldClose(window->win))
 	{
 		last_frame = current_frame;
@@ -297,7 +165,6 @@ int		main(void)
 		glfwPollEvents();
 
 		glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
-		//glClear(GL_COLOR_BUFFER_BIT);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		glUseProgram(program->program);
@@ -305,17 +172,21 @@ int		main(void)
 		do_movement(delta_time);
 		update_camera();
 
-		//glUniform1f(glGetUniformLocation(program->program, "mixVal"), mixVal);
-
 		t_mat	*model;
 		t_mat	*view;
 		t_mat	*projection;
-		t_mat	*rot;
+		t_mat	*scal;
 
-		//model = rotate(new_vec3(0.0, deg_to_rad((GLfloat)glfwGetTime() * 25.0f), deg_to_rad((GLfloat)glfwGetTime() * 50.0f)));
+		scal = scale(new_vec3(g_conf.obj_scale, g_conf.obj_scale, g_conf.obj_scale));
+		model = rotate(new_vec3(0.0, 0.0, deg_to_rad((GLfloat)glfwGetTime() * 15.0f)));
+		model = mat_mult(model, scal);
 		//view = translate(new_vec3(0.0, 0.0, -3.0 + (mixVal * 4)));
+		//model = new_mat4();
 		view = build_view();
-		projection = perspective(deg_to_rad(g_cam.fov), ((float)win_height) / win_width, 0.1, 100.0);
+		projection = perspective(deg_to_rad(g_cam.fov), ((float)g_conf.win_height) / g_conf.win_width, 0.1, 100.0);
+
+		GLuint	loc1 = glGetUniformLocation(program->program, "model");
+		glUniformMatrix4fv(loc1, 1, GL_TRUE, model->elts);
 
 		GLuint	loc2 = glGetUniformLocation(program->program, "view");
 		glUniformMatrix4fv(loc2, 1, GL_TRUE, view->elts);
@@ -323,18 +194,7 @@ int		main(void)
 		GLuint	loc3 = glGetUniformLocation(program->program, "projection");
 		glUniformMatrix4fv(loc3, 1, GL_TRUE, projection->elts);
 
-		i = 0;
-		while (i < nb_cubes)
-		{
-			model = translate(cubePositions[i]);
-			rot = rotate(new_vec3(0.0, i * 5.0, i % 3 == 0 ? (i + 0.0) * glfwGetTime() : i * 20.0));
-			model = mat_mult(model, rot);
-			GLuint	loc = glGetUniformLocation(program->program, "model");
-			glUniformMatrix4fv(loc, 1, GL_TRUE, model->elts);
-
-			draw_object(program, obj);
-			i++;
-		}
+		draw_object(program, obj);
 
 		glfwSwapBuffers(window->win);
 	}

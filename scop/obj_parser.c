@@ -4,6 +4,8 @@
 
 void	setup_objfile(t_objfile **objfile)
 {
+	float	tmp_float;
+
 	if (!(*objfile = (t_objfile*)malloc(sizeof(t_objfile))))
 	{
 		*objfile = NULL;
@@ -14,6 +16,15 @@ void	setup_objfile(t_objfile **objfile)
 	(*objfile)->texture = new_list(sizeof(float));
 	(*objfile)->normals = new_list(sizeof(float));
 	(*objfile)->faces = new_list(sizeof(int));
+	tmp_float = 0.0;
+	add_to_list((*objfile)->vertices, &tmp_float);
+	add_to_list((*objfile)->vertices, &tmp_float);
+	add_to_list((*objfile)->vertices, &tmp_float);
+	add_to_list((*objfile)->texture, &tmp_float);
+	add_to_list((*objfile)->texture, &tmp_float);
+	add_to_list((*objfile)->normals, &tmp_float);
+	add_to_list((*objfile)->normals, &tmp_float);
+	add_to_list((*objfile)->normals, &tmp_float);
 }
 
 char	startswith(char *str, char *begin)
@@ -28,84 +39,12 @@ char	startswith(char *str, char *begin)
 	return (0);
 }
 
-char	valid_float(char *line, char **end)
-{
-	size_t	i;
-	char	seen_point;
-
-	seen_point = 0;
-	if (line[0] == '-' || line[0] == '+')
-		line++;
-	i = 0;
-	while (line[i] && ((line[i] <= '9' && line[i] >= '0') || line[i] == '.'))
-	{
-		if (line[i] == '.')
-		{
-			if (seen_point)
-				return (0);
-			seen_point = 1;
-		}
-		i++;
-	}
-	if (i < 1 || !seen_point || line[i - 1] == '.')
-		return (0);
-	*end = line + i;
-	return (1);
-}
-
-char	valid_vertex_line(char *line)
-{
-	line += 2;
-	if (!(valid_float(line, &line)))
-		return (0);
-	if (*line != ' ')
-		return (0);
-	line += 1;
-	if (!(valid_float(line, &line)))
-		return (0);
-	if (*line != ' ')
-		return (0);
-	line += 1;
-	if (!(valid_float(line, &line)))
-		return (0);
-	if (*line != '\n')
-		return (0);
-	return (1);
-}
-
-char	add_vertex(t_objfile *objfile, char *line)
-{
-	float	tmp;
-
-	if (!(valid_vertex_line(line)))
-		return (0);
-	line += 2;
-	tmp = strtof(line, &line);
-	if (tmp == HUGE_VALF || tmp == -HUGE_VALF)
-		return (0);
-	add_to_list(objfile->vertices, &tmp);
-	line++;
-	tmp = strtof(line, &line);
-	add_to_list(objfile->vertices, &tmp);
-	line++;
-	tmp = strtof(line, &line);
-	add_to_list(objfile->vertices, &tmp);
-	return (1);
-}
-
-char	add_face(t_objfile *objfile, char *line)
-{
-	if (!(valid_face_line(line)))
-		return (0);
-	return (1);
-}
-
-char	interpret_line(t_objfile *objfile, char *line)
+char	interpret_line(t_objfile *objfile, char *line, size_t line_nb)
 {
 	if (startswith(line, "v "))
-		return (add_vertex(objfile, line));
+		return (add_vertex(objfile, line, line_nb));
 	if (startswith(line, "f "))
-		return (add_face(objfile, line));
+		return (add_face(objfile, line, line_nb));
 	return (1);
 }
 
@@ -115,6 +54,7 @@ t_objfile	*parse_objfile(char *path)
 	char		*line;
 	size_t		len;
 	t_objfile	*objfile;
+	size_t		line_nb;
 
 	setup_objfile(&objfile);
 	if (!objfile)
@@ -123,13 +63,18 @@ t_objfile	*parse_objfile(char *path)
 	line = NULL;
 	fp = fopen(path, "r");
 	if (!fp)
+	{
+		printf("file could not be opened\n");
 		return (NULL);
+	}
+	line_nb = 1;
 	while (getline(&line, &len, fp) != -1)
 	{
-		if (!(interpret_line(objfile, line)))
+		if (!(interpret_line(objfile, line, line_nb)))
 			return (NULL);
 		free(line);
 		line = NULL;
+		line_nb++;
 	}
 	fclose(fp);
 	return (objfile);

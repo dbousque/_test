@@ -8,6 +8,13 @@ SOURCES		=	shader_program.c \
 				window.c \
 				ft_itoa.c \
 				matrices.c \
+				events.c \
+				camera.c \
+				list.c \
+				parse_face.c \
+				parse_vertices.c \
+				obj_parser.c \
+				objfile_to_vertices.c \
 				utils.c
 
 OBJECTS	=	$(subst .c,.o,$(SOURCES))
