@@ -10,13 +10,13 @@ char	test_valid_inds(int *faces, size_t ind, t_objfile *objfile)
 		return (0);
 	if (faces[ind + 2] >= (int)objfile->normals->len)
 		return (0);
-	if (faces[ind + 3] <= 0 || faces[ind] >= (int)objfile->vertices->len)
+	if (faces[ind + 3] <= 0 || faces[ind + 3] >= (int)objfile->vertices->len)
 		return (0);
 	if (faces[ind + 4] >= (int)objfile->texture->len)
 		return (0);
 	if (faces[ind + 5] >= (int)objfile->normals->len)
 		return (0);
-	if (faces[ind + 6] <= 0 || faces[ind] >= (int)objfile->vertices->len)
+	if (faces[ind + 6] <= 0 || faces[ind + 6] >= (int)objfile->vertices->len)
 		return (0);
 	if (faces[ind + 7] >= (int)objfile->texture->len)
 		return (0);

@@ -49,28 +49,102 @@ void	front_up_cross(float *x, float *y, float *z)
 	*z = (g_cam.front_x * g_cam.up_y) - (g_cam.front_y * g_cam.up_x);
 }
 
-void	do_movement3(GLfloat delta_time)
+void	do_movement3(GLfloat delta_time, t_list *objs, t_list *lights)
 {
 	if (g_keys[GLFW_KEY_KP_ADD])
 		g_conf.obj_scale += delta_time * (g_conf.obj_scale * 0.5);
 	if (g_keys[GLFW_KEY_KP_SUBTRACT])
 		g_conf.obj_scale -= delta_time * (g_conf.obj_scale * 0.5);
+	if (g_keys[GLFW_KEY_N])
+	{
+		if (g_conf.obj_ind >= (int)(objs->len + lights->len))
+			g_conf.obj_ind = 0;
+		else
+			g_conf.obj_ind++;
+	}
 }
 
-void	do_movement2(GLfloat delta_time)
+void	obj_movement(GLfloat delta_time, t_list *objs, t_list *lights)
 {
+	float		norm;
+	float		tmp_x;
+	float		tmp_y;
+	float		tmp_z;
+	t_globj		*obj;
+
+	if (g_conf.obj_ind > 0)
+	{
+		if (g_conf.obj_ind <= (int)objs->len)
+			obj = ((t_globj**)objs->elts)[g_conf.obj_ind - 1];
+		else
+			obj = ((t_light**)lights->elts)[g_conf.obj_ind - 1 - objs->len]->obj;
+	}
+	if (g_keys[GLFW_KEY_A])
+	{
+		if (g_conf.obj_ind == 0)
+		{
+			front_up_cross(&tmp_x, &tmp_y, &tmp_z);
+			norm = get_norm(tmp_x, tmp_y, tmp_z);
+			g_cam.x -= tmp_x / norm * g_cam.speed * delta_time;
+			g_cam.y -= tmp_y / norm * g_cam.speed * delta_time;
+			g_cam.z -= tmp_z / norm * g_cam.speed * delta_time;
+		}
+		else
+			obj->x -= 2.0 * g_cam.speed * delta_time;
+	}
+	if (g_keys[GLFW_KEY_D])
+	{
+		if (g_conf.obj_ind == 0)
+		{
+			front_up_cross(&tmp_x, &tmp_y, &tmp_z);
+			norm = get_norm(tmp_x, tmp_y, tmp_z);
+			g_cam.x += tmp_x / norm * g_cam.speed * delta_time;
+			g_cam.y += tmp_y / norm * g_cam.speed * delta_time;
+			g_cam.z += tmp_z / norm * g_cam.speed * delta_time;
+		}
+		else
+			obj->x += 2.0 * g_cam.speed * delta_time;
+	}
 	if (g_keys[GLFW_KEY_W])
 	{
-		g_cam.x += g_cam.speed * g_cam.front_x * delta_time;
-		g_cam.y += g_cam.speed * g_cam.front_y * delta_time;
-		g_cam.z += g_cam.speed * g_cam.front_z * delta_time;
+		if (g_conf.obj_ind == 0)
+		{
+			g_cam.x += g_cam.speed * g_cam.front_x * delta_time;
+			g_cam.y += g_cam.speed * g_cam.front_y * delta_time;
+			g_cam.z += g_cam.speed * g_cam.front_z * delta_time;
+		}
+		else
+			obj->z -= 2.0 * g_cam.speed * delta_time;
 	}
 	if (g_keys[GLFW_KEY_S])
 	{
-		g_cam.x -= g_cam.speed * g_cam.front_x * delta_time;
-		g_cam.y -= g_cam.speed * g_cam.front_y * delta_time;
-		g_cam.z -= g_cam.speed * g_cam.front_z * delta_time;
+		if (g_conf.obj_ind == 0)
+		{
+			g_cam.x -= g_cam.speed * g_cam.front_x * delta_time;
+			g_cam.y -= g_cam.speed * g_cam.front_y * delta_time;
+			g_cam.z -= g_cam.speed * g_cam.front_z * delta_time;
+		}
+		else
+			obj->z += 2.0 * g_cam.speed * delta_time;
 	}
+	if (g_keys[GLFW_KEY_E])
+	{
+		if (g_conf.obj_ind == 0)
+			g_cam.y += 2.0 * g_cam.speed * delta_time;
+		else
+			obj->y += 2.0 * g_cam.speed * delta_time;
+	}
+	if (g_keys[GLFW_KEY_Q])
+	{
+		if (g_conf.obj_ind == 0)
+			g_cam.y -= 2.0 * g_cam.speed * delta_time;
+		else
+			obj->y -= 2.0 * g_cam.speed * delta_time;
+	}
+}
+
+void	do_movement2(GLfloat delta_time, t_list *objs, t_list *lights)
+{
 	if (g_keys[GLFW_KEY_C])
 		g_cam.roll -= 20 * g_cam.speed * delta_time;
 	if (g_keys[GLFW_KEY_V])
@@ -83,35 +157,15 @@ void	do_movement2(GLfloat delta_time)
 		g_cam.yaw += 20 * g_cam.speed * delta_time;
 	if (g_keys[GLFW_KEY_LEFT])
 		g_cam.yaw -= 20 * g_cam.speed * delta_time;
-	do_movement3(delta_time);
+	do_movement3(delta_time, objs, lights);
 }
 
-void	do_movement(GLfloat delta_time)
+void	do_movement(GLfloat delta_time, t_list *objs, t_list *lights)
 {
-	float	norm;
-	float	tmp_x;
-	float	tmp_y;
-	float	tmp_z;
-
-	if (g_keys[GLFW_KEY_A])
-	{
-		front_up_cross(&tmp_x, &tmp_y, &tmp_z);
-		norm = get_norm(tmp_x, tmp_y, tmp_z);
-		g_cam.x -= tmp_x / norm * g_cam.speed * delta_time;
-		g_cam.y -= tmp_y / norm * g_cam.speed * delta_time;
-		g_cam.z -= tmp_z / norm * g_cam.speed * delta_time;
-	}
-	if (g_keys[GLFW_KEY_D])
-	{
-		front_up_cross(&tmp_x, &tmp_y, &tmp_z);
-		norm = get_norm(tmp_x, tmp_y, tmp_z);
-		g_cam.x += tmp_x / norm * g_cam.speed * delta_time;
-		g_cam.y += tmp_y / norm * g_cam.speed * delta_time;
-		g_cam.z += tmp_z / norm * g_cam.speed * delta_time;
-	}
+	obj_movement(delta_time, objs, lights);
 	if (g_keys[GLFW_KEY_Z])
 		g_cam.fov += 80.0 * g_cam.speed * delta_time;
 	if (g_keys[GLFW_KEY_X])
 		g_cam.fov -= 80.0 * g_cam.speed * delta_time;
-	do_movement2(delta_time);
+	do_movement2(delta_time, objs, lights);
 }

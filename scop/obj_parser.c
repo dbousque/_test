@@ -45,6 +45,10 @@ char	interpret_line(t_objfile *objfile, char *line, size_t line_nb)
 		return (add_vertex(objfile, line, line_nb));
 	if (startswith(line, "f "))
 		return (add_face(objfile, line, line_nb));
+	if (startswith(line, "vn "))
+		return (add_normal(objfile, line, line_nb));
+	if (startswith(line, "vt "))
+		return (add_texture(objfile, line, line_nb));
 	return (1);
 }
 

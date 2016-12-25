@@ -133,6 +133,10 @@ t_globj		*new_object(GLfloat *vertices, int nb_vertices,
 	obj->has_indices = 0;
 	obj->nb_textures = 0;
 	obj->textures = NULL;
+	obj->shader = NULL;
+	obj->x = 0.0;
+	obj->y = 0.0;
+	obj->z = 0.0;
 	glGenVertexArrays(1, &(obj->VAO));
 	glBindVertexArray(obj->VAO);
 	glGenBuffers(1, &(obj->VBO));
@@ -158,6 +162,11 @@ void	attach_indices_to_obj(t_globj *obj, GLuint indices[], int nb_indices)
 	glBindVertexArray(0);
 	obj->has_indices = 1;
 	obj->nb_indices = nb_indices;
+}
+
+void	attach_shader_program_to_obj(t_globj *obj, t_shader_program *shader)
+{
+	obj->shader = shader;
 }
 
 void	activate_textures(t_shader_program *shader_program, t_globj *obj)
