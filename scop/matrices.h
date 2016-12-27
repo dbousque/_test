@@ -32,6 +32,8 @@ t_mat			*mat_mult(t_mat *mat1, t_mat *mat2);
 t_mat			*translate(t_vec *vec);
 t_mat			*scale(t_vec *vec);
 t_mat			*rotate(t_vec *rotate);
+t_mat			*invert(t_mat *inp);
+t_mat			*transpose(t_mat *inp);
 t_mat			*perspective(float fov, float ratio, float near, float far);
 float			deg_to_rad(float deg);
 void			print_mat(t_mat *mat);

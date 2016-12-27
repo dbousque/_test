@@ -31,9 +31,13 @@ typedef struct			s_shader_program
 
 typedef struct			s_globj
 {
-	GLuint				VAO;
-	GLuint				VBO;
-	GLuint				EBO;
+	GLuint				VAO1;
+	GLuint				VBO1;
+	GLuint				EBO1;
+	GLuint				VAO2;
+	GLuint				VBO2;
+	GLuint				EBO2;
+	char				normal_mode;
 	int					nb_vertices;
 	int					nb_indices;
 	char				has_indices;
@@ -84,6 +88,7 @@ typedef struct			s_objfile
 	t_list				*texture;
 	t_list				*normals;
 	t_list				*faces;
+	t_list				*calc_normals;
 }						t_objfile;
 
 typedef struct			s_config
@@ -93,6 +98,10 @@ typedef struct			s_config
 	int					win_width;
 	int					win_height;
 	int					obj_ind;
+	float				info_updated_at;
+	float				time_spent;
+	int					frames_seen;
+	char				normal_mode;
 }						t_config;
 
 typedef struct			s_light
@@ -116,6 +125,8 @@ char					*ft_strconcat(char *st1, char *st2);
 char					*read_file(char *filename, size_t max_size);
 void    				key_callback(GLFWwindow *window, int key, int scancode,
 														int action, int mode);
+
+void					calculate_raw_normals(GLfloat *v, int nb_vertices);
 t_shader_program		*new_shader_program(char *vertex_shader_path,
 												char *fragment_shader_path);
 t_window				*setup_window(int width, int height, char *title_name);
@@ -147,5 +158,17 @@ char					add_normal(t_objfile *objfile, char *line,
 															size_t line_nb);
 char					add_texture(t_objfile *objfile, char *line,
 															size_t line_nb);
+void					set_lights(t_list *objs, t_list *lights,
+														t_vec *ambient_color);
+t_light					*new_std_light(float r, float g, float b);
+void					adjust_obj(GLfloat *vertices, int nb_vertices);
+t_mat					*build_view(void);
+void					setup_conf(void);
+void					draw_lights(t_list *lights, t_mat *view,
+															t_mat *projection);
+void					draw_objects(t_list *objs, t_mat *view,
+															t_mat *projection);
+t_globj					*new_obj_from_path(char *path);
+void					update_stats(void);
 
 #endif

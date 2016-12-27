@@ -15,6 +15,9 @@ SOURCES		=	shader_program.c \
 				parse_vertices.c \
 				obj_parser.c \
 				objfile_to_vertices.c \
+				normals.c \
+				main_utils.c \
+				draw_objs.c \
 				utils.c
 
 OBJECTS	=	$(subst .c,.o,$(SOURCES))

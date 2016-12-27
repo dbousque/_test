@@ -117,6 +117,24 @@ void	init_vertex_attributes(int attribs_struct[], int nb_attribs,
 	}
 }
 
+void	*cpy_array(void *array, size_t size)
+{
+	char	*to_cpy;
+	char	*res;
+	size_t	i;
+
+	if (!(res = (char*)malloc(size)))
+		return (NULL);
+	to_cpy = (char*)array;
+	i = 0;
+	while (i < size)
+	{
+		res[i] = to_cpy[i];
+		i++;
+	}
+	return (res);
+}
+
 t_globj		*new_object(GLfloat *vertices, int nb_vertices,
 										int attribs_struct[], int nb_attribs)
 {
@@ -137,29 +155,55 @@ t_globj		*new_object(GLfloat *vertices, int nb_vertices,
 	obj->x = 0.0;
 	obj->y = 0.0;
 	obj->z = 0.0;
-	glGenVertexArrays(1, &(obj->VAO));
-	glBindVertexArray(obj->VAO);
-	glGenBuffers(1, &(obj->VBO));
-	glBindBuffer(GL_ARRAY_BUFFER, obj->VBO);
+	obj->normal_mode = 0;
 	tot_data_len = sizeof(GLfloat)
 					* (nb_vertices * int_arr_sum(attribs_struct, nb_attribs));
+	glGenVertexArrays(1, &(obj->VAO1));
+	glBindVertexArray(obj->VAO1);
+	glGenBuffers(1, &(obj->VBO1));
+	glBindBuffer(GL_ARRAY_BUFFER, obj->VBO1);
 	glBufferData(GL_ARRAY_BUFFER, tot_data_len,
 									(GLfloat const*)vertices, GL_STATIC_DRAW);
 	init_vertex_attributes(attribs_struct, nb_attribs, nb_vertices,
 																tot_data_len);
 	glBindVertexArray(0);
+
+	GLfloat		*vertices_cpy;
+
+	vertices_cpy = cpy_array(vertices, sizeof(GLfloat) * 8 * nb_vertices);
+	calculate_raw_normals(vertices_cpy, nb_vertices);
+
+	glGenVertexArrays(1, &(obj->VAO2));
+	glBindVertexArray(obj->VAO2);
+	glGenBuffers(1, &(obj->VBO2));
+	glBindBuffer(GL_ARRAY_BUFFER, obj->VBO2);
+	glBufferData(GL_ARRAY_BUFFER, tot_data_len,
+									(GLfloat const*)vertices_cpy, GL_STATIC_DRAW);
+	init_vertex_attributes(attribs_struct, nb_attribs, nb_vertices,
+																tot_data_len);
+	glBindVertexArray(0);
+
 	return (obj);
 }
 
 void	attach_indices_to_obj(t_globj *obj, GLuint indices[], int nb_indices)
 {
-	glBindVertexArray(obj->VAO);
+	glBindVertexArray(obj->VAO1);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
-	glGenBuffers(1, &(obj->EBO));
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, obj->EBO);
+	glGenBuffers(1, &(obj->EBO1));
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, obj->EBO1);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(GLuint) * nb_indices, indices,
 															GL_STATIC_DRAW);
 	glBindVertexArray(0);
+
+	glBindVertexArray(obj->VAO2);
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+	glGenBuffers(1, &(obj->EBO2));
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, obj->EBO2);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(GLuint) * nb_indices, indices,
+															GL_STATIC_DRAW);
+	glBindVertexArray(0);
+
 	obj->has_indices = 1;
 	obj->nb_indices = nb_indices;
 }
@@ -195,7 +239,10 @@ void	draw_object(t_shader_program *shader_program, t_globj *obj)
 	if (obj->has_textures)
 		activate_textures(shader_program, obj);
 	glUseProgram(shader_program->program);
-	glBindVertexArray(obj->VAO);
+	if (obj->normal_mode == 0)
+		glBindVertexArray(obj->VAO1);
+	else
+		glBindVertexArray(obj->VAO2);
 	if (obj->has_indices)
 		glDrawElements(GL_TRIANGLES, obj->nb_indices, GL_UNSIGNED_INT, 0);
 	else

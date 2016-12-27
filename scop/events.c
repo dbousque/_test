@@ -38,6 +38,10 @@ void    key_callback(GLFWwindow *window, int key, int scancode, int action,
 		}
 
 	}
+	if (key == GLFW_KEY_N && action == GLFW_PRESS)
+		g_conf.obj_ind++;
+	if (key == GLFW_KEY_M && action == GLFW_PRESS)
+		g_conf.normal_mode = g_conf.normal_mode == 0 ? 1 : 0;
 	if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
 		glfwSetWindowShouldClose(window, GL_TRUE);
 }
@@ -51,17 +55,12 @@ void	front_up_cross(float *x, float *y, float *z)
 
 void	do_movement3(GLfloat delta_time, t_list *objs, t_list *lights)
 {
+	(void)objs;
+	(void)lights;
 	if (g_keys[GLFW_KEY_KP_ADD])
 		g_conf.obj_scale += delta_time * (g_conf.obj_scale * 0.5);
 	if (g_keys[GLFW_KEY_KP_SUBTRACT])
 		g_conf.obj_scale -= delta_time * (g_conf.obj_scale * 0.5);
-	if (g_keys[GLFW_KEY_N])
-	{
-		if (g_conf.obj_ind >= (int)(objs->len + lights->len))
-			g_conf.obj_ind = 0;
-		else
-			g_conf.obj_ind++;
-	}
 }
 
 void	obj_movement(GLfloat delta_time, t_list *objs, t_list *lights)
@@ -145,6 +144,8 @@ void	obj_movement(GLfloat delta_time, t_list *objs, t_list *lights)
 
 void	do_movement2(GLfloat delta_time, t_list *objs, t_list *lights)
 {
+	t_light		*sel_light;
+
 	if (g_keys[GLFW_KEY_C])
 		g_cam.roll -= 20 * g_cam.speed * delta_time;
 	if (g_keys[GLFW_KEY_V])
@@ -157,12 +158,67 @@ void	do_movement2(GLfloat delta_time, t_list *objs, t_list *lights)
 		g_cam.yaw += 20 * g_cam.speed * delta_time;
 	if (g_keys[GLFW_KEY_LEFT])
 		g_cam.yaw -= 20 * g_cam.speed * delta_time;
+	if (g_keys[GLFW_KEY_1] && g_conf.obj_ind > (int)objs->len)
+	{
+		sel_light = ((t_light**)lights->elts)[g_conf.obj_ind - (int)objs->len - 1];
+		sel_light->r -= 1.0 * delta_time;
+		if (sel_light->r < 0.0)
+			sel_light->r = 0.0;
+	}
+	if (g_keys[GLFW_KEY_2] && g_conf.obj_ind > (int)objs->len)
+	{
+		sel_light = ((t_light**)lights->elts)[g_conf.obj_ind - (int)objs->len - 1];
+		sel_light->g -= 1.0 * delta_time;
+		if (sel_light->g < 0.0)
+			sel_light->g = 0.0;
+	}
+	if (g_keys[GLFW_KEY_3] && g_conf.obj_ind > (int)objs->len)
+	{
+		sel_light = ((t_light**)lights->elts)[g_conf.obj_ind - (int)objs->len - 1];
+		sel_light->b -= 1.0 * delta_time;
+		if (sel_light->b < 0.0)
+			sel_light->b = 0.0;
+	}
+	if (g_keys[GLFW_KEY_4] && g_conf.obj_ind > (int)objs->len)
+	{
+		sel_light = ((t_light**)lights->elts)[g_conf.obj_ind - (int)objs->len - 1];
+		sel_light->r += 1.0 * delta_time;
+		if (sel_light->r > 1.0)
+			sel_light->r = 1.0;
+	}
+	if (g_keys[GLFW_KEY_5] && g_conf.obj_ind > (int)objs->len)
+	{
+		sel_light = ((t_light**)lights->elts)[g_conf.obj_ind - (int)objs->len - 1];
+		sel_light->g += 1.0 * delta_time;
+		if (sel_light->g > 1.0)
+			sel_light->g = 1.0;
+	}
+	if (g_keys[GLFW_KEY_6] && g_conf.obj_ind > (int)objs->len)
+	{
+		sel_light = ((t_light**)lights->elts)[g_conf.obj_ind - (int)objs->len - 1];
+		sel_light->b += 1.0 * delta_time;
+		if (sel_light->b > 1.0)
+			sel_light->b = 1.0;
+	}
 	do_movement3(delta_time, objs, lights);
 }
 
 void	do_movement(GLfloat delta_time, t_list *objs, t_list *lights)
 {
+	t_globj		*sel_obj;
+
+	if (g_conf.obj_ind > (int)(objs->len + lights->len))
+		g_conf.obj_ind = 0;
 	obj_movement(delta_time, objs, lights);
+	if (g_keys[GLFW_KEY_M])
+	{
+		if (g_conf.obj_ind > 0 && (size_t)g_conf.obj_ind <= objs->len)
+		{
+			sel_obj = ((t_globj**)objs->elts)[g_conf.obj_ind - 1];
+			sel_obj->normal_mode = sel_obj->normal_mode == 0 ? 1 : 0;
+		}
+		g_keys[GLFW_KEY_M] = 0;
+	}
 	if (g_keys[GLFW_KEY_Z])
 		g_cam.fov += 80.0 * g_cam.speed * delta_time;
 	if (g_keys[GLFW_KEY_X])
