@@ -33,6 +33,7 @@ endif
 
 CC		=	gcc
 
+.SILENT:
 
 $(NAME): $(OBJECTS)
 	$(CC) $(WFLAGS) $(OBJECTS) -o $(NAME) $(FLAGS)

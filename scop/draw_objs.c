@@ -2,7 +2,7 @@
 
 #include "myopengl.h"
 
-void	set_lights(t_list *objs, t_list *lights, t_vec *ambient_color)
+void	set_lights(t_list *objs, t_list *lights, float texture_strength)
 {
 	size_t		i;
 	size_t		x;
@@ -17,10 +17,12 @@ void	set_lights(t_list *objs, t_list *lights, t_vec *ambient_color)
 	{
 		obj = ((t_globj**)objs->elts)[i];
 		glUseProgram(obj->shader->program);
-		loc = glGetUniformLocation(obj->shader->program, "ambientColor");
-		glUniform3f(loc, ambient_color->elts[0], ambient_color->elts[1], ambient_color->elts[2]);
 		loc = glGetUniformLocation(obj->shader->program, "cameraPos");
 		glUniform3f(loc, g_cam.x, g_cam.y, g_cam.z);
+		loc = glGetUniformLocation(obj->shader->program, "nbLights");
+		glUniform1i(loc, (int)lights->len);
+		loc = glGetUniformLocation(obj->shader->program, "textureStrength");
+		glUniform1f(loc, texture_strength);
 		x = 0;
 		while (x < lights->len)
 		{
@@ -33,6 +35,11 @@ void	set_lights(t_list *objs, t_list *lights, t_vec *ambient_color)
 			tmp = ft_strconcat("lightPos", x_str);
 			loc = glGetUniformLocation(obj->shader->program, tmp);
 			glUniform3f(loc, light->obj->x, light->obj->y, light->obj->z);
+			free(tmp);
+			tmp = ft_strconcat("ambientColor", x_str);
+			loc = glGetUniformLocation(obj->shader->program, tmp);
+			glUniform3f(loc, light->r * light->ambient_strength,
+					light->g * light->ambient_strength, light->b * light->ambient_strength);
 			free(tmp);
 			free(x_str);
 			x++;

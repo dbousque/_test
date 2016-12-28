@@ -8,9 +8,9 @@ t_list	*new_list(size_t elt_size)
 
 	if (!(list = (t_list*)malloc(sizeof(t_list))))
 		return (NULL);
-	if (!(list->elts = malloc(elt_size * 32)))
+	if (!(list->elts = malloc(elt_size * 4)))
 		return (NULL);
-	list->size = 32;
+	list->size = 4;
 	list->len = 0;
 	list->elt_size = elt_size;
 	return (list);

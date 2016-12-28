@@ -23,7 +23,7 @@ void	main_loop(t_window *window, t_list *objs, t_list *lights)
 		view = build_view();
 		projection = perspective(deg_to_rad(g_cam.fov),
 					((float)g_conf.win_height) / g_conf.win_width, 0.1, 100.0);
-		set_lights(objs, lights, new_vec3(0.1, 0.1, 0.1));
+		set_lights(objs, lights, g_conf.texture_strength);
 		draw_objects(objs, view, projection);
 		draw_lights(lights, view, projection);
 		g_conf.time_spent += glfwGetTime() - current_frame;
@@ -45,7 +45,7 @@ int		main(void)
 	setup_keys();
 	setup_conf();
 	init_camera();
-	window = setup_window(g_conf.win_width, g_conf.win_height, "My window!");
+	window = setup_window(g_conf.win_width, g_conf.win_height, "scop - dbousque");
 	if (!window)
 		return (-1);
 	glEnable(GL_DEPTH_TEST);
@@ -60,19 +60,19 @@ int		main(void)
 	objs = new_list(sizeof(t_globj*));
 	lights = new_list(sizeof(t_light*));
 	//obj = new_obj_from_path("ressources/plane/Su-27_Flanker.obj");
-	obj = new_obj_from_path("ressources/sphere.obj");
+	obj = new_obj_from_path("ressources/42.obj");
 	if (!obj)
 		return (-1);
+	attach_shader_program_to_obj(obj, program);
 	add_to_list(objs, &obj);
-	light = new_std_light(1.0, 1.0, 1.0);
+	light = new_std_light(1.0, 1.0, 1.0, 0.2);
 	if (!light)
 		return (-1);
-	add_to_list(lights, &light);
-	attach_shader_program_to_obj(obj, program);
 	attach_shader_program_to_obj(light->obj, light_program);
+	add_to_list(lights, &light);
 	//attach_indices_to_obj(obj, indices, nb_indices);
 	//load_texture_to_obj(obj, "ressources/plane/Su-27_Flanker_P01.png");
-	//load_texture_to_obj(obj, "awesomeface.png");
+	load_texture_to_obj(obj, "wall.png");
 	g_conf.info_updated_at = glfwGetTime();
 	g_conf.frames_seen = 0;
 	g_conf.time_spent = 0.0;

@@ -6,7 +6,7 @@ void	init_camera(void)
 {
 	g_cam.x = 0.0;
 	g_cam.y = 0.0;
-	g_cam.z = 3.0;
+	g_cam.z = 4.5;
 	g_cam.front_x = 0.0;
 	g_cam.front_y = 0.0;
 	g_cam.front_z = -1.0;

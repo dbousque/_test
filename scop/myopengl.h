@@ -102,6 +102,8 @@ typedef struct			s_config
 	float				time_spent;
 	int					frames_seen;
 	char				normal_mode;
+	float				texture_strength;
+	float				texture_plus;
 }						t_config;
 
 typedef struct			s_light
@@ -110,6 +112,7 @@ typedef struct			s_light
 	float				r;
 	float				g;
 	float				b;
+	float				ambient_strength;
 }						t_light;
 
 t_camera				g_cam;
@@ -159,8 +162,9 @@ char					add_normal(t_objfile *objfile, char *line,
 char					add_texture(t_objfile *objfile, char *line,
 															size_t line_nb);
 void					set_lights(t_list *objs, t_list *lights,
-														t_vec *ambient_color);
-t_light					*new_std_light(float r, float g, float b);
+													float texture_strength);
+t_light					*new_std_light(float r, float g, float b,
+													float ambient_strength);
 void					adjust_obj(GLfloat *vertices, int nb_vertices);
 t_mat					*build_view(void);
 void					setup_conf(void);

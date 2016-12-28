@@ -10,6 +10,8 @@ void	setup_conf(void)
 	g_conf.win_height = 1000;
 	g_conf.obj_ind = 0;
 	g_conf.normal_mode = 0;
+	g_conf.texture_strength = 0.0;
+	g_conf.texture_plus = 0;
 }	
 
 t_mat	*build_view(void)
@@ -45,6 +47,19 @@ t_mat	*build_view(void)
 	tmp2->elts[7] = -(camera_pos->elts[1]);
 	tmp2->elts[11] = -(camera_pos->elts[2]);
 	return (mat_mult(tmp1, tmp2));
+}
+
+void	generate_texture_coords(GLfloat *vertices, int nb_vertices)
+{
+	int		i;
+
+	i = 0;
+	while (i < nb_vertices)
+	{
+		vertices[i * 8 + 3] = vertices[i * 8 + 0] + vertices[i * 8 + 2];
+		vertices[i * 8 + 4] = vertices[i * 8 + 1] + vertices[i * 8 + 2];
+		i++;
+	}
 }
 
 float	max(float f1, float f2)
@@ -114,7 +129,7 @@ void	adjust_obj(GLfloat *vertices, int nb_vertices)
 	adjust_scale(x_y_z_mmax);
 }
 
-t_light		*new_std_light(float r, float g, float b)
+t_light		*new_std_light(float r, float g, float b, float ambient_strength)
 {
 	t_light		*light;
 	GLfloat		vertices[] = {
@@ -168,6 +183,10 @@ t_light		*new_std_light(float r, float g, float b)
 		return (NULL);
 	if (!(light->obj = new_object(vertices, nb_vertices, attribs_struct, nb_attribs)))
 		return (NULL);
+	light->ambient_strength = ambient_strength;
+	light->obj->x = 2.0;
+	light->obj->z = 1.0;
+	light->obj->y = 0.5;
 	light->r = r;
 	light->g = g;
 	light->b = b;
@@ -193,7 +212,7 @@ t_globj		*new_obj_from_path(char *path)
 		printf("error in .obj\n");
 		return (NULL);
 	}
-	adjust_obj(vertices, nb_vertices);
+	adjust_obj(vertices, nb_vertices, objfile->texture->len == 2);
 	return (new_object(vertices, nb_vertices, attribs_struct, nb_attribs));
 }
 
@@ -202,8 +221,9 @@ void	update_stats(void)
 	g_conf.frames_seen++;
 	if (glfwGetTime() - g_conf.info_updated_at >= 2.0)
 	{
-		printf("fps : %.1f\n", g_conf.frames_seen / g_conf.time_spent);
-		printf("time per frame : %.1f ms\n",
+		printf("cpu fps : %.1f\n", g_conf.frames_seen / g_conf.time_spent);
+		printf("actual fps : %.1f\n", g_conf.frames_seen / (glfwGetTime() - g_conf.info_updated_at));
+		printf("time per frame : %.1f ms\n\n",
 							g_conf.time_spent / g_conf.frames_seen * 1000.0);
 		g_conf.frames_seen = 0;
 		g_conf.info_updated_at = glfwGetTime();
