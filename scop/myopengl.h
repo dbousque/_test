@@ -118,6 +118,8 @@ typedef struct			s_light
 t_camera				g_cam;
 char					g_keys[1024];
 t_config				g_conf;
+t_shader_program		*g_obj_program;
+t_shader_program		*g_light_program;
 
 t_list					*new_list(size_t elt_size);
 void					add_to_list(t_list *lst, void *elt);

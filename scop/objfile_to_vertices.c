@@ -164,38 +164,48 @@ char	create_calc_normals(t_objfile *objfile, int *nb_vertices)
 	return (1);
 }
 
-void	find_top_left(t_objfile *objfile, int *top_left_vertex, float *scale)
+char	find_top_left(t_objfile *objfile, int *top_left_vertex, float *scale,
+												char *vertex_text_already_set)
 {
 	int		*faces;
 	size_t	i;
 	float	top_left[2];
 	float	lower_right[2];
 	float	*vertices;
+	char	set_once;
 
+	set_once = 0;
 	faces = (int*)objfile->faces->elts;
 	vertices = (float*)objfile->vertices->elts;
 	i = 0;
 	while (i < objfile->faces->len)
 	{
-		if (i == 0 || (vertices[faces[i] * 3] < top_left[0]
-				&& vertices[faces[i] * 3 + 1] > top_left[1]))
+		if (!vertex_text_already_set[faces[i]])
 		{
-			top_left[0] = vertices[faces[i] * 3];
-			top_left[1] = vertices[faces[i] * 3 + 1];
-			*top_left_vertex = faces[i];
-		}
-		if (i == 0 || (vertices[faces[i] * 3] > lower_right[0]
-				&& vertices[faces[i] * 3 + 1] < lower_right[1]))
-		{
-			lower_right[0] = vertices[faces[i] * 3];
-			lower_right[1] = vertices[faces[i] * 3 + 1];
+			if (!set_once || vertices[faces[i] * 3 + 1] > top_left[1]
+				|| (vertices[faces[i] * 3 + 1] == top_left[1]
+					&& vertices[faces[i] * 3] < top_left[0]))
+			{
+				top_left[0] = vertices[faces[i] * 3];
+				top_left[1] = vertices[faces[i] * 3 + 1];
+				*top_left_vertex = faces[i];
+			}
+			if (!set_once || vertices[faces[i] * 3 + 1] < top_left[1]
+				|| (vertices[faces[i] * 3 + 1] == top_left[1]
+					&& vertices[faces[i] * 3] > top_left[0]))
+			{
+				lower_right[0] = vertices[faces[i] * 3];
+				lower_right[1] = vertices[faces[i] * 3 + 1];
+			}
+			set_once = 1;
 		}
 		i += 3;
 		if (faces[i] == 0)
 			i++;
 	}
-	*scale = max(fabs(top_left[0] - lower_right[0]),
+	*scale = fmaxf(fabs(top_left[0] - lower_right[0]),
 					fabs(top_left[1] - lower_right[1]));
+	return (set_once);
 }
 
 void	set_vertex_in_faces(t_objfile *objfile, t_list **vertex_in_faces)
@@ -223,18 +233,70 @@ void	set_vertex_in_faces(t_objfile *objfile, t_list **vertex_in_faces)
 	}
 }
 
+void	get_text_xy(t_objfile *objfile, int known_ind, int unknown_ind,
+												float res_xy[2], float scale)
+{
+	float	*vertices;
+	float	*texture;
+	float	known_xyz[3];
+	float	unknown_xyz[3];
+	float	known_text_xy[2];
+
+	vertices = (float*)objfile->vertices->elts;
+	texture = (float*)objfile->texture->elts;
+	known_xyz[0] = vertices[known_ind * 3];
+	known_xyz[1] = vertices[known_ind * 3 + 1];
+	known_xyz[2] = vertices[known_ind * 3 + 2];
+	unknown_xyz[0] = vertices[unknown_ind * 3];
+	unknown_xyz[1] = vertices[unknown_ind * 3 + 1];
+	unknown_xyz[2] = vertices[unknown_ind * 3 + 2];
+	known_text_xy[0] = texture[known_ind * 2];
+	known_text_xy[1] = texture[known_ind * 2 + 1];
+	known_xyz[0] = unknown_xyz[0] - known_xyz[0];
+	known_xyz[1] = unknown_xyz[1] - known_xyz[1];
+	known_xyz[2] = unknown_xyz[2] - known_xyz[2];
+	res_xy[0] = known_text_xy[0] + ((known_xyz[0] + known_xyz[2]) / scale);
+	res_xy[1] = known_text_xy[1] + (known_xyz[1] / scale);
+}
+
 void	 solve_text_coords(t_objfile *objfile, t_list **vertex_in_faces,
-			char *vertex_text_already_set, int top_left_vertex, float scale)
+			char *vertex_text_already_set, int current_vertex, float scale,
+												float x_text, float y_text)
 {
 	size_t	i;
+	int		x;
+	int		*faces;
+	int		*face;
+	float	new_xy[2];
 
-	((float*)objfile->texture->elts)[top_left_vertex * 2] = 0.0;
-	((float*)objfile->texture->elts)[top_left_vertex * 2 + 1] = 1.0;
-	vertex_text_already_set[top_left_vertex] = 1;
+	faces = (int*)objfile->faces->elts;
+	((float*)objfile->texture->elts)[current_vertex * 2] = x_text;
+	((float*)objfile->texture->elts)[current_vertex * 2 + 1] = y_text;
+	vertex_text_already_set[current_vertex] = 1;
 	i = 0;
-	while (i < vertex_in_faces[top_left_vertex]->len)
+	while (i < vertex_in_faces[current_vertex]->len)
 	{
-		
+		face = faces + ((int*)vertex_in_faces[current_vertex]->elts)[i];
+		if (!vertex_text_already_set[face[0]])
+		{
+			get_text_xy(objfile, current_vertex, face[0], new_xy, scale);
+			solve_text_coords(objfile, vertex_in_faces, vertex_text_already_set,
+					face[0], scale, new_xy[0], new_xy[1]);
+		}
+		else
+		{
+			x = 0;
+			while (face[x] != 0)
+			{
+				if (!vertex_text_already_set[face[x]])
+				{
+					get_text_xy(objfile, face[0], face[x], new_xy, scale);
+					solve_text_coords(objfile, vertex_in_faces, vertex_text_already_set,
+							face[x], scale, new_xy[0], new_xy[1]);
+				}
+				x += 3;
+			}
+		}
 		i++;
 	}
 }
@@ -278,9 +340,11 @@ char	generate_texture_coords2(t_objfile *objfile)
 		vertex_text_already_set[i / 3] = 0;
 		i += 3;
 	}
-	find_top_left(objfile, &top_left_vertex, &scale);
-	set_vertex_in_faces(objfile, vertex_in_faces);
-	solve_text_coords(objfile, vertex_in_faces, vertex_text_already_set, top_left_vertex, scale);
+	while (find_top_left(objfile, &top_left_vertex, &scale, vertex_text_already_set))
+	{
+		set_vertex_in_faces(objfile, vertex_in_faces);
+		solve_text_coords(objfile, vertex_in_faces, vertex_text_already_set, top_left_vertex, scale, 0.0, 1.0);
+	}
 	return (1);
 }
 
@@ -302,7 +366,7 @@ char	objfile_to_vertices(t_objfile *objfile, GLfloat **verts,
 			return (0);
 	}
 	if (objfile->texture->len == 2)
-		generate_texture_coords2(objfile, *verts, *nb_vertices);
+		generate_texture_coords2(objfile);
 	decal = 0;
 	res_ind = 0;
 	faces_ind = 0;

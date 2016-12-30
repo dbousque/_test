@@ -212,7 +212,7 @@ t_globj		*new_obj_from_path(char *path)
 		printf("error in .obj\n");
 		return (NULL);
 	}
-	adjust_obj(vertices, nb_vertices, objfile->texture->len == 2);
+	adjust_obj(vertices, nb_vertices);
 	return (new_object(vertices, nb_vertices, attribs_struct, nb_attribs));
 }
 

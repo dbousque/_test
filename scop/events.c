@@ -221,7 +221,6 @@ void	do_movement(GLfloat delta_time, t_list *objs, t_list *lights)
 {
 	t_globj				*sel_obj;
 	t_light				*light;
-	t_shader_program	*light_shader;
 
 	if (g_conf.obj_ind > (int)(objs->len + lights->len))
 		g_conf.obj_ind = 0;
@@ -237,11 +236,10 @@ void	do_movement(GLfloat delta_time, t_list *objs, t_list *lights)
 	}
 	if (g_keys[GLFW_KEY_P] && lights->len < 10)
 	{
-		light_shader = new_shader_program("shaders/light.vs", "shaders/light.fs");
 		light = new_std_light(1.0, 1.0, 1.0, 0.2);
-		if (light && light_shader)
+		if (light)
 		{
-			attach_shader_program_to_obj(light->obj, light_shader);
+			attach_shader_program_to_obj(light->obj, g_light_program);
 			add_to_list(lights, &light);
 		}
 		g_keys[GLFW_KEY_P] = 0;
