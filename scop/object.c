@@ -39,14 +39,20 @@ int		get_texture_nb(int nb)
 	return (0);
 }
 
-GLuint	make_texture(char *img_path)
+GLuint	make_texture(char *img_path, char *error)
 {
 	int				width;
 	int				height;
 	unsigned char	*img;
 	GLuint			texture;
 
+	*error = 0;
 	img = SOIL_load_image(img_path, &width, &height, 0, SOIL_LOAD_RGB);
+	if (!img)
+	{
+		*error = 1;
+		return (0);
+	}
 	glGenTextures(1, &texture);
 	glBindTexture(GL_TEXTURE_2D, texture);
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB,
@@ -62,8 +68,14 @@ void	load_texture_to_obj(t_globj *obj, char *img_path)
 	GLuint	texture;
 	GLuint	*new_textures;
 	int		i;
+	char	error;
 
-	texture = make_texture(img_path);
+	texture = make_texture(img_path, &error);
+	if (error)
+	{
+		ft_putstr("could not load texture\n");
+		return ;
+	}
 	if (!(new_textures = (GLuint*)malloc(sizeof(GLuint)
 												* (obj->nb_textures + 1))))
 	{
@@ -82,6 +94,26 @@ void	load_texture_to_obj(t_globj *obj, char *img_path)
 	obj->textures = new_textures;
 	obj->has_textures = 1;
 	obj->nb_textures++;
+}
+
+void	load_specular_map_to_obj(t_globj *obj, char *img_path)
+{
+	char	error;
+
+	obj->specular_map = make_texture(img_path, &error);
+	if (error)
+		return ;
+	obj->has_specular_map = 1;
+}
+
+void	load_normal_map_to_obj(t_globj *obj, char *img_path)
+{
+	char	error;
+
+	obj->normal_map = make_texture(img_path, &error);
+	if (error)
+		return ;
+	obj->has_normal_map = 1;
 }
 
 int		int_arr_sum(int arr[], int nb)
@@ -135,6 +167,25 @@ void	*cpy_array(void *array, size_t size)
 	return (res);
 }
 
+void	set_obj_std(t_globj *obj, int nb_vertices)
+{
+	obj->nb_vertices = nb_vertices;
+	obj->has_textures = 0;
+	obj->has_indices = 0;
+	obj->nb_textures = 0;
+	obj->textures = NULL;
+	obj->shader = NULL;
+	obj->x = 0.0;
+	obj->y = 0.0;
+	obj->z = 0.0;
+	obj->normal_mode = 0;
+	obj->specular_map = 0;
+	obj->normal_map = 0;
+	obj->has_specular_map = 0;
+	obj->has_normal_map = 0;
+	obj->specular_strength = 0.0;
+}
+
 t_globj		*new_object(GLfloat *vertices, int nb_vertices,
 										int attribs_struct[], int nb_attribs)
 {
@@ -146,16 +197,7 @@ t_globj		*new_object(GLfloat *vertices, int nb_vertices,
 		ft_putstr("malloc error\n");
 		return (NULL);
 	}
-	obj->nb_vertices = nb_vertices;
-	obj->has_textures = 0;
-	obj->has_indices = 0;
-	obj->nb_textures = 0;
-	obj->textures = NULL;
-	obj->shader = NULL;
-	obj->x = 0.0;
-	obj->y = 0.0;
-	obj->z = 0.0;
-	obj->normal_mode = 0;
+	set_obj_std(obj, nb_vertices);
 	tot_data_len = sizeof(GLfloat)
 					* (nb_vertices * int_arr_sum(attribs_struct, nb_attribs));
 	glGenVertexArrays(1, &(obj->VAO1));
@@ -170,7 +212,7 @@ t_globj		*new_object(GLfloat *vertices, int nb_vertices,
 
 	GLfloat		*vertices_cpy;
 
-	vertices_cpy = cpy_array(vertices, sizeof(GLfloat) * 8 * nb_vertices);
+	vertices_cpy = cpy_array(vertices, sizeof(GLfloat) * 17 * nb_vertices);
 	calculate_raw_normals(vertices_cpy, nb_vertices);
 
 	glGenVertexArrays(1, &(obj->VAO2));
@@ -219,6 +261,10 @@ void	activate_textures(t_shader_program *shader_program, t_globj *obj)
 	char	*tmp_text_name;
 	char	*i_str;
 
+	glUniform1i(glGetUniformLocation(shader_program->program,
+								"hasSpecularMap"), 0);
+	glUniform1i(glGetUniformLocation(shader_program->program,
+								"hasNormalMap"), 0);
 	i = 0;
 	while (i < obj->nb_textures)
 	{
@@ -232,6 +278,26 @@ void	activate_textures(t_shader_program *shader_program, t_globj *obj)
 		free(tmp_text_name);
 		i++;
 	}
+	if (obj->has_specular_map)
+	{
+		glUniform1i(glGetUniformLocation(shader_program->program,
+								"hasSpecularMap"), 1);
+		glActiveTexture(get_texture_nb(obj->nb_textures));
+		glBindTexture(GL_TEXTURE_2D, obj->specular_map);
+		glUniform1i(glGetUniformLocation(shader_program->program,
+											"ourSpecular1"), obj->nb_textures);
+	}
+	if (obj->has_normal_map)
+	{
+		glUniform1i(glGetUniformLocation(shader_program->program,
+								"hasNormalMap"), 1);
+		glActiveTexture(get_texture_nb(obj->nb_textures) + obj->has_specular_map);
+		glBindTexture(GL_TEXTURE_2D, obj->normal_map);
+		glUniform1i(glGetUniformLocation(shader_program->program,
+					"ourNormal1"), obj->nb_textures + obj->has_specular_map);
+	}
+	glUniform1f(glGetUniformLocation(shader_program->program,
+								"specularStrength"), obj->specular_strength);
 }
 
 void	draw_object(t_shader_program *shader_program, t_globj *obj)

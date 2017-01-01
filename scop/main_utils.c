@@ -6,8 +6,8 @@ void	setup_conf(void)
 {
 	g_conf.lines = 0;
 	g_conf.obj_scale = 1.0;
-	g_conf.win_width = 1300;
-	g_conf.win_height = 1000;
+	g_conf.win_width = 1900;
+	g_conf.win_height = 1300;
 	g_conf.obj_ind = 0;
 	g_conf.normal_mode = 0;
 	g_conf.texture_strength = 0.0;
@@ -56,8 +56,8 @@ void	generate_texture_coords(GLfloat *vertices, int nb_vertices)
 	i = 0;
 	while (i < nb_vertices)
 	{
-		vertices[i * 8 + 3] = vertices[i * 8 + 0] + vertices[i * 8 + 2];
-		vertices[i * 8 + 4] = vertices[i * 8 + 1] + vertices[i * 8 + 2];
+		vertices[i * 17 + 3] = vertices[i * 17 + 0] + vertices[i * 17 + 2];
+		vertices[i * 17 + 4] = vertices[i * 17 + 1] + vertices[i * 17 + 2];
 		i++;
 	}
 }
@@ -81,9 +81,9 @@ void	center_vertices(GLfloat *vertices, int nb_vertices,
 	i = 0;
 	while (i < nb_vertices)
 	{
-		vertices[i * 8] -= x_diff;
-		vertices[i * 8 + 1] -= y_diff;
-		vertices[i * 8 + 2] -= z_diff;
+		vertices[i * 17] -= x_diff;
+		vertices[i * 17 + 1] -= y_diff;
+		vertices[i * 17 + 2] -= z_diff;
 		i++;
 	}
 }
@@ -111,18 +111,18 @@ void	adjust_obj(GLfloat *vertices, int nb_vertices)
 	i = 0;
 	while (i < nb_vertices)
 	{
-		if (i == 0 || vertices[i * 8] < x_y_z_mmax[0])
-			x_y_z_mmax[0] = vertices[i * 8];
-		if (i == 0 || vertices[i * 8] > x_y_z_mmax[1])
-			x_y_z_mmax[1] = vertices[i * 8];
-		if (i == 0 || vertices[i * 8 + 1] < x_y_z_mmax[2])
-			x_y_z_mmax[2] = vertices[i * 8 + 1];
-		if (i == 0 || vertices[i * 8 + 1] > x_y_z_mmax[3])
-			x_y_z_mmax[3] = vertices[i * 8 + 1];
-		if (i == 0 || vertices[i * 8 + 2] < x_y_z_mmax[4])
-			x_y_z_mmax[4] = vertices[i * 8 + 2];
-		if (i == 0 || vertices[i * 8 + 2] > x_y_z_mmax[5])
-			x_y_z_mmax[5] = vertices[i * 8 + 2];
+		if (i == 0 || vertices[i * 17] < x_y_z_mmax[0])
+			x_y_z_mmax[0] = vertices[i * 17];
+		if (i == 0 || vertices[i * 17] > x_y_z_mmax[1])
+			x_y_z_mmax[1] = vertices[i * 17];
+		if (i == 0 || vertices[i * 17 + 1] < x_y_z_mmax[2])
+			x_y_z_mmax[2] = vertices[i * 17 + 1];
+		if (i == 0 || vertices[i * 17 + 1] > x_y_z_mmax[3])
+			x_y_z_mmax[3] = vertices[i * 17 + 1];
+		if (i == 0 || vertices[i * 17 + 2] < x_y_z_mmax[4])
+			x_y_z_mmax[4] = vertices[i * 17 + 2];
+		if (i == 0 || vertices[i * 17 + 2] > x_y_z_mmax[5])
+			x_y_z_mmax[5] = vertices[i * 17 + 2];
 		i++;
 	}
 	center_vertices(vertices, nb_vertices, x_y_z_mmax);
@@ -193,11 +193,90 @@ t_light		*new_std_light(float r, float g, float b, float ambient_strength)
 	return (light);
 }
 
+void	get_next_color2(float rgb[3], int i)
+{
+	if (i % 6 == 3)
+	{
+		rgb[0] = 0.0;
+		rgb[1] = 0.3;
+		rgb[2] = 0.6;
+	}
+	if (i % 6 == 4)
+	{
+		rgb[0] = 0.0;
+		rgb[1] = 0.2;
+		rgb[2] = 0.9;
+	}
+	else
+	{
+		rgb[0] = 0.5;
+		rgb[1] = 0.1;
+		rgb[2] = 0.5;
+	}
+}
+
+void	get_next_color(float rgb[3])
+{
+	static int	i = 0;
+
+	if (i % 6 == 0)
+	{
+		rgb[0] = 0.2;
+		rgb[1] = 0.5;
+		rgb[2] = 0.1;
+	}
+	if (i % 6 == 1)
+	{
+		rgb[0] = 0.7;
+		rgb[1] = 0.1;
+		rgb[2] = 0.1;
+	}
+	if (i % 6 == 2)
+	{
+		rgb[0] = 0.9;
+		rgb[1] = 0.0;
+		rgb[2] = 0.1;
+	}
+	get_next_color2(rgb, i);
+	if (i % 6 == 5)
+		i = 0;
+	else
+		i++;	
+}
+
+void	add_face_color_to_obj(GLfloat *vertices, int nb_vertices)
+{
+	int		i;
+	float	rgb[3];
+
+	i = 0;
+	while (i < nb_vertices)
+	{
+		get_next_color(rgb);
+		vertices[i * 17 + 8] = rgb[0];
+		vertices[i * 17 + 9] = rgb[1];
+		vertices[i * 17 + 10] = rgb[2];
+		vertices[(i + 1) * 17 + 8] = rgb[0];
+		vertices[(i + 1) * 17 + 9] = rgb[1];
+		vertices[(i + 1) * 17 + 10] = rgb[2];
+		vertices[(i + 2) * 17 + 8] = rgb[0];
+		vertices[(i + 2) * 17 + 9] = rgb[1];
+		vertices[(i + 2) * 17 + 10] = rgb[2];
+		i += 3;
+	}
+}
+
+void	calc_tangent_bitangent(GLfloat *vertices, int nb_vertices)
+{
+	(void)vertices;
+	(void)nb_vertices;
+}
+
 t_globj		*new_obj_from_path(char *path)
 {
 	t_objfile	*objfile;
-	int			attribs_struct[] = {3, 2, 3};
-	int			nb_attribs = 3;
+	int			attribs_struct[] = {3, 2, 3, 3, 3, 3};
+	int			nb_attribs = 6;
 	GLfloat		*vertices;
 	int			nb_vertices;
 
@@ -213,6 +292,8 @@ t_globj		*new_obj_from_path(char *path)
 		return (NULL);
 	}
 	adjust_obj(vertices, nb_vertices);
+	add_face_color_to_obj(vertices, nb_vertices);
+	calc_tangent_bitangent(vertices, nb_vertices);
 	return (new_object(vertices, nb_vertices, attribs_struct, nb_attribs));
 }
 

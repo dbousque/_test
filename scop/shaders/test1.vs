@@ -3,6 +3,9 @@
 layout (location = 0) in vec3 position;
 layout (location = 1) in vec2 textCoords;
 layout (location = 2) in vec3 normalVec;
+layout (location = 3) in vec3 faceColor;
+layout (location = 4) in vec3 faceTangent;
+layout (location = 5) in vec3 faceBitangent;
 
 out vec2 TextCoords;
 out vec3 NormalVec;

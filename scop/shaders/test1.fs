@@ -4,10 +4,16 @@ in vec2 TextCoords;
 in vec3 NormalVec;
 in vec3 FragPos;
 in vec3 Position;
+in vec3 FaceColor;
 
 out vec4 color;
 
 uniform sampler2D ourTexture1;
+uniform sampler2D ourSpecular1;
+uniform sampler2D ourNormal1;
+uniform bool hasSpecularMap;
+uniform bool hasNormalMap;
+uniform float specularStrength;
 uniform vec3 ambientColor;
 uniform vec3 cameraPos;
 uniform float textureStrength;
@@ -126,43 +132,61 @@ void	getNAmbientColor(in int n, out vec3 ambientColorN)
 		ambientColorN = ambientColor10;
 }
 
-void	getNLightColor(inout int n, inout vec3 norm, inout vec3 cameraDir, inout float specularStrength, inout vec3 resColor)
+void	getNLightColor(inout int n, inout vec3 norm, inout vec3 cameraDir, inout vec3 resColor)
 {
 	vec3 lightPos;
 	vec3 lightColor;
-	vec3 ambientColor;
+	vec3 tmp_ambientColor;
 
 	getNLightPos(n, lightPos);
 	getNLightColor(n, lightColor);
-	getNAmbientColor(n, ambientColor);
+	getNAmbientColor(n, tmp_ambientColor);
 
 	vec3 lightDir = normalize(lightPos - FragPos);
 	float diff = max(dot(lightDir, norm), 0.0);
-	vec3 diffuse = lightColor * diff;
+	vec3 tmp_diffuse = lightColor * diff;
 	vec3 reflectDir = reflect(-lightDir, norm);
-	float spec = pow(max(dot(cameraDir, reflectDir), 0.0), 32);
+	float spec = pow(max(dot(cameraDir, reflectDir), 0.0), 8);
 	vec3 specular = specularStrength * spec * lightColor;
 
+	vec3 diffuse = tmp_diffuse * (1.0 - textureStrength);
+	diffuse += tmp_diffuse * vec3(texture(ourTexture1, TextCoords)) * textureStrength;
+	if (hasSpecularMap)
+	{
+		specular *= vec3(texture(ourSpecular1, TextCoords));
+	}
+	vec3 ambientColor = tmp_ambientColor * (1.0 - textureStrength);
+	ambientColor += tmp_ambientColor * vec3(texture(ourTexture1, TextCoords)) * textureStrength;
 	resColor = diffuse + specular + ambientColor;
 }
 
 void	main()
 {
 	vec3 objColor = vec3(0.8, 0.8, 0.8);
-	vec3 norm = normalize(NormalVec);
-	float specularStrength = 3.0f;
+	vec3 norm = vec3(0.0, 0.0, 0.0);
 	vec3 cameraDir = normalize(cameraPos - FragPos);
 	vec3 totLight = vec3(0.0, 0.0, 0.0);
 	vec3 tmpColor;
 
+	if (!hasNormalMap)
+	{
+		norm = normalize(NormalVec);
+	}
+	else
+	{
+		norm = texture(ourNormal1, TextCoords).rgb;
+		// Transform normal vector to range [-1,1]
+		norm = normalize(norm * 2.0 - 1.0); 
+	}
+
 	for (int i = 1; i <= nbLights; i++)
 	{
-		getNLightColor(i, norm, cameraDir, specularStrength, tmpColor);
+		getNLightColor(i, norm, cameraDir, tmpColor);
 		totLight += tmpColor;
 	}
 
-	color = vec4(objColor * totLight, 1.0) * (1.0 - textureStrength);
-	color += texture(ourTexture1, TextCoords) * vec4(totLight, 1.0) * textureStrength;
+	color = vec4(objColor * totLight, 1.0);// * (1.0 - textureStrength);
+	//color += texture(ourTexture1, TextCoords) * vec4(totLight, 1.0) * textureStrength;
 	//color = vec4(objColor * totLight, 1.0) * texture(ourTexture1, vec2(Position.x + Position.z, Position.y + Position.z));
 }
 

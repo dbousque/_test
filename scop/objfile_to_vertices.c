@@ -129,7 +129,7 @@ void	second_pass_add_normals(t_objfile *objfile, GLfloat **vertices)
 		{
 			set_normal(objfile, vertices, faces_ind, res_ind, x == 0 ? decal : 0);
 			faces_ind += 3;
-			res_ind += 8;
+			res_ind += 17;
 			x++;
 		}
 		if (((int*)objfile->faces->elts)[faces_ind] != 0)
@@ -255,8 +255,9 @@ void	get_text_xy(t_objfile *objfile, int known_ind, int unknown_ind,
 	known_xyz[0] = unknown_xyz[0] - known_xyz[0];
 	known_xyz[1] = unknown_xyz[1] - known_xyz[1];
 	known_xyz[2] = unknown_xyz[2] - known_xyz[2];
-	res_xy[0] = known_text_xy[0] + ((known_xyz[0] + known_xyz[2]) / scale);
-	res_xy[1] = known_text_xy[1] + (known_xyz[1] / scale);
+	res_xy[0] = known_text_xy[0] + ((known_xyz[0] + known_xyz[2]));
+	res_xy[1] = known_text_xy[1] + (known_xyz[1]);
+	(void)scale;
 }
 
 void	 solve_text_coords(t_objfile *objfile, t_list **vertex_in_faces,
@@ -357,8 +358,11 @@ char	objfile_to_vertices(t_objfile *objfile, GLfloat **verts,
 	int		decal;
 
 	if (!(valid_faces(objfile, nb_vertices)))
+	{
+		printf("a face has an invalid index\n");
 		return (0);
-	if (!(*verts = (GLfloat*)malloc(*nb_vertices * sizeof(GLfloat) * 8)))
+	}
+	if (!(*verts = (GLfloat*)malloc(*nb_vertices * sizeof(GLfloat) * 17)))
 		return (0);
 	if (objfile->normals->len == 3)
 	{
@@ -377,7 +381,7 @@ char	objfile_to_vertices(t_objfile *objfile, GLfloat **verts,
 		{
 			set_vertex(objfile, verts, faces_ind, res_ind, x == 0 ? decal : 0);
 			faces_ind += 3;
-			res_ind += 8;
+			res_ind += 17;
 			x++;
 		}
 		// no normal data

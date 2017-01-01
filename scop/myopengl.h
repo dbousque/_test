@@ -48,6 +48,11 @@ typedef struct			s_globj
 	float				x;
 	float				y;
 	float				z;
+	GLuint				specular_map;
+	GLuint				normal_map;
+	char				has_specular_map;
+	char				has_normal_map;
+	float				specular_strength;
 }						t_globj;
 
 typedef struct			s_window
@@ -176,5 +181,7 @@ void					draw_objects(t_list *objs, t_mat *view,
 															t_mat *projection);
 t_globj					*new_obj_from_path(char *path);
 void					update_stats(void);
+void					load_specular_map_to_obj(t_globj *obj, char *img_path);
+void					load_normal_map_to_obj(t_globj *obj, char *img_path);
 
 #endif

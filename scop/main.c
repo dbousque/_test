@@ -62,7 +62,7 @@ int		main(void)
 	objs = new_list(sizeof(t_globj*));
 	lights = new_list(sizeof(t_light*));
 	//obj = new_obj_from_path("ressources/plane/Su-27_Flanker.obj");
-	obj = new_obj_from_path("ressources/f14.obj");
+	obj = new_obj_from_path("ressources/teapot.obj");
 	if (!obj)
 		return (-1);
 	attach_shader_program_to_obj(obj, g_obj_program);
@@ -74,7 +74,10 @@ int		main(void)
 	add_to_list(lights, &light);
 	//attach_indices_to_obj(obj, indices, nb_indices);
 	//load_texture_to_obj(obj, "ressources/plane/Su-27_Flanker_P01.png");
-	load_texture_to_obj(obj, "wooden.png");
+	obj->specular_strength = 0.5;
+	load_texture_to_obj(obj, "wall2.jpg");
+	load_specular_map_to_obj(obj, "wall2_specular.jpg");
+	load_normal_map_to_obj(obj, "wall2_normal.jpg");
 	g_conf.info_updated_at = glfwGetTime();
 	g_conf.frames_seen = 0;
 	g_conf.time_spent = 0.0;
