@@ -62,7 +62,7 @@ int		main(void)
 	objs = new_list(sizeof(t_globj*));
 	lights = new_list(sizeof(t_light*));
 	//obj = new_obj_from_path("ressources/plane/Su-27_Flanker.obj");
-	obj = new_obj_from_path("ressources/teapot.obj");
+	obj = new_obj_from_path("ressources/car.obj");
 	if (!obj)
 		return (-1);
 	attach_shader_program_to_obj(obj, g_obj_program);
