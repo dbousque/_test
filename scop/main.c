@@ -9,12 +9,37 @@ void	main_loop(t_window *window, t_list *objs, t_list *lights)
 	GLfloat		delta_time;
 	t_mat		*view;
 	t_mat		*projection;
+	char		i;
 
+	i = 0;
 	while (!glfwWindowShouldClose(window->win))
 	{
+		if (i == 0)
+		{
+			g_conf.blue_strength = 0.0;
+			g_conf.red_strength = 1.0;
+			g_conf.green_strength = 0.0;
+			g_cam.x -= 0.1;
+			//g_cam.front_x += 50.0;
+			i = 1;
+		}
+		else
+		{
+			g_conf.blue_strength = 1.0;
+			g_conf.red_strength = 0.0;
+			g_conf.green_strength = 1.0;
+			g_cam.x += 0.1;
+			//g_cam.front_x -= 50.0;
+			i = 0;
+		}
 		glfwPollEvents();
-		glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		if (i == 0)
+		{
+			glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
+			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		}
+		else
+			glClearDepth(1);
 		last_frame = current_frame;
 		current_frame = glfwGetTime();
 		delta_time = current_frame - last_frame;
@@ -28,7 +53,8 @@ void	main_loop(t_window *window, t_list *objs, t_list *lights)
 		draw_lights(lights, view, projection);
 		g_conf.time_spent += glfwGetTime() - current_frame;
 		update_stats();
-		glfwSwapBuffers(window->win);
+		if (i == 1)
+			glfwSwapBuffers(window->win);
 	}
 }
 
@@ -57,12 +83,12 @@ int		main(void)
 	g_light_program = new_shader_program("shaders/light.vs", "shaders/light.fs");
 	if (!g_light_program)
 		return (-1);
-	//glEnable(GL_BLEND);
-	//glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	objs = new_list(sizeof(t_globj*));
 	lights = new_list(sizeof(t_light*));
-	obj = new_obj_from_path("ressources/plane/Su-27_Flanker.obj");
-	//obj = new_obj_from_path("ressources/pouf/pouf.obj");
+	//obj = new_obj_from_path("ressources/plane/Su-27_Flanker.obj");
+	obj = new_obj_from_path("ressources/42.obj");
 	if (!obj)
 		return (-1);
 	attach_shader_program_to_obj(obj, g_obj_program);
@@ -74,16 +100,16 @@ int		main(void)
 	add_to_list(lights, &light);
 	//attach_indices_to_obj(obj, indices, nb_indices);
 	//load_texture_to_obj(obj, "ressources/plane/Su-27_Flanker_P01.png");
-	obj->specular_strength = 3.5;
+	obj->specular_strength = 10.5;
 	//load_texture_to_obj(obj, "ressources/teeth/teeth_diff.png");
 	//load_specular_map_to_obj(obj, "ressources/teeth/teeth_spec.png");
 	//load_normal_map_to_obj(obj, "ressources/teeth/teeth_normal.png");
-	//load_texture_to_obj(obj, "wall2.jpg");
-	//load_specular_map_to_obj(obj, "wall2_specular.jpg");
-	//load_normal_map_to_obj(obj, "wall2_normal.jpg");
-	load_texture_to_obj(obj, "ressources/plane/Su-27_Flanker_P01.png");
-	load_specular_map_to_obj(obj, "ressources/plane/Su-27_Flanker_S2.png");
-	load_normal_map_to_obj(obj, "ressources/plane/Su-27_Flanker_N.png");
+	load_texture_to_obj(obj, "wall2.jpg");
+	load_specular_map_to_obj(obj, "wall2_specular.jpg");
+	load_normal_map_to_obj(obj, "wall2_normal.jpg");
+	//load_texture_to_obj(obj, "ressources/plane/Su-27_Flanker_P01.png");
+	//load_specular_map_to_obj(obj, "ressources/plane/Su-27_Flanker_S2.png");
+	//load_normal_map_to_obj(obj, "ressources/plane/Su-27_Flanker_N.png");
 	//load_texture_to_obj(obj, "ressources/pouf/diff.jpg");
 	//load_specular_map_to_obj(obj, "ressources/pouf/spec.jpg");
 	//load_normal_map_to_obj(obj, "ressources/pouf/normal.png");

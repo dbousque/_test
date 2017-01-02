@@ -19,6 +19,9 @@ uniform vec3 ambientColor;
 uniform vec3 cameraPos;
 uniform float textureStrength;
 uniform float colorsStrength;
+uniform float redStrength;
+uniform float greenStrength;
+uniform float blueStrength;
 
 uniform int nbLights;
 
@@ -206,6 +209,8 @@ void	main()
 		totLight += tmpColor;
 	}
 
+	totLight = vec3(totLight.r * redStrength, totLight.g * greenStrength, totLight.b * blueStrength);
+
 	color = vec4(objColor * totLight, 1.0);// * (1.0 - textureStrength);
 	//color += texture(ourTexture1, TextCoords) * vec4(totLight, 1.0) * textureStrength;
 	//color = vec4(objColor * totLight, 1.0) * texture(ourTexture1, vec2(Position.x + Position.z, Position.y + Position.z));
@@ -230,6 +235,6 @@ void	main()
 
 	vec3 totLight = resLight1;
 
-	color = vec4(objColor * totLight, 1.0) * texture(ourTexture1, TextCoords);
+	color = vec4(objColor * totLight, 0.0) * texture(ourTexture1, TextCoords);
 	//color = mix(texture(ourTexture1, TextCoords), texture(ourTexture2, TextCoords), 1.0);
 }*/

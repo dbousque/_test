@@ -14,6 +14,9 @@ void	setup_conf(void)
 	g_conf.texture_plus = 0;
 	g_conf.colors_strength = 0.0;
 	g_conf.colors_plus = 0;
+	g_conf.red_strength = 1.0;
+	g_conf.green_strength = 0.72;
+	g_conf.blue_strength = 1.0;
 }	
 
 t_mat	*build_view(void)

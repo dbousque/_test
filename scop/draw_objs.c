@@ -26,6 +26,12 @@ void	set_lights(t_list *objs, t_list *lights, float texture_strength,
 		glUniform1f(loc, texture_strength);
 		loc = glGetUniformLocation(obj->shader->program, "colorsStrength");
 		glUniform1f(loc, colors_strength);
+		loc = glGetUniformLocation(obj->shader->program, "redStrength");
+		glUniform1f(loc, g_conf.red_strength);
+		loc = glGetUniformLocation(obj->shader->program, "greenStrength");
+		glUniform1f(loc, g_conf.green_strength);
+		loc = glGetUniformLocation(obj->shader->program, "blueStrength");
+		glUniform1f(loc, g_conf.blue_strength);
 		x = 0;
 		while (x < lights->len)
 		{
@@ -70,6 +76,12 @@ void	draw_objects(t_list *objs, t_mat *view, t_mat *projection)
 		obj = ((t_globj**)objs->elts)[i];
 		shader = obj->shader;
 		glUseProgram(shader->program);
+		loc = glGetUniformLocation(shader->program, "redStrength");
+		glUniform1f(loc, g_conf.red_strength);
+		loc = glGetUniformLocation(shader->program, "greenStrength");
+		glUniform1f(loc, g_conf.green_strength);
+		loc = glGetUniformLocation(shader->program, "blueStrength");
+		glUniform1f(loc, g_conf.blue_strength);
 		if (i == 0)
 		{
 			trans = translate(new_vec3(obj->x, obj->y, obj->z));

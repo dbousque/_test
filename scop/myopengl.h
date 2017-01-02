@@ -111,6 +111,9 @@ typedef struct			s_config
 	float				colors_strength;
 	char				texture_plus;
 	char				colors_plus;
+	float				red_strength;
+	float				green_strength;
+	float				blue_strength;
 }						t_config;
 
 typedef struct			s_light
