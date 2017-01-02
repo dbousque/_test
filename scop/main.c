@@ -23,7 +23,7 @@ void	main_loop(t_window *window, t_list *objs, t_list *lights)
 		view = build_view();
 		projection = perspective(deg_to_rad(g_cam.fov),
 					((float)g_conf.win_height) / g_conf.win_width, 0.1, 100.0);
-		set_lights(objs, lights, g_conf.texture_strength);
+		set_lights(objs, lights, g_conf.texture_strength, g_conf.colors_strength);
 		draw_objects(objs, view, projection);
 		draw_lights(lights, view, projection);
 		g_conf.time_spent += glfwGetTime() - current_frame;
@@ -61,8 +61,8 @@ int		main(void)
 	//glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	objs = new_list(sizeof(t_globj*));
 	lights = new_list(sizeof(t_light*));
-	//obj = new_obj_from_path("ressources/plane/Su-27_Flanker.obj");
-	obj = new_obj_from_path("ressources/car.obj");
+	obj = new_obj_from_path("ressources/plane/Su-27_Flanker.obj");
+	//obj = new_obj_from_path("ressources/pouf/pouf.obj");
 	if (!obj)
 		return (-1);
 	attach_shader_program_to_obj(obj, g_obj_program);
@@ -74,10 +74,19 @@ int		main(void)
 	add_to_list(lights, &light);
 	//attach_indices_to_obj(obj, indices, nb_indices);
 	//load_texture_to_obj(obj, "ressources/plane/Su-27_Flanker_P01.png");
-	obj->specular_strength = 0.5;
-	load_texture_to_obj(obj, "wall2.jpg");
-	load_specular_map_to_obj(obj, "wall2_specular.jpg");
-	load_normal_map_to_obj(obj, "wall2_normal.jpg");
+	obj->specular_strength = 3.5;
+	//load_texture_to_obj(obj, "ressources/teeth/teeth_diff.png");
+	//load_specular_map_to_obj(obj, "ressources/teeth/teeth_spec.png");
+	//load_normal_map_to_obj(obj, "ressources/teeth/teeth_normal.png");
+	//load_texture_to_obj(obj, "wall2.jpg");
+	//load_specular_map_to_obj(obj, "wall2_specular.jpg");
+	//load_normal_map_to_obj(obj, "wall2_normal.jpg");
+	load_texture_to_obj(obj, "ressources/plane/Su-27_Flanker_P01.png");
+	load_specular_map_to_obj(obj, "ressources/plane/Su-27_Flanker_S2.png");
+	load_normal_map_to_obj(obj, "ressources/plane/Su-27_Flanker_N.png");
+	//load_texture_to_obj(obj, "ressources/pouf/diff.jpg");
+	//load_specular_map_to_obj(obj, "ressources/pouf/spec.jpg");
+	//load_normal_map_to_obj(obj, "ressources/pouf/normal.png");
 	g_conf.info_updated_at = glfwGetTime();
 	g_conf.frames_seen = 0;
 	g_conf.time_spent = 0.0;

@@ -11,6 +11,8 @@ out vec2 TextCoords;
 out vec3 NormalVec;
 out vec3 FragPos;
 out vec3 Position;
+out vec3 FaceTangent;
+out vec3 FaceColor;
 
 uniform mat4 model;
 uniform mat4 view;
@@ -30,4 +32,6 @@ void main()
 	//NormalVec = vec3(tmp3.x, tmp3.y, -tmp3.z);
 	vec3 tmp3 = mat3(transpInv) * normalVec;
 	NormalVec = vec3(tmp3.x, tmp3.y, tmp3.z);
+	FaceTangent = (projection * model * vec4(faceTangent, 0.0)).xyz;
+	FaceColor = faceColor;
 }

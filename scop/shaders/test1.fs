@@ -5,6 +5,7 @@ in vec3 NormalVec;
 in vec3 FragPos;
 in vec3 Position;
 in vec3 FaceColor;
+in vec3 FaceTangent;
 
 out vec4 color;
 
@@ -17,6 +18,7 @@ uniform float specularStrength;
 uniform vec3 ambientColor;
 uniform vec3 cameraPos;
 uniform float textureStrength;
+uniform float colorsStrength;
 
 uniform int nbLights;
 
@@ -146,18 +148,35 @@ void	getNLightColor(inout int n, inout vec3 norm, inout vec3 cameraDir, inout ve
 	float diff = max(dot(lightDir, norm), 0.0);
 	vec3 tmp_diffuse = lightColor * diff;
 	vec3 reflectDir = reflect(-lightDir, norm);
-	float spec = pow(max(dot(cameraDir, reflectDir), 0.0), 8);
+	float spec = pow(max(dot(cameraDir, reflectDir), 0.0), 64);
 	vec3 specular = specularStrength * spec * lightColor;
 
-	vec3 diffuse = tmp_diffuse * (1.0 - textureStrength);
+	vec3 diffuse = tmp_diffuse * (1.0 - (textureStrength + colorsStrength));
 	diffuse += tmp_diffuse * vec3(texture(ourTexture1, TextCoords)) * textureStrength;
+	diffuse += tmp_diffuse * FaceColor * colorsStrength;
 	if (hasSpecularMap)
 	{
 		specular *= vec3(texture(ourSpecular1, TextCoords));
 	}
-	vec3 ambientColor = tmp_ambientColor * (1.0 - textureStrength);
+	vec3 ambientColor = tmp_ambientColor * (1.0 - (textureStrength + colorsStrength));
 	ambientColor += tmp_ambientColor * vec3(texture(ourTexture1, TextCoords)) * textureStrength;
+	ambientColor += tmp_ambientColor * FaceColor * colorsStrength;
 	resColor = diffuse + specular + ambientColor;
+}
+
+vec3 CalcBumpedNormal()
+{
+    vec3 Normal = normalize(NormalVec);
+    vec3 Tangent = normalize(FaceTangent);
+    Tangent = normalize(Tangent - dot(Tangent, Normal) * Normal);
+    vec3 Bitangent = cross(Tangent, Normal);
+    vec3 BumpMapNormal = texture(ourNormal1, TextCoords).xyz;
+    BumpMapNormal = 2.0 * BumpMapNormal - vec3(1.0, 1.0, 1.0);
+    vec3 NewNormal;
+    mat3 TBN = mat3(Tangent, Bitangent, Normal);
+    NewNormal = TBN * BumpMapNormal;
+    NewNormal = normalize(NewNormal);
+    return NewNormal;
 }
 
 void	main()
@@ -174,9 +193,11 @@ void	main()
 	}
 	else
 	{
-		norm = texture(ourNormal1, TextCoords).rgb;
+		norm = CalcBumpedNormal();
+		/*norm = texture(ourNormal1, TextCoords).rgb;
+		norm *= FaceTangent * FaceBitangent;
 		// Transform normal vector to range [-1,1]
-		norm = normalize(norm * 2.0 - 1.0); 
+		norm = normalize(norm * 2.0 - 1.0);*/
 	}
 
 	for (int i = 1; i <= nbLights; i++)

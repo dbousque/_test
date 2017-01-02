@@ -43,7 +43,17 @@ void    key_callback(GLFWwindow *window, int key, int scancode, int action,
 	if (key == GLFW_KEY_M && action == GLFW_PRESS)
 		g_conf.normal_mode = g_conf.normal_mode == 0 ? 1 : 0;
 	if (key == GLFW_KEY_T && action == GLFW_PRESS)
-		g_conf.texture_plus = g_conf.texture_plus ? 0 : 1;
+	{
+		if (!g_conf.texture_plus && !g_conf.colors_plus)
+			g_conf.colors_plus = 1;
+		else if (g_conf.colors_plus)
+		{
+			g_conf.colors_plus = 0;
+			g_conf.texture_plus = 1;
+		}
+		else if (g_conf.texture_plus)
+			g_conf.texture_plus = 0;
+	}
 	if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
 		glfwSetWindowShouldClose(window, GL_TRUE);
 }
@@ -74,6 +84,18 @@ void	do_movement3(GLfloat delta_time, t_list *objs, t_list *lights)
 		g_conf.texture_strength -= 1.0 * delta_time;
 		if (g_conf.texture_strength < 0.0)
 			g_conf.texture_strength = 0.0;
+	}
+	if (g_conf.colors_plus)
+	{
+		g_conf.colors_strength += 1.0 * delta_time;
+		if (g_conf.colors_strength > 1.0)
+			g_conf.colors_strength = 1.0;
+	}
+	else
+	{
+		g_conf.colors_strength -= 1.0 * delta_time;
+		if (g_conf.colors_strength < 0.0)
+			g_conf.colors_strength = 0.0;
 	}
 }
 

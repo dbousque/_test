@@ -12,6 +12,8 @@ void	setup_conf(void)
 	g_conf.normal_mode = 0;
 	g_conf.texture_strength = 0.0;
 	g_conf.texture_plus = 0;
+	g_conf.colors_strength = 0.0;
+	g_conf.colors_plus = 0;
 }	
 
 t_mat	*build_view(void)
@@ -193,7 +195,7 @@ t_light		*new_std_light(float r, float g, float b, float ambient_strength)
 	return (light);
 }
 
-void	get_next_color2(float rgb[3], int i)
+/*void	get_next_color2(float rgb[3], int i)
 {
 	if (i % 6 == 3)
 	{
@@ -207,7 +209,7 @@ void	get_next_color2(float rgb[3], int i)
 		rgb[1] = 0.2;
 		rgb[2] = 0.9;
 	}
-	else
+	if (i % 6 == 5)
 	{
 		rgb[0] = 0.5;
 		rgb[1] = 0.1;
@@ -242,6 +244,13 @@ void	get_next_color(float rgb[3])
 		i = 0;
 	else
 		i++;	
+}*/
+
+void	get_next_color(float rgb[3])
+{
+	rgb[0] = (rand() % 1000) / 1000.0;
+	rgb[1] = (rand() % 1000) / 1000.0;
+	rgb[2] = (rand() % 1000) / 1000.0;
 }
 
 void	add_face_color_to_obj(GLfloat *vertices, int nb_vertices)
@@ -266,10 +275,95 @@ void	add_face_color_to_obj(GLfloat *vertices, int nb_vertices)
 	}
 }
 
+void	calc_tangent_bitangent_triangle(GLfloat *vertices, int i, float r)
+{
+	float	delta_pos1[3];
+	float	delta_pos2[3];
+	float	delta_uv1[2];
+	float	delta_uv2[2];
+
+	delta_pos1[0] = vertices[(i + 1) * 17 + 0] - vertices[i * 17 + 0];
+	delta_pos1[1] = vertices[(i + 1) * 17 + 1] - vertices[i * 17 + 1];
+	delta_pos1[2] = vertices[(i + 1) * 17 + 2] - vertices[i * 17 + 2];
+	delta_pos2[0] = vertices[(i + 2) * 17 + 0] - vertices[i * 17 + 0];
+	delta_pos2[1] = vertices[(i + 2) * 17 + 1] - vertices[i * 17 + 1];
+	delta_pos2[2] = vertices[(i + 2) * 17 + 2] - vertices[i * 17 + 2];
+	delta_uv1[0] = vertices[(i + 1) * 17 + 3] - vertices[i * 17 + 3];
+	delta_uv1[1] = vertices[(i + 1) * 17 + 4] - vertices[i * 17 + 4];
+	delta_uv2[0] = vertices[(i + 2) * 17 + 3] - vertices[i * 17 + 3];
+	delta_uv2[1] = vertices[(i + 2) * 17 + 4] - vertices[i * 17 + 4];
+	r = 1.0 / (delta_uv1[0] * delta_uv2[1] - delta_uv1[1] * delta_uv2[0]);
+	vertices[(i + 0) * 17 + 11] = delta_pos1[0] * delta_uv2[1];
+	vertices[(i + 0) * 17 + 11] -= delta_pos2[0] * delta_uv1[1];
+	vertices[(i + 0) * 17 + 11] *= r;
+	vertices[(i + 0) * 17 + 12] = delta_pos1[1] * delta_uv2[1];
+	vertices[(i + 0) * 17 + 12] -= delta_pos2[1] * delta_uv1[1];
+	vertices[(i + 0) * 17 + 12] *= r;
+	vertices[(i + 0) * 17 + 13] = delta_pos1[2] * delta_uv2[1];
+	vertices[(i + 0) * 17 + 13] -= delta_pos2[2] * delta_uv1[1];
+	vertices[(i + 0) * 17 + 13] *= r;
+
+	vertices[(i + 1) * 17 + 11] = delta_pos1[0] * delta_uv2[1];
+	vertices[(i + 1) * 17 + 11] -= delta_pos2[0] * delta_uv1[1];
+	vertices[(i + 1) * 17 + 11] *= r;
+	vertices[(i + 1) * 17 + 12] = delta_pos1[1] * delta_uv2[1];
+	vertices[(i + 1) * 17 + 12] -= delta_pos2[1] * delta_uv1[1];
+	vertices[(i + 1) * 17 + 12] *= r;
+	vertices[(i + 1) * 17 + 13] = delta_pos1[2] * delta_uv2[1];
+	vertices[(i + 1) * 17 + 13] -= delta_pos2[2] * delta_uv1[1];
+	vertices[(i + 1) * 17 + 13] *= r;
+
+	vertices[(i + 2) * 17 + 11] = delta_pos1[0] * delta_uv2[1];
+	vertices[(i + 2) * 17 + 11] -= delta_pos2[0] * delta_uv1[1];
+	vertices[(i + 2) * 17 + 11] *= r;
+	vertices[(i + 2) * 17 + 12] = delta_pos1[1] * delta_uv2[1];
+	vertices[(i + 2) * 17 + 12] -= delta_pos2[1] * delta_uv1[1];
+	vertices[(i + 2) * 17 + 12] *= r;
+	vertices[(i + 2) * 17 + 13] = delta_pos1[2] * delta_uv2[1];
+	vertices[(i + 2) * 17 + 13] -= delta_pos2[2] * delta_uv1[1];
+	vertices[(i + 2) * 17 + 13] *= r;
+
+	vertices[(i + 0) * 17 + 14] = delta_pos2[0] * delta_uv1[0];
+	vertices[(i + 0) * 17 + 14] -= delta_pos1[0] * delta_uv2[0];
+	vertices[(i + 0) * 17 + 14] *= r;
+	vertices[(i + 0) * 17 + 15] = delta_pos2[1] * delta_uv1[0];
+	vertices[(i + 0) * 17 + 15] -= delta_pos1[1] * delta_uv2[0];
+	vertices[(i + 0) * 17 + 15] *= r;
+	vertices[(i + 0) * 17 + 16] = delta_pos2[2] * delta_uv1[0];
+	vertices[(i + 0) * 17 + 16] -= delta_pos1[2] * delta_uv2[0];
+	vertices[(i + 0) * 17 + 16] *= r;
+
+	vertices[(i + 1) * 17 + 14] = delta_pos2[0] * delta_uv1[0];
+	vertices[(i + 1) * 17 + 14] -= delta_pos1[0] * delta_uv2[0];
+	vertices[(i + 1) * 17 + 14] *= r;
+	vertices[(i + 1) * 17 + 15] = delta_pos2[1] * delta_uv1[0];
+	vertices[(i + 1) * 17 + 15] -= delta_pos1[1] * delta_uv2[0];
+	vertices[(i + 1) * 17 + 15] *= r;
+	vertices[(i + 1) * 17 + 16] = delta_pos2[2] * delta_uv1[0];
+	vertices[(i + 1) * 17 + 16] -= delta_pos1[2] * delta_uv2[0];
+	vertices[(i + 1) * 17 + 16] *= r;
+
+	vertices[(i + 2) * 17 + 14] = delta_pos2[0] * delta_uv1[0];
+	vertices[(i + 2) * 17 + 14] -= delta_pos1[0] * delta_uv2[0];
+	vertices[(i + 2) * 17 + 14] *= r;
+	vertices[(i + 2) * 17 + 15] = delta_pos2[1] * delta_uv1[0];
+	vertices[(i + 2) * 17 + 15] -= delta_pos1[1] * delta_uv2[0];
+	vertices[(i + 2) * 17 + 15] *= r;
+	vertices[(i + 2) * 17 + 16] = delta_pos2[2] * delta_uv1[0];
+	vertices[(i + 2) * 17 + 16] -= delta_pos1[2] * delta_uv2[0];
+	vertices[(i + 2) * 17 + 16] *= r;
+}
+
 void	calc_tangent_bitangent(GLfloat *vertices, int nb_vertices)
 {
-	(void)vertices;
-	(void)nb_vertices;
+	int		i;
+
+	i = 0;
+	while (i < nb_vertices)
+	{
+		calc_tangent_bitangent_triangle(vertices, i, 0.0);
+		i += 3;
+	}
 }
 
 t_globj		*new_obj_from_path(char *path)

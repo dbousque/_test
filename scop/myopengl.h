@@ -108,7 +108,9 @@ typedef struct			s_config
 	int					frames_seen;
 	char				normal_mode;
 	float				texture_strength;
-	float				texture_plus;
+	float				colors_strength;
+	char				texture_plus;
+	char				colors_plus;
 }						t_config;
 
 typedef struct			s_light
@@ -169,7 +171,7 @@ char					add_normal(t_objfile *objfile, char *line,
 char					add_texture(t_objfile *objfile, char *line,
 															size_t line_nb);
 void					set_lights(t_list *objs, t_list *lights,
-													float texture_strength);
+								float texture_strength, float colors_strength);
 t_light					*new_std_light(float r, float g, float b,
 													float ambient_strength);
 void					adjust_obj(GLfloat *vertices, int nb_vertices);

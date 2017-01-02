@@ -2,7 +2,8 @@
 
 #include "myopengl.h"
 
-void	set_lights(t_list *objs, t_list *lights, float texture_strength)
+void	set_lights(t_list *objs, t_list *lights, float texture_strength,
+														float colors_strength)
 {
 	size_t		i;
 	size_t		x;
@@ -23,6 +24,8 @@ void	set_lights(t_list *objs, t_list *lights, float texture_strength)
 		glUniform1i(loc, (int)lights->len);
 		loc = glGetUniformLocation(obj->shader->program, "textureStrength");
 		glUniform1f(loc, texture_strength);
+		loc = glGetUniformLocation(obj->shader->program, "colorsStrength");
+		glUniform1f(loc, colors_strength);
 		x = 0;
 		while (x < lights->len)
 		{
