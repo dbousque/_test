@@ -114,6 +114,14 @@ typedef struct			s_config
 	float				red_strength;
 	float				green_strength;
 	float				blue_strength;
+	GLuint				left_eye_framebuffer;
+	GLuint				right_eye_framebuffer;
+	GLuint				left_eye_texture;
+	GLuint				right_eye_texture;
+	GLuint				left_eye_depthbuffer;
+	GLuint				right_eye_depthbuffer;
+	t_globj				*quad;
+	char				stereoscopic;
 }						t_config;
 
 typedef struct			s_light
@@ -130,6 +138,7 @@ char					g_keys[1024];
 t_config				g_conf;
 t_shader_program		*g_obj_program;
 t_shader_program		*g_light_program;
+t_shader_program		*g_merge_program;
 
 t_list					*new_list(size_t elt_size);
 void					add_to_list(t_list *lst, void *elt);

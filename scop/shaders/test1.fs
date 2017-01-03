@@ -1,13 +1,13 @@
 #version 330 core
 
+layout(location = 0) out vec3 color;
+
 in vec2 TextCoords;
 in vec3 NormalVec;
 in vec3 FragPos;
 in vec3 Position;
 in vec3 FaceColor;
 in vec3 FaceTangent;
-
-out vec4 color;
 
 uniform sampler2D ourTexture1;
 uniform sampler2D ourSpecular1;
@@ -19,9 +19,6 @@ uniform vec3 ambientColor;
 uniform vec3 cameraPos;
 uniform float textureStrength;
 uniform float colorsStrength;
-uniform float redStrength;
-uniform float greenStrength;
-uniform float blueStrength;
 
 uniform int nbLights;
 
@@ -197,10 +194,6 @@ void	main()
 	else
 	{
 		norm = CalcBumpedNormal();
-		/*norm = texture(ourNormal1, TextCoords).rgb;
-		norm *= FaceTangent * FaceBitangent;
-		// Transform normal vector to range [-1,1]
-		norm = normalize(norm * 2.0 - 1.0);*/
 	}
 
 	for (int i = 1; i <= nbLights; i++)
@@ -209,32 +202,5 @@ void	main()
 		totLight += tmpColor;
 	}
 
-	totLight = vec3(totLight.r * redStrength, totLight.g * greenStrength, totLight.b * blueStrength);
-
-	color = vec4(objColor * totLight, 1.0);// * (1.0 - textureStrength);
-	//color += texture(ourTexture1, TextCoords) * vec4(totLight, 1.0) * textureStrength;
-	//color = vec4(objColor * totLight, 1.0) * texture(ourTexture1, vec2(Position.x + Position.z, Position.y + Position.z));
+	color = objColor * totLight;
 }
-
-/*void	main()
-{
-	vec3 objColor = vec3(0.8, 0.8, 0.8);
-
-	vec3 norm = normalize(NormalVec);
-
-
-	vec3 lightDir = normalize(lightPos1 - FragPos);
-	float diff = max(dot(lightDir, norm), 0.0);
-	vec3 diffuse = lightColor1 * diff;
-	float specularStrength = 3.0f;
-	vec3 cameraDir = normalize(cameraPos - FragPos);
-	vec3 reflectDir = reflect(-lightDir, norm);
-	float spec = pow(max(dot(cameraDir, reflectDir), 0.0), 32);
-	vec3 specular = specularStrength * spec * lightColor1;
-	vec3 resLight1 = diffuse + specular + ambientColor1;
-
-	vec3 totLight = resLight1;
-
-	color = vec4(objColor * totLight, 0.0) * texture(ourTexture1, TextCoords);
-	//color = mix(texture(ourTexture1, TextCoords), texture(ourTexture2, TextCoords), 1.0);
-}*/

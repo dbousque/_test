@@ -17,6 +17,7 @@ void	setup_conf(void)
 	g_conf.red_strength = 1.0;
 	g_conf.green_strength = 0.72;
 	g_conf.blue_strength = 1.0;
+	g_conf.stereoscopic = 1;
 }	
 
 t_mat	*build_view(void)
@@ -197,57 +198,6 @@ t_light		*new_std_light(float r, float g, float b, float ambient_strength)
 	light->b = b;
 	return (light);
 }
-
-/*void	get_next_color2(float rgb[3], int i)
-{
-	if (i % 6 == 3)
-	{
-		rgb[0] = 0.0;
-		rgb[1] = 0.3;
-		rgb[2] = 0.6;
-	}
-	if (i % 6 == 4)
-	{
-		rgb[0] = 0.0;
-		rgb[1] = 0.2;
-		rgb[2] = 0.9;
-	}
-	if (i % 6 == 5)
-	{
-		rgb[0] = 0.5;
-		rgb[1] = 0.1;
-		rgb[2] = 0.5;
-	}
-}
-
-void	get_next_color(float rgb[3])
-{
-	static int	i = 0;
-
-	if (i % 6 == 0)
-	{
-		rgb[0] = 0.2;
-		rgb[1] = 0.5;
-		rgb[2] = 0.1;
-	}
-	if (i % 6 == 1)
-	{
-		rgb[0] = 0.7;
-		rgb[1] = 0.1;
-		rgb[2] = 0.1;
-	}
-	if (i % 6 == 2)
-	{
-		rgb[0] = 0.9;
-		rgb[1] = 0.0;
-		rgb[2] = 0.1;
-	}
-	get_next_color2(rgb, i);
-	if (i % 6 == 5)
-		i = 0;
-	else
-		i++;	
-}*/
 
 void	get_next_color(float rgb[3])
 {

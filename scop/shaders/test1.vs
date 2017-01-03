@@ -27,9 +27,6 @@ void main()
 	FragPos = vec3(tmp2.x, tmp2.y, tmp2.z);
 	Position = position;
 	TextCoords = vec2(textCoords.x, 1.0 - textCoords.y);
-	//NormalVec = normalVec;
-	//vec3 tmp3 = mat3(transpose(inverse(model))) * normalVec;
-	//NormalVec = vec3(tmp3.x, tmp3.y, -tmp3.z);
 	vec3 tmp3 = mat3(transpInv) * normalVec;
 	NormalVec = vec3(tmp3.x, tmp3.y, tmp3.z);
 	FaceTangent = (projection * model * vec4(faceTangent, 0.0)).xyz;
