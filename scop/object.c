@@ -184,6 +184,7 @@ void	set_obj_std(t_globj *obj, int nb_vertices)
 	obj->has_specular_map = 0;
 	obj->has_normal_map = 0;
 	obj->specular_strength = 0.0;
+	obj->scale = 1.0;
 }
 
 t_globj		*new_object(GLfloat *vertices, int nb_vertices,
@@ -291,7 +292,7 @@ void	activate_textures(t_shader_program *shader_program, t_globj *obj)
 	{
 		glUniform1i(glGetUniformLocation(shader_program->program,
 								"hasNormalMap"), 1);
-		glActiveTexture(get_texture_nb(obj->nb_textures) + obj->has_specular_map);
+		glActiveTexture(get_texture_nb(obj->nb_textures + obj->has_specular_map));
 		glBindTexture(GL_TEXTURE_2D, obj->normal_map);
 		glUniform1i(glGetUniformLocation(shader_program->program,
 					"ourNormal1"), obj->nb_textures + obj->has_specular_map);

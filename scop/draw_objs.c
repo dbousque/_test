@@ -85,13 +85,17 @@ void	draw_objects(t_list *objs, t_mat *view, t_mat *projection)
 		if (i == 0)
 		{
 			trans = translate(new_vec3(obj->x, obj->y, obj->z));
-			scal = scale(new_vec3(g_conf.obj_scale, g_conf.obj_scale, g_conf.obj_scale));
+			scal = scale(new_vec3(obj->scale, obj->scale, obj->scale));
 			rot = rotate(new_vec3(0.0, 0.0, deg_to_rad((GLfloat)glfwGetTime() * 15.0f)));
 			model = mat_mult(scal, trans);
 			model = mat_mult(model, rot);
 		}
 		else
+		{
+			scal = scale(new_vec3(obj->scale, obj->scale, obj->scale));
 			model = translate(new_vec3(obj->x, obj->y, obj->z));
+			model = mat_mult(model, scal);
+		}
 		//view = translate(new_vec3(0.0, 0.0, -3.0 + (mixVal * 4)));
 		//model = new_mat4();
 		inv = invert(model);

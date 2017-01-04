@@ -5,8 +5,7 @@
 void	setup_conf(void)
 {
 	g_conf.lines = 0;
-	g_conf.obj_scale = 1.0;
-	g_conf.win_width = 1900;
+	g_conf.win_width = 2100;
 	g_conf.win_height = 1300;
 	g_conf.obj_ind = 0;
 	g_conf.normal_mode = 0;
@@ -17,7 +16,8 @@ void	setup_conf(void)
 	g_conf.red_strength = 1.0;
 	g_conf.green_strength = 0.72;
 	g_conf.blue_strength = 1.0;
-	g_conf.stereoscopic = 1;
+	g_conf.stereoscopic = 0;
+	g_conf.generic_textures_ind = 0;
 }	
 
 t_mat	*build_view(void)
@@ -94,7 +94,7 @@ void	center_vertices(GLfloat *vertices, int nb_vertices,
 	}
 }
 
-void	adjust_scale(GLfloat x_y_z_mmax[6])
+float	adjust_scale(GLfloat x_y_z_mmax[6])
 {
 	GLfloat		x_diff;
 	GLfloat		y_diff;
@@ -106,10 +106,10 @@ void	adjust_scale(GLfloat x_y_z_mmax[6])
 	z_diff = (x_y_z_mmax[4] - x_y_z_mmax[5]);
 	biggest_diff = max(fabs(x_diff), fabs(y_diff));
 	biggest_diff = max(biggest_diff, fabs(z_diff));
-	g_conf.obj_scale = 3.0 / biggest_diff;
+	return (3.0 / biggest_diff);
 }
 
-void	adjust_obj(GLfloat *vertices, int nb_vertices)
+float	adjust_obj(GLfloat *vertices, int nb_vertices)
 {
 	GLfloat		x_y_z_mmax[6];
 	int			i;
@@ -132,7 +132,7 @@ void	adjust_obj(GLfloat *vertices, int nb_vertices)
 		i++;
 	}
 	center_vertices(vertices, nb_vertices, x_y_z_mmax);
-	adjust_scale(x_y_z_mmax);
+	return (adjust_scale(x_y_z_mmax));
 }
 
 t_light		*new_std_light(float r, float g, float b, float ambient_strength)
@@ -319,13 +319,14 @@ void	calc_tangent_bitangent(GLfloat *vertices, int nb_vertices)
 	}
 }
 
-t_globj		*new_obj_from_path(char *path)
+t_globj		*new_obj_from_path(char *path, char main_obj)
 {
 	t_objfile	*objfile;
 	int			attribs_struct[] = {3, 2, 3, 3, 3, 3};
-	int			nb_attribs = 6;
 	GLfloat		*vertices;
 	int			nb_vertices;
+	float		scale;
+	t_globj		*obj;
 
 	objfile = parse_objfile(path);
 	if (!objfile)
@@ -338,10 +339,14 @@ t_globj		*new_obj_from_path(char *path)
 		printf("error in .obj\n");
 		return (NULL);
 	}
-	adjust_obj(vertices, nb_vertices);
+	scale = adjust_obj(vertices, nb_vertices);
+	if (!main_obj)
+		scale = 1.0;
 	add_face_color_to_obj(vertices, nb_vertices);
 	calc_tangent_bitangent(vertices, nb_vertices);
-	return (new_object(vertices, nb_vertices, attribs_struct, nb_attribs));
+	obj = new_object(vertices, nb_vertices, attribs_struct, 6);
+	obj->scale = scale;
+	return (obj);
 }
 
 void	update_stats(void)

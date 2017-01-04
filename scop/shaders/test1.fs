@@ -161,7 +161,12 @@ void	getNLightColor(inout int n, inout vec3 norm, inout vec3 cameraDir, inout ve
 	vec3 ambientColor = tmp_ambientColor * (1.0 - (textureStrength + colorsStrength));
 	ambientColor += tmp_ambientColor * vec3(texture(ourTexture1, TextCoords)) * textureStrength;
 	ambientColor += tmp_ambientColor * FaceColor * colorsStrength;
-	resColor = diffuse + specular + ambientColor;
+
+	float light_distance = pow(lightPos.x - FragPos.x, 2) + pow(lightPos.y - FragPos.y, 2) + pow(lightPos.z - FragPos.z, 2);
+	light_distance = sqrt(light_distance);
+	float attenuation = 1 / (1 + 0.3 * pow(light_distance, 2));
+
+	resColor = (attenuation * 4.0 * ambientColor) + attenuation * (diffuse + specular);
 }
 
 vec3 CalcBumpedNormal()

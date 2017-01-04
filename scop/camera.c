@@ -18,6 +18,8 @@ void	init_camera(void)
 	g_cam.pitch = 0.0;
 	g_cam.yaw = -90.0;
 	g_cam.roll = 0.0;
+	g_cam.stereo_decal = 0.16;
+	g_cam.stereo_decal_front = 0.030;
 }
 
 void	update_camera(void)

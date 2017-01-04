@@ -14,7 +14,8 @@ void	main()
 	if (twoText)
 	{
 		vec4 tmp2 = texture(text2, TextCoords);
-		color = vec4(tmp1.r, tmp1.g, (tmp2.r * 0.15 + tmp2.g * 0.15 + tmp2.b * 0.7), 1.0);
+		color = vec4(tmp1.r, tmp2.g, (tmp2.r * 0.15 + tmp2.g * 0.15 + tmp2.b * 0.7), 1.0);
+		//color = tmp1;
 	}
 	else
 	{

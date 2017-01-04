@@ -14,7 +14,6 @@ void	setup_keys(void)
 	}
 }
 
-
 void    key_callback(GLFWwindow *window, int key, int scancode, int action,
 																	int mode)
 {
@@ -54,15 +53,12 @@ void    key_callback(GLFWwindow *window, int key, int scancode, int action,
 		else if (g_conf.texture_plus)
 			g_conf.texture_plus = 0;
 	}
+	if (key == GLFW_KEY_G && action == GLFW_PRESS)
+		g_conf.generic_textures_ind++;
+	if (key == GLFW_KEY_KP_3 && action == GLFW_PRESS)
+		g_conf.stereoscopic = g_conf.stereoscopic ? 0 : 1;
 	if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
 		glfwSetWindowShouldClose(window, GL_TRUE);
-}
-
-void	front_up_cross(float *x, float *y, float *z)
-{
-	*x = (g_cam.front_y * g_cam.up_z) - (g_cam.front_z * g_cam.up_y);
-	*y = (g_cam.front_z * g_cam.up_x) - (g_cam.front_x * g_cam.up_z);
-	*z = (g_cam.front_x * g_cam.up_y) - (g_cam.front_y * g_cam.up_x);
 }
 
 void	do_movement3(GLfloat delta_time, t_list *objs, t_list *lights)
@@ -70,9 +66,27 @@ void	do_movement3(GLfloat delta_time, t_list *objs, t_list *lights)
 	(void)objs;
 	(void)lights;
 	if (g_keys[GLFW_KEY_KP_ADD])
-		g_conf.obj_scale += delta_time * (g_conf.obj_scale * 0.5);
+	{
+		((t_globj**)objs->elts)[0]->scale += delta_time
+								* ((t_globj**)objs->elts)[0]->scale * 0.5;
+	}
 	if (g_keys[GLFW_KEY_KP_SUBTRACT])
-		g_conf.obj_scale -= delta_time * (g_conf.obj_scale * 0.5);
+	{
+		((t_globj**)objs->elts)[0]->scale -= delta_time
+								* ((t_globj**)objs->elts)[0]->scale * 0.5;
+	}
+	if (g_keys[GLFW_KEY_MINUS])
+		g_cam.stereo_decal -= delta_time * 1.0;
+	if (g_keys[GLFW_KEY_EQUAL])
+		g_cam.stereo_decal += delta_time * 1.0;
+	if (g_keys[GLFW_KEY_LEFT_BRACKET])
+		g_cam.stereo_decal_front -= delta_time * 0.1;
+	if (g_keys[GLFW_KEY_RIGHT_BRACKET])
+		g_cam.stereo_decal_front += delta_time * 0.1;
+	if (g_cam.stereo_decal_front < 0.0)
+		g_cam.stereo_decal_front = 0.0;
+	if (g_cam.stereo_decal < 0.0)
+		g_cam.stereo_decal = 0.0;
 	if (g_conf.texture_plus)
 	{
 		g_conf.texture_strength += 1.0 * delta_time;
@@ -97,6 +111,13 @@ void	do_movement3(GLfloat delta_time, t_list *objs, t_list *lights)
 		if (g_conf.colors_strength < 0.0)
 			g_conf.colors_strength = 0.0;
 	}
+}
+
+void	front_up_cross(float *x, float *y, float *z)
+{
+	*x = (g_cam.front_y * g_cam.up_z) - (g_cam.front_z * g_cam.up_y);
+	*y = (g_cam.front_z * g_cam.up_x) - (g_cam.front_x * g_cam.up_z);
+	*z = (g_cam.front_x * g_cam.up_y) - (g_cam.front_y * g_cam.up_x);
 }
 
 void	obj_movement(GLfloat delta_time, t_list *objs, t_list *lights)
@@ -266,6 +287,10 @@ void	do_movement(GLfloat delta_time, t_list *objs, t_list *lights)
 		}
 		g_keys[GLFW_KEY_P] = 0;
 	}
+	if (g_conf.generic_textures_ind >= 5)
+		g_conf.generic_textures_ind = 0;
+	((t_globj**)objs->elts)[objs->len - 1] =
+						g_conf.generic_textures[g_conf.generic_textures_ind];
 	if (g_keys[GLFW_KEY_Z])
 		g_cam.fov += 80.0 * g_cam.speed * delta_time;
 	if (g_keys[GLFW_KEY_X])

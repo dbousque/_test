@@ -53,6 +53,7 @@ typedef struct			s_globj
 	char				has_specular_map;
 	char				has_normal_map;
 	float				specular_strength;
+	float				scale;
 }						t_globj;
 
 typedef struct			s_window
@@ -76,6 +77,8 @@ typedef struct			s_camera
 	float				pitch;
 	float				yaw;
 	float				roll;
+	float				stereo_decal_front;
+	float				stereo_decal;
 }						t_camera;
 
 typedef struct			s_list
@@ -99,7 +102,6 @@ typedef struct			s_objfile
 typedef struct			s_config
 {
 	char				lines;
-	float				obj_scale;
 	int					win_width;
 	int					win_height;
 	int					obj_ind;
@@ -122,6 +124,8 @@ typedef struct			s_config
 	GLuint				right_eye_depthbuffer;
 	t_globj				*quad;
 	char				stereoscopic;
+	t_globj				*generic_textures[5];
+	int					generic_textures_ind;
 }						t_config;
 
 typedef struct			s_light
@@ -186,16 +190,17 @@ void					set_lights(t_list *objs, t_list *lights,
 								float texture_strength, float colors_strength);
 t_light					*new_std_light(float r, float g, float b,
 													float ambient_strength);
-void					adjust_obj(GLfloat *vertices, int nb_vertices);
+float					adjust_obj(GLfloat *vertices, int nb_vertices);
 t_mat					*build_view(void);
 void					setup_conf(void);
 void					draw_lights(t_list *lights, t_mat *view,
 															t_mat *projection);
 void					draw_objects(t_list *objs, t_mat *view,
 															t_mat *projection);
-t_globj					*new_obj_from_path(char *path);
+t_globj					*new_obj_from_path(char *path, char main_obj);
 void					update_stats(void);
 void					load_specular_map_to_obj(t_globj *obj, char *img_path);
 void					load_normal_map_to_obj(t_globj *obj, char *img_path);
+void					front_up_cross(float *x, float *y, float *z);
 
 #endif
