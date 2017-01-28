@@ -55,7 +55,7 @@ void    key_callback(GLFWwindow *window, int key, int scancode, int action,
 	}
 	if (key == GLFW_KEY_G && action == GLFW_PRESS)
 		g_conf.generic_textures_ind++;
-	if (key == GLFW_KEY_KP_3 && action == GLFW_PRESS)
+	if (key == GLFW_KEY_J && action == GLFW_PRESS)
 		g_conf.stereoscopic = g_conf.stereoscopic ? 0 : 1;
 	if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
 		glfwSetWindowShouldClose(window, GL_TRUE);

@@ -321,9 +321,9 @@ int		main(void)
 	//glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	objs = new_list(sizeof(t_globj*));
 	lights = new_list(sizeof(t_light*));
-	//obj = new_obj_from_path("ressources/plane/Su-27_Flanker.obj", 1);
+	obj = new_obj_from_path("ressources/plane/Su-27_Flanker.obj", 1);
 	//obj = new_obj_from_path("ressources/42.obj", 1);
-	obj = new_obj_from_path("ressources/rock/rock.obj", 1);
+	//obj = new_obj_from_path("ressources/rock/rock.obj", 1);
 	if (!obj)
 		return (-1);
 	attach_shader_program_to_obj(obj, g_obj_program);
@@ -344,18 +344,18 @@ int		main(void)
 	//load_texture_to_obj(obj, "ressources/teeth/teeth_diff.png");
 	//load_specular_map_to_obj(obj, "ressources/teeth/teeth_spec.png");
 	//load_normal_map_to_obj(obj, "ressources/teeth/teeth_normal.png");
-	//load_texture_to_obj(obj, "wall2.jpg");
-	//load_specular_map_to_obj(obj, "wall2_specular.jpg");
-	//load_normal_map_to_obj(obj, "wall2_normal.jpg");
+	load_texture_to_obj(obj, "wall2.jpg");
+	load_specular_map_to_obj(obj, "wall2_specular.jpg");
+	load_normal_map_to_obj(obj, "wall2_normal.jpg");
 	//load_texture_to_obj(obj, "ressources/plane/Su-27_Flanker_P01.png");
 	//load_specular_map_to_obj(obj, "ressources/plane/Su-27_Flanker_S2.png");
 	//load_normal_map_to_obj(obj, "ressources/plane/Su-27_Flanker_N.png");
 	//load_texture_to_obj(obj, "ressources/pouf/diff.jpg");
 	//load_specular_map_to_obj(obj, "ressources/pouf/spec.jpg");
 	//load_normal_map_to_obj(obj, "ressources/pouf/normal.png");
-	load_texture_to_obj(obj, "ressources/rock/diff.png");
-	load_specular_map_to_obj(obj, "ressources/rock/specular2.png");
-	load_normal_map_to_obj(obj, "ressources/rock/normal.png");
+	//load_texture_to_obj(obj, "ressources/rock/diff.png");
+	//load_specular_map_to_obj(obj, "ressources/rock/specular2.png");
+	//load_normal_map_to_obj(obj, "ressources/rock/normal.png");
 	g_conf.info_updated_at = glfwGetTime();
 	g_conf.frames_seen = 0;
 	g_conf.time_spent = 0.0;
