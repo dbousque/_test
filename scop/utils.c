@@ -12,6 +12,18 @@ size_t	ft_strlen(char *str)
 	return (i);
 }
 
+char	startswith(char *str, char *begin)
+{
+	size_t	i;
+
+	i = 0;
+	while (str[i] && begin[i] && str[i] == begin[i])
+		i++;
+	if (!begin[i])
+		return (1);
+	return (0);
+}
+
 void	ft_putstr(char *str)
 {
 	write(1, str, ft_strlen(str));

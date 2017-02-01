@@ -27,18 +27,6 @@ void	setup_objfile(t_objfile **objfile)
 	add_to_list((*objfile)->normals, &tmp_float);
 }
 
-char	startswith(char *str, char *begin)
-{
-	size_t	i;
-
-	i = 0;
-	while (str[i] && begin[i] && str[i] == begin[i])
-		i++;
-	if (!begin[i])
-		return (1);
-	return (0);
-}
-
 char	interpret_line(t_objfile *objfile, char *line, size_t line_nb)
 {
 	if (startswith(line, "v "))
@@ -68,7 +56,7 @@ t_objfile	*parse_objfile(char *path)
 	fp = fopen(path, "r");
 	if (!fp)
 	{
-		printf("file could not be opened\n");
+		printf("file %s could not be opened\n", path);
 		return (NULL);
 	}
 	line_nb = 1;

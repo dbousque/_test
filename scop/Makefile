@@ -18,6 +18,7 @@ SOURCES		=	shader_program.c \
 				normals.c \
 				main_utils.c \
 				draw_objs.c \
+				load_object_file.c \
 				utils.c
 
 OBJECTS	=	$(subst .c,.o,$(SOURCES))

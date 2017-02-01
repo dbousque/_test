@@ -177,6 +177,7 @@ void	main_loop(t_window *window, t_list *objs, t_list *lights)
 
 	while (!glfwWindowShouldClose(window->win))
 	{
+		ft_putstr("LOOP!\n");
 		glfwPollEvents();
 		last_frame = current_frame;
 		current_frame = glfwGetTime();
@@ -293,14 +294,33 @@ void	add_environment(t_list *objs)
 	add_environment2();
 }
 
-int		main(void)
+char	init_shaders(void)
+{
+	g_obj_program = new_shader_program("shaders/test1.vs", "shaders/test1.fs");
+	if (!g_obj_program)
+		return (0);
+	g_light_program = new_shader_program("shaders/light.vs", "shaders/light.fs");
+	if (!g_light_program)
+		return (0);
+	g_merge_program = new_shader_program("shaders/merge_stereo.vs", "shaders/merge_stereo.fs");
+	if (!g_merge_program)
+		return (0);
+	return (1);
+}
+
+int		main(int argc, char **argv)
 {
 	t_window			*window;
-	t_globj				*obj;
+	//t_globj				*obj;
 	t_light				*light;
 	t_list				*objs;
 	t_list				*lights;
 
+	if (argc != 2)
+	{
+		ft_putstr("format : ./scop <object_file>\n");
+		return (-1);
+	}
 	setup_keys();
 	setup_conf();
 	init_camera();
@@ -308,26 +328,21 @@ int		main(void)
 	if (!window)
 		return (-1);
 	glEnable(GL_DEPTH_TEST);
-	g_obj_program = new_shader_program("shaders/test1.vs", "shaders/test1.fs");
-	if (!g_obj_program)
-		return (-1);
-	g_light_program = new_shader_program("shaders/light.vs", "shaders/light.fs");
-	if (!g_light_program)
-		return (-1);
-	g_merge_program = new_shader_program("shaders/merge_stereo.vs", "shaders/merge_stereo.fs");
-	if (!g_merge_program)
+	if (!init_shaders())
 		return (-1);
 	//glEnable(GL_BLEND);
 	//glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	objs = new_list(sizeof(t_globj*));
 	lights = new_list(sizeof(t_light*));
-	obj = new_obj_from_path("ressources/plane/Su-27_Flanker.obj", 1);
+	load_object_file(argv[1], objs);
+	ft_putstr("AFTER LOAD\n");
+	//obj = new_obj_from_path("ressources/plane/Su-27_Flanker.obj", 1);
 	//obj = new_obj_from_path("ressources/42.obj", 1);
 	//obj = new_obj_from_path("ressources/rock/rock.obj", 1);
-	if (!obj)
-		return (-1);
-	attach_shader_program_to_obj(obj, g_obj_program);
-	add_to_list(objs, &obj);
+	//if (!obj)
+	//	return (-1);
+	//attach_shader_program_to_obj(obj, g_obj_program);
+	//add_to_list(objs, &obj);
 	add_environment(objs);
 	light = new_std_light(1.0, 1.0, 1.0, 0.2);
 	if (!light)
@@ -340,13 +355,13 @@ int		main(void)
 	attach_shader_program_to_obj(g_conf.quad, g_merge_program);
 	//attach_indices_to_obj(obj, indices, nb_indices);
 	//load_texture_to_obj(obj, "ressources/plane/Su-27_Flanker_P01.png");
-	obj->specular_strength = 10.5;
+	//obj->specular_strength = 10.5;
 	//load_texture_to_obj(obj, "ressources/teeth/teeth_diff.png");
 	//load_specular_map_to_obj(obj, "ressources/teeth/teeth_spec.png");
 	//load_normal_map_to_obj(obj, "ressources/teeth/teeth_normal.png");
-	load_texture_to_obj(obj, "wall2.jpg");
-	load_specular_map_to_obj(obj, "wall2_specular.jpg");
-	load_normal_map_to_obj(obj, "wall2_normal.jpg");
+	//load_texture_to_obj(obj, "wall2.jpg");
+	//load_specular_map_to_obj(obj, "wall2_specular.jpg");
+	//load_normal_map_to_obj(obj, "wall2_normal.jpg");
 	//load_texture_to_obj(obj, "ressources/plane/Su-27_Flanker_P01.png");
 	//load_specular_map_to_obj(obj, "ressources/plane/Su-27_Flanker_S2.png");
 	//load_normal_map_to_obj(obj, "ressources/plane/Su-27_Flanker_N.png");
@@ -360,6 +375,7 @@ int		main(void)
 	g_conf.frames_seen = 0;
 	g_conf.time_spent = 0.0;
 	setup_eyes();
+	ft_putstr("BEFORE MAIN LOOP\n");
 	main_loop(window, objs, lights);
 	return (0);
 }

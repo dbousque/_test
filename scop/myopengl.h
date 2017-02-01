@@ -19,8 +19,8 @@
 # include <fcntl.h>
 # include "matrices.h"
 
-# define MAX_SHADER_SIZE 32768
-# define READ_BUFFER_LEN 4096
+# define MAX_SHADER_SIZE 	32768
+# define READ_BUFFER_LEN 	4096
 
 typedef struct			s_shader_program
 {
@@ -147,6 +147,7 @@ t_shader_program		*g_merge_program;
 t_list					*new_list(size_t elt_size);
 void					add_to_list(t_list *lst, void *elt);
 size_t					ft_strlen(char *str);
+char					startswith(char *str, char *begin);
 void					ft_putstr(char *str);
 char					*ft_itoa(int n);
 char					*ft_strconcat(char *st1, char *st2);
@@ -202,5 +203,6 @@ void					update_stats(void);
 void					load_specular_map_to_obj(t_globj *obj, char *img_path);
 void					load_normal_map_to_obj(t_globj *obj, char *img_path);
 void					front_up_cross(float *x, float *y, float *z);
+char					load_object_file(char *filename, t_list *objs);
 
 #endif

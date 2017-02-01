@@ -1,0 +1,5 @@
+obj objects/ressources/42.obj
+diffuse objects/ressources/wall.jpg
+specular objects/ressources/wall_specular.jpg
+normal objects/ressources/wall_normal.jpg
+spec_strength 10
