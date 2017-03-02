@@ -9,6 +9,8 @@ SOURCES		=	srcs/shader_program.c \
 				srcs/ft_itoa.c \
 				srcs/matrices.c \
 				srcs/events.c \
+				srcs/events2.c \
+				srcs/events_obj_movement.c \
 				srcs/camera.c \
 				srcs/list.c \
 				srcs/parse_face.c \
@@ -18,6 +20,7 @@ SOURCES		=	srcs/shader_program.c \
 				srcs/normals.c \
 				srcs/main_utils.c \
 				srcs/draw_objs.c \
+				srcs/draw_objs2.c \
 				srcs/load_object_file.c \
 				srcs/utils.c \
 				srcs/utils2.c

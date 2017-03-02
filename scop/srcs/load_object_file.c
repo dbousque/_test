@@ -1,4 +1,14 @@
-
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   load_object_file.c                                 :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: dbousque <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2017/03/02 19:25:15 by dbousque          #+#    #+#             */
+/*   Updated: 2017/03/02 19:25:16 by dbousque         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
 #include "myopengl.h"
 
@@ -29,32 +39,40 @@ char	parse_object_line(char *line, t_globj **obj)
 	return (1);
 }
 
+char	read_object_file(FILE *fp, t_globj **obj)
+{
+	char	*line;
+	size_t	len;
+
+	line = NULL;
+	len = 0;
+	while (getline(&line, &len, fp) != -1)
+	{
+		if (line[ft_strlen(line) - 1] == '\n')
+			line[ft_strlen(line) - 1] = '\0';
+		if (!(parse_object_line(line, obj)))
+		{
+			fclose(fp);
+			return (0);
+		}
+	}
+	return (1);
+}
+
 char	load_object_file(char *filename, t_list *objs)
 {
 	FILE	*fp;
-	char	*line;
-	size_t	len;
 	t_globj	*obj;
 
-	line = NULL;
 	obj = NULL;
-	len = 0;
 	fp = fopen(filename, "r");
 	if (!fp)
 	{
 		printf("file %s could not be opened\n", filename);
 		return (0);
 	}
-	while (getline(&line, &len, fp) != -1)
-	{
-		if (line[ft_strlen(line) - 1] == '\n')
-			line[ft_strlen(line) - 1] = '\0';
-		if (!(parse_object_line(line, &obj)))
-		{
-			fclose(fp);
-			return (0);
-		}
-	}
+	if (!(read_object_file(fp, &obj)))
+		return (0);
 	fclose(fp);
 	attach_shader_program_to_obj(obj, g_obj_program);
 	add_to_list(objs, &obj);

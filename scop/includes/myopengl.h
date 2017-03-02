@@ -162,6 +162,9 @@ void					ft_putstr(char *str);
 char					*ft_itoa(int n);
 char					*ft_strconcat(char *st1, char *st2);
 char					*read_file(char *filename, size_t max_size);
+void					front_up_cross(float *x, float *y, float *z);
+void					obj_movement(GLfloat delta_time, t_list *objs,
+															t_list *lights);
 void					key_callback(GLFWwindow *window, int key, int scancode,
 														int action, int mode);
 
@@ -199,6 +202,7 @@ char					add_texture(t_objfile *objfile, char *line,
 															size_t line_nb);
 void					set_lights(t_list *objs, t_list *lights,
 								float texture_strength, float colors_strength);
+void					set_obj_color(t_shader_program *shader);
 t_light					*new_std_light(float r, float g, float b,
 													float ambient_strength);
 float					adjust_obj(GLfloat *vertices, int nb_vertices);
@@ -214,5 +218,6 @@ void					load_specular_map_to_obj(t_globj *obj, char *img_path);
 void					load_normal_map_to_obj(t_globj *obj, char *img_path);
 void					front_up_cross(float *x, float *y, float *z);
 char					load_object_file(char *filename, t_list *objs);
+void					do_movement4(GLfloat delta_time);
 
 #endif

@@ -69,3 +69,10 @@ char	*read_file(char *filename, size_t max_size)
 	close(fd);
 	return (res);
 }
+
+void	front_up_cross(float *x, float *y, float *z)
+{
+	*x = (g_cam.front_y * g_cam.up_z) - (g_cam.front_z * g_cam.up_y);
+	*y = (g_cam.front_z * g_cam.up_x) - (g_cam.front_x * g_cam.up_z);
+	*z = (g_cam.front_x * g_cam.up_y) - (g_cam.front_y * g_cam.up_x);
+}
