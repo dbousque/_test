@@ -2,28 +2,29 @@
 
 NAME		=	a.out
 
-SOURCES		=	shader_program.c \
-				object.c \
-				main.c \
-				window.c \
-				ft_itoa.c \
-				matrices.c \
-				events.c \
-				camera.c \
-				list.c \
-				parse_face.c \
-				parse_vertices.c \
-				obj_parser.c \
-				objfile_to_vertices.c \
-				normals.c \
-				main_utils.c \
-				draw_objs.c \
-				load_object_file.c \
-				utils.c
+SOURCES		=	srcs/shader_program.c \
+				srcs/object.c \
+				srcs/main.c \
+				srcs/window.c \
+				srcs/ft_itoa.c \
+				srcs/matrices.c \
+				srcs/events.c \
+				srcs/camera.c \
+				srcs/list.c \
+				srcs/parse_face.c \
+				srcs/parse_vertices.c \
+				srcs/obj_parser.c \
+				srcs/objfile_to_vertices.c \
+				srcs/normals.c \
+				srcs/main_utils.c \
+				srcs/draw_objs.c \
+				srcs/load_object_file.c \
+				srcs/utils.c \
+				srcs/utils2.c
 
 OBJECTS	=	$(subst .c,.o,$(SOURCES))
 
-WFLAGS	=	-Wall -Werror -Wextra
+WFLAGS	=	-Wall -Werror -Wextra -I includes
 
 OS := $(shell uname)
 ifneq ($(OS), Darwin)
