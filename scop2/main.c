@@ -344,12 +344,12 @@ int		main(void)
 	//load_texture_to_obj(obj, "ressources/teeth/teeth_diff.png");
 	//load_specular_map_to_obj(obj, "ressources/teeth/teeth_spec.png");
 	//load_normal_map_to_obj(obj, "ressources/teeth/teeth_normal.png");
-	load_texture_to_obj(obj, "wall2.jpg");
-	load_specular_map_to_obj(obj, "wall2_specular.jpg");
-	load_normal_map_to_obj(obj, "wall2_normal.jpg");
-	//load_texture_to_obj(obj, "ressources/plane/Su-27_Flanker_P01.png");
-	//load_specular_map_to_obj(obj, "ressources/plane/Su-27_Flanker_S2.png");
-	//load_normal_map_to_obj(obj, "ressources/plane/Su-27_Flanker_N.png");
+	//load_texture_to_obj(obj, "wall2.jpg");
+	//load_specular_map_to_obj(obj, "wall2_specular.jpg");
+	//load_normal_map_to_obj(obj, "wall2_normal.jpg");
+	load_texture_to_obj(obj, "ressources/plane/Su-27_Flanker_P01.png");
+	load_specular_map_to_obj(obj, "ressources/plane/Su-27_Flanker_S2.png");
+	load_normal_map_to_obj(obj, "ressources/plane/Su-27_Flanker_N.png");
 	//load_texture_to_obj(obj, "ressources/pouf/diff.jpg");
 	//load_specular_map_to_obj(obj, "ressources/pouf/spec.jpg");
 	//load_normal_map_to_obj(obj, "ressources/pouf/normal.png");

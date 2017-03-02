@@ -57,6 +57,6 @@ char	load_object_file(char *filename, t_list *objs)
 	}
 	fclose(fp);
 	attach_shader_program_to_obj(obj, g_obj_program);
-	add_to_list(objs, obj);
+	add_to_list(objs, &obj);
 	return (1);
 }

@@ -287,7 +287,7 @@ void	do_movement(GLfloat delta_time, t_list *objs, t_list *lights)
 		}
 		g_keys[GLFW_KEY_P] = 0;
 	}
-	if (g_conf.generic_textures_ind >= 5)
+	if (g_conf.generic_textures_ind >= 4)
 		g_conf.generic_textures_ind = 0;
 	((t_globj**)objs->elts)[objs->len - 1] =
 						g_conf.generic_textures[g_conf.generic_textures_ind];

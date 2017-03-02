@@ -124,7 +124,7 @@ typedef struct			s_config
 	GLuint				right_eye_depthbuffer;
 	t_globj				*quad;
 	char				stereoscopic;
-	t_globj				*generic_textures[5];
+	t_globj				*generic_textures[4];
 	int					generic_textures_ind;
 }						t_config;
 

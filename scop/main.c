@@ -177,7 +177,6 @@ void	main_loop(t_window *window, t_list *objs, t_list *lights)
 
 	while (!glfwWindowShouldClose(window->win))
 	{
-		ft_putstr("LOOP!\n");
 		glfwPollEvents();
 		last_frame = current_frame;
 		current_frame = glfwGetTime();
@@ -225,41 +224,32 @@ void	main_loop(t_window *window, t_list *objs, t_list *lights)
 
 void	add_environment3(void)
 {
-	g_conf.generic_textures[4] = new_obj_from_path(
+	g_conf.generic_textures[3] = new_obj_from_path(
 								"ressources/plate/plate.obj", 0);
-	if (!g_conf.generic_textures[4])
+	if (!g_conf.generic_textures[3])
 		return ;
-	load_texture_to_obj(g_conf.generic_textures[4], "ressources/plate/diff.jpg");
-	load_specular_map_to_obj(g_conf.generic_textures[4], "ressources/plate/spec.jpg");
-	load_normal_map_to_obj(g_conf.generic_textures[4], "ressources/plate/normal.jpg");
-	attach_shader_program_to_obj(g_conf.generic_textures[4], g_obj_program);
-	g_conf.generic_textures[4]->specular_strength = 10.5;
-	g_conf.generic_textures[4]->y = -2.0;
-	g_conf.generic_textures[4]->scale = 7.0;
+	load_texture_to_obj(g_conf.generic_textures[3], "ressources/plate/diff.jpg");
+	load_specular_map_to_obj(g_conf.generic_textures[3], "ressources/plate/spec.jpg");
+	load_normal_map_to_obj(g_conf.generic_textures[3], "ressources/plate/normal.jpg");
+	attach_shader_program_to_obj(g_conf.generic_textures[3], g_obj_program);
+	g_conf.generic_textures[3]->specular_strength = 10.5;
+	g_conf.generic_textures[3]->y = -2.0;
+	g_conf.generic_textures[3]->scale = 7.0;
 }
 
 void	add_environment2(void)
 {
+	g_conf.generic_textures[2] = new_obj_from_path(
+								"ressources/parquet2/parquet2.obj", 0);
 	if (!g_conf.generic_textures[2])
 		return ;
-	load_texture_to_obj(g_conf.generic_textures[2], "ressources/asphalt/diff.png");
-	load_specular_map_to_obj(g_conf.generic_textures[2], "ressources/asphalt/spec.png");
-	load_normal_map_to_obj(g_conf.generic_textures[2], "ressources/asphalt/normal.png");
+	load_texture_to_obj(g_conf.generic_textures[2], "ressources/parquet2/diff.jpg");
+	load_specular_map_to_obj(g_conf.generic_textures[2], "ressources/parquet2/spec.jpg");
+	load_normal_map_to_obj(g_conf.generic_textures[2], "ressources/parquet2/normal.jpg");
 	attach_shader_program_to_obj(g_conf.generic_textures[2], g_obj_program);
-	g_conf.generic_textures[2]->specular_strength = 0.5;
+	g_conf.generic_textures[2]->specular_strength = 5.5;
 	g_conf.generic_textures[2]->y = -2.0;
 	g_conf.generic_textures[2]->scale = 7.0;
-	g_conf.generic_textures[3] = new_obj_from_path(
-								"ressources/parquet2/parquet2.obj", 0);
-	if (!g_conf.generic_textures[3])
-		return ;
-	load_texture_to_obj(g_conf.generic_textures[3], "ressources/parquet2/diff.jpg");
-	load_specular_map_to_obj(g_conf.generic_textures[3], "ressources/parquet2/spec.jpg");
-	load_normal_map_to_obj(g_conf.generic_textures[3], "ressources/parquet2/normal.jpg");
-	attach_shader_program_to_obj(g_conf.generic_textures[3], g_obj_program);
-	g_conf.generic_textures[3]->specular_strength = 5.5;
-	g_conf.generic_textures[3]->y = -2.0;
-	g_conf.generic_textures[3]->scale = 7.0;
 	add_environment3();
 }
 
@@ -288,9 +278,6 @@ void	add_environment(t_list *objs)
 	g_conf.generic_textures[1]->specular_strength = 1.5;
 	g_conf.generic_textures[1]->y = -2.0;
 	g_conf.generic_textures[1]->scale = 7.0;
-
-	g_conf.generic_textures[2] = new_obj_from_path(
-								"ressources/asphalt/asphalt.obj", 0);
 	add_environment2();
 }
 
@@ -334,8 +321,11 @@ int		main(int argc, char **argv)
 	//glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	objs = new_list(sizeof(t_globj*));
 	lights = new_list(sizeof(t_light*));
-	load_object_file(argv[1], objs);
-	ft_putstr("AFTER LOAD\n");
+	if (!load_object_file(argv[1], objs))
+	{
+		printf("could not load .object file %s\n", argv[1]);
+		return (-1);
+	}
 	//obj = new_obj_from_path("ressources/plane/Su-27_Flanker.obj", 1);
 	//obj = new_obj_from_path("ressources/42.obj", 1);
 	//obj = new_obj_from_path("ressources/rock/rock.obj", 1);
@@ -375,7 +365,6 @@ int		main(int argc, char **argv)
 	g_conf.frames_seen = 0;
 	g_conf.time_spent = 0.0;
 	setup_eyes();
-	ft_putstr("BEFORE MAIN LOOP\n");
 	main_loop(window, objs, lights);
 	return (0);
 }
