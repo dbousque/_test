@@ -1,0 +1,516 @@
+Norme: ./camera.c
+Error: 42 header not at top of the file
+Error: file must end with a single empty line
+Error (line 2): multiple empty lines
+Error (line 23): function update_camera has 27 lines
+Error (line 46): Empty line
+Error (line 52, col 0): no newline after block
+Norme: ./ft_itoa.c
+Error: 42 header not at top of the file
+Error (line 2): multiple empty lines
+Norme: ./list_test.c
+Error: 42 header not at top of the file
+Error: file must end with a single empty line
+Error (line 2): multiple empty lines
+Error (line 5): function main has 30 lines
+Error (line 5, col 0): main has 6 variables
+Error (line 37, col 0): no newline after block
+Norme: ./list.c
+Error: 42 header not at top of the file
+Error: file must end with a single empty line
+Error (line 2): multiple empty lines
+Error (line 64, col 0): no newline after block
+Norme: ./main.c
+Error: 42 header not at top of the file
+Error (line 2): multiple empty lines
+Error (line 5): function main_loop has 26 lines
+Error (line 26): line has 83 characters
+Error (line 35): declarations in main are bad aligned
+Error (line 35): function main has 58 lines
+Error (line 35): declarations in main must be at the top of the function
+Error (line 35): declarations must be followed by one empty line in main
+Error (line 35, col 0): main has 6 variables
+Error (line 46): line has 83 characters
+Error (line 50, col 7): planeCoefficients not unixcase
+Error (line 50, col 7): planeCoefficients is instanciated during declaration
+Error (line 57): line has 82 characters
+Error (line 60): bad indentation
+Error (line 60): C++ comment
+Error (line 61): bad indentation
+Error (line 61): C++ comment
+Error (line 64): C++ comment
+Error (line 75): C++ comment
+Error (line 76): C++ comment
+Error (line 78): C++ comment
+Error (line 79): C++ comment
+Error (line 80): C++ comment
+Error (line 81): C++ comment
+Error (line 82): C++ comment
+Error (line 83): C++ comment
+Error (line 84): C++ comment
+Error (line 85): C++ comment
+Error (line 86): C++ comment
+Norme: ./draw_objs.c
+Error: 42 header not at top of the file
+Error: file must end with a single empty line
+Error (line 2): multiple empty lines
+Error (line 5): function set_lights has 44 lines
+Error (line 5, col 0): set_lights has 7 variables
+Error (line 45): line has 93 characters
+Error (line 54): function draw_objects has 43 lines
+Error (line 54, col 0): draw_objects has 10 variables
+Error (line 61, col 11): transpInv not unixcase
+Error (line 76): line has 90 characters
+Error (line 77): line has 90 characters
+Error (line 83): bad indentation
+Error (line 83): C++ comment
+Error (line 84): bad indentation
+Error (line 84): C++ comment
+Error (line 89): Empty line
+Error (line 101): function draw_lights has 31 lines
+Error (line 114): Empty line
+Error (line 116): Empty line
+Error (line 119): Empty line
+Error (line 120): line has 82 characters
+Error (line 121): Empty line
+Error (line 124): Empty line
+Error (line 127): Empty line
+Error (line 130): Empty line
+Error (line 134, col 0): no newline after block
+Norme: ./matrices_test.c
+Error: 42 header not at top of the file
+Error: file must end with a single empty line
+Error (line 2): multiple empty lines
+Error (line 22, col 0): no newline after block
+Norme: ./normals.c
+Error: 42 header not at top of the file
+Error: file must end with a single empty line
+Error (line 2): multiple empty lines
+Error (line 5): function calculate_raw_normals has 26 lines
+Error (line 17): line has 82 characters
+Error (line 19): line has 82 characters
+Error (line 33, col 0): no newline after block
+Norme: ./obj_parser.c
+Error: global scope bad aligned
+Error: 42 header not at top of the file
+Error: file must end with a single empty line
+Error (line 2): multiple empty lines
+Error (line 55): function parse_objfile has 28 lines
+Error (line 85, col 0): no newline after block
+Norme: ./events.c
+Error: 7 functions in the file
+Error: 42 header not at top of the file
+Error: file must end with a single empty line
+Error (line 2): multiple empty lines
+Error (line 5): bad spacing after setup_keys
+Error (line 17): multiple empty lines
+Error (line 18): key_callback have 5 parameters
+Error (line 18): Space before function name
+Error (line 18): Space before function name
+Error (line 18): Space before function name
+Error (line 18): Space before function name
+Error (line 18): function key_callback has 38 lines
+Error (line 18): bad spacing before key_callback
+Error (line 18, col 4): bad spacing
+Error (line 39): Empty line
+Error (line 40, col 1): no empty line before block
+Error (line 68): function do_movement3 has 30 lines
+Error (line 102): function obj_movement has 75 lines
+Error (line 115): line has 82 characters
+Error (line 181): function do_movement2 has 57 lines
+Error (line 199): line has 84 characters
+Error (line 206): line has 84 characters
+Error (line 213): line has 84 characters
+Error (line 220): line has 84 characters
+Error (line 227): line has 84 characters
+Error (line 234): line has 84 characters
+Error (line 242): function do_movement has 30 lines
+Error (line 274, col 0): no newline after block
+Norme: ./object.c
+Error: global scope bad aligned
+Error: 14 functions in the file
+Error: 42 header not at top of the file
+Error: file must end with a single empty line
+Error (line 2): multiple empty lines
+Error (line 5): function get_texture_nb has 33 lines
+Error (line 63): bad indentation
+Error (line 63): must begin only by tabulations
+Error (line 66): function load_texture_to_obj has 29 lines
+Error (line 189): declarations in new_object are bad aligned
+Error (line 189): function new_object has 37 lines
+Error (line 189): declarations in new_object must be at the top of the function
+Error (line 217): Empty line
+Error (line 223): line has 83 characters
+Error (line 227): Empty line
+Error (line 240): Empty line
+Error (line 248): Empty line
+Error (line 258): function activate_textures has 41 lines
+Error (line 294): line has 83 characters
+Error (line 317, col 0): no newline after block
+Norme: ./parse_face.c
+Error: 6 functions in the file
+Error: 42 header not at top of the file
+Error: file must end with a single empty line
+Error (line 2): multiple empty lines
+Error (line 57): function add_face_point has 26 lines
+Error (line 109, col 0): no newline after block
+Norme: ./parse_vertices.c
+Error: 7 functions in the file
+Error: 42 header not at top of the file
+Error: file must end with a single empty line
+Error (line 2): multiple empty lines
+Error (line 11): function valid_float has 26 lines
+Error (line 69): bad indentation
+Error (line 69): C++ comment
+Error (line 70): bad indentation
+Error (line 70): C++ comment
+Error (line 135, col 0): no newline after block
+Norme: ./parser_test.c
+Error: 42 header not at top of the file
+Error: file must end with a single empty line
+Error (line 2): multiple empty lines
+Error (line 5): declarations in main are bad aligned
+Error (line 5): function main has 48 lines
+Error (line 5): declarations in main must be at the top of the function
+Error (line 5): declarations must be followed by one empty line in main
+Error (line 8): C++ comment
+Error (line 9): C++ comment
+Error (line 10): C++ comment
+Error (line 17): comment not well formatted
+Error (line 17): bad indentation
+Error (line 17): comment not well placed
+Error (line 39, col 5): i is instanciated during declaration
+Error (line 55, col 0): no newline after block
+Norme: ./shader_program.c
+Error: global scope bad aligned
+Error: 42 header not at top of the file
+Error: file must end with a single empty line
+Error (line 2): multiple empty lines
+Error (line 20, col 2): missing space after return
+Error (line 20, col 12): space before ;
+Error (line 26): must begin only by tabulations
+Error (line 35): line has 82 characters
+Error (line 69): function new_shader_program has 26 lines
+Error (line 98, col 0): no newline after block
+Norme: ./utils.c
+Error: 42 header not at top of the file
+Error: file must end with a single empty line
+Error (line 2): multiple empty lines
+Error (line 23, col 7): bad spacing
+Error (line 47): function read_file has 27 lines
+Error (line 100, col 0): no newline after block
+Norme: ./window.c
+Error: 42 header not at top of the file
+Error (line 2): multiple empty lines
+Error (line 12): function setup_window has 27 lines
+Error (line 28): C++ comment
+Norme: ./main_utils.c
+Error: global scope bad aligned
+Error: 14 functions in the file
+Error: 42 header not at top of the file
+Error: file must end with a single empty line
+Error (line 2): multiple empty lines
+Error (line 17): spaces at the end of line
+Error (line 17, col 0): no newline after block
+Error (line 19): function build_view has 31 lines
+Error (line 19, col 0): build_view has 8 variables
+Error (line 134): function new_std_light has 60 lines
+Error (line 134): declarations in new_std_light must be at the top of the function
+Error (line 137, col 10): vertices is instanciated during declaration
+Error (line 138, col 21): bad spacing
+Error (line 139, col 8): bad spacing
+Error (line 139, col 21): bad spacing
+Error (line 140): must begin only by tabulations
+Error (line 140, col 21): bad spacing
+Error (line 141, col 8): bad spacing
+Error (line 141, col 21): bad spacing
+Error (line 142): must begin only by tabulations
+Error (line 142, col 21): bad spacing
+Error (line 143): must begin only by tabulations
+Error (line 143, col 8): bad spacing
+Error (line 143, col 21): bad spacing
+Error (line 145, col 22): bad spacing
+Error (line 146, col 8): bad spacing
+Error (line 146, col 22): bad spacing
+Error (line 147): must begin only by tabulations
+Error (line 147, col 22): bad spacing
+Error (line 148, col 8): bad spacing
+Error (line 148, col 22): bad spacing
+Error (line 149): must begin only by tabulations
+Error (line 149, col 22): bad spacing
+Error (line 150): must begin only by tabulations
+Error (line 150, col 8): bad spacing
+Error (line 150, col 22): bad spacing
+Error (line 152): must begin only by tabulations
+Error (line 152, col 22): bad spacing
+Error (line 153): must begin only by tabulations
+Error (line 153, col 8): bad spacing
+Error (line 153, col 22): bad spacing
+Error (line 154): must begin only by tabulations
+Error (line 154, col 15): bad spacing
+Error (line 154, col 22): bad spacing
+Error (line 155): must begin only by tabulations
+Error (line 155, col 8): bad spacing
+Error (line 155, col 22): bad spacing
+Error (line 156): must begin only by tabulations
+Error (line 156, col 15): bad spacing
+Error (line 156, col 22): bad spacing
+Error (line 157): must begin only by tabulations
+Error (line 157, col 8): bad spacing
+Error (line 157, col 15): bad spacing
+Error (line 157, col 22): bad spacing
+Error (line 159, col 22): bad spacing
+Error (line 160, col 8): bad spacing
+Error (line 160, col 22): bad spacing
+Error (line 161, col 15): bad spacing
+Error (line 161, col 22): bad spacing
+Error (line 162, col 8): bad spacing
+Error (line 162, col 22): bad spacing
+Error (line 163, col 15): bad spacing
+Error (line 163, col 22): bad spacing
+Error (line 164, col 8): bad spacing
+Error (line 164, col 15): bad spacing
+Error (line 164, col 22): bad spacing
+Error (line 166, col 8): bad spacing
+Error (line 166, col 22): bad spacing
+Error (line 167): must begin only by tabulations
+Error (line 167, col 8): bad spacing
+Error (line 167, col 22): bad spacing
+Error (line 168, col 8): bad spacing
+Error (line 168, col 15): bad spacing
+Error (line 168, col 22): bad spacing
+Error (line 169): must begin only by tabulations
+Error (line 169, col 8): bad spacing
+Error (line 169, col 22): bad spacing
+Error (line 170, col 8): bad spacing
+Error (line 170, col 15): bad spacing
+Error (line 170, col 22): bad spacing
+Error (line 171): must begin only by tabulations
+Error (line 171, col 8): bad spacing
+Error (line 171, col 15): bad spacing
+Error (line 171, col 22): bad spacing
+Error (line 173, col 22): bad spacing
+Error (line 174): must begin only by tabulations
+Error (line 174, col 22): bad spacing
+Error (line 175, col 15): bad spacing
+Error (line 175, col 22): bad spacing
+Error (line 176): must begin only by tabulations
+Error (line 176, col 22): bad spacing
+Error (line 177, col 15): bad spacing
+Error (line 177, col 22): bad spacing
+Error (line 178): must begin only by tabulations
+Error (line 178, col 15): bad spacing
+Error (line 178, col 22): bad spacing
+Error (line 180, col 7): nb_vertices is instanciated during declaration
+Error (line 181, col 7): attribs_struct is instanciated during declaration
+Error (line 182, col 7): nb_attribs is instanciated during declaration
+Error (line 186): line has 87 characters
+Error (line 198): comment not well formatted
+Error (line 246): spaces at the end of line
+Error (line 278): function calc_tangent_bitangent_triangle has 75 lines
+Error (line 305): Empty line
+Error (line 315): Empty line
+Error (line 325): Empty line
+Error (line 335): Empty line
+Error (line 345): Empty line
+Error (line 372, col 7): attribs_struct is instanciated during declaration
+Error (line 373, col 7): nb_attribs is instanciated during declaration
+Error (line 400): line has 102 characters
+Error (line 407, col 0): no newline after block
+Norme: ./matrices.c
+Error: 30 functions in the file
+Error: 42 header not at top of the file
+Error: file must end with a single empty line
+Error (line 2): multiple empty lines
+Error (line 42): missing void in function new_mat2
+Error (line 47): missing void in function new_mat3
+Error (line 52): missing void in function new_mat4
+Error (line 150): comment not well formatted
+Error (line 167): comment not well formatted
+Error (line 238): comment not well formatted
+Error (line 329): spaces at the end of line
+Error (line 330): spaces at the end of line
+Error (line 331): spaces at the end of line
+Error (line 332): spaces at the end of line
+Error (line 333): spaces at the end of line
+Error (line 350): spaces at the end of line
+Error (line 350, col 16): bad spacing
+Error (line 351): spaces at the end of line
+Error (line 351, col 6): bad spacing
+Error (line 352): spaces at the end of line
+Error (line 352, col 6): bad spacing
+Error (line 353): spaces at the end of line
+Error (line 353, col 6): bad spacing
+Error (line 354): spaces at the end of line
+Error (line 356): spaces at the end of line
+Error (line 357): spaces at the end of line
+Error (line 358): spaces at the end of line
+Error (line 359): spaces at the end of line
+Error (line 360): spaces at the end of line
+Error (line 362): spaces at the end of line
+Error (line 363): spaces at the end of line
+Error (line 364): spaces at the end of line
+Error (line 365): spaces at the end of line
+Error (line 366): spaces at the end of line
+Error (line 368): spaces at the end of line
+Error (line 369): spaces at the end of line
+Error (line 370): spaces at the end of line
+Error (line 371): spaces at the end of line
+Error (line 372): spaces at the end of line
+Error (line 379): spaces at the end of line
+Error (line 379, col 15): bad spacing
+Error (line 380): spaces at the end of line
+Error (line 380, col 6): bad spacing
+Error (line 381): spaces at the end of line
+Error (line 381, col 6): bad spacing
+Error (line 382): spaces at the end of line
+Error (line 382, col 6): bad spacing
+Error (line 383): spaces at the end of line
+Error (line 385): spaces at the end of line
+Error (line 385, col 14): bad spacing
+Error (line 386): spaces at the end of line
+Error (line 386, col 6): bad spacing
+Error (line 387): spaces at the end of line
+Error (line 387, col 6): bad spacing
+Error (line 388): spaces at the end of line
+Error (line 388, col 6): bad spacing
+Error (line 389): spaces at the end of line
+Error (line 391): spaces at the end of line
+Error (line 391, col 15): bad spacing
+Error (line 392): spaces at the end of line
+Error (line 392, col 6): bad spacing
+Error (line 393): spaces at the end of line
+Error (line 393, col 6): bad spacing
+Error (line 394): spaces at the end of line
+Error (line 394, col 6): bad spacing
+Error (line 395): spaces at the end of line
+Error (line 397): spaces at the end of line
+Error (line 397, col 15): bad spacing
+Error (line 398): spaces at the end of line
+Error (line 398, col 6): bad spacing
+Error (line 399): spaces at the end of line
+Error (line 399, col 6): bad spacing
+Error (line 400): spaces at the end of line
+Error (line 400, col 6): bad spacing
+Error (line 401): spaces at the end of line
+Error (line 408): spaces at the end of line
+Error (line 408, col 16): bad spacing
+Error (line 409, col 6): bad spacing
+Error (line 410): spaces at the end of line
+Error (line 410, col 6): bad spacing
+Error (line 411): spaces at the end of line
+Error (line 411, col 6): bad spacing
+Error (line 412): spaces at the end of line
+Error (line 414): spaces at the end of line
+Error (line 414, col 15): bad spacing
+Error (line 415): spaces at the end of line
+Error (line 415, col 6): bad spacing
+Error (line 416): spaces at the end of line
+Error (line 416, col 6): bad spacing
+Error (line 417): spaces at the end of line
+Error (line 417, col 6): bad spacing
+Error (line 418): spaces at the end of line
+Error (line 420): spaces at the end of line
+Error (line 420, col 14): bad spacing
+Error (line 421): spaces at the end of line
+Error (line 421, col 6): bad spacing
+Error (line 422): spaces at the end of line
+Error (line 422, col 6): bad spacing
+Error (line 423): spaces at the end of line
+Error (line 423, col 6): bad spacing
+Error (line 424): spaces at the end of line
+Error (line 426): spaces at the end of line
+Error (line 426, col 15): bad spacing
+Error (line 427): spaces at the end of line
+Error (line 427, col 6): bad spacing
+Error (line 428): spaces at the end of line
+Error (line 428, col 6): bad spacing
+Error (line 429): spaces at the end of line
+Error (line 429, col 6): bad spacing
+Error (line 430): spaces at the end of line
+Error (line 435): function invert has 28 lines
+Error (line 437): bad indentation
+Error (line 437): must begin only by tabulations
+Error (line 438): bad indentation
+Error (line 438): must begin only by tabulations
+Error (line 439): bad indentation
+Error (line 439): must begin only by tabulations
+Error (line 441): bad indentation
+Error (line 441): must begin only by tabulations
+Error (line 442): bad indentation
+Error (line 442): must begin only by tabulations
+Error (line 443): bad indentation
+Error (line 443): must begin only by tabulations
+Error (line 444): bad indentation
+Error (line 444): must begin only by tabulations
+Error (line 445): bad indentation
+Error (line 445): must begin only by tabulations
+Error (line 446): spaces at the end of line
+Error (line 446, col 14): bad spacing
+Error (line 447): spaces at the end of line
+Error (line 447, col 6): bad spacing
+Error (line 448): spaces at the end of line
+Error (line 448, col 6): bad spacing
+Error (line 448, col 14): bad spacing
+Error (line 449, col 6): bad spacing
+Error (line 449, col 14): bad spacing
+Error (line 450): spaces at the end of line
+Error (line 450, col 14): bad spacing
+Error (line 451, col 14): bad spacing
+Error (line 452): spaces at the end of line
+Error (line 452, col 15): bad spacing
+Error (line 453): spaces at the end of line
+Error (line 453, col 6): bad spacing
+Error (line 454): spaces at the end of line
+Error (line 454, col 6): bad spacing
+Error (line 454, col 14): bad spacing
+Error (line 455): spaces at the end of line
+Error (line 455, col 6): bad spacing
+Error (line 455, col 14): bad spacing
+Error (line 456): spaces at the end of line
+Error (line 456, col 14): bad spacing
+Error (line 457, col 14): bad spacing
+Error (line 458): spaces at the end of line
+Error (line 458, col 14): bad spacing
+Error (line 459): spaces at the end of line
+Error (line 459, col 6): bad spacing
+Error (line 460): spaces at the end of line
+Error (line 460, col 6): bad spacing
+Error (line 461): spaces at the end of line
+Error (line 461, col 6): bad spacing
+Error (line 462): spaces at the end of line
+Error (line 480): line has 82 characters
+Error (line 488): comment not well formatted
+Error (line 536, col 0): no newline after block
+Norme: ./objfile_to_vertices.c
+Error: global scope bad aligned
+Error: 13 functions in the file
+Error: 42 header not at top of the file
+Error: file must end with a single empty line
+Error (line 2): multiple empty lines
+Error (line 50): set_vertex have 5 parameters
+Error (line 85): line has 87 characters
+Error (line 86): line has 87 characters
+Error (line 87): line has 83 characters
+Error (line 88): line has 91 characters
+Error (line 89): line has 91 characters
+Error (line 101): set_normal have 5 parameters
+Error (line 115): function second_pass_add_normals has 29 lines
+Error (line 130): line has 83 characters
+Error (line 154): line has 93 characters
+Error (line 167): function find_top_left has 39 lines
+Error (line 167, col 0): find_top_left has 6 variables
+Error (line 225): C++ comment
+Error (line 236): get_text_xy have 5 parameters
+Error (line 263): solve_text_coords have 7 parameters
+Error (line 263): Space before function name
+Error (line 263): function solve_text_coords has 36 lines
+Error (line 263, col 4): bad spacing
+Error (line 295): line has 89 characters
+Error (line 305): function generate_texture_coords2 has 43 lines
+Error (line 344): line has 86 characters
+Error (line 347): line has 112 characters
+Error (line 352): function objfile_to_vertices has 50 lines
+Error (line 387): C++ comment
+Error (line 388): C++ comment
+Error (line 405, col 0): no newline after block
