@@ -43,10 +43,12 @@ char		init_shaders(void)
 	g_obj_program = new_shader_program("shaders/test1.vs", "shaders/test1.fs");
 	if (!g_obj_program)
 		return (0);
-	g_light_program = new_shader_program("shaders/light.vs", "shaders/light.fs");
+	g_light_program = new_shader_program("shaders/light.vs",
+														"shaders/light.fs");
 	if (!g_light_program)
 		return (0);
-	g_merge_program = new_shader_program("shaders/merge_stereo.vs", "shaders/merge_stereo.fs");
+	g_merge_program = new_shader_program("shaders/merge_stereo.vs",
+													"shaders/merge_stereo.fs");
 	if (!g_merge_program)
 		return (0);
 	return (1);
@@ -87,13 +89,14 @@ int			main(int argc, char **argv)
 
 	if (argc != 2)
 	{
-		ft_putstr("format : ./scop <object_file>\n");
+		show_help();
 		return (-1);
 	}
 	setup_keys();
 	setup_conf();
 	init_camera();
-	window = setup_window(g_conf.win_width, g_conf.win_height, "scop - dbousque");
+	window = setup_window(g_conf.win_width, g_conf.win_height,
+															"scop - dbousque");
 	if (!window)
 		return (-1);
 	glEnable(GL_DEPTH_TEST);

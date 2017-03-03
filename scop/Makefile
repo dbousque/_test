@@ -18,6 +18,7 @@ SOURCES		=	srcs/shader_program.c \
 				srcs/matrices4.c \
 				srcs/matrices5.c \
 				srcs/matrices_invert.c \
+				srcs/matrices_invert2.c \
 				srcs/matrices_rotation.c \
 				srcs/events.c \
 				srcs/events2.c \
@@ -26,8 +27,14 @@ SOURCES		=	srcs/shader_program.c \
 				srcs/list.c \
 				srcs/parse_face.c \
 				srcs/parse_vertices.c \
+				srcs/parse_vertices2.c \
 				srcs/obj_parser.c \
 				srcs/objfile_to_vertices.c \
+				srcs/objfile_to_vertices2.c \
+				srcs/objfile_to_vertices3.c \
+				srcs/objfile_to_vertices4.c \
+				srcs/objfile_to_vertices5.c \
+				srcs/objfile_to_vertices6.c \
 				srcs/normals.c \
 				srcs/main_utils.c \
 				srcs/main_utils2.c \
@@ -39,7 +46,10 @@ SOURCES		=	srcs/shader_program.c \
 				srcs/utils2.c \
 				srcs/environment.c \
 				srcs/calc_tangent_bitangent.c \
-				srcs/calc_tangent_bitangent2.c
+				srcs/calc_tangent_bitangent2.c \
+				srcs/make_std_light.c \
+				srcs/make_std_light2.c \
+				srcs/show_help.c
 
 OBJECTS	=	$(subst .c,.o,$(SOURCES))
 

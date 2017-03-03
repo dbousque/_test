@@ -1,8 +1,18 @@
-
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   main_utils3.c                                      :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: dbousque <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2017/03/03 13:58:11 by dbousque          #+#    #+#             */
+/*   Updated: 2017/03/03 13:58:13 by dbousque         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
 #include "myopengl.h"
 
-void	center_vertices(GLfloat *vertices, int nb_vertices,
+void		center_vertices(GLfloat *vertices, int nb_vertices,
 														GLfloat x_y_z_mmax[6])
 {
 	int			i;
@@ -23,7 +33,7 @@ void	center_vertices(GLfloat *vertices, int nb_vertices,
 	}
 }
 
-float	adjust_scale(GLfloat x_y_z_mmax[6])
+float		adjust_scale(GLfloat x_y_z_mmax[6])
 {
 	GLfloat		x_diff;
 	GLfloat		y_diff;
@@ -38,7 +48,7 @@ float	adjust_scale(GLfloat x_y_z_mmax[6])
 	return (3.0 / biggest_diff);
 }
 
-float	adjust_obj(GLfloat *vertices, int nb_vertices)
+float		adjust_obj(GLfloat *vertices, int nb_vertices)
 {
 	GLfloat		x_y_z_mmax[6];
 	int			i;
@@ -67,56 +77,20 @@ float	adjust_obj(GLfloat *vertices, int nb_vertices)
 t_light		*new_std_light(float r, float g, float b, float ambient_strength)
 {
 	t_light		*light;
-	GLfloat		vertices[] = {
-		-0.05, -0.05, 0.05,  r, g, b,
-		-0.05,  0.05, 0.05,  r, g, b,
-		 0.05, -0.05, 0.05,  r, g, b,
-		-0.05,  0.05, 0.05,  r, g, b,
-		 0.05, -0.05, 0.05,  r, g, b,
-		 0.05,  0.05, 0.05,  r, g, b,
+	GLfloat		vertices[36 * 6];
+	int			nb_vertices;
+	int			attribs_struct[2];
+	int			nb_attribs;
 
-		-0.05, -0.05, -0.05,  r, g, b,
-		-0.05,  0.05, -0.05,  r, g, b,
-		 0.05, -0.05, -0.05,  r, g, b,
-		-0.05,  0.05, -0.05,  r, g, b,
-		 0.05, -0.05, -0.05,  r, g, b,
-		 0.05,  0.05, -0.05,  r, g, b,
-
-		 0.05, -0.05, -0.05,  r, g, b,
-		 0.05,  0.05, -0.05,  r, g, b,
-		 0.05, -0.05,  0.05,  r, g, b,
-		 0.05,  0.05, -0.05,  r, g, b,
-		 0.05, -0.05,  0.05,  r, g, b,
-		 0.05,  0.05,  0.05,  r, g, b,
-
-		-0.05, -0.05, -0.05,  r, g, b,
-		-0.05,  0.05, -0.05,  r, g, b,
-		-0.05, -0.05,  0.05,  r, g, b,
-		-0.05,  0.05, -0.05,  r, g, b,
-		-0.05, -0.05,  0.05,  r, g, b,
-		-0.05,  0.05,  0.05,  r, g, b,
-
-		-0.05,  0.05, -0.05,  r, g, b,
-		 0.05,  0.05, -0.05,  r, g, b,
-		-0.05,  0.05,  0.05,  r, g, b,
-		 0.05,  0.05, -0.05,  r, g, b,
-		-0.05,  0.05,  0.05,  r, g, b,
-		 0.05,  0.05,  0.05,  r, g, b,
-
-		-0.05, -0.05, -0.05,  r, g, b,
-		 0.05, -0.05, -0.05,  r, g, b,
-		-0.05, -0.05,  0.05,  r, g, b,
-		 0.05, -0.05, -0.05,  r, g, b,
-		-0.05, -0.05,  0.05,  r, g, b,
-		 0.05, -0.05,  0.05,  r, g, b,
-	};
-	int			nb_vertices = 36;
-	int			attribs_struct[] = {3, 3};
-	int			nb_attribs = 2;
-
+	nb_vertices = 36;
+	attribs_struct[0] = 3;
+	attribs_struct[1] = 3;
+	nb_attribs = 2;
+	make_std_light_vertices(vertices, r, g, b);
 	if (!(light = (t_light*)malloc(sizeof(t_light))))
 		return (NULL);
-	if (!(light->obj = new_object(vertices, nb_vertices, attribs_struct, nb_attribs)))
+	if (!(light->obj = new_object(vertices, nb_vertices, attribs_struct,
+																nb_attribs)))
 		return (NULL);
 	light->ambient_strength = ambient_strength;
 	light->obj->x = 2.0;

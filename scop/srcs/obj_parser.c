@@ -50,6 +50,12 @@ char		interpret_line(t_objfile *objfile, char *line, size_t line_nb)
 	return (1);
 }
 
+t_objfile	*parse_objfile_could_not_open(char *path)
+{
+	printf("file %s could not be opened\n", path);
+	return (NULL);
+}
+
 t_objfile	*parse_objfile(char *path)
 {
 	FILE		*fp;
@@ -65,10 +71,7 @@ t_objfile	*parse_objfile(char *path)
 	line = NULL;
 	fp = fopen(path, "r");
 	if (!fp)
-	{
-		printf("file %s could not be opened\n", path);
-		return (NULL);
-	}
+		return (parse_objfile_could_not_open(path));
 	line_nb = 1;
 	while (getline(&line, &len, fp) != -1)
 	{

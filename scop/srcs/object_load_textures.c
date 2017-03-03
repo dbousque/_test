@@ -1,4 +1,14 @@
-
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   object_load_textures.c                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: dbousque <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2017/03/03 13:59:57 by dbousque          #+#    #+#             */
+/*   Updated: 2017/03/03 13:59:59 by dbousque         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
 #include "myopengl.h"
 
@@ -23,7 +33,7 @@ GLuint	make_texture(char *img_path, char *error)
 	glGenerateMipmap(GL_TEXTURE_2D);
 	SOIL_free_image_data(img);
 	glBindTexture(GL_TEXTURE_2D, 0);
-    return (texture);
+	return (texture);
 }
 
 void	load_texture_to_obj(t_globj *obj, char *img_path)

@@ -12,7 +12,8 @@
 
 #include "myopengl.h"
 
-char	create_shader(GLchar const *shader_source, int mode, GLuint *shader)
+char				create_shader(GLchar const *shader_source, int mode,
+																GLuint *shader)
 {
 	GLint	success;
 	GLchar	info_log[512];
@@ -27,13 +28,13 @@ char	create_shader(GLchar const *shader_source, int mode, GLuint *shader)
 		ft_putstr("SHADER COMPILATION ERROR:\n");
 		ft_putstr(info_log);
 		ft_putstr("\n");
-		return(0) ;
+		return (0);
 	}
 	return (1);
 }
 
-char	create_shaders(GLchar const *vs_content, GLchar const *fs_content,
-											 t_shader_program *shader_program)
+char				create_shaders(GLchar const *vs_content,
+					GLchar const *fs_content, t_shader_program *shader_program)
 {
 	if (!(create_shader(vs_content, GL_VERTEX_SHADER,
 											&(shader_program->vertex_shader))))
@@ -42,7 +43,7 @@ char	create_shaders(GLchar const *vs_content, GLchar const *fs_content,
 		return (0);
 	}
 	if (!(create_shader(fs_content, GL_FRAGMENT_SHADER,
-											&(shader_program->fragment_shader))))
+										&(shader_program->fragment_shader))))
 	{
 		ft_putstr("could not compile fragment shader\n");
 		return (0);
@@ -79,7 +80,7 @@ t_shader_program	*create_shaders_and_program(GLchar const *vs_content,
 t_shader_program	*new_shader_program(char *vertex_shader_path,
 												char *fragment_shader_path)
 {
-	GLchar const		*vs_content;
+	GLchar const		*vs_cont;
 	GLchar const		*fs_content;
 	t_shader_program	*shader_program;
 
@@ -89,8 +90,8 @@ t_shader_program	*new_shader_program(char *vertex_shader_path,
 		ft_putstr("malloc error\n");
 		return (NULL);
 	}
-	vs_content = read_file(vertex_shader_path, MAX_SHADER_SIZE);
-	if (!vs_content)
+	vs_cont = read_file(vertex_shader_path, MAX_SHADER_SIZE);
+	if (!vs_cont)
 	{
 		ft_putstr(vertex_shader_path);
 		ft_putstr(" : invalid file\n");
@@ -103,6 +104,5 @@ t_shader_program	*new_shader_program(char *vertex_shader_path,
 		ft_putstr(" : invalid file\n");
 		return (NULL);
 	}
-	return (create_shaders_and_program(vs_content, fs_content,
-															shader_program));
+	return (create_shaders_and_program(vs_cont, fs_content, shader_program));
 }

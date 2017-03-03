@@ -1,4 +1,14 @@
-
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   matrices2.c                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: dbousque <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2017/03/03 13:58:26 by dbousque          #+#    #+#             */
+/*   Updated: 2017/03/03 13:58:28 by dbousque         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
 #include "matrices.h"
 
@@ -31,7 +41,8 @@ t_mat	*transpose(t_mat *mat)
 		j = 0;
 		while (j < mat->nb_columns)
 		{
-			res->elts[j * mat->nb_rows + i] = mat->elts[i * mat->nb_columns + j];
+			res->elts[j * mat->nb_rows + i] =
+											mat->elts[i * mat->nb_columns + j];
 			j++;
 		}
 		i++;

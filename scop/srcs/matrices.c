@@ -49,17 +49,17 @@ t_mat	*new_square_mat(int n)
 	return (mat);
 }
 
-t_mat	*new_mat2()
+t_mat	*new_mat2(void)
 {
 	return (new_square_mat(2));
 }
 
-t_mat	*new_mat3()
+t_mat	*new_mat3(void)
 {
 	return (new_square_mat(3));
 }
 
-t_mat	*new_mat4()
+t_mat	*new_mat4(void)
 {
 	return (new_square_mat(4));
 }

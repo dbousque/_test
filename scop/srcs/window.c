@@ -19,6 +19,12 @@ t_window	*init_error(char *str)
 	return (NULL);
 }
 
+t_window	*setup_window_malloc_error(void)
+{
+	ft_putstr("malloc error\n");
+	return (NULL);
+}
+
 t_window	*setup_window(int width, int height, char *title_name)
 {
 	t_window	*window;
@@ -26,16 +32,12 @@ t_window	*setup_window(int width, int height, char *title_name)
 	int			actual_height;
 
 	if (!(window = (t_window*)malloc(sizeof(t_window))))
-	{
-		ft_putstr("malloc error\n");
-		return (NULL);
-	}
+		return (setup_window_malloc_error());
 	glfwInit();
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 	glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
-	// macos
 	glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 	window->win = glfwCreateWindow(width, height, title_name, NULL, NULL);
 	if (!window->win)

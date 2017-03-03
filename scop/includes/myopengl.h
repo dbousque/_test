@@ -147,6 +147,14 @@ typedef struct			s_light
 	float				ambient_strength;
 }						t_light;
 
+typedef struct			s_solve_text_coords_params
+{
+	t_list				**vertex_in_faces;
+	char				*vertex_text_already_set;
+	float				scale;
+	int					top_left_vertex;
+}						t_solve_text_coords_params;
+
 t_camera				g_cam;
 char					g_keys[1024];
 t_config				g_conf;
@@ -240,5 +248,46 @@ int						get_texture_nb(int nb);
 void					init_vertex_attributes(int attribs_struct[],
 						int nb_attribs, int nb_vertices, size_t tot_data_len);
 int						int_arr_sum(int arr[], int nb);
+void					solve_text_coords(t_objfile *objfile,
+			t_solve_text_coords_params *params, float x_text, float y_text);
+char					generate_texture_coords2(t_objfile *objfile);
+void					get_text_xy(t_objfile *objfile, int known_unkown_ind[2],
+												float res_xy[2], float scale);
+void					set_new_params(t_solve_text_coords_params *params,
+					t_solve_text_coords_params *new_params, int new_top_left);
+void					set_vertex_in_faces(t_objfile *objfile,
+													t_list **vertex_in_faces);
+char					find_top_left(t_objfile *objfile, int *top_left_vertex,
+								float *scale, char *vertex_text_already_set);
+char					find_top_left_cond1(float *v, int *f, size_t i,
+																float tl[4]);
+void					second_pass_add_normals(t_objfile *objfile,
+														GLfloat **vertices);
+void					set_normal(t_objfile *objfile, GLfloat **vertices,
+											size_t faces_ind, size_t res_ind);
+void					set_vertex(t_objfile *objfile, GLfloat **vertices,
+											size_t faces_ind, size_t res_ind);
+void					add_normal2(t_objfile *objfile, size_t f_i, int decal);
+char					create_calc_normals(t_objfile *objfile,
+															int *nb_vertices);
+char					valid_faces(t_objfile *objfile, int *nb_vertices);
+char					return_face_error(char *msg, char *line,
+															size_t line_nb);
+char					valid_float(char *line, char **end);
+char					return_vertex_error(char *msg, char *line,
+															size_t line_nb);
+void					make_std_light_vertices(GLfloat vertices[], float r,
+															float g, float b);
+void					make_std_light_vertices6(GLfloat vertices[], float r,
+															float g, float b);
+void					make_std_light_vertices7(GLfloat vertices[], float r,
+															float g, float b);
+void					make_std_light_vertices8(GLfloat vertices[], float r,
+															float g, float b);
+void					make_std_light_vertices9(GLfloat vertices[], float r,
+															float g, float b);
+void					make_std_light_vertices10(GLfloat vertices[], float r,
+															float g, float b);
+void					show_help(void);
 
 #endif

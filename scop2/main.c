@@ -321,8 +321,8 @@ int		main(void)
 	//glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	objs = new_list(sizeof(t_globj*));
 	lights = new_list(sizeof(t_light*));
-	obj = new_obj_from_path("ressources/plane/Su-27_Flanker.obj", 1);
-	//obj = new_obj_from_path("ressources/42.obj", 1);
+	//obj = new_obj_from_path("ressources/plane/Su-27_Flanker.obj", 1);
+	obj = new_obj_from_path("ressources/teapot.obj", 1);
 	//obj = new_obj_from_path("ressources/rock/rock.obj", 1);
 	if (!obj)
 		return (-1);
@@ -347,9 +347,9 @@ int		main(void)
 	//load_texture_to_obj(obj, "wall2.jpg");
 	//load_specular_map_to_obj(obj, "wall2_specular.jpg");
 	//load_normal_map_to_obj(obj, "wall2_normal.jpg");
-	load_texture_to_obj(obj, "ressources/plane/Su-27_Flanker_P01.png");
-	load_specular_map_to_obj(obj, "ressources/plane/Su-27_Flanker_S2.png");
-	load_normal_map_to_obj(obj, "ressources/plane/Su-27_Flanker_N.png");
+	//load_texture_to_obj(obj, "ressources/plane/Su-27_Flanker_P01.png");
+	//load_specular_map_to_obj(obj, "ressources/plane/Su-27_Flanker_S2.png");
+	//load_normal_map_to_obj(obj, "ressources/plane/Su-27_Flanker_N.png");
 	//load_texture_to_obj(obj, "ressources/pouf/diff.jpg");
 	//load_specular_map_to_obj(obj, "ressources/pouf/spec.jpg");
 	//load_normal_map_to_obj(obj, "ressources/pouf/normal.png");

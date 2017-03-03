@@ -47,5 +47,6 @@ t_mat			*transpose(t_mat *inp);
 t_mat			*perspective(float fov, float ratio, float near, float far);
 float			deg_to_rad(float deg);
 void			print_mat(t_mat *mat);
+t_mat			*invert5(float *m, t_mat *res_inv, float *inv);
 
 #endif

@@ -12,12 +12,6 @@
 
 #include "myopengl.h"
 
-char	return_face_error(char *msg, char *line, size_t line_nb)
-{
-	printf("line %ld ; %s : \"%s\"\n", line_nb, msg, line);
-	return (0);
-}
-
 char	valid_int(char *line, char **end)
 {
 	size_t	i;
@@ -69,8 +63,7 @@ char	add_face_point(t_objfile *objfile, char *line, char **end,
 {
 	int		tmp;
 
-	tmp = strtol(line, &line, 10);
-	if (tmp <= 0)
+	if ((tmp = strtol(line, &line, 10)) <= 0)
 		return (0);
 	add_to_list(objfile->faces, &tmp);
 	if (*line == ' ' || *line == '\n' || !(*line))

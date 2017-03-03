@@ -76,3 +76,9 @@ void	front_up_cross(float *x, float *y, float *z)
 	*y = (g_cam.front_z * g_cam.up_x) - (g_cam.front_x * g_cam.up_z);
 	*z = (g_cam.front_x * g_cam.up_y) - (g_cam.front_y * g_cam.up_x);
 }
+
+char	return_face_error(char *msg, char *line, size_t line_nb)
+{
+	printf("line %ld ; %s : \"%s\"\n", line_nb, msg, line);
+	return (0);
+}

@@ -12,7 +12,7 @@
 
 #include "myopengl.h"
 
-void	*cpy_array(void *array, size_t size)
+void		*cpy_array(void *array, size_t size)
 {
 	char	*to_cpy;
 	char	*res;
@@ -30,7 +30,7 @@ void	*cpy_array(void *array, size_t size)
 	return (res);
 }
 
-void	set_obj_std(t_globj *obj, int nb_vertices)
+void		set_obj_std(t_globj *obj, int nb_vertices)
 {
 	obj->nb_vertices = nb_vertices;
 	obj->has_textures = 0;
@@ -56,7 +56,7 @@ t_globj		*new_object_malloc_error(void)
 	return (NULL);
 }
 
-void	new_object_middle(GLfloat *vertices, size_t tot_data_len,
+void		new_object_middle(GLfloat *vertices, size_t tot_data_len,
 																t_globj *obj)
 {
 	glGenVertexArrays(1, &(obj->vao1));
@@ -85,13 +85,12 @@ t_globj		*new_object(GLfloat *vertices, int nb_vertices,
 	glBindVertexArray(0);
 	vertices_cpy = cpy_array(vertices, sizeof(GLfloat) * 17 * nb_vertices);
 	calculate_raw_normals(vertices_cpy, nb_vertices);
-
 	glGenVertexArrays(1, &(obj->vao2));
 	glBindVertexArray(obj->vao2);
 	glGenBuffers(1, &(obj->vbo2));
 	glBindBuffer(GL_ARRAY_BUFFER, obj->vbo2);
 	glBufferData(GL_ARRAY_BUFFER, tot_data_len,
-									(GLfloat const*)vertices_cpy, GL_STATIC_DRAW);
+								(GLfloat const*)vertices_cpy, GL_STATIC_DRAW);
 	init_vertex_attributes(attribs_struct, nb_attribs, nb_vertices,
 																tot_data_len);
 	glBindVertexArray(0);

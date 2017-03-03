@@ -1,4 +1,14 @@
-
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   main_utils2.c                                      :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: dbousque <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2017/03/03 13:58:05 by dbousque          #+#    #+#             */
+/*   Updated: 2017/03/03 13:58:07 by dbousque         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
 #include "myopengl.h"
 
@@ -18,7 +28,7 @@ void	setup_conf(void)
 	g_conf.blue_strength = 1.0;
 	g_conf.stereoscopic = 0;
 	g_conf.generic_textures_ind = 0;
-}	
+}
 
 t_mat	*build_view2(t_vec *camera_right, t_vec *camera_up,
 								t_vec *camera_direction, t_vec *camera_pos)
