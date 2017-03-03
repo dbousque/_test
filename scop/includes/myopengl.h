@@ -219,5 +219,26 @@ void					load_normal_map_to_obj(t_globj *obj, char *img_path);
 void					front_up_cross(float *x, float *y, float *z);
 char					load_object_file(char *filename, t_list *objs);
 void					do_movement4(GLfloat delta_time);
+void					main_loop(t_window *window, t_list *objs,
+															t_list *lights);
+void					setup_eyes(void);
+void					set_right_eye(void);
+void					set_left_eye(void);
+void					add_environment(t_list *objs);
+void					calc_tangent_bitangent(GLfloat *vertices,
+															int nb_vertices);
+void					calc_tangent_bitangent_triangle4(GLfloat *vertices,
+											int i, float r, float *deltas[4]);
+void					calc_tangent_bitangent_triangle3(GLfloat *vertices,
+											int i, float r, float *deltas[4]);
+void					calc_tangent_bitangent_triangle2(GLfloat *vertices,
+											int i, float r, float *deltas[4]);
+void					calc_tangent_bitangent_triangle1(GLfloat *vertices,
+											int i, float *deltas[4]);
+float					max(float f1, float f2);
+int						get_texture_nb(int nb);
+void					init_vertex_attributes(int attribs_struct[],
+						int nb_attribs, int nb_vertices, size_t tot_data_len);
+int						int_arr_sum(int arr[], int nb);
 
 #endif

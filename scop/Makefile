@@ -4,10 +4,21 @@ NAME		=	a.out
 
 SOURCES		=	srcs/shader_program.c \
 				srcs/object.c \
+				srcs/object2.c \
+				srcs/object3.c \
+				srcs/object_load_textures.c \
 				srcs/main.c \
+				srcs/main_loop.c \
+				srcs/eyes.c \
 				srcs/window.c \
 				srcs/ft_itoa.c \
 				srcs/matrices.c \
+				srcs/matrices2.c \
+				srcs/matrices3.c \
+				srcs/matrices4.c \
+				srcs/matrices5.c \
+				srcs/matrices_invert.c \
+				srcs/matrices_rotation.c \
 				srcs/events.c \
 				srcs/events2.c \
 				srcs/events_obj_movement.c \
@@ -19,11 +30,16 @@ SOURCES		=	srcs/shader_program.c \
 				srcs/objfile_to_vertices.c \
 				srcs/normals.c \
 				srcs/main_utils.c \
+				srcs/main_utils2.c \
+				srcs/main_utils3.c \
 				srcs/draw_objs.c \
 				srcs/draw_objs2.c \
 				srcs/load_object_file.c \
 				srcs/utils.c \
-				srcs/utils2.c
+				srcs/utils2.c \
+				srcs/environment.c \
+				srcs/calc_tangent_bitangent.c \
+				srcs/calc_tangent_bitangent2.c
 
 OBJECTS	=	$(subst .c,.o,$(SOURCES))
 

@@ -12,7 +12,7 @@
 
 #include "myopengl.h"
 
-void	setup_objfile(t_objfile **objfile)
+void		setup_objfile(t_objfile **objfile)
 {
 	float	tmp_float;
 
@@ -37,7 +37,7 @@ void	setup_objfile(t_objfile **objfile)
 	add_to_list((*objfile)->normals, &tmp_float);
 }
 
-char	interpret_line(t_objfile *objfile, char *line, size_t line_nb)
+char		interpret_line(t_objfile *objfile, char *line, size_t line_nb)
 {
 	if (startswith(line, "v "))
 		return (add_vertex(objfile, line, line_nb));

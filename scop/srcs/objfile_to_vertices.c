@@ -80,7 +80,7 @@ void	set_vertex(t_objfile *objfile, GLfloat **vertices, size_t faces_ind,
 	(*vertices)[res_ind + 7] = normals[faces[faces_ind + 2] * 3 + 2];
 }
 
-void	add_normal2(t_objfile *objfile, size_t faces_ind, int decal)
+void	add_normal2(t_objfile *objfile, size_t f_i, int decal)
 {
 	float	v1[3];
 	float	v2[3];
@@ -91,21 +91,21 @@ void	add_normal2(t_objfile *objfile, size_t faces_ind, int decal)
 	faces = (int*)objfile->faces->elts;
 	verts = (float*)objfile->vertices->elts;
 	normals = (float*)objfile->calc_normals->elts;
-	v1[0] = verts[faces[faces_ind - decal] * 3] - verts[faces[faces_ind] * 3];
-	v1[1] = verts[faces[faces_ind - decal] * 3 + 1] - verts[faces[faces_ind] * 3 + 1];
-	v1[2] = verts[faces[faces_ind - decal] * 3 + 2] - verts[faces[faces_ind] * 3 + 2];
-	v2[0] = verts[faces[faces_ind - decal] * 3] - verts[faces[faces_ind + 3] * 3];
-	v2[1] = verts[faces[faces_ind - decal] * 3 + 1] - verts[faces[faces_ind + 3] * 3 + 1];
-	v2[2] = verts[faces[faces_ind - decal] * 3 + 2] - verts[faces[faces_ind + 3] * 3 + 2];
-	normals[faces[faces_ind - decal] * 3] += v1[1] * v2[2] - v1[2] * v2[1];
-	normals[faces[faces_ind - decal] * 3 + 1] += v1[2] * v2[0] - v1[0] * v2[2];
-	normals[faces[faces_ind - decal] * 3 + 2] += v1[0] * v2[1] - v1[1] * v2[0];
-	normals[faces[faces_ind] * 3] += v1[1] * v2[2] - v1[2] * v2[1];
-	normals[faces[faces_ind] * 3 + 1] += v1[2] * v2[0] - v1[0] * v2[2];
-	normals[faces[faces_ind] * 3 + 2] += v1[0] * v2[1] - v1[1] * v2[0];
-	normals[faces[faces_ind + 3] * 3] += v1[1] * v2[2] - v1[2] * v2[1];
-	normals[faces[faces_ind + 3] * 3 + 1] += v1[2] * v2[0] - v1[0] * v2[2];
-	normals[faces[faces_ind + 3] * 3 + 2] += v1[0] * v2[1] - v1[1] * v2[0];
+	v1[0] = verts[faces[f_i - decal] * 3] - verts[faces[f_i] * 3];
+	v1[1] = verts[faces[f_i - decal] * 3 + 1] - verts[faces[f_i] * 3 + 1];
+	v1[2] = verts[faces[f_i - decal] * 3 + 2] - verts[faces[f_i] * 3 + 2];
+	v2[0] = verts[faces[f_i - decal] * 3] - verts[faces[f_i + 3] * 3];
+	v2[1] = verts[faces[f_i - decal] * 3 + 1] - verts[faces[f_i + 3] * 3 + 1];
+	v2[2] = verts[faces[f_i - decal] * 3 + 2] - verts[faces[f_i + 3] * 3 + 2];
+	normals[faces[f_i - decal] * 3] += v1[1] * v2[2] - v1[2] * v2[1];
+	normals[faces[f_i - decal] * 3 + 1] += v1[2] * v2[0] - v1[0] * v2[2];
+	normals[faces[f_i - decal] * 3 + 2] += v1[0] * v2[1] - v1[1] * v2[0];
+	normals[faces[f_i] * 3] += v1[1] * v2[2] - v1[2] * v2[1];
+	normals[faces[f_i] * 3 + 1] += v1[2] * v2[0] - v1[0] * v2[2];
+	normals[faces[f_i] * 3 + 2] += v1[0] * v2[1] - v1[1] * v2[0];
+	normals[faces[f_i + 3] * 3] += v1[1] * v2[2] - v1[2] * v2[1];
+	normals[faces[f_i + 3] * 3 + 1] += v1[2] * v2[0] - v1[0] * v2[2];
+	normals[faces[f_i + 3] * 3 + 2] += v1[0] * v2[1] - v1[1] * v2[0];
 }
 
 void	set_normal(t_objfile *objfile, GLfloat **vertices, size_t faces_ind,
@@ -120,6 +120,21 @@ void	set_normal(t_objfile *objfile, GLfloat **vertices, size_t faces_ind,
 	(*vertices)[res_ind + 5] = normals[faces[faces_ind] * 3];
 	(*vertices)[res_ind + 6] = normals[faces[faces_ind] * 3 + 1];
 	(*vertices)[res_ind + 7] = normals[faces[faces_ind] * 3 + 2];
+}
+
+void	second_pass_add_normals_middle(t_objfile *objfile, size_t *faces_ind,
+																	int *decal)
+{
+	if (((int*)objfile->faces->elts)[*faces_ind] != 0)
+	{
+		*decal += 3;
+		*faces_ind -= 6;
+	}
+	else
+	{
+		*decal = 0;
+		(*faces_ind)++;
+	}
 }
 
 void	second_pass_add_normals(t_objfile *objfile, GLfloat **vertices)
@@ -137,21 +152,13 @@ void	second_pass_add_normals(t_objfile *objfile, GLfloat **vertices)
 		x = 0;
 		while (x < 3)
 		{
-			set_normal(objfile, vertices, faces_ind, res_ind, x == 0 ? decal : 0);
+			set_normal(objfile, vertices, faces_ind,
+											res_ind, x == 0 ? decal : 0);
 			faces_ind += 3;
 			res_ind += 17;
 			x++;
 		}
-		if (((int*)objfile->faces->elts)[faces_ind] != 0)
-		{
-			decal += 3;
-			faces_ind -= 6;
-		}
-		else
-		{
-			decal = 0;
-			faces_ind++;
-		}
+		second_pass_add_normals_middle(objfile, &faces_ind, &decal);
 	}
 }
 
@@ -174,47 +181,64 @@ char	create_calc_normals(t_objfile *objfile, int *nb_vertices)
 	return (1);
 }
 
+char	find_top_left_cond1(float *v, int *f, size_t i, float tl[4])
+{
+	return (v[f[i] * 3 + 1] > tl[1]
+				|| (v[f[i] * 3 + 1] == tl[1] && v[f[i] * 3] < tl[0]));
+}
+
+char	find_top_left_cond2(float *v, int *f, size_t i, float tl[4])
+{
+	return (v[f[i] * 3 + 1] < tl[1]
+				|| (v[f[i] * 3 + 1] == tl[1] && v[f[i] * 3] > tl[0]));
+}
+
+void	find_top_left_expr_cond1(float *v, int *f, size_t i, float tl[4])
+{
+	tl[0] = v[f[i] * 3];
+	tl[1] = v[f[i] * 3 + 1];
+}
+
+void	find_top_left_expr_cond2(float *v, int *f, size_t i, float tl[4])
+{
+	tl[2] = v[f[i] * 3];
+	tl[3] = v[f[i] * 3 + 1];
+}
+
+void	find_top_set_vars(float **v, int **f, size_t *i, t_objfile *objfile)
+{
+	*f = (int*)objfile->faces->elts;
+	*v = (float*)objfile->vertices->elts;
+	*i = 0;
+}
+
 char	find_top_left(t_objfile *objfile, int *top_left_vertex, float *scale,
 												char *vertex_text_already_set)
 {
-	int		*faces;
+	int		*f;
 	size_t	i;
-	float	top_left[2];
-	float	lower_right[2];
-	float	*vertices;
+	float	tl[4];
+	float	*v;
 	char	set_once;
 
 	set_once = 0;
-	faces = (int*)objfile->faces->elts;
-	vertices = (float*)objfile->vertices->elts;
-	i = 0;
+	find_top_set_vars(&v, &f, &i, objfile);
 	while (i < objfile->faces->len)
 	{
-		if (!vertex_text_already_set[faces[i]])
+		if (!vertex_text_already_set[f[i]])
 		{
-			if (!set_once || vertices[faces[i] * 3 + 1] > top_left[1]
-				|| (vertices[faces[i] * 3 + 1] == top_left[1]
-					&& vertices[faces[i] * 3] < top_left[0]))
+			if (!set_once || find_top_left_cond1(v, f, i, tl))
 			{
-				top_left[0] = vertices[faces[i] * 3];
-				top_left[1] = vertices[faces[i] * 3 + 1];
-				*top_left_vertex = faces[i];
+				find_top_left_expr_cond1(v, f, i, tl);
+				*top_left_vertex = f[i];
 			}
-			if (!set_once || vertices[faces[i] * 3 + 1] < top_left[1]
-				|| (vertices[faces[i] * 3 + 1] == top_left[1]
-					&& vertices[faces[i] * 3] > top_left[0]))
-			{
-				lower_right[0] = vertices[faces[i] * 3];
-				lower_right[1] = vertices[faces[i] * 3 + 1];
-			}
+			if (!set_once || find_top_left_cond2(v, f, i, tl))
+				find_top_left_expr_cond2(v, f, i, tl);
 			set_once = 1;
 		}
-		i += 3;
-		if (faces[i] == 0)
-			i++;
+		i = (f[i + 3] == 0 ? i + 4 : i + 3);
 	}
-	*scale = fmaxf(fabs(top_left[0] - lower_right[0]),
-					fabs(top_left[1] - lower_right[1]));
+	*scale = fmaxf(fabs(tl[0] - tl[2]), fabs(tl[1] - tl[3]));
 	return (set_once);
 }
 
