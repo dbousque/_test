@@ -16,11 +16,16 @@ GLuint	make_texture(char *img_path, char *error)
 {
 	int				width;
 	int				height;
+	int				channels;
 	unsigned char	*img;
 	GLuint			texture;
 
 	*error = 0;
-	img = SOIL_load_image(img_path, &width, &height, 0, SOIL_LOAD_RGB);
+	if (endswith(img_path, ".tga"))
+		img = (unsigned char*)read_tga(img_path, &width, &height);
+	else
+		img = SOIL_load_image(img_path, &width, &height, &channels,
+																SOIL_LOAD_RGB);
 	if (!img)
 	{
 		*error = 1;
@@ -31,7 +36,8 @@ GLuint	make_texture(char *img_path, char *error)
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB,
 													GL_UNSIGNED_BYTE, img);
 	glGenerateMipmap(GL_TEXTURE_2D);
-	SOIL_free_image_data(img);
+	if (!(endswith(img_path, ".tga")))
+		SOIL_free_image_data(img);
 	glBindTexture(GL_TEXTURE_2D, 0);
 	return (texture);
 }

@@ -34,6 +34,27 @@ char	startswith(char *str, char *begin)
 	return (0);
 }
 
+char	endswith(char *str, char *end)
+{
+	int		i;
+	int		x;
+
+	i = 0;
+	while (str[i])
+		i++;
+	x = 0;
+	while (end[x])
+		x++;
+	while (i >= 0 && x >= 0 && str[i] == end[x])
+	{
+		if (x == 0)
+			return (1);
+		i--;
+		x--;
+	}
+	return (0);
+}
+
 void	ft_putstr(char *str)
 {
 	write(1, str, ft_strlen(str));

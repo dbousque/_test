@@ -49,7 +49,8 @@ SOURCES		=	srcs/shader_program.c \
 				srcs/calc_tangent_bitangent2.c \
 				srcs/make_std_light.c \
 				srcs/make_std_light2.c \
-				srcs/show_help.c
+				srcs/show_help.c \
+				srcs/read_tga.c
 
 OBJECTS	=	$(subst .c,.o,$(SOURCES))
 

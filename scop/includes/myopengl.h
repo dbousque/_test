@@ -289,5 +289,7 @@ void					make_std_light_vertices9(GLfloat vertices[], float r,
 void					make_std_light_vertices10(GLfloat vertices[], float r,
 															float g, float b);
 void					show_help(void);
+char					endswith(char *str, char *end);
+char					*read_tga(char *path, int *width, int *height);
 
 #endif
