@@ -1,0 +1,4 @@
+_server/mymodule.cmo :
+_server/mymodule.cmx :
+_server/mymodule.cmo : _server/mymodule.type_mli
+_server/mymodule.cmx : _server/mymodule.type_mli

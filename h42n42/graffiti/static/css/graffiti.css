@@ -1,0 +1,16 @@
+
+
+* {
+    font-family: sans-serif;
+}
+
+.bestiole {
+	background-color: black;
+	position: absolute;
+}
+
+.bestiole_container {
+	background-color: #EEE;
+	width: 700px;
+	height: 400px
+}

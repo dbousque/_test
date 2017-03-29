@@ -54,7 +54,7 @@ SOURCES		=	srcs/shader_program.c \
 
 OBJECTS	=	$(subst .c,.o,$(SOURCES))
 
-WFLAGS	=	-Wall -Werror -Wextra -I includes -I ~/libSOIL
+WFLAGS	=	-Wall -Werror -Wextra -I includes
 
 OS := $(shell uname)
 ifneq ($(OS), Darwin)

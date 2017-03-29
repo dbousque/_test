@@ -1,0 +1,24 @@
+_server/bestiole.cmo :
+_server/bestiole.cmx :
+_server/bestiole.cmo : _server/bestiole.type_mli
+_server/bestiole.cmx : _server/bestiole.type_mli
+_server/graffiti.cmo :
+_server/graffiti.cmx :
+_server/graffiti.cmo : _server/graffiti.type_mli
+_server/graffiti.cmx : _server/graffiti.type_mli
+_server/mymodule.cmo :
+_server/mymodule.cmx :
+_server/mymodule.cmo : _server/mymodule.type_mli
+_server/mymodule.cmx : _server/mymodule.type_mli
+_client/bestiole.cmo :
+_client/bestiole.cmx :
+_client/bestiole.cmo : _server/bestiole.type_mli
+_client/bestiole.cmx : _server/bestiole.type_mli
+_client/graffiti.cmo : _client/mymodule.cmo
+_client/graffiti.cmx : _client/mymodule.cmx
+_client/graffiti.cmo : _server/graffiti.type_mli
+_client/graffiti.cmx : _server/graffiti.type_mli
+_client/mymodule.cmo :
+_client/mymodule.cmx :
+_client/mymodule.cmo : _server/mymodule.type_mli
+_client/mymodule.cmx : _server/mymodule.type_mli
