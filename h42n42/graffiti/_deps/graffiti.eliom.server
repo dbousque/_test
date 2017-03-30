@@ -1,4 +1,5 @@
-_server/graffiti.cmo :
-_server/graffiti.cmx :
+_server/graffiti.cmo : _server/config.cmo
+_server/graffiti.cmx : _server/config.cmx
+_server/graffiti.type_mli : _server/config.cmo
 _server/graffiti.cmo : _server/graffiti.type_mli
 _server/graffiti.cmx : _server/graffiti.type_mli

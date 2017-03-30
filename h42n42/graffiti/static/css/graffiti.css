@@ -1,16 +1,46 @@
 
 
-* {
-    font-family: sans-serif;
+h1 {
+	text-align: center;
+	font-family: monospace;
 }
 
 .bestiole {
-	background-color: black;
 	position: absolute;
+	z-index: 1;
+	-webkit-filter: drop-shadow(2px 2px 2px #222);
+	filter: drop-shadow(2px 2px 2px #222);
+	user-select: none;
 }
 
-.bestiole_container {
+.selected-bestiole {
+	-webkit-filter: drop-shadow(5px 5px 5px #222);
+	filter: drop-shadow(5px 5px 5px #222);
+	transform: scale(1.07);
+}
+
+.board-container {
+	margin: 0 auto;
+}
+
+.bestiole-container {
 	background-color: #EEE;
-	width: 700px;
-	height: 400px
+	float: left;
+	box-shadow: inset 0px 0px 8px 0px #222;
+}
+
+.hide-border {
+	position: relative;
+	background-color: #FFF;
+	z-index: 2;
+}
+
+.left-right-border {
+	width: 20px;
+	float: left;
+}
+
+.top-bottom-border {
+	width: 100%;
+	height: 20px;
 }

@@ -1,4 +1,4 @@
-_client/graffiti.cmo : _client/mymodule.cmo
-_client/graffiti.cmx : _client/mymodule.cmx
+_client/graffiti.cmo : _client/config.cmo
+_client/graffiti.cmx : _client/config.cmx
 _client/graffiti.cmo : _server/graffiti.type_mli
 _client/graffiti.cmx : _server/graffiti.type_mli
