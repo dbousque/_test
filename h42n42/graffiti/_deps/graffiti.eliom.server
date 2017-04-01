@@ -1,5 +1,5 @@
-_server/graffiti.cmo : _server/config.cmo
-_server/graffiti.cmx : _server/config.cmx
-_server/graffiti.type_mli : _server/config.cmo
+_server/graffiti.cmo : _server/page.cmo _server/bestioleType.cmo
+_server/graffiti.cmx : _server/page.cmx _server/bestioleType.cmx
+_server/graffiti.type_mli : _server/page.cmo _server/bestioleType.cmo
 _server/graffiti.cmo : _server/graffiti.type_mli
 _server/graffiti.cmx : _server/graffiti.type_mli

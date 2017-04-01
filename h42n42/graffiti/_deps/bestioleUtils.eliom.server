@@ -1,0 +1,5 @@
+_server/bestioleUtils.cmo : _server/page.cmo
+_server/bestioleUtils.cmx : _server/page.cmx
+_server/bestioleUtils.type_mli : _server/page.cmo
+_server/bestioleUtils.cmo : _server/bestioleUtils.type_mli
+_server/bestioleUtils.cmx : _server/bestioleUtils.type_mli

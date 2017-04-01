@@ -1,4 +1,6 @@
 val __eliom__compilation_unit_id__Q41EPy : string
 val board_width : int
 val board_height : int
+val extremes_height : int
 val std_bestiole_size : int
+val starting_nb_bestioles : int

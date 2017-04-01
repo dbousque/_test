@@ -361,3 +361,412 @@ Mar 30 03:20:16: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X
 Mar 30 03:20:16: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): css/graffiti.css
 Mar 30 03:20:16: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): graffiti.js
 Mar 30 03:20:17: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): images/bestiole.png
+Mar 31 00:24:20: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): 
+Mar 31 00:24:20: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): css/graffiti.css
+Mar 31 00:24:20: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): graffiti.js
+Mar 31 00:24:21: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): images/bestiole.png
+Mar 31 00:24:21: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): favicon.ico
+Mar 31 00:24:21: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): favicon.ico
+Mar 31 00:25:47: access: connection for 192.168.1.9 from 192.168.1.12 (Dalvik/1.6.0 (Linux; U; Android 4.4.4; C6603 Build/10.5.1.A.0.292)): BasicDeviceDescription.xml
+Mar 31 00:27:28: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): 
+Mar 31 00:35:38: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): 
+Mar 31 00:35:47: access: connection for 192.168.1.9 from 192.168.1.12 (Dalvik/1.6.0 (Linux; U; Android 4.4.4; C6603 Build/10.5.1.A.0.292)): BasicDeviceDescription.xml
+Mar 31 00:36:54: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): 
+Mar 31 00:37:06: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (iPad; CPU OS 9_1 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Version/9.0 Mobile/13B143 Safari/601.1): 
+Mar 31 00:41:14: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): 
+Mar 31 00:51:19: access: connection for 192.168.1.9 from 192.168.1.12 (Dalvik/1.6.0 (Linux; U; Android 4.4.4; C6603 Build/10.5.1.A.0.292)): BasicDeviceDescription.xml
+Mar 31 01:09:39: access: connection for 192.168.1.9 from 192.168.1.12 (Dalvik/1.6.0 (Linux; U; Android 4.4.4; C6603 Build/10.5.1.A.0.292)): BasicDeviceDescription.xml
+Mar 31 01:20:20: access: connection for 192.168.1.9 from 192.168.1.12 (Dalvik/1.6.0 (Linux; U; Android 4.4.4; C6603 Build/10.5.1.A.0.292)): BasicDeviceDescription.xml
+Mar 31 01:23:52: access: connection for 192.168.1.9 from 192.168.1.12 (Dalvik/1.6.0 (Linux; U; Android 4.4.4; C6603 Build/10.5.1.A.0.292)): BasicDeviceDescription.xml
+Mar 31 01:44:38: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): 
+Mar 31 01:44:38: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): css/graffiti.css
+Mar 31 01:44:38: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): graffiti.js
+Mar 31 01:44:38: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): images/bestiole.png
+Mar 31 13:52:01: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): 
+Mar 31 13:52:01: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): css/graffiti.css
+Mar 31 13:52:01: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): graffiti.js
+Mar 31 13:52:01: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): images/bestiole.png
+Mar 31 13:52:01: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): favicon.ico
+Mar 31 13:52:01: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): favicon.ico
+Mar 31 13:55:37: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): 
+Mar 31 13:55:37: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): graffiti.js
+Mar 31 14:04:26: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): 
+Mar 31 14:04:26: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): graffiti.js
+Mar 31 14:04:29: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): 
+Mar 31 14:04:29: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): graffiti.js
+Mar 31 14:04:58: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): 
+Mar 31 14:04:58: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): graffiti.js
+Mar 31 14:05:00: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): 
+Mar 31 14:05:00: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): graffiti.js
+Mar 31 14:05:03: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): 
+Mar 31 14:05:03: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): graffiti.js
+Mar 31 14:05:06: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): 
+Mar 31 14:05:06: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): graffiti.js
+Mar 31 14:05:07: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): 
+Mar 31 14:05:07: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): graffiti.js
+Mar 31 14:05:08: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): 
+Mar 31 14:05:08: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): graffiti.js
+Mar 31 14:05:09: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): 
+Mar 31 14:05:09: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): graffiti.js
+Mar 31 14:05:10: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): 
+Mar 31 14:05:10: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): graffiti.js
+Mar 31 15:08:16: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): 
+Mar 31 15:08:16: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): graffiti.js
+Mar 31 15:43:29: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): 
+Mar 31 15:43:29: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): graffiti.js
+Mar 31 17:41:17: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): 
+Mar 31 17:41:17: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): css/graffiti.css
+Mar 31 17:41:17: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): graffiti.js
+Mar 31 17:41:17: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): images/bestiole.png
+Mar 31 17:41:20: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): 
+Mar 31 17:41:20: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): css/graffiti.css
+Mar 31 17:41:20: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): graffiti.js
+Mar 31 17:41:20: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): images/bestiole.png
+Mar 31 17:41:30: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): 
+Mar 31 17:41:30: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): css/graffiti.css
+Mar 31 17:46:37: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): 
+Mar 31 17:46:37: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): css/graffiti.css
+Mar 31 17:46:37: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): graffiti.js
+Mar 31 17:46:37: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): images/bestiole.png
+Mar 31 17:47:23: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): 
+Mar 31 17:47:23: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): css/graffiti.css
+Mar 31 17:47:23: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): graffiti.js
+Mar 31 17:49:38: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): 
+Mar 31 17:49:38: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): css/graffiti.css
+Mar 31 17:49:38: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): graffiti.js
+Mar 31 17:49:39: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): images/bestiole.png
+Mar 31 17:57:18: access: connection for 192.168.1.9 from 192.168.1.12 (Dalvik/1.6.0 (Linux; U; Android 4.4.4; C6603 Build/10.5.1.A.0.292)): BasicDeviceDescription.xml
+Mar 31 18:37:44: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): simple-water-waves.png
+Mar 31 18:38:06: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): images/simple-water-waves.png
+Mar 31 18:51:18: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): css/graffiti.css
+Mar 31 18:57:53: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): 
+Mar 31 18:57:53: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): css/graffiti.css
+Mar 31 18:57:53: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): graffiti.js
+Mar 31 18:59:55: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): 
+Mar 31 18:59:55: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): css/graffiti.css
+Mar 31 18:59:55: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): graffiti.js
+Mar 31 18:59:55: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): images/wave.png
+Mar 31 18:59:56: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): images/bestiole.png
+Mar 31 18:59:57: access: connection for 192.168.1.9 from 192.168.1.12 (Dalvik/1.6.0 (Linux; U; Android 4.4.4; C6603 Build/10.5.1.A.0.292)): BasicDeviceDescription.xml
+Mar 31 19:00:04: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): 
+Mar 31 19:00:04: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): css/graffiti.css
+Mar 31 19:00:04: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): graffiti.js
+Mar 31 19:00:04: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): images/wave.png
+Mar 31 19:00:04: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): images/bestiole.png
+Mar 31 19:00:06: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): 
+Mar 31 19:00:06: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): css/graffiti.css
+Mar 31 19:00:06: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): graffiti.js
+Mar 31 19:00:06: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): images/wave.png
+Mar 31 19:00:06: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): images/bestiole.png
+Mar 31 19:00:23: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): 
+Mar 31 19:00:23: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): css/graffiti.css
+Mar 31 19:00:23: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): graffiti.js
+Mar 31 19:00:23: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): images/wave.png
+Mar 31 19:00:24: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): images/bestiole.png
+Mar 31 19:01:28: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): 
+Mar 31 19:01:28: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): css/graffiti.css
+Mar 31 19:01:28: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): graffiti.js
+Mar 31 19:01:28: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): images/wave.png
+Mar 31 19:01:28: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): images/bestiole.png
+Mar 31 19:02:02: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): 
+Mar 31 19:02:02: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): css/graffiti.css
+Mar 31 19:02:02: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): graffiti.js
+Mar 31 19:02:02: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): images/wave.png
+Mar 31 19:02:02: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): images/bestiole.png
+Mar 31 19:03:47: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): 
+Mar 31 19:03:47: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): css/graffiti.css
+Mar 31 19:03:47: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): graffiti.js
+Mar 31 19:03:47: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): images/wave.png
+Mar 31 19:04:19: access: connection for 192.168.1.9 from 192.168.1.12 (Dalvik/1.6.0 (Linux; U; Android 4.4.4; C6603 Build/10.5.1.A.0.292)): BasicDeviceDescription.xml
+Mar 31 19:19:04: access: connection for 192.168.1.9 from 192.168.1.12 (Dalvik/1.6.0 (Linux; U; Android 4.4.4; C6603 Build/10.5.1.A.0.292)): BasicDeviceDescription.xml
+Mar 31 19:24:41: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): 
+Mar 31 19:24:41: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): css/graffiti.css
+Mar 31 19:24:41: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): graffiti.js
+Mar 31 19:24:41: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): images/wave.png
+Mar 31 19:24:41: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): images/bestiole.png
+Mar 31 20:57:24: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): 
+Mar 31 20:57:24: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): css/graffiti.css
+Mar 31 20:57:24: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): graffiti.js
+Mar 31 20:57:24: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): images/wave.png
+Mar 31 20:57:25: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): images/bestiole.png
+Mar 31 20:59:46: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): 
+Mar 31 20:59:46: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): css/graffiti.css
+Mar 31 20:59:46: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): graffiti.js
+Mar 31 20:59:46: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): images/wave.png
+Mar 31 20:59:46: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): images/bestiole.png
+Mar 31 21:03:40: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): 
+Mar 31 21:03:40: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): css/graffiti.css
+Mar 31 21:03:40: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): graffiti.js
+Mar 31 21:03:40: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): images/wave.png
+Mar 31 21:03:41: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): images/bestiole.png
+Mar 31 21:03:44: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): 
+Mar 31 21:03:44: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): css/graffiti.css
+Mar 31 21:04:16: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): 
+Mar 31 21:04:16: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): css/graffiti.css
+Mar 31 21:04:16: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): graffiti.js
+Mar 31 21:04:16: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): images/wave.png
+Mar 31 21:04:17: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): images/bestiole.png
+Mar 31 21:04:34: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): 
+Mar 31 21:04:34: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): css/graffiti.css
+Mar 31 21:04:34: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): graffiti.js
+Mar 31 21:04:34: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): images/wave.png
+Mar 31 21:04:34: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): images/bestiole.png
+Mar 31 21:04:51: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): 
+Mar 31 21:04:51: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): css/graffiti.css
+Mar 31 21:04:51: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): graffiti.js
+Mar 31 21:04:52: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): images/wave.png
+Mar 31 21:04:52: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): images/bestiole.png
+Mar 31 21:05:13: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): 
+Mar 31 21:05:13: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): css/graffiti.css
+Mar 31 21:05:13: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): graffiti.js
+Mar 31 21:05:13: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): images/wave.png
+Mar 31 21:05:13: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): images/bestiole.png
+Mar 31 21:05:52: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): images/hospital.png
+Mar 31 21:13:25: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): 
+Mar 31 21:13:25: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): css/graffiti.css
+Mar 31 21:13:25: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): graffiti.js
+Mar 31 21:13:25: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): images/wave.png
+Mar 31 21:13:25: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): images/hospital.png
+Mar 31 21:13:26: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): images/bestiole.png
+Mar 31 21:15:14: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): 
+Mar 31 21:15:14: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): css/graffiti.css
+Mar 31 21:15:14: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): graffiti.js
+Mar 31 21:15:14: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): images/wave.png
+Mar 31 21:15:15: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): images/hospital.png
+Mar 31 21:15:15: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): images/bestiole.png
+Mar 31 21:17:45: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): 
+Mar 31 21:17:45: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): css/graffiti.css
+Mar 31 21:17:45: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): graffiti.js
+Mar 31 21:17:45: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): images/wave.png
+Mar 31 21:17:45: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): images/hospital.png
+Mar 31 21:17:46: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): images/bestiole.png
+Mar 31 21:18:25: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): 
+Mar 31 21:18:25: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): css/graffiti.css
+Mar 31 21:18:25: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): graffiti.js
+Mar 31 21:18:25: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): images/wave.png
+Mar 31 21:18:25: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): images/hospital.png
+Mar 31 21:18:26: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): images/bestiole.png
+Mar 31 21:18:52: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): 
+Mar 31 21:18:52: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): css/graffiti.css
+Mar 31 21:18:52: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): graffiti.js
+Mar 31 21:18:52: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): images/wave.png
+Mar 31 21:18:52: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): images/hospital.png
+Mar 31 21:18:53: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): images/bestiole.png
+Mar 31 21:20:56: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): 
+Mar 31 21:20:56: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): css/graffiti.css
+Mar 31 21:20:56: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): graffiti.js
+Mar 31 21:20:56: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): images/hospital.png
+Mar 31 21:27:33: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): 
+Mar 31 21:27:33: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): css/graffiti.css
+Mar 31 21:27:33: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): graffiti.js
+Mar 31 21:27:33: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): images/hospital.png
+Mar 31 21:30:09: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): 
+Mar 31 21:30:09: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): css/graffiti.css
+Mar 31 21:30:09: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): graffiti.js
+Mar 31 21:30:09: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): images/hospital.png
+Mar 31 21:34:05: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): 
+Mar 31 21:34:05: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): css/graffiti.css
+Mar 31 21:34:05: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): graffiti.js
+Mar 31 21:34:05: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): images/wave.png
+Mar 31 21:34:05: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): images/hospital.png
+Mar 31 21:35:30: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): 
+Mar 31 21:35:30: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): graffiti.js
+Mar 31 21:36:37: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): 
+Mar 31 21:36:37: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): css/graffiti.css
+Mar 31 21:36:37: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): graffiti.js
+Mar 31 21:36:37: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): images/wave.png
+Mar 31 21:36:37: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): images/hospital.png
+Mar 31 21:36:37: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): images/bestiole.png
+Mar 31 21:36:43: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): 
+Mar 31 21:36:43: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): css/graffiti.css
+Mar 31 21:36:54: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): 
+Mar 31 21:36:54: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): css/graffiti.css
+Mar 31 21:36:54: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): graffiti.js
+Mar 31 21:36:54: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): images/wave.png
+Mar 31 21:36:54: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): images/hospital.png
+Mar 31 21:36:55: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): images/bestiole.png
+Mar 31 21:37:34: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): 
+Mar 31 21:37:34: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): css/graffiti.css
+Mar 31 21:37:34: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): graffiti.js
+Mar 31 21:37:34: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): images/wave.png
+Mar 31 21:37:34: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): images/hospital.png
+Mar 31 21:37:35: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): images/bestiole.png
+Mar 31 21:37:41: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): 
+Mar 31 21:37:41: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): css/graffiti.css
+Mar 31 21:37:41: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): graffiti.js
+Mar 31 21:37:41: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): images/wave.png
+Mar 31 21:37:41: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): images/hospital.png
+Mar 31 21:37:42: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): images/bestiole.png
+Mar 31 21:44:41: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): 
+Mar 31 21:44:41: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): css/graffiti.css
+Mar 31 21:44:41: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): graffiti.js
+Mar 31 21:44:41: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): images/hospital.png
+Mar 31 21:44:56: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): 
+Mar 31 21:44:56: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): graffiti.js
+Mar 31 21:45:32: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): 
+Mar 31 21:45:32: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): css/graffiti.css
+Mar 31 21:45:32: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): graffiti.js
+Mar 31 21:45:49: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): 
+Mar 31 21:45:49: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): graffiti.js
+Mar 31 21:46:12: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): 
+Mar 31 21:46:12: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): graffiti.js
+Mar 31 21:46:26: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): 
+Mar 31 21:46:26: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): css/graffiti.css
+Mar 31 21:46:26: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): graffiti.js
+Mar 31 21:46:41: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): 
+Mar 31 21:46:41: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): graffiti.js
+Mar 31 21:47:12: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): 
+Mar 31 21:47:12: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): graffiti.js
+Mar 31 21:47:43: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): 
+Mar 31 21:47:43: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): css/graffiti.css
+Mar 31 21:47:43: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): graffiti.js
+Mar 31 21:47:43: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): images/hospital.png
+Mar 31 21:48:02: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): 
+Mar 31 21:48:02: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): graffiti.js
+Mar 31 21:48:25: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): 
+Mar 31 21:48:25: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): graffiti.js
+Mar 31 21:48:43: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): 
+Mar 31 21:48:43: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): graffiti.js
+Mar 31 21:49:03: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): 
+Mar 31 21:49:03: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): css/graffiti.css
+Mar 31 21:49:03: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): graffiti.js
+Mar 31 21:49:16: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): 
+Mar 31 21:49:16: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): graffiti.js
+Mar 31 21:49:30: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): 
+Mar 31 21:49:30: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): graffiti.js
+Mar 31 21:49:45: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): 
+Mar 31 21:49:45: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): graffiti.js
+Mar 31 21:49:57: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): 
+Mar 31 21:49:57: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): graffiti.js
+Mar 31 21:50:09: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): 
+Mar 31 21:50:09: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): graffiti.js
+Mar 31 21:50:21: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): 
+Mar 31 21:50:21: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): css/graffiti.css
+Mar 31 21:50:21: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): graffiti.js
+Mar 31 21:50:39: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): 
+Mar 31 21:50:39: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): graffiti.js
+Mar 31 21:50:53: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): 
+Mar 31 21:50:53: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): graffiti.js
+Mar 31 21:57:54: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): 
+Mar 31 21:57:54: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): css/graffiti.css
+Mar 31 21:57:54: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): graffiti.js
+Mar 31 21:57:54: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): images/wave.png
+Mar 31 21:57:54: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): images/hospital.png
+Mar 31 21:58:18: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): 
+Mar 31 21:58:18: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): graffiti.js
+Mar 31 22:03:20: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): 
+Mar 31 22:03:20: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): graffiti.js
+Mar 31 22:03:20: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): css/graffiti.css
+Mar 31 22:03:20: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): images/wave.png
+Mar 31 22:03:20: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): images/hospital.png
+Mar 31 22:03:21: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): images/bestiole.png
+Mar 31 22:04:08: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): 
+Mar 31 22:04:08: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): graffiti.js
+Mar 31 22:08:17: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): 
+Mar 31 22:08:17: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): css/graffiti.css
+Mar 31 22:08:17: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): graffiti.js
+Mar 31 22:08:17: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): images/hospital.png
+Mar 31 22:09:21: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): 
+Mar 31 22:09:21: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): graffiti.js
+Mar 31 22:09:50: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): 
+Mar 31 22:10:08: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): 
+Mar 31 22:10:08: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): graffiti.js
+Mar 31 22:10:20: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): 
+Mar 31 22:10:20: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): graffiti.js
+Mar 31 22:10:33: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): 
+Mar 31 22:10:33: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): graffiti.js
+Mar 31 22:12:42: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): 
+Mar 31 22:12:42: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): css/graffiti.css
+Mar 31 22:12:42: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): graffiti.js
+Mar 31 22:12:57: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): 
+Mar 31 22:12:57: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): graffiti.js
+Mar 31 22:13:11: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): 
+Mar 31 22:13:11: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): graffiti.js
+Mar 31 22:13:24: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): 
+Mar 31 22:13:24: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): graffiti.js
+Mar 31 22:13:40: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): 
+Mar 31 22:13:40: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): graffiti.js
+Mar 31 22:13:40: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): images/hospital.png
+Mar 31 22:13:53: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): 
+Mar 31 22:13:53: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): graffiti.js
+Mar 31 22:14:05: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): 
+Mar 31 22:14:05: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): graffiti.js
+Mar 31 22:14:17: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): 
+Mar 31 22:14:17: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): graffiti.js
+Mar 31 22:17:53: access: connection for 192.168.1.9 from 192.168.1.12 (Dalvik/1.6.0 (Linux; U; Android 4.4.4; C6603 Build/10.5.1.A.0.292)): BasicDeviceDescription.xml
+Mar 31 22:23:03: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): 
+Mar 31 22:23:03: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): css/h42n42.css
+Mar 31 22:23:03: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): graffiti.js
+Mar 31 22:23:03: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): images/wave.png
+Mar 31 22:23:03: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): images/hospital.png
+Mar 31 22:23:03: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): images/bestiole.png
+Mar 31 22:23:23: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): 
+Mar 31 22:23:23: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): css/h42n42.css
+Mar 31 22:23:23: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): graffiti.js
+Mar 31 22:23:23: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): images/wave.png
+Mar 31 22:23:23: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): images/hospital.png
+Mar 31 22:23:23: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): images/bestiole.png
+Mar 31 22:23:39: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): 
+Mar 31 22:23:39: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): css/h42n42.css
+Mar 31 22:23:39: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): graffiti.js
+Mar 31 22:23:39: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): images/wave.png
+Mar 31 22:23:39: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): images/hospital.png
+Mar 31 22:23:39: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): images/bestiole.png
+Mar 31 22:23:52: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): 
+Mar 31 22:23:52: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): css/h42n42.css
+Mar 31 22:23:52: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): graffiti.js
+Mar 31 22:23:52: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): images/wave.png
+Mar 31 22:23:52: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): images/hospital.png
+Mar 31 22:23:53: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): images/bestiole.png
+Mar 31 22:24:08: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): 
+Mar 31 22:24:08: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): css/h42n42.css
+Mar 31 22:24:08: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): graffiti.js
+Mar 31 22:24:08: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): images/wave.png
+Mar 31 22:24:08: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): images/hospital.png
+Mar 31 22:24:09: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): images/bestiole.png
+Mar 31 22:24:34: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): 
+Mar 31 22:24:34: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): css/h42n42.css
+Mar 31 22:24:34: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): graffiti.js
+Mar 31 22:25:31: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): 
+Mar 31 22:25:31: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): css/h42n42.css
+Mar 31 22:25:31: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): graffiti.js
+Mar 31 22:26:35: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): 
+Mar 31 22:26:35: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): css/h42n42.css
+Mar 31 22:26:35: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): graffiti.js
+Mar 31 22:26:53: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): 
+Mar 31 22:26:53: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): graffiti.js
+Mar 31 22:34:45: access: connection for 192.168.1.9 from 192.168.1.12 (Dalvik/1.6.0 (Linux; U; Android 4.4.4; C6603 Build/10.5.1.A.0.292)): BasicDeviceDescription.xml
+Mar 31 22:48:06: access: connection for 192.168.1.9 from 192.168.1.12 (Dalvik/1.6.0 (Linux; U; Android 4.4.4; C6603 Build/10.5.1.A.0.292)): BasicDeviceDescription.xml
+Mar 31 22:49:31: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): 
+Mar 31 22:49:31: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): css/h42n42.css
+Mar 31 22:49:31: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): graffiti.js
+Mar 31 22:49:31: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): images/wave.png
+Mar 31 22:49:31: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): images/hospital.png
+Mar 31 23:25:03: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): 
+Mar 31 23:25:03: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): css/h42n42.css
+Mar 31 23:25:03: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): graffiti.js
+Mar 31 23:25:03: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): images/wave.png
+Mar 31 23:25:03: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): images/hospital.png
+Mar 31 23:25:03: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): images/bestiole.png
+Mar 31 23:25:07: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): 
+Mar 31 23:29:43: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): 
+Apr  1 03:21:39: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): 
+Apr  1 03:21:39: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): css/h42n42.css
+Apr  1 03:21:39: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): graffiti.js
+Apr  1 03:21:39: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): images/wave.png
+Apr  1 03:21:39: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): images/hospital.png
+Apr  1 03:21:39: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): images/bestiole.png
+Apr  1 03:21:44: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): 
+Apr  1 03:21:44: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): graffiti.js
+Apr  1 03:37:01: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): 
+Apr  1 03:37:01: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): graffiti.js
+Apr  1 03:39:50: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): 
+Apr  1 03:39:50: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): graffiti.js
+Apr  1 03:40:55: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): 
+Apr  1 03:40:55: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): graffiti.js
+Apr  1 03:42:01: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): 
+Apr  1 03:42:01: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): graffiti.js
+Apr  1 03:42:08: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): 
+Apr  1 03:42:08: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): graffiti.js
+Apr  1 03:42:34: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): 
+Apr  1 03:42:34: access: connection for localhost from 127.0.0.1 (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36): graffiti.js

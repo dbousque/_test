@@ -1,0 +1,4 @@
+_client/page.cmo :
+_client/page.cmx :
+_client/page.cmo : _server/page.type_mli
+_client/page.cmx : _server/page.type_mli

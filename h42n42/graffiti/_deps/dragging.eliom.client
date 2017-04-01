@@ -1,0 +1,4 @@
+_client/dragging.cmo :
+_client/dragging.cmx :
+_client/dragging.cmo : _server/dragging.type_mli
+_client/dragging.cmx : _server/dragging.type_mli

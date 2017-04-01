@@ -1,0 +1,4 @@
+_server/bestioleType.cmo :
+_server/bestioleType.cmx :
+_server/bestioleType.cmo : _server/bestioleType.type_mli
+_server/bestioleType.cmx : _server/bestioleType.type_mli

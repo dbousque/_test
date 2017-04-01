@@ -5,6 +5,10 @@
 let board_width = 1100
 let board_height = 800
 
-let std_bestiole_size = 40
+let extremes_height = 71
+
+let std_bestiole_size = 50
+
+let starting_nb_bestioles = 2
 
 ]
