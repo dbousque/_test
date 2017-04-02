@@ -9,7 +9,7 @@ type 'a events_callbacks = {
 
 type 'a dragging_handler = {
 	events_cbs:						'a events_callbacks ;
-	move:							'a -> int -> int -> unit ;
+	move:							'a -> float -> float -> unit ;
 	set_dragging_status:			'a -> bool -> unit ;
 	get_dom_elt:					'a -> Dom_html.element Js.t ;
 	mutable currently_dragging:		'a option
@@ -78,7 +78,7 @@ let make_handler events_cbs move set_dragging_status get_dom_elt =
 	let handle_mousemove ev _ =
 		( match handler.currently_dragging with
 		| None -> ()
-		| Some elt -> handler.move elt ev##.clientX ev##.clientY ) ;
+		| Some elt -> handler.move elt (float_of_int ev##.clientX) (float_of_int ev##.clientY) ) ;
 		Lwt.return ()
 	in
 	Lwt_js_events.mouseups Dom_html.document handle_mouseup ;

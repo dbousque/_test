@@ -89,7 +89,7 @@ let board_container =
 
 let make () =
 	html
-		(head (title (pcdata "Graffiti"))
+		(head (title (pcdata "H42N42"))
 				[css_link ~uri:(make_uri (Eliom_service.static_dir ()) ["css" ; "h42n42.css"])
 		()])
-		(body [h1 [pcdata "Graffiti"] ; board_container ])
+		(body [h1 [pcdata "H42N42"] ; board_container ])

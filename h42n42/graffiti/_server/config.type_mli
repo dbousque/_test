@@ -4,3 +4,4 @@ val board_height : int
 val extremes_height : int
 val std_bestiole_size : int
 val starting_nb_bestioles : int
+val std_bestiole_speed : float
