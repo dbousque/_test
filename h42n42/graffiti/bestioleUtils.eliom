@@ -9,7 +9,7 @@ let get_elt_coords elt =
 	(coords##.left, coords##.top)
 
 let get_bestiole_size bestiole =
-	float_of_int Config.std_bestiole_size
+	bestiole.size
 
 let get_bestiole_relative_coords x y =
 	let cont_x, cont_y = get_elt_coords (Utils.elt_to_dom_elt ~%(Page.bestiole_container)) in

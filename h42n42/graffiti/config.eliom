@@ -13,4 +13,8 @@ let starting_nb_bestioles = 3
 
 let std_bestiole_speed = 100.0
 
+let new_bestiole_every = 10.0
+
+let living_time_after_infection = 15.0
+
 ]
