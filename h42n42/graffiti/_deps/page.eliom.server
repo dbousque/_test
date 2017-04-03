@@ -1,5 +1,0 @@
-_server/page.cmo : _server/config.cmo
-_server/page.cmx : _server/config.cmx
-_server/page.type_mli : _server/config.cmo
-_server/page.cmo : _server/page.type_mli
-_server/page.cmx : _server/page.type_mli
