@@ -1,4 +1,4 @@
-_client/graffiti.cmo : _client/utils.cmo _client/dragging.cmo _client/config.cmo _client/bestioleUtils.cmo _client/bestiole.cmo
-_client/graffiti.cmx : _client/utils.cmx _client/dragging.cmx _client/config.cmx _client/bestioleUtils.cmx _client/bestiole.cmx
+_client/graffiti.cmo : _client/utils.cmo _client/quadtree.cmo _client/dragging.cmo _client/config.cmo _client/bestioleUtils.cmo _client/bestioleType.cmo _client/bestiole.cmo
+_client/graffiti.cmx : _client/utils.cmx _client/quadtree.cmx _client/dragging.cmx _client/config.cmx _client/bestioleUtils.cmx _client/bestioleType.cmx _client/bestiole.cmx
 _client/graffiti.cmo : _server/graffiti.type_mli
 _client/graffiti.cmx : _server/graffiti.type_mli

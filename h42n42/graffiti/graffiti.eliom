@@ -5,6 +5,7 @@
 open Eliom_content.Html.D
 open Eliom_content.Html
 open Lwt
+open BestioleType
 
 ]
 
@@ -16,6 +17,15 @@ module Graffiti_app =
     end)
 
 [%%client
+
+module BestioleLeaf : (Quadtree.Leaf with type t = bestiole) = struct
+  type t = bestiole
+  let get_coords bestiole =
+    (bestiole.x, bestiole.y)
+  let get_size bestiole =
+    (bestiole.size, bestiole.size)
+end
+module BestioleQuadtree = Quadtree.Make (BestioleLeaf)
 
 let rec wait_for_threads beginned_at threads existing_bestioles attach_n_bestioles =
   Lwt.choose threads >>= fun () ->
@@ -45,6 +55,9 @@ and make_bestioles_loop start nb threads existing_bestioles attach_n_bestioles =
 
 and init_client () =
   Random.self_init () ;
+  let width = float_of_int Config.board_width in
+  let height = float_of_int Config.board_height in
+  let tree = BestioleQuadtree.make width height in
   let start_time = Unix.gettimeofday () in
   let events_cbs = Dragging.{
     dragstart = (fun _ -> ()) ;
@@ -68,17 +81,7 @@ and init_client () =
 
 ]
 
-module BestioleLeaf : Quadtree.Leaf with type t = BestioleType.bestiole = struct
-  type t = BestioleType.bestiole
-  let get_coords bestiole =
-    (bestiole.x, bestiole.y)
-  let get_size bestiole =
-    (bestiole.size, bestiole.size)
-end
-module BestioleQuadtree = Quadtree.MakeQuadTree (BestioleLeaf)
-
 let main_service =
-  let tree = BestioleQuadtree.make Config.board_width Config.board_height in
   Graffiti_app.create
     ~path:(Eliom_service.Path [""])
     ~meth:(Eliom_service.Get Eliom_parameter.unit)

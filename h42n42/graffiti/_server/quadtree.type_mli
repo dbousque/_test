@@ -15,5 +15,15 @@ module type Quadtree =
     val collision_pred :
       t -> leaftype -> (leaftype -> leaftype -> bool) -> bool
   end
-module type MakeQuadtreeSig = functor (Leaftype : Leaf) -> Quadtree
+module type MakeQuadtreeSig =
+  functor (Leaftype : Leaf) ->
+    sig
+      type t
+      type tree
+      type leaftype = Leaftype.t
+      val make : float -> float -> t
+      val add : t -> leaftype -> t
+      val collision_pred :
+        t -> leaftype -> (leaftype -> leaftype -> bool) -> bool
+    end
 module MakeQuadtree : MakeQuadtreeSig

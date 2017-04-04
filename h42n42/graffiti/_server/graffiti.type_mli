@@ -1,0 +1,10 @@
+val __eliom__compilation_unit_id__m05vrj : string
+module Graffiti_app : Eliom_registration.APP
+val _eliom_injected_ident_m05vrj1 :
+  [> Html_types.div ] Eliom_content.Html.D.elt option ref
+val _eliom_fragment_m05vrj1 : unit Lwt.t Eliom_client_value.t option ref
+val main_service :
+  (unit, unit, Eliom_service.get, Eliom_service.att, Eliom_service.non_co,
+   Eliom_service.non_ext, Eliom_service.reg, [ `WithoutSuffix ], unit, 
+   unit, Graffiti_app.return)
+  Eliom_service.t

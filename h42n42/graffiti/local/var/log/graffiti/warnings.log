@@ -1547,3 +1547,39 @@ Apr  4 01:09:28: ocsipersist:dbm: Initializing ...
 Apr  4 01:09:30: ocsipersist:dbm: Launching a new Ocsidbm process: /home/dodo/.opam/4.04.0/lib/ocsigenserver/extensions/ocsidbm on directory local/var/data/graffiti/ocsipersist.
 Apr  4 01:09:30: ocsipersist:dbm: ...Initialization complete
 Apr  4 01:09:30: ocsigen:config: While parsing config file, tag <host>: No defaulthostname, assuming it is "dodo-MS-7817"
+Apr  4 17:52:34: ocsipersist:dbm: Initializing ...
+Apr  4 17:52:35: ocsipersist:dbm: Launching a new Ocsidbm process: /home/dodo/.opam/4.04.0/lib/ocsigenserver/extensions/ocsidbm on directory local/var/data/graffiti/ocsipersist.
+Apr  4 17:52:35: ocsipersist:dbm: ...Initialization complete
+Apr  4 17:52:35: ocsigen:config: While parsing config file, tag <host>: No defaulthostname, assuming it is "dodo"
+Apr  4 17:53:03: ocsipersist:dbm: Initializing ...
+Apr  4 17:53:03: ocsipersist:dbm: Launching a new Ocsidbm process: /home/dodo/.opam/4.04.0/lib/ocsigenserver/extensions/ocsidbm on directory local/var/data/graffiti/ocsipersist.
+Apr  4 17:53:04: ocsipersist:dbm: ...Initialization complete
+Apr  4 17:53:04: ocsigen:config: While parsing config file, tag <host>: No defaulthostname, assuming it is "dodo"
+Apr  4 17:55:12: ocsipersist:dbm: Initializing ...
+Apr  4 17:55:13: ocsipersist:dbm: Launching a new Ocsidbm process: /home/dodo/.opam/4.04.0/lib/ocsigenserver/extensions/ocsidbm on directory local/var/data/graffiti/ocsipersist.
+Apr  4 17:55:13: ocsipersist:dbm: ...Initialization complete
+Apr  4 17:55:13: ocsigen:config: While parsing config file, tag <host>: No defaulthostname, assuming it is "dodo"
+Apr  4 17:58:04: ocsipersist:dbm: Initializing ...
+Apr  4 17:58:05: ocsipersist:dbm: Launching a new Ocsidbm process: /home/dodo/.opam/4.04.0/lib/ocsigenserver/extensions/ocsidbm on directory local/var/data/graffiti/ocsipersist.
+Apr  4 17:58:05: ocsipersist:dbm: ...Initialization complete
+Apr  4 17:58:05: ocsigen:config: While parsing config file, tag <host>: No defaulthostname, assuming it is "dodo"
+Apr  4 17:58:29: ocsipersist:dbm: Initializing ...
+Apr  4 17:58:30: ocsipersist:dbm: Launching a new Ocsidbm process: /home/dodo/.opam/4.04.0/lib/ocsigenserver/extensions/ocsidbm on directory local/var/data/graffiti/ocsipersist.
+Apr  4 17:58:30: ocsipersist:dbm: ...Initialization complete
+Apr  4 17:58:30: ocsigen:config: While parsing config file, tag <host>: No defaulthostname, assuming it is "dodo"
+Apr  4 18:01:53: ocsipersist:dbm: Initializing ...
+Apr  4 18:01:54: ocsipersist:dbm: Launching a new Ocsidbm process: /home/dodo/.opam/4.04.0/lib/ocsigenserver/extensions/ocsidbm on directory local/var/data/graffiti/ocsipersist.
+Apr  4 18:01:54: ocsipersist:dbm: ...Initialization complete
+Apr  4 18:01:54: ocsigen:config: While parsing config file, tag <host>: No defaulthostname, assuming it is "dodo"
+Apr  4 18:04:37: ocsipersist:dbm: Initializing ...
+Apr  4 18:04:37: ocsipersist:dbm: Launching a new Ocsidbm process: /home/dodo/.opam/4.04.0/lib/ocsigenserver/extensions/ocsidbm on directory local/var/data/graffiti/ocsipersist.
+Apr  4 18:04:38: ocsipersist:dbm: ...Initialization complete
+Apr  4 18:04:39: ocsigen:config: While parsing config file, tag <host>: No defaulthostname, assuming it is "dodo"
+Apr  4 18:11:26: ocsipersist:dbm: Initializing ...
+Apr  4 18:11:28: ocsipersist:dbm: Launching a new Ocsidbm process: /home/dodo/.opam/4.04.0/lib/ocsigenserver/extensions/ocsidbm on directory local/var/data/graffiti/ocsipersist.
+Apr  4 18:11:28: ocsipersist:dbm: ...Initialization complete
+Apr  4 18:11:28: ocsigen:config: While parsing config file, tag <host>: No defaulthostname, assuming it is "dodo"
+Apr  4 18:20:50: ocsipersist:dbm: Initializing ...
+Apr  4 18:20:50: ocsipersist:dbm: Launching a new Ocsidbm process: /home/dodo/.opam/4.04.0/lib/ocsigenserver/extensions/ocsidbm on directory local/var/data/graffiti/ocsipersist.
+Apr  4 18:20:51: ocsipersist:dbm: ...Initialization complete
+Apr  4 18:20:51: ocsigen:config: While parsing config file, tag <host>: No defaulthostname, assuming it is "dodo"
