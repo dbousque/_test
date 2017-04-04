@@ -17,10 +17,17 @@ end
 
 module type MakeQuadtreeSig =
 	functor (Leaftype : Leaf) ->
-		Quadtree with 
-			type leaftype = Leaftype.t and
-			type tree = Node of (tree * tree * tree * tree * leaftype list) | Leaf of leaftype list and
+		Quadtree
+
+(**
+type leaftype = Leaftype.t and
+			type tree = (
+				Node of (leaftype * leaftype * leaftype * leaftype * leaftype list)
+				| Leaf of leaftype list
+			) and
 			type t = (float * float * tree)
+
+**)
 
 module MakeQuadtree : MakeQuadtreeSig =
 	functor (Leaftype : Leaf) ->
@@ -30,16 +37,16 @@ module MakeQuadtree : MakeQuadtreeSig =
 			type t = (float * float * tree)
 
 			let make width height =
-				(width, height, Leaf [])tree
+				(width, height, Leaf [])
 
 			let add (width, height, node) leaf =
 				let _add node leaf x y width height =
 					match node with
-					| Node (tl, tr, bl, br, lst) -> 
+					| Node (tl, tr, bl, br, lst) -> Leaf []
 					| Leaf lst -> Leaf (leaf :: lst)
 				in
-				_add node leaf 0.0 0.0 width height
+				(width, height, _add node leaf 0.0 0.0 width height)
 
 			let collision_pred tree leaf pred =
-
+				true
 		end

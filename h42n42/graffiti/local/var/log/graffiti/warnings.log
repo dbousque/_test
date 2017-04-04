@@ -1539,3 +1539,11 @@ Apr  3 18:14:23: ocsipersist:dbm: Initializing ...
 Apr  3 18:14:23: ocsipersist:dbm: Launching a new Ocsidbm process: /home/dodo/.opam/4.04.0/lib/ocsigenserver/extensions/ocsidbm on directory local/var/data/graffiti/ocsipersist.
 Apr  3 18:14:24: ocsipersist:dbm: ...Initialization complete
 Apr  3 18:14:24: ocsigen:config: While parsing config file, tag <host>: No defaulthostname, assuming it is "dodo"
+Apr  4 01:09:05: ocsipersist:dbm: Initializing ...
+Apr  4 01:09:07: ocsipersist:dbm: Launching a new Ocsidbm process: /home/dodo/.opam/4.04.0/lib/ocsigenserver/extensions/ocsidbm on directory local/var/data/graffiti/ocsipersist.
+Apr  4 01:09:07: ocsipersist:dbm: ...Initialization complete
+Apr  4 01:09:07: ocsigen:config: While parsing config file, tag <host>: No defaulthostname, assuming it is "dodo-MS-7817"
+Apr  4 01:09:28: ocsipersist:dbm: Initializing ...
+Apr  4 01:09:30: ocsipersist:dbm: Launching a new Ocsidbm process: /home/dodo/.opam/4.04.0/lib/ocsigenserver/extensions/ocsidbm on directory local/var/data/graffiti/ocsipersist.
+Apr  4 01:09:30: ocsipersist:dbm: ...Initialization complete
+Apr  4 01:09:30: ocsigen:config: While parsing config file, tag <host>: No defaulthostname, assuming it is "dodo-MS-7817"

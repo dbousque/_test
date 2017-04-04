@@ -5,7 +5,6 @@
 open Eliom_content.Html.D
 open Eliom_content.Html
 open Lwt
-open BestioleType
 
 ]
 
@@ -69,7 +68,17 @@ and init_client () =
 
 ]
 
+module BestioleLeaf : Quadtree.Leaf with type t = BestioleType.bestiole = struct
+  type t = BestioleType.bestiole
+  let get_coords bestiole =
+    (bestiole.x, bestiole.y)
+  let get_size bestiole =
+    (bestiole.size, bestiole.size)
+end
+module BestioleQuadtree = Quadtree.MakeQuadTree (BestioleLeaf)
+
 let main_service =
+  let tree = BestioleQuadtree.make Config.board_width Config.board_height in
   Graffiti_app.create
     ~path:(Eliom_service.Path [""])
     ~meth:(Eliom_service.Get Eliom_parameter.unit)

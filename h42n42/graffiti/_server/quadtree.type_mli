@@ -1,0 +1,19 @@
+val __eliom__compilation_unit_id__uvorOn : string
+module type Leaf =
+  sig
+    type t
+    val get_coords : t -> float * float
+    val get_size : t -> float * float
+  end
+module type Quadtree =
+  sig
+    type t
+    type tree
+    type leaftype
+    val make : float -> float -> t
+    val add : t -> leaftype -> t
+    val collision_pred :
+      t -> leaftype -> (leaftype -> leaftype -> bool) -> bool
+  end
+module type MakeQuadtreeSig = functor (Leaftype : Leaf) -> Quadtree
+module MakeQuadtree : MakeQuadtreeSig
