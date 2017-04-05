@@ -2,6 +2,12 @@
 
 * {
 	user-select: none;
+	font-family: monospace;
+}
+
+body {
+	background-color: #faf8ef;
+	color: #333;
 }
 
 @keyframes fadein {
@@ -11,8 +17,34 @@
 
 h1 {
 	text-align: center;
-	font-family: monospace;
 	margin-top: 70px;
+}
+
+.you-lost-animation {
+	-webkit-transition: all 1s;
+	-webkit-filter: blur(4.5px) brightness(80%) grayscale(100%);
+	transition: all 1s;
+	filter: blur(4.5px) brightness(80%) grayscale(100%);
+}
+
+.you-lost-container {
+	position: absolute;
+	width: 400px;
+	height: 175px;
+    background-color: #f7f7f7;
+    z-index: 2;
+    border-radius: 4px;
+    text-align: center;
+    box-shadow: 11px 11px 20px 0px #333;
+}
+
+.appear {
+	animation: fadein 1s;
+}
+
+.you-lost-container-child {
+	margin-top: 65px;
+	font-size: 42px;
 }
 
 .bestiole {
@@ -40,7 +72,7 @@ h1 {
 
 .hide-border {
 	position: relative;
-	background-color: #FFF;
+	background-color: #faf8ef;
 	z-index: 2;
 }
 

@@ -4,5 +4,6 @@ val river : [> Html_types.div ] Eliom_content.Html.D.elt
 val hospital_images : [> Html_types.img ] Eliom_content.Html.D.elt list
 val hospital : [> Html_types.div ] Eliom_content.Html.D.elt
 val bestiole_container : [> Html_types.div ] Eliom_content.Html.D.elt
+val you_lost : [> Html_types.div ] Eliom_content.Html.D.elt
 val board_container : [> Html_types.div ] Eliom_content.Html.D.elt
 val make : unit -> [> `Html ] Eliom_content.Html.D.elt

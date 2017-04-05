@@ -107,9 +107,13 @@ let move_bestiole_bounce bestiole x y =
 	BestioleUtils.move_bestiole bestiole x y
 
 let change_rotation_if_ok bestiole =
-	if Unix.gettimeofday () >= bestiole.change_rotation_at then (
-		update_rotation bestiole (Utils.random_rotation ()) ;
-		bestiole.change_rotation_at <- Utils.random_forward_time ()
+	match bestiole.state with
+	| Naughty -> ()
+	| _ -> (
+		if Unix.gettimeofday () >= bestiole.change_rotation_at then (
+			update_rotation bestiole (Utils.random_rotation ()) ;
+			bestiole.change_rotation_at <- Utils.random_forward_time ()
+		)
 	)
 
 let make_ill_if_ok bestiole =
@@ -126,13 +130,13 @@ let rec bestiole_thread bestiole =
 	  	| true -> ( bestiole.updated_at <- Some (Unix.gettimeofday ()) ;
 	  				bestiole_thread bestiole )
 	  	| false -> (
-	  		Lwt.return (change_rotation_if_ok bestiole) >>= fun () ->
-		      Lwt.return (update_speed bestiole) >>= fun () ->
-		      	Lwt.return (update_size bestiole) >>= fun () ->
-		          Lwt.return (next_coords bestiole) >>= fun (x, y) ->
-		            Lwt.return (move_bestiole_bounce bestiole x y) >>= fun () ->
-		          	  Lwt.return (make_ill_if_ok bestiole) >>= fun () ->
-		                bestiole_thread bestiole
+	  		change_rotation_if_ok bestiole ;
+		    update_speed bestiole ;
+		    update_size bestiole ;
+		    let x, y = next_coords bestiole in
+		    move_bestiole_bounce bestiole x y ;
+		    make_ill_if_ok bestiole ;
+		    bestiole_thread bestiole
 		)
 	)
 

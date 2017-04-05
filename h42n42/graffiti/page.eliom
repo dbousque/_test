@@ -63,12 +63,26 @@ let bestiole_container =
 		hospital
 	]
 
+let you_lost =
+	div ~a:[
+		a_class ["you-lost-container"] ;
+		a_style (
+		"margin-left:" ^ string_of_int ((Config.board_width + 40 - 400) / 2) ^ "px;" ^
+		"margin-top:" ^ string_of_int ((Config.board_height + 40 - 175) / 2) ^ "px;"
+		)
+	] [
+		div ~a:[a_class ["you-lost-container-child"]] [
+			p [pcdata "You lost"]
+		]
+	]
+
 let board_container =
 	div ~a:[
 		a_class ["board-container"] ;
 		a_style ("width:" ^ string_of_int (Config.board_width + 40) ^ "px;" ^
 							"height:" ^ string_of_int (Config.board_height + 40) ^ "px;")
 	] [
+		you_lost ;
 		div ~a:[
 			a_class ["hide-border" ; "top-bottom-border"]
 		] [] ;

@@ -22,16 +22,6 @@ module type MakeSig =
 	functor (Leaftype : Leaf) ->
 		Quadtree with type leaftype = Leaftype.t
 
-(**
-type leaftype = Leaftype.t and
-			type tree = (
-				Node of (leaftype * leaftype * leaftype * leaftype * leaftype list)
-				| Leaf of leaftype list
-			) and
-			type t = (float * float * tree)
-
-**)
-
 module Make : MakeSig =
 	functor (Leaftype : Leaf) ->
 		struct
