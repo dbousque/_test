@@ -136,6 +136,7 @@ and init_client () =
   in
   let dragging_handler = Dragging.make_handler events_cbs move set_dragging_status get_dom_elt in
   let container = Utils.elt_to_dom_elt ~%(Page.bestiole_container) in
+  remove_lost_css container ;
   let attach_n_bestioles = Bestiole.make_bestioles_and_attach start_time dragging_handler container in
   make_bestioles_loop true Config.starting_nb_bestioles [] [] attach_n_bestioles
 
