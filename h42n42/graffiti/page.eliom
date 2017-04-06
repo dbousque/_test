@@ -103,10 +103,6 @@ let board_container =
 
 let first_input_parent =
 	div ~a:[a_class ["input-parent"]] [
-		pcdata "Hospital and river height : ";
-		span ~a:[a_class ["range-field rangeparent"] ; a_title "fst-parent"] [
-			Form.input ~a:[a_id "extremes-height"] ~input_type:`Range Form.string
-		] ;
 		pcdata "Bestiole size : ";
 		span ~a:[a_class ["range-field rangeparent"] ; a_title "fst-parent"] [
 			Form.input ~a:[a_id "bestiole-size"] ~input_type:`Range Form.string
@@ -127,20 +123,25 @@ let second_input_parent =
 		span ~a:[a_class ["range-field rangeparent"] ; a_title "snd-parent"] [
 			Form.input ~a:[a_id "new-bestiole-every"] ~input_type:`Range Form.string
 		] ;
-		pcdata "Ill surviving time : ";
-		span ~a:[a_class ["range-field rangeparent"] ; a_title "snd-parent"] [
-			Form.input ~a:[a_id "living-time-after-infection"] ~input_type:`Range Form.string
-		] ;
 	]
 
 let start_button =
 	div ~a:[a_class ["btn start-game"]] [pcdata "Start game"]
 
+let third_input_parent =
+	div ~a:[a_class ["input-parent"]] [
+		pcdata "Ill surviving time : ";
+		span ~a:[a_class ["range-field rangeparent"] ; a_title "thd-parent"] [
+			Form.input ~a:[a_id "living-time-after-infection"] ~input_type:`Range Form.string
+		] ;
+		start_button
+	]
+
 let form = 
 	div ~a:[a_class ["all-input-parent"]] [
 		first_input_parent ;
 		second_input_parent ;
-		start_button
+		third_input_parent
 	]
 
 let body_html =
@@ -158,6 +159,7 @@ let make () =
 			[css_link ~uri:(make_uri (Eliom_service.static_dir ()) ["css" ; "h42n42.css"]) () ;
 			css_link ~uri:(make_uri (Eliom_service.static_dir ()) ["css" ; "materialize.min.css"]) () ;
 			js_script ~uri:(make_uri (Eliom_service.static_dir ()) ["js" ; "jquery.min.js"]) () ;
-			js_script ~uri:(make_uri (Eliom_service.static_dir ()) ["js" ; "materialize.min.js"]) ()
+			js_script ~uri:(make_uri (Eliom_service.static_dir ()) ["js" ; "materialize.min.js"]) () ;
+			js_script ~uri:(make_uri (Eliom_service.static_dir ()) ["js" ; "setvals.js"]) ()
 			])
 		body_html

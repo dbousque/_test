@@ -9,6 +9,7 @@ val board_container : [> Html_types.div ] Eliom_content.Html.D.elt
 val first_input_parent : [> Html_types.div ] Eliom_content.Html.D.elt
 val second_input_parent : [> Html_types.div ] Eliom_content.Html.D.elt
 val start_button : [> Html_types.div ] Eliom_content.Html.D.elt
+val third_input_parent : [> Html_types.div ] Eliom_content.Html.D.elt
 val form : [> Html_types.div ] Eliom_content.Html.D.elt
 val body_html : [> Html_types.body ] Eliom_content.Html.D.elt
 val make : unit -> [> `Html ] Eliom_content.Html.D.elt

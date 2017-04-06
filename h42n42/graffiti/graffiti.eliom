@@ -40,6 +40,51 @@ let remove_lost_css dom_elt =
   let new_classes = String.sub classes 0 ind in
   dom_elt##.className := Js.string new_classes
 
+let update_config_val inp =
+  (**let inp = Utils.elt_to_dom_elt inp in
+  let value = inp##getAttribute (Js.string "value") in
+  let ident = inp##getAttribute (Js.string "id") in
+  let value = Js.coerce_opt value Dom_html.CoerceTo.element (fun _ -> assert false) in
+  let ident = Js.coerce_opt ident Dom_html.CoerceTo.element (fun _ -> assert false) in
+  let value = Js.to_string value in
+  let ident = Js.to_string ident in 
+  let inp = Js.some (Js.Unsafe.coerce inp) in
+  let inp = Js.Opt.get inp (fun _ -> assert false) in **)
+  let find_value attrs =
+    let value = attrs##getNamedItem (Js.string "value") in
+    let value = Js.Opt.get value (fun _ -> assert false) in
+    Js.to_string value##.value
+  in
+  let attrs = inp##.attributes in
+  let value = find_value attrs in
+  let ident = inp##getAttribute (Js.string "id") in
+  let ident = Js.Opt.get ident (fun _ -> assert false) in
+  let ident = Js.to_string ident in
+  let value = try int_of_string value with | _ -> 10 in
+  Printf.printf "setting %s %d\n" ident value ;
+  Config.set_val ident value
+
+let replace_range_tagname range =
+  let d = Dom_html.createP Dom_html.document in
+  d##.innerHTML := range##.innerHTML ;
+  d##.className := Js.string "range-field rangeparent" ;
+  let title = range##.title in
+  let parent = ( match Js.to_string title with
+    | "fst-parent" -> Utils.elt_to_dom_elt ~%(Page.first_input_parent)
+    | "snd-parent" -> Utils.elt_to_dom_elt ~%(Page.second_input_parent)
+    | _ -> Utils.elt_to_dom_elt ~%(Page.third_input_parent)
+  ) in
+  Dom.replaceChild parent d range ;
+  let inp = Dom.list_of_nodeList (d##querySelectorAll (Js.string "input")) in
+  match inp with
+  | [] -> ()
+  | hd :: rest -> (
+      let value, min, max = Hashtbl.find Config.vals (Js.to_string hd##.id) in
+      hd##setAttribute (Js.string "min") (Js.string (string_of_int min)) ;
+      hd##setAttribute (Js.string "max") (Js.string (string_of_int max)) ;
+      hd##setAttribute (Js.string "value") (Js.string (string_of_int value))
+    )
+
 let change_naughty_rotation bestiole existing_bestioles =
   let rad_to_deg rad =
     rad *. (180.0 /. 3.14159265)
@@ -92,10 +137,11 @@ let rec wait_for_threads beginned_at threads existing_bestioles attach_n_bestiol
       let threads = (match threads with | [] -> [] | hd :: rest -> Lwt.cancel hd ; rest) in
       Lwt.return (List.filter (fun b -> not b.dead) existing_bestioles) >>= fun existing_bestioles ->
         if List.length existing_bestioles = 0 then exit_game () else (
-          if (Unix.gettimeofday ()) -. beginned_at >= Config.new_bestiole_every then (
+          let new_b_every = float_of_int (Config.get_val "new-bestiole-every") in
+          if (Unix.gettimeofday ()) -. beginned_at >= new_b_every then (
             make_bestioles_loop false 1 threads existing_bestioles attach_n_bestioles
           ) else (
-            let wait_n_sec = Config.new_bestiole_every -. ((Unix.gettimeofday ()) -. beginned_at) in
+            let wait_n_sec = new_b_every -. ((Unix.gettimeofday ()) -. beginned_at) in
             let threads = (Lwt_js.sleep wait_n_sec) :: threads in
             let collisions = check_for_collisions_thread existing_bestioles in
             let threads = collisions :: threads in
@@ -109,7 +155,8 @@ and make_bestioles_loop start nb threads existing_bestioles attach_n_bestioles =
   let new_bestioles = attach_n_bestioles (not start) nb in
   let existing_bestioles = List.fold_left (fun acc b -> b::acc) existing_bestioles new_bestioles in
   let threads = List.fold_left (fun acc b -> (Bestiole.bestiole_thread b)::acc) threads new_bestioles in
-  let threads = (Lwt_js.sleep Config.new_bestiole_every) :: threads in
+  let new_b_every = float_of_int (Config.get_val "new-bestiole-every") in
+  let threads = (Lwt_js.sleep new_b_every) :: threads in
   let collisions = check_for_collisions_thread existing_bestioles in
   let threads = collisions :: threads in
   wait_for_threads (Unix.gettimeofday ()) threads existing_bestioles attach_n_bestioles
@@ -117,6 +164,10 @@ and make_bestioles_loop start nb threads existing_bestioles attach_n_bestioles =
 and start_game () =
   let you_lost = Utils.elt_to_dom_elt ~%(Page.you_lost) in
   you_lost##.style##.display := (Js.string "none") ;
+  Js.Unsafe.eval_string "setVals()" ;
+  let body = Utils.elt_to_dom_elt ~%(Page.body_html) in
+  let inps = body##querySelectorAll (Js.string ".rangeparent > input") in
+  List.iter update_config_val (Dom.list_of_nodeList inps) ;
   let start_time = Unix.gettimeofday () in
   let events_cbs = Dragging.{
     dragstart = (fun _ -> ()) ;
@@ -135,40 +186,14 @@ and start_game () =
   in
   let dragging_handler = Dragging.make_handler events_cbs move set_dragging_status get_dom_elt in
   let container = Utils.elt_to_dom_elt ~%(Page.bestiole_container) in
-  remove_lost_css container ;
+  (**remove_lost_css container ; **)
   let attach_n_bestioles = Bestiole.make_bestioles_and_attach start_time dragging_handler container in
-  make_bestioles_loop true Config.starting_nb_bestioles [] [] attach_n_bestioles
+  let nb_bestioles = (Config.get_val "starting-nb-bestioles") in
+  make_bestioles_loop true nb_bestioles [] [] attach_n_bestioles
 
 and init_client restart =
   Random.self_init () ;
-  let replace_range_tagname range =
-    let d = Dom_html.createP Dom_html.document in
-    d##.innerHTML := range##.innerHTML ;
-    d##.className := Js.string "range-field rangeparent" ;
-    let title = range##.title in
-    let parent = ( match Js.to_string title with
-      | "fst-parent" -> Utils.elt_to_dom_elt ~%(Page.first_input_parent)
-      | _ -> Utils.elt_to_dom_elt ~%(Page.second_input_parent)
-    ) in
-    Dom.replaceChild parent d range ;
-    let inp = Dom.list_of_nodeList (d##querySelectorAll (Js.string "input")) in
-    match inp with
-    | [] -> ()
-    | hd :: rest -> (
-        let value, min, max = (
-          match Js.to_string hd##.id with
-          | "extremes-height" -> 71, 20, 300
-          | "bestiole-size" -> 50, 30, 100
-          | "bestiole-speed" -> 100, 30, 300
-          | "starting-nb-bestioles" -> 3, 1, 20
-          | "new-bestiole-every" -> 10, 3, 30
-          | _ -> 7, 1, 20
-        ) in
-        hd##setAttribute (Js.string "min") (Js.string (string_of_int min)) ;
-        hd##setAttribute (Js.string "max") (Js.string (string_of_int max)) ;
-        hd##setAttribute (Js.string "value") (Js.string (string_of_int value))
-      )
-  in
+  Config.set_std_vals () ;
   let body = Utils.elt_to_dom_elt ~%(Page.body_html) in
   let ranges = body##querySelectorAll (Js.string "span.rangeparent") in
   List.iter replace_range_tagname (Dom.list_of_nodeList ranges) ;

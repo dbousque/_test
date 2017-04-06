@@ -16,8 +16,8 @@ let is_ill bestiole =
 
 let cure_bestiole bestiole =
 	if bestiole.state = Beserk then (
-	  bestiole.size <- float_of_int Config.std_bestiole_size ;
-	  let size_str = Config.std_bestiole_size |> string_of_int |> Js.string in
+	  bestiole.size <- float_of_int (Config.get_val "bestiole-size") ;
+	  let size_str = (Config.get_val "bestiole-size") |> string_of_int |> Js.string in
   	  bestiole.dom_elt##setAttribute (Js.string "width") size_str
 	) ;
 	bestiole.state <- StdIll false ;
@@ -50,7 +50,7 @@ let update_speed bestiole =
 	in
 	let time_speedup = (Unix.gettimeofday () -. bestiole.start_time) /. 120.0 in
 	let time_speedup = 1.0 +. time_speedup in
-	bestiole.speed <- Config.std_bestiole_speed *. time_speedup *. multiplier 
+	bestiole.speed <- float_of_int (Config.get_val "bestiole-speed") *. time_speedup *. multiplier 
 
 let update_size bestiole =
 	match bestiole.state with
@@ -64,7 +64,7 @@ let update_size bestiole =
   	  	  	  1.0 +. ((current_time +. 7.0 -. x) /. 7.0)
   	  	  ) in
   	  	  let multiplier = if multiplier > 2.0 then 2.0 else multiplier in
-  	  	  bestiole.size <- float_of_int Config.std_bestiole_size *. multiplier ;
+  	  	  bestiole.size <- float_of_int (Config.get_val "bestiole-size") *. multiplier ;
   	  	  let size_str = bestiole.size |> string_of_float |> Js.string in
   	  	  bestiole.dom_elt##setAttribute (Js.string "width") size_str
   	    )
@@ -121,8 +121,10 @@ let make_ill_if_ok bestiole =
 		make_bestiole_ill bestiole
 
 let rec bestiole_thread bestiole =
+  let living_time_after_infection = Config.get_val "living-time-after-infection" in
+  let living_time_after_infection = float_of_int living_time_after_infection in
   match bestiole.got_infected_at with
-  | Some time when Unix.gettimeofday () -. time >= Config.living_time_after_infection ->
+  | Some time when Unix.gettimeofday () -. time >= living_time_after_infection ->
   		kill_bestiole bestiole
   | _ -> (
 	  Lwt_js.sleep 0.01 >>= fun () ->
@@ -152,7 +154,7 @@ let make_bestiole ?fadein:(fadein=false) start_time dragging_handler =
   let image = img
       ~alt:""
       ~a:[
-      	a_width Config.std_bestiole_size ;
+      	a_width (Config.get_val "bestiole-size") ;
       	a_class ["bestiole"] ;
       	a_style (if fadein then "animation: fadein 2s;" else "")
       ]
@@ -163,10 +165,10 @@ let make_bestiole ?fadein:(fadein=false) start_time dragging_handler =
     dom_elt = Utils.elt_to_dom_elt image ;
     x = 0.0 ;
     y = 0.0 ;
-    size = float_of_int Config.std_bestiole_size ;
+    size = float_of_int (Config.get_val "bestiole-size") ;
     rotation = 0 ;
     start_time = start_time ;
-    speed = Config.std_bestiole_speed ;
+    speed = float_of_int (Config.get_val "bestiole-speed") ;
     state = StdIll false ;
     change_rotation_at = Utils.random_forward_time () ;
     updated_at = None ;
