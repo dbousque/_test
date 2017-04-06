@@ -2,7 +2,7 @@
 
 * {
 	user-select: none;
-	font-family: monospace;
+	font-family: "Monaco", "NanumGothic", cursive;
 }
 
 body {
@@ -17,7 +17,36 @@ body {
 
 h1 {
 	text-align: center;
-	margin-top: 70px;
+	margin-top: 34px;
+	margin-bottom: -15px;
+}
+
+.start-game {
+	margin-top: -194px;
+}
+
+.all-input-parent {
+	text-align: center;
+	margin-top: 35px;
+	margin-bottom: 100px;
+}
+
+.input-parent {
+	width: 270px;
+	margin: 0 40px;
+	display: inline-block;
+}
+
+.rangeparent {
+	width: 100%;
+}
+
+.centertext {
+	text-align: center;
+}
+
+.description {
+	margin-top: 40px;
 }
 
 .you-lost-animation {
@@ -36,6 +65,7 @@ h1 {
     border-radius: 4px;
     text-align: center;
     box-shadow: 11px 11px 20px 0px #333;
+    display: none;
 }
 
 .appear {
@@ -43,7 +73,7 @@ h1 {
 }
 
 .you-lost-container-child {
-	margin-top: 65px;
+	margin-top: 57px;
 	font-size: 42px;
 }
 

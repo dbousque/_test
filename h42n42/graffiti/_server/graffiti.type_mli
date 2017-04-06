@@ -1,5 +1,13 @@
 val __eliom__compilation_unit_id__m05vrj : string
 module Graffiti_app : Eliom_registration.APP
+val _eliom_injected_ident_m05vrj6 :
+  [> Html_types.div ] Eliom_content.Html.D.elt option ref
+val _eliom_injected_ident_m05vrj5 :
+  [> Html_types.div ] Eliom_content.Html.D.elt option ref
+val _eliom_injected_ident_m05vrj4 :
+  [> Html_types.body ] Eliom_content.Html.D.elt option ref
+val _eliom_injected_ident_m05vrj3 :
+  [> Html_types.div ] Eliom_content.Html.D.elt option ref
 val _eliom_injected_ident_m05vrj2 :
   [> Html_types.div ] Eliom_content.Html.D.elt option ref
 val _eliom_injected_ident_m05vrj1 :

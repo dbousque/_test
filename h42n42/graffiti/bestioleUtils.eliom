@@ -20,8 +20,9 @@ let get_bestiole_absolute_coords x y =
 	(cont_x +. x, cont_y +. y)
 
 let actual_move_bestiole bestiole x_float y_float =
+	let body = Utils.elt_to_dom_elt ~%(Page.body_html) in
 	let x = Js.string (string_of_float x_float ^ "px") in
-	let y = Js.string (string_of_float y_float ^ "px") in
+	let y = Js.string (string_of_float (y_float +. float_of_int body##.scrollTop) ^ "px") in
 	bestiole.dom_elt##.style##.left := x ;
 	bestiole.dom_elt##.style##.top := y ;
 	let x, y = get_bestiole_relative_coords x_float y_float in

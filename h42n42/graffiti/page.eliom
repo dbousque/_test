@@ -101,9 +101,63 @@ let board_container =
 		] []
 	]
 
+let first_input_parent =
+	div ~a:[a_class ["input-parent"]] [
+		pcdata "Hospital and river height : ";
+		span ~a:[a_class ["range-field rangeparent"] ; a_title "fst-parent"] [
+			Form.input ~a:[a_id "extremes-height"] ~input_type:`Range Form.string
+		] ;
+		pcdata "Bestiole size : ";
+		span ~a:[a_class ["range-field rangeparent"] ; a_title "fst-parent"] [
+			Form.input ~a:[a_id "bestiole-size"] ~input_type:`Range Form.string
+		] ;
+		pcdata "Bestiole speed : ";
+		span ~a:[a_class ["range-field rangeparent"] ; a_title "fst-parent"] [
+			Form.input ~a:[a_id "bestiole-speed"] ~input_type:`Range Form.string
+		] ;
+	]
+
+let second_input_parent =
+	div ~a:[a_class ["input-parent"]] [
+		pcdata "Starting nb bestioles : ";
+		span ~a:[a_class ["range-field rangeparent"] ; a_title "snd-parent"] [
+			Form.input ~a:[a_id "starting-nb-bestioles"] ~input_type:`Range Form.string
+		] ;
+		pcdata "New bestiole every n second : ";
+		span ~a:[a_class ["range-field rangeparent"] ; a_title "snd-parent"] [
+			Form.input ~a:[a_id "new-bestiole-every"] ~input_type:`Range Form.string
+		] ;
+		pcdata "Ill surviving time : ";
+		span ~a:[a_class ["range-field rangeparent"] ; a_title "snd-parent"] [
+			Form.input ~a:[a_id "living-time-after-infection"] ~input_type:`Range Form.string
+		] ;
+	]
+
+let start_button =
+	div ~a:[a_class ["btn start-game"]] [pcdata "Start game"]
+
+let form = 
+	div ~a:[a_class ["all-input-parent"]] [
+		first_input_parent ;
+		second_input_parent ;
+		start_button
+	]
+
+let body_html =
+	(body [
+		h1 [pcdata "H42N42"] ;
+		p ~a:[a_class ["centertext"]] [pcdata "dbousque"] ;
+		p ~a:[a_class ["centertext" ; "description"]] [pcdata "Keep bestioles from touching the river, it is contaminated. Bring ill bestioles to the hospital."] ;
+		board_container ;
+		form
+	])
+
 let make () =
 	html
 		(head (title (pcdata "H42N42"))
-				[css_link ~uri:(make_uri (Eliom_service.static_dir ()) ["css" ; "h42n42.css"])
-		()])
-		(body [h1 [pcdata "H42N42"] ; board_container ])
+			[css_link ~uri:(make_uri (Eliom_service.static_dir ()) ["css" ; "h42n42.css"]) () ;
+			css_link ~uri:(make_uri (Eliom_service.static_dir ()) ["css" ; "materialize.min.css"]) () ;
+			js_script ~uri:(make_uri (Eliom_service.static_dir ()) ["js" ; "jquery.min.js"]) () ;
+			js_script ~uri:(make_uri (Eliom_service.static_dir ()) ["js" ; "materialize.min.js"]) ()
+			])
+		body_html

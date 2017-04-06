@@ -114,8 +114,7 @@ and make_bestioles_loop start nb threads existing_bestioles attach_n_bestioles =
   let threads = collisions :: threads in
   wait_for_threads (Unix.gettimeofday ()) threads existing_bestioles attach_n_bestioles
 
-and init_client () =
-  Random.self_init () ;
+and start_game () =
   let you_lost = Utils.elt_to_dom_elt ~%(Page.you_lost) in
   you_lost##.style##.display := (Js.string "none") ;
   let start_time = Unix.gettimeofday () in
@@ -140,6 +139,42 @@ and init_client () =
   let attach_n_bestioles = Bestiole.make_bestioles_and_attach start_time dragging_handler container in
   make_bestioles_loop true Config.starting_nb_bestioles [] [] attach_n_bestioles
 
+and init_client restart =
+  Random.self_init () ;
+  let replace_range_tagname range =
+    let d = Dom_html.createP Dom_html.document in
+    d##.innerHTML := range##.innerHTML ;
+    d##.className := Js.string "range-field rangeparent" ;
+    let title = range##.title in
+    let parent = ( match Js.to_string title with
+      | "fst-parent" -> Utils.elt_to_dom_elt ~%(Page.first_input_parent)
+      | _ -> Utils.elt_to_dom_elt ~%(Page.second_input_parent)
+    ) in
+    Dom.replaceChild parent d range ;
+    let inp = Dom.list_of_nodeList (d##querySelectorAll (Js.string "input")) in
+    match inp with
+    | [] -> ()
+    | hd :: rest -> (
+        let value, min, max = (
+          match Js.to_string hd##.id with
+          | "extremes-height" -> 71, 20, 300
+          | "bestiole-size" -> 50, 30, 100
+          | "bestiole-speed" -> 100, 30, 300
+          | "starting-nb-bestioles" -> 3, 1, 20
+          | "new-bestiole-every" -> 10, 3, 30
+          | _ -> 7, 1, 20
+        ) in
+        hd##setAttribute (Js.string "min") (Js.string (string_of_int min)) ;
+        hd##setAttribute (Js.string "max") (Js.string (string_of_int max)) ;
+        hd##setAttribute (Js.string "value") (Js.string (string_of_int value))
+      )
+  in
+  let body = Utils.elt_to_dom_elt ~%(Page.body_html) in
+  let ranges = body##querySelectorAll (Js.string "span.rangeparent") in
+  List.iter replace_range_tagname (Dom.list_of_nodeList ranges) ;
+  let start_button = Utils.elt_to_dom_elt ~%(Page.start_button) in
+  Lwt_js_events.mousedowns start_button (fun _ _ -> start_game ())
+
 and exit_game () =
   let container = Utils.elt_to_dom_elt ~%(Page.bestiole_container) in
   add_lost_css container ;
@@ -157,5 +192,5 @@ let main_service =
     ~path:(Eliom_service.Path [""])
     ~meth:(Eliom_service.Get Eliom_parameter.unit)
     (fun () () ->
-       let _ = [%client (init_client () : unit Lwt.t) ] in
+       let _ = [%client (init_client false : unit Lwt.t) ] in
        Lwt.return (Page.make ()))
