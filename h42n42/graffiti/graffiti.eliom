@@ -36,33 +36,34 @@ let add_lost_css dom_elt =
 
 let remove_lost_css dom_elt =
   let classes = Js.to_string dom_elt##.className in
-  let ind = String.length classes - String.length (" " ^ you_lost_class) in
-  let new_classes = String.sub classes 0 ind in
-  dom_elt##.className := Js.string new_classes
+  if String.length classes > 30 then (
+    let ind = String.length classes - String.length (" " ^ you_lost_class) in
+    let new_classes = String.sub classes 0 ind in
+    dom_elt##.className := Js.string new_classes
+  )
+
+let clear_game_board container =
+  remove_lost_css container ;
+  let you_lost = Utils.elt_to_dom_elt ~%(Page.you_lost) in
+  you_lost##.style##.display := (Js.string "none")
 
 let update_config_val inp =
-  (**let inp = Utils.elt_to_dom_elt inp in
   let value = inp##getAttribute (Js.string "value") in
   let ident = inp##getAttribute (Js.string "id") in
-  let value = Js.coerce_opt value Dom_html.CoerceTo.element (fun _ -> assert false) in
-  let ident = Js.coerce_opt ident Dom_html.CoerceTo.element (fun _ -> assert false) in
-  let value = Js.to_string value in
-  let ident = Js.to_string ident in 
-  let inp = Js.some (Js.Unsafe.coerce inp) in
-  let inp = Js.Opt.get inp (fun _ -> assert false) in **)
-  let find_value attrs =
-    let value = attrs##getNamedItem (Js.string "value") in
-    let value = Js.Opt.get value (fun _ -> assert false) in
-    Js.to_string value##.value
-  in
-  let attrs = inp##.attributes in
-  let value = find_value attrs in
-  let ident = inp##getAttribute (Js.string "id") in
+  let value = Js.Opt.get value (fun _ -> assert false) in
   let ident = Js.Opt.get ident (fun _ -> assert false) in
+  let value = Js.to_string value in
   let ident = Js.to_string ident in
   let value = try int_of_string value with | _ -> 10 in
-  Printf.printf "setting %s %d\n" ident value ;
+  let value = if value <= 0 then 10 else value in
+  Printf.printf "val %s %d\n" ident value ;
   Config.set_val ident value
+
+let update_config () =
+  Js.Unsafe.eval_string "setVals()" ;
+  let body = Utils.elt_to_dom_elt ~%(Page.body_html) in
+  let inps = body##querySelectorAll (Js.string ".rangeparent > input") in
+  List.iter update_config_val (Dom.list_of_nodeList inps)
 
 let replace_range_tagname range =
   let d = Dom_html.createP Dom_html.document in
@@ -162,12 +163,9 @@ and make_bestioles_loop start nb threads existing_bestioles attach_n_bestioles =
   wait_for_threads (Unix.gettimeofday ()) threads existing_bestioles attach_n_bestioles
 
 and start_game () =
-  let you_lost = Utils.elt_to_dom_elt ~%(Page.you_lost) in
-  you_lost##.style##.display := (Js.string "none") ;
-  Js.Unsafe.eval_string "setVals()" ;
-  let body = Utils.elt_to_dom_elt ~%(Page.body_html) in
-  let inps = body##querySelectorAll (Js.string ".rangeparent > input") in
-  List.iter update_config_val (Dom.list_of_nodeList inps) ;
+  let container = Utils.elt_to_dom_elt ~%(Page.bestiole_container) in
+  clear_game_board container ;
+  update_config () ;
   let start_time = Unix.gettimeofday () in
   let events_cbs = Dragging.{
     dragstart = (fun _ -> ()) ;
@@ -185,8 +183,6 @@ and start_game () =
     bestiole.dom_elt
   in
   let dragging_handler = Dragging.make_handler events_cbs move set_dragging_status get_dom_elt in
-  let container = Utils.elt_to_dom_elt ~%(Page.bestiole_container) in
-  (**remove_lost_css container ; **)
   let attach_n_bestioles = Bestiole.make_bestioles_and_attach start_time dragging_handler container in
   let nb_bestioles = (Config.get_val "starting-nb-bestioles") in
   make_bestioles_loop true nb_bestioles [] [] attach_n_bestioles
@@ -210,6 +206,11 @@ and exit_game () =
     you_lost##.style##.display := (Js.string "inherit") ;
     Lwt.return ()
 
+(**let () =
+  ( Lwt_js.sleep 0.5 >>= fun () ->
+    init_client false ) ;
+  () **)
+
 ]
 
 let main_service =
@@ -217,5 +218,5 @@ let main_service =
     ~path:(Eliom_service.Path [""])
     ~meth:(Eliom_service.Get Eliom_parameter.unit)
     (fun () () ->
-       let _ = [%client (init_client false : unit Lwt.t) ] in
-       Lwt.return (Page.make ()))
+      let _ = [%client (init_client false : unit Lwt.t) ] in
+      Lwt.return (Page.make ()))

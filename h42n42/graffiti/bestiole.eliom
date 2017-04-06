@@ -21,7 +21,7 @@ let cure_bestiole bestiole =
   	  bestiole.dom_elt##setAttribute (Js.string "width") size_str
 	) ;
 	bestiole.state <- StdIll false ;
-	bestiole.dom_elt##setAttribute (Js.string "src") (Js.string "/images/bestiole_sane.png") ;
+	bestiole.dom_elt##setAttribute (Js.string "src") (Js.string "./images/bestiole_sane.png") ;
 	bestiole.got_infected_at <- None ;
 	bestiole.full_size_at <- None
 
@@ -29,9 +29,9 @@ let make_bestiole_ill bestiole =
 	let n = Random.int 10 in
 	bestiole.got_infected_at <- Some (Unix.gettimeofday ()) ;
 	let img_src = ( match n with
-		| 0 -> bestiole.state <- Beserk ; bestiole.full_size_at <- Some (Unix.gettimeofday () +. 7.0) ; "/images/bestiole_beserk.png"
-		| 1 -> bestiole.state <- Naughty ; "/images/bestiole_naughty.png"
-		| _ -> bestiole.state <- StdIll true ; "/images/bestiole_ill.png"
+		| 0 -> bestiole.state <- Beserk ; bestiole.full_size_at <- Some (Unix.gettimeofday () +. 7.0) ; "./images/bestiole_beserk.png"
+		| 1 -> bestiole.state <- Naughty ; "./images/bestiole_naughty.png"
+		| _ -> bestiole.state <- StdIll true ; "./images/bestiole_ill.png"
 	) in
 	bestiole.dom_elt##setAttribute (Js.string "src") (Js.string img_src)
 
@@ -61,9 +61,9 @@ let update_size bestiole =
   	  	  let multiplier = ( if current_time >= x then
   	  	  	  2.0
   	  	    else
-  	  	  	  1.0 +. ((current_time +. 7.0 -. x) /. 7.0)
+  	  	  	  1.0 +. ((current_time +. 7.0 -. x) /. 7.0 *. 2.0)
   	  	  ) in
-  	  	  let multiplier = if multiplier > 2.0 then 2.0 else multiplier in
+  	  	  let multiplier = if multiplier > 4.0 then 4.0 else multiplier in
   	  	  bestiole.size <- float_of_int (Config.get_val "bestiole-size") *. multiplier ;
   	  	  let size_str = bestiole.size |> string_of_float |> Js.string in
   	  	  bestiole.dom_elt##setAttribute (Js.string "width") size_str
