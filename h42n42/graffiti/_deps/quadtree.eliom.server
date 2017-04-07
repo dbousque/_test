@@ -1,4 +1,0 @@
-_server/quadtree.cmo :
-_server/quadtree.cmx :
-_server/quadtree.cmo : _server/quadtree.type_mli
-_server/quadtree.cmx : _server/quadtree.type_mli

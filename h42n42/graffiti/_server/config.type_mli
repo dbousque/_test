@@ -1,8 +1,0 @@
-val __eliom__compilation_unit_id__Q41EPy : string
-val board_width : int
-val board_height : int
-val extremes_height : int
-val vals : (string, int * int * int) Hashtbl.t
-val set_std_vals : unit -> unit
-val set_val : string -> int -> unit
-val get_val : string -> int

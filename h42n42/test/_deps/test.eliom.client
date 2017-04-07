@@ -1,4 +1,0 @@
-_client/test.cmo :
-_client/test.cmx :
-_client/test.cmo : _server/test.type_mli
-_client/test.cmx : _server/test.type_mli

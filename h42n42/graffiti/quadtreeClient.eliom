@@ -1,7 +1,0 @@
-
-
-[%%client
-
-include Quadtree
-
-]

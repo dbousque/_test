@@ -1,4 +1,0 @@
-_client/bestioleUtils.cmo : _client/utils.cmo _client/config.cmo _client/bestioleType.cmo
-_client/bestioleUtils.cmx : _client/utils.cmx _client/config.cmx _client/bestioleType.cmx
-_client/bestioleUtils.cmo : _server/bestioleUtils.type_mli
-_client/bestioleUtils.cmx : _server/bestioleUtils.type_mli
