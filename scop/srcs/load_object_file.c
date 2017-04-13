@@ -6,11 +6,12 @@
 /*   By: dbousque <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/02 19:25:15 by dbousque          #+#    #+#             */
-/*   Updated: 2017/03/02 19:25:16 by dbousque         ###   ########.fr       */
+/*   Updated: 2017/04/11 15:39:36 by dbousque         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "myopengl.h"
+#include <sys/stat.h>
 
 char	parse_object_line(char *line, t_globj **obj)
 {
@@ -59,6 +60,14 @@ char	read_object_file(FILE *fp, t_globj **obj)
 	return (1);
 }
 
+char	regular_file(char *path)
+{
+	struct stat	stats;
+
+	stat(path, &stats);
+	return (S_ISREG(stats.st_mode));
+}
+
 char	load_object_file(char *filename, t_list *objs)
 {
 	FILE	*fp;
@@ -66,7 +75,7 @@ char	load_object_file(char *filename, t_list *objs)
 
 	obj = NULL;
 	fp = fopen(filename, "r");
-	if (!fp)
+	if (!fp || !(regular_file(filename)))
 	{
 		printf("file %s could not be opened\n", filename);
 		return (0);
