@@ -1,3 +1,0 @@
-val __eliom__compilation_unit_id__'gEGeJ : string
-val _eliom_injected_ident_'gEGeJ1 :
-  [> Html_types.div ] Eliom_content.Html.D.elt option ref

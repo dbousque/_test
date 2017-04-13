@@ -1,4 +1,0 @@
-_client/utils.cmo :
-_client/utils.cmx :
-_client/utils.cmo : _server/utils.type_mli
-_client/utils.cmx : _server/utils.type_mli

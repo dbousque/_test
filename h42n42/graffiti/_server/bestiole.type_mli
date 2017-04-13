@@ -1,3 +1,0 @@
-val __eliom__compilation_unit_id__sE2_Cx : string
-val _eliom_injected_ident_sE2_Cx1 :
-  [> Html_types.div ] Eliom_content.Html.D.elt option ref

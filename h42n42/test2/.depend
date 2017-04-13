@@ -1,8 +1,0 @@
-_server/test2.cmo :
-_server/test2.cmx :
-_server/test2.cmo : _server/test2.type_mli
-_server/test2.cmx : _server/test2.type_mli
-_client/test2.cmo :
-_client/test2.cmx :
-_client/test2.cmo : _server/test2.type_mli
-_client/test2.cmx : _server/test2.type_mli
