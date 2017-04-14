@@ -2,6 +2,7 @@
 
 type t = {
 	tiles:					Tile.t array array ;
+	mutable heur_value:		int ;
 	mutable blue_taken:		int ;
 	mutable red_taken:		int
 }
@@ -13,11 +14,12 @@ type dir = Horizontal | Vertical | DiagUp | DiagDown
 let make_board n =
 	{
 		tiles = Array.init n (fun i -> Array.make n Tile.Empty) ;
+		heur_value = 0 ;
 		blue_taken = 0 ;
 		red_taken = 0
 	}
 
-let place_tile_ret_capt board y x is_red =
+let place_tile_raw board y x is_red =
 	let tile = if is_red then Tile.Red else Tile.Blue in
 	let other_tile = if is_red then Tile.Blue else Tile.Red in
 	Array.set board.(y) x tile ;
@@ -37,16 +39,17 @@ let place_tile_ret_capt board y x is_red =
 	let decals_list = [(0, 1); (0, (-1)); (1, 0); ((-1), 0); (1, 1); ((-1), (-1)); ((-1), 1); (1, (-1))] in
 	List.fold_left (fun acc (y_decal, x_decal) -> _make_capture y_decal x_decal acc) [] decals_list
 
-let place_tile board y x is_red =
+let place_tile board y x heur_value_change is_red =
 	let capt = place_tile_ret_capt board.tiles y x is_red in
 	let gain = List.length capt * 2 in
 	(if is_red then
 		board.blue_taken <- board.blue_taken + gain
 	else
 		board.red_taken <- board.red_taken + gain) ;
+	board.heur_value <- board.heur_value + heur_value_change ;
 	capt
 
-let cancel_move board y x is_red captures =
+let cancel_move_raw board y x is_red captures =
 	let other_tile = if is_red then Tile.Blue else Tile.Red in
 	let rec _cancel_captures = function
 		| [] -> ()
@@ -58,6 +61,15 @@ let cancel_move board y x is_red captures =
 	in
 	_cancel_captures captures ;
 	board.tiles.(y).(x) <- Tile.Empty
+
+let cancel_move board y x heur_value_change is_red captures =
+	cancel_move_raw board y x is_red captures ;
+	let loss = List.length captures * 2 in
+	(if is_red then
+		board.blue_taken <- board.blue_taken - loss
+	else
+		board.red_taken <- board.red_taken - loss) ;
+	board.heur_value <- board.heur_value - heur_value_change
 
 let print_dir = function
 	| Horizontal -> print_string "Horizontal"
@@ -118,19 +130,19 @@ let can_place_tile board y x is_red heuristic =
 			List.exists ((=) elt) lst
 		in
 		let ori_threes = free_threes board.tiles y x tile in
-		let capt = place_tile_ret_capt board.tiles y x is_red in
+		let capt = place_tile_raw board.tiles y x is_red in
 		let new_threes = free_threes board.tiles y x tile in
 		let diff = List.filter (fun elt -> not (_in_list ori_threes elt)) new_threes in
 		let no_threes = List.length diff < 2 in
 		let score = match heuristic with
-			| Some heur -> heur board
-			| None -> Heuristic.void_score
+			| Some heur -> heur board y x capt
+			| None -> 0
 		in
-		cancel_move board y x is_red capt ;
+		cancel_move_raw board y x is_red capt ;
 		no_threes, score
 	in
 	if not (_is_empty ()) then
-		false, Heuristic.void_score
+		false, 0
 	else
 		_no_double_threes ()
 
@@ -157,12 +169,8 @@ let valid_moves_heuristic_helper board ~is_red ~heuristic =
 	in 
 	_make_rows [] 19 0
 
-let valid_moves_heuristic board ~is_red ~heuristic =
+let valid_moves board ~is_red ~heuristic =
 	valid_moves_heuristic_helper board ~is_red:is_red ~heuristic:(Some heuristic)
-
-let valid_moves board ~is_red =
-	let moves = valid_moves_heuristic_helper board ~is_red:is_red ~heuristic:None in
-	List.map (fun (y, x, score) -> (y, x)) moves
 
 (** let rec print_moves = function
 	| [] -> print_endline "" ;

@@ -19,5 +19,8 @@ let () =
 	ignore (Board.place_tile board 14 13 false) ;
 	ignore (Board.place_tile board 14 11 false) ;
 	Board.print_board ~min:true board ;
-	let moves = Board.valid_moves board true in
-	print_moves moves
+	for i = 0 to 10000 do
+		ignore (Board.valid_moves board true)
+	done
+	(**let moves = Board.valid_moves board true in
+	print_moves moves**)
