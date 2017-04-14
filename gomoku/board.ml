@@ -40,10 +40,10 @@ let place_tile_ret_capt board y x is_red =
 let place_tile board y x is_red =
 	let capt = place_tile_ret_capt board.tiles y x is_red in
 	let gain = List.length capt * 2 in
-	if is_red then
+	(if is_red then
 		board.blue_taken <- board.blue_taken + gain
 	else
-		board.red_taken <- board.red_taken + gain
+		board.red_taken <- board.red_taken + gain) ;
 	capt
 
 let cancel_move board y x is_red captures =
@@ -51,13 +51,13 @@ let cancel_move board y x is_red captures =
 	let rec _cancel_captures = function
 		| [] -> ()
 		| (decal_y, decal_x) :: tl -> (
-				board.tiles.(y + (decal_y * 1)).(x + (decal_x * 1)) <- other_tile ;
-				board.tiles.(y + (decal_y * 2)).(x + (decal_x * 2)) <- other_tile ;
-				_cancel_captures tl
-			)
+			board.tiles.(y + (decal_y * 1)).(x + (decal_x * 1)) <- other_tile ;
+			board.tiles.(y + (decal_y * 2)).(x + (decal_x * 2)) <- other_tile ;
+			_cancel_captures tl
+		)
 	in
-	_cancel_captures board y x is_red captures ;
-	board.(y).(x) <- Tile.Empty
+	_cancel_captures captures ;
+	board.tiles.(y).(x) <- Tile.Empty
 
 let print_dir = function
 	| Horizontal -> print_string "Horizontal"
@@ -110,7 +110,6 @@ let free_threes board y x tile =
 
 let can_place_tile board y x is_red heuristic =
 	let tile = if is_red then Tile.Red else Tile.Blue in
-	let other_tile = if is_red then Tile.Blue else Tile.Red in
 	let _is_empty () =
 		board.tiles.(y).(x) = Tile.Empty
 	in
@@ -147,10 +146,10 @@ let valid_moves_heuristic_helper board ~is_red ~heuristic =
 	let rec _make_columns acc y upto = function
 		| i when i = upto -> acc
 		| i -> (
-				let ok, score = can_place_tile boardy i is_red heuristic in
-				let acc = if ok then (y, i, score) :: acc else acc in
-				_make_columns acc y upto (i + 1)
-			)
+			let ok, score = can_place_tile board y i is_red heuristic in
+			let acc = if ok then (y, i, score) :: acc else acc in
+			_make_columns acc y upto (i + 1)
+		)
 	in
 	let rec _make_rows acc upto = function
 		| i when i = upto -> acc
@@ -159,7 +158,7 @@ let valid_moves_heuristic_helper board ~is_red ~heuristic =
 	_make_rows [] 19 0
 
 let valid_moves_heuristic board ~is_red ~heuristic =
-	valid_moves_heuristic board ~is_red:is_red ~heuristic:(Some heuristic)
+	valid_moves_heuristic_helper board ~is_red:is_red ~heuristic:(Some heuristic)
 
 let valid_moves board ~is_red =
 	let moves = valid_moves_heuristic_helper board ~is_red:is_red ~heuristic:None in

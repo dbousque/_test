@@ -10,10 +10,10 @@ let better_score score1 score2 =
 	| Win -> Win
 	| Loss -> score2
 	| Score i1 -> (
-			match score2 with
-			| Win -> Win
-			| Loss -> score1
-			| Score i2 -> max i1 i2
-		)
+		match score2 with
+		| Win -> Win
+		| Loss -> score1
+		| Score i2 -> Score (max i1 i2)
+	)
 
 let void_score = Loss
