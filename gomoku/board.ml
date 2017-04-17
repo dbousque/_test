@@ -40,7 +40,7 @@ let place_tile_raw board y x is_red =
 	List.fold_left (fun acc (y_decal, x_decal) -> _make_capture y_decal x_decal acc) [] decals_list
 
 let place_tile board y x heur_value_change is_red =
-	let capt = place_tile_ret_capt board.tiles y x is_red in
+	let capt = place_tile_raw board.tiles y x is_red in
 	let gain = List.length capt * 2 in
 	(if is_red then
 		board.blue_taken <- board.blue_taken + gain
@@ -120,6 +120,74 @@ let free_threes board y x tile =
 	let dirs = [(0, 1, Horizontal); (1, 0, Vertical); (1, 1, DiagDown); ((-1), 1, DiagUp)] in
 	List.fold_left _add_to_acc [] dirs
 
+let find_five_alignements board y x =
+	let tile = board.tiles.(y).(x) in
+	let rec _alignement_helper _y _x y_decal x_decal acc =
+		let _y, _x = _y + y_decal, _x + x_decal in
+		if _y < 0 || _y >= Array.length board.tiles || x < 0 || x >= Array.length board.tiles
+		then acc
+		else (
+			if board.tiles.(_y).(_x) = tile then _alignement_helper _y _x y_decal x_decal (acc + 1)
+			else acc
+		)
+	in
+	let _alignement y_decal x_decal =
+		_alignement_helper y x y_decal x_decal 0
+	in
+	let hori = _alignement 0 1 + _alignement 0 (-1) + 1 in
+	let verti = _alignement 1 0 + _alignement (-1) 0 + 1 in
+	let diagup = _alignement (-1) 1 + _alignement 1 (-1) + 1 in
+	let diagdown = _alignement 1 1 + _alignement (-1) (-1) + 1 in
+	let alignements = [] in
+	let alignements = if hori >= 5 then Horizontal :: alignements else alignements in
+	let alignements = if verti >= 5 then Vertical :: alignements else alignements in
+	let alignements = if diagup >= 5 then DiagUp :: alignements else alignements in
+	let alignements = if diagdown >= 5 then DiagDown :: alignements else alignements in
+	alignements
+
+let can_break_alignements_or_take_ten board y x is_red =
+	let tile = if is_red then Tile.Red else Tile.Blue in
+	let other_tile = if is_red then Tile.Blue else Tile.Red in
+	let could_take_ten =
+		if tile = Tile.Red && board.red_taken < 8 then false
+		else if tile = Tile.Blue && board.blue_taken < 8 then false
+		else true
+	in
+	let _breaking_alignements () =
+		let new_alignements = find_five_alignements board y x in
+		List.length new_alignements = 0
+	in
+	let _capturing_ten captures =
+		List.length captures > 0
+	in
+	let _no_double_threes ori_threes capt _y _x =
+		let _in_list lst elt =
+			List.exists ((=) elt) lst
+		in
+		let new_threes = free_threes board.tiles _y _x other_tile in
+		let diff = List.filter (fun elt -> not (_in_list ori_threes elt)) new_threes in
+		let no_threes = List.length diff < 2 in
+		no_threes || List.length capt > 0
+	in
+	let _ok_move board _y _x =
+		if not (board.(_y).(_x) = Tile.Empty) then false
+		else (
+			let ori_threes = free_threes board.tiles _y _x other_tile in
+			let capt = place_tile_raw board.tiles _y _x (not is_red) in
+			let no_threes = _no_double_threes ori_threes capt _y _x in
+			if not no_threes then (cancel_move_raw board _y _x (not is_red) capt ; false)
+			else (
+				if could_take_ten && List.length capt > 0 then (cancel_move_raw board _y _x (not is_red) capt ; true)
+				else if _breaking_alignements () then (cancel_move_raw board _y _x (not is_red) capt ; true)
+				else (cancel_move_raw board _y _x (not is_red) capt ; false)
+			)
+		)
+	in
+	let _one_ok_in_row acc _y =
+		List.fold_left (fun acc _x -> acc || _ok_move board _y _x) acc (Utils.list_init Utils.id_func 19)
+	in
+	List.fold_left (fun acc _y -> acc || _one_ok_in_row acc _y) false (Utils.list_init Utils.id_func 19)
+
 let can_place_tile board y x is_red heuristic =
 	let tile = if is_red then Tile.Red else Tile.Blue in
 	let _is_empty () =
@@ -134,15 +202,32 @@ let can_place_tile board y x is_red heuristic =
 		let new_threes = free_threes board.tiles y x tile in
 		let diff = List.filter (fun elt -> not (_in_list ori_threes elt)) new_threes in
 		let no_threes = List.length diff < 2 in
-		let score = match heuristic with
-			| Some heur -> heur board y x capt
-			| None -> 0
-		in
+		let ok = no_threes || List.length capt > 0 in
+		let score = if not ok then score else (
+			let score = match heuristic with
+				| Some heur -> (Heuristic.Score (heur board y x capt), (false, 0, 0))
+				| None -> (Heuristic.void_score, (false, 0, 0))
+			in
+			let score = (
+				if is_red && board.blue_taken >= 10 then (Heuristic.Win, (false, 0, 0))
+				else if not is_red && board.red_taken >= 10 then (Heuristic.Loss, (false, 0, 0))
+				else (
+					let alignements = find_five_alignements board y x in
+					if List.length alignements = 0 then score
+					else if can_break_alignements_or_take_ten board y x is_red then (
+						match score with
+						| score, _ -> (score, (true, y, x))
+					)
+					else (if is_red then Heuristic.Win else Heuristic.Loss, (false, 0, 0))
+				)
+			) in
+			score
+		) in
 		cancel_move_raw board y x is_red capt ;
-		no_threes, score
+		ok, score
 	in
 	if not (_is_empty ()) then
-		false, 0
+		false, (Heuristic.void_score, (false, 0, 0))
 	else
 		_no_double_threes ()
 
@@ -155,19 +240,30 @@ let print_board ?(min=false) board =
 	Array.iter (_print_row) board.tiles
 
 let valid_moves_heuristic_helper board ~is_red ~heuristic =
-	let rec _make_columns acc y upto = function
+	let rec _make_columns (fatal_score, acc) y upto = function
 		| i when i = upto -> acc
 		| i -> (
 			let ok, score = can_place_tile board y i is_red heuristic in
+			let fatal_score = (
+				match score with
+				| Heuristic.Score _ -> fatal_score
+				| Heuristic.Win -> (
+					if is_red || fatal_score <> Heuristic.Loss then Heuristic.Win
+					else fatal_score
+				)
+				| Heuristic.Loss -> (
+					if not is_red || fatal_score <> Heuristic.Win then Heuristic.Loss
+				)
+			) in
 			let acc = if ok then (y, i, score) :: acc else acc in
-			_make_columns acc y upto (i + 1)
+			_make_columns (fatal_score, acc) y upto (i + 1)
 		)
 	in
 	let rec _make_rows acc upto = function
 		| i when i = upto -> acc
 		| i -> _make_rows (_make_columns acc i upto 0) upto (i + 1)
 	in 
-	_make_rows [] 19 0
+	_make_rows (Heuristic.Score 0, []) 19 0
 
 let valid_moves board ~is_red ~heuristic =
 	valid_moves_heuristic_helper board ~is_red:is_red ~heuristic:(Some heuristic)

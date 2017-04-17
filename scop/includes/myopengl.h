@@ -21,7 +21,7 @@
 #  include <GLUT/glut.h>
 #  include <OpenGL/glu.h>
 # endif
-# include <SOIL/SOIL.h>
+# include "SOIL.h"
 # include <stdio.h>
 # include <math.h>
 # include <unistd.h>

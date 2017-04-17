@@ -42,5 +42,5 @@ let simple_heuristic board y x captures =
 		acc + _count_on_line y x y_decal x_decal 0 0
 	in
 	let score = List.fold_left _acc_helper 0 dirs in
-	let score = score + (List.length captures * 2) in
+	let score = score + (List.length captures * 4) in
 	if tile = Tile.Red then score else (- score)
