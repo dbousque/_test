@@ -169,8 +169,8 @@ let can_break_alignements_or_take_ten board y x is_red =
 		let no_threes = List.length diff < 2 in
 		no_threes || List.length capt > 0
 	in
-	let _ok_move board _y _x =
-		if not (board.(_y).(_x) = Tile.Empty) then false
+	let _ok_move _y _x =
+		if not (board.tiles.(_y).(_x) = Tile.Empty) then false
 		else (
 			let ori_threes = free_threes board.tiles _y _x other_tile in
 			let capt = place_tile_raw board.tiles _y _x (not is_red) in
@@ -183,10 +183,11 @@ let can_break_alignements_or_take_ten board y x is_red =
 			)
 		)
 	in
+	let board_len = Array.length board.tiles in
 	let _one_ok_in_row acc _y =
-		List.fold_left (fun acc _x -> acc || _ok_move board _y _x) acc (Utils.list_init Utils.id_func 19)
+		List.fold_left (fun acc _x -> acc || _ok_move _y _x) acc (Utils.list_init Utils.id_func board_len)
 	in
-	List.fold_left (fun acc _y -> acc || _one_ok_in_row acc _y) false (Utils.list_init Utils.id_func 19)
+	List.fold_left (fun acc _y -> acc || _one_ok_in_row acc _y) false (Utils.list_init Utils.id_func board_len)
 
 let can_place_tile board y x is_red heuristic =
 	let tile = if is_red then Tile.Red else Tile.Blue in
@@ -203,7 +204,7 @@ let can_place_tile board y x is_red heuristic =
 		let diff = List.filter (fun elt -> not (_in_list ori_threes elt)) new_threes in
 		let no_threes = List.length diff < 2 in
 		let ok = no_threes || List.length capt > 0 in
-		let score = if not ok then score else (
+		let score = if not ok then (Heuristic.void_score, (false, 0, 0)) else (
 			let score = match heuristic with
 				| Some heur -> (Heuristic.Score (heur board y x capt), (false, 0, 0))
 				| None -> (Heuristic.void_score, (false, 0, 0))
@@ -218,7 +219,7 @@ let can_place_tile board y x is_red heuristic =
 						match score with
 						| score, _ -> (score, (true, y, x))
 					)
-					else (if is_red then Heuristic.Win else Heuristic.Loss, (false, 0, 0))
+					else ((if is_red then Heuristic.Win else Heuristic.Loss), (false, 0, 0))
 				)
 			) in
 			score
@@ -240,19 +241,25 @@ let print_board ?(min=false) board =
 	Array.iter (_print_row) board.tiles
 
 let valid_moves_heuristic_helper board ~is_red ~heuristic =
+	let _fatal_matches fatal to_match =
+		match fatal with
+		| Some (to_match, _) -> true
+		| _ -> false
+	in
 	let rec _make_columns (fatal_score, acc) y upto = function
 		| i when i = upto -> acc
 		| i -> (
 			let ok, score = can_place_tile board y i is_red heuristic in
 			let fatal_score = (
 				match score with
-				| Heuristic.Score _ -> fatal_score
-				| Heuristic.Win -> (
-					if is_red || fatal_score <> Heuristic.Loss then Heuristic.Win
+				| (Heuristic.Score _), _ -> fatal_score
+				| Heuristic.Win, f -> (
+					if is_red || not (_fatal_matches fatal_score Heuristic.Loss) then Some (Heuristic.Win, f)
 					else fatal_score
 				)
-				| Heuristic.Loss -> (
-					if not is_red || fatal_score <> Heuristic.Win then Heuristic.Loss
+				| Heuristic.Loss, f -> (
+					if not is_red || not (_fatal_matches fatal_score Heuristic.Win)  then Some (Heuristic.Loss, f)
+					else fatal_score
 				)
 			) in
 			let acc = if ok then (y, i, score) :: acc else acc in
@@ -263,7 +270,7 @@ let valid_moves_heuristic_helper board ~is_red ~heuristic =
 		| i when i = upto -> acc
 		| i -> _make_rows (_make_columns acc i upto 0) upto (i + 1)
 	in 
-	_make_rows (Heuristic.Score 0, []) 19 0
+	_make_rows (None, []) (Array.length board.tiles) 0
 
 let valid_moves board ~is_red ~heuristic =
 	valid_moves_heuristic_helper board ~is_red:is_red ~heuristic:(Some heuristic)
