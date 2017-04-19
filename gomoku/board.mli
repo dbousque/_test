@@ -1,20 +1,18 @@
 
 
-type t
-
 type captures
 
-val make_board : int -> t
+val make_board : int -> BoardType.t
 
-val place_tile : t -> int -> int -> int -> bool -> captures
+val place_tile : BoardType.t -> int -> int -> int -> bool -> captures
 
-val cancel_move : t -> int -> int -> int -> bool -> captures -> unit
+val cancel_move : BoardType.t -> int -> int -> int -> bool -> captures -> unit
 
-val heuristic_of_moves : t -> is_red:bool -> moves:((int * int) list)
-			-> heuristic:(t -> int -> int -> ((int * int) list) -> Heuristic.score)
+val heuristic_of_moves : BoardType.t -> is_red:bool -> moves:((int * int) list)
+			-> heuristic:(BoardType.t -> int -> int -> ((int * int) list) -> int)
 	-> (((Heuristic.score * int * int) option) * ((int * int * (Heuristic.score * (bool * ((int * int) list)))) list))
 
-val valid_moves : t -> is_red:bool -> heuristic:(t -> int -> int -> ((int * int) list) -> Heuristic.score)
+val valid_moves : BoardType.t -> is_red:bool -> heuristic:(BoardType.t -> int -> int -> ((int * int) list) -> int)
 	-> (((Heuristic.score * int * int) option) * ((int * int * (Heuristic.score * (bool * ((int * int) list)))) list))
 
-val print_board : ?min:bool -> t -> unit
+val print_board : ?min:bool -> BoardType.t -> unit

@@ -1,11 +1,6 @@
 
 
-type t = {
-	tiles:					Tile.t array array ;
-	mutable heur_value:		int ;
-	mutable blue_taken:		int ;
-	mutable red_taken:		int
-}
+open BoardType
 
 type captures = (int * int) list
 
@@ -124,7 +119,7 @@ let find_five_alignements board y x =
 	let tile = board.tiles.(y).(x) in
 	let rec _alignement_helper _y _x y_decal x_decal acc =
 		let _y, _x = _y + y_decal, _x + x_decal in
-		if _y < 0 || _y >= Array.length board.tiles || x < 0 || x >= Array.length board.tiles
+		if _y < 0 || _y >= Array.length board.tiles || _x < 0 || _x >= Array.length board.tiles
 		then acc
 		else (
 			if board.tiles.(_y).(_x) = tile then _alignement_helper _y _x y_decal x_decal (acc + 1)
@@ -189,7 +184,7 @@ let can_break_alignements_or_take_ten board y x is_red =
 		let acc_f = (fun acc _x -> let ok = _ok_move _y _x in if ok then (_y, _x) :: acc else acc) in
 		List.fold_left acc_f acc lst
 	in
-	List.fold_left (fun acc _y -> _one_ok_in_row acc _y) false lst
+	List.fold_left (fun acc _y -> _one_ok_in_row acc _y) [] lst
 
 let can_place_tile board y x is_red heuristic =
 	let tile = if is_red then Tile.Red else Tile.Blue in
@@ -245,7 +240,7 @@ let print_board ?(min=false) board =
 	in
 	Array.iter (_print_row) board.tiles
 
-let update_fatal_score fatal_score score y x =
+let update_fatal_score is_red fatal_score score y x =
 	let _fatal_matches fatal to_match =
 		match fatal with
 		| Some (to_match, _, _) -> true
@@ -264,9 +259,9 @@ let update_fatal_score fatal_score score y x =
 
 let heuristic_of_moves board ~is_red ~moves ~heuristic =
 	let _heuristic_of_move (fatal_score, acc) (y, x) =
-		let ok, score = can_place_tile board y x is_red heuristic in
+		let ok, score = can_place_tile board y x is_red (Some heuristic) in
 		if not ok then (fatal_score, acc) else (
-			let fatal_score = update_fatal_score fatal_score score y x in
+			let fatal_score = update_fatal_score is_red fatal_score score y x in
 			(fatal_score, (y, x, score) :: acc)
 		)
 	in
@@ -274,10 +269,10 @@ let heuristic_of_moves board ~is_red ~moves ~heuristic =
 
 let valid_moves_heuristic_helper board ~is_red ~heuristic =
 	let rec _make_columns (fatal_score, acc) y upto = function
-		| i when i = upto -> acc
+		| i when i = upto -> (fatal_score, acc)
 		| i -> (
 			let ok, score = can_place_tile board y i is_red heuristic in
-			let fatal_score = update_fatal_score fatal_score score y i in
+			let fatal_score = update_fatal_score is_red fatal_score score y i in
 			let acc = if ok then (y, i, score) :: acc else acc in
 			_make_columns (fatal_score, acc) y upto (i + 1)
 		)
