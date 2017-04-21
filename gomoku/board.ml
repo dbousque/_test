@@ -284,9 +284,9 @@ let around_placed_tiles board y x =
 	in
 	let _check_dir decal_y decal_x =
 		_check_tile decal_y decal_x
-		|| _check_tile (decal_y * 2) (decal_x * 2)
+		(*|| _check_tile (decal_y * 2) (decal_x * 2) *)
 		|| _check_tile (- decal_y) (- decal_x)
-		|| _check_tile (- (decal_y * 2)) (- (decal_x * 2))
+		(*|| _check_tile (- (decal_y * 2)) (- (decal_x * 2)) *)
 	in
 	if _is_not_empty y x then true
 	else if _check_dir 1 0 then true
