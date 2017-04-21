@@ -32,10 +32,23 @@ let rec best_move board ~for_red ~valid_next ~heuristic ~depth =
 			Board.cancel_move board y x sc for_red captures ;
 			match best with
 			| None -> (y, x, (Heuristic.Score 0, (false, [])))
-			| Some (_, _, score) -> (y, x, score)
+			| Some (_, _, score) -> (
+				let score = match score with
+					| (Heuristic.Score new_sc, _) -> (Heuristic.Score (sc + new_sc), (forced_next_move, valid_next))
+					| (s, _) -> (s, (forced_next_move, valid_next))
+				in
+				(y, x, score)
+			)
 		)
 		| Heuristic.Win -> (y, x, (Heuristic.Win, (false, [])))
 		| Heuristic.Loss -> (y, x, (Heuristic.Loss, (false, [])))
+	in
+	let rec _alpha_beta_get_moves moves min max acc =
+		match moves with
+		| [] -> acc
+		| move :: rest -> (
+			
+		)
 	in
 	let fatal_move, moves = match valid_next with
 		| None -> Board.valid_moves board ~is_red:for_red ~heuristic:heuristic
@@ -45,6 +58,6 @@ let rec best_move board ~for_red ~valid_next ~heuristic ~depth =
 		match for_red, fatal_move with
 		| true, Some (Heuristic.Win, y, x) -> [(y, x, (Heuristic.Win, (false, [])))]
 		| false, Some (Heuristic.Loss, y, x) -> [(y, x, (Heuristic.Loss, (false, [])))]
-		| _ -> if depth = 0 then moves else List.map _get_move_score moves
+		| _ -> if depth = 0 then moves else _alpha_beta_get_moves moves Heuristic.Loss Heuristic.Win []
 	in
 	List.fold_left _keep_best_score None moves

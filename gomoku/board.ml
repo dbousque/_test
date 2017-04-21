@@ -14,6 +14,14 @@ let make_board n =
 		red_taken = 0
 	}
 
+let print_board ?(min=false) board =
+	let print_func = if min then Tile.print_tile_min else Tile.print_tile in
+	let _print_row row =
+		Array.iter (fun x -> print_func x ; print_string " ") row ;
+		print_endline "" ;
+	in
+	Array.iter (_print_row) board.tiles
+
 let place_tile_raw board y x is_red =
 	let tile = if is_red then Tile.Red else Tile.Blue in
 	let other_tile = if is_red then Tile.Blue else Tile.Red in
@@ -228,17 +236,9 @@ let can_place_tile board y x is_red heuristic =
 		ok, score
 	in
 	if not (_is_empty ()) then
-		false, (Heuristic.void_score, (false, []))
+		(false, (Heuristic.void_score, (false, [])))
 	else
 		_no_double_threes ()
-
-let print_board ?(min=false) board =
-	let print_func = if min then Tile.print_tile_min else Tile.print_tile in
-	let _print_row row =
-		Array.iter (fun x -> print_func x ; print_string " ") row ;
-		print_endline "" ;
-	in
-	Array.iter (_print_row) board.tiles
 
 let update_fatal_score is_red fatal_score score y x =
 	let _fatal_matches fatal to_match =
@@ -267,13 +267,57 @@ let heuristic_of_moves board ~is_red ~moves ~heuristic =
 	in
 	List.fold_left _heuristic_of_move (None, []) moves
 
-let valid_moves_heuristic_helper board ~is_red ~heuristic =
+let around_placed_tiles board y x =
+	let board_len = Array.length board.tiles in
+	let _is_not_empty _y _x =
+		board.tiles.(_y).(_x) <> Tile.Empty
+	in
+	let _check_tile decal_y decal_x =
+		let _y = y + decal_y in
+		let _x = x + decal_x in
+		if _y > 0 && _y < board_len
+			&& _x > 0 && _x < board_len
+			&& _is_not_empty _y _x then
+			true
+		else
+			false
+	in
+	let _check_dir decal_y decal_x =
+		_check_tile decal_y decal_x
+		|| _check_tile (decal_y * 2) (decal_x * 2)
+		|| _check_tile (- decal_y) (- decal_x)
+		|| _check_tile (- (decal_y * 2)) (- (decal_x * 2))
+	in
+	if _is_not_empty y x then true
+	else if _check_dir 1 0 then true
+	else if _check_dir 0 1 then true
+	else if _check_dir 1 1 then true
+	else if _check_dir (-1) 1 then true
+	else false
+
+let valid_moves_heuristic_helper board ~is_red ~heuristic ~only_around_placed_tiles =
 	let rec _make_columns (fatal_score, acc) y upto = function
 		| i when i = upto -> (fatal_score, acc)
 		| i -> (
-			let ok, score = can_place_tile board y i is_red heuristic in
-			let fatal_score = update_fatal_score is_red fatal_score score y i in
-			let acc = if ok then (y, i, score) :: acc else acc in
+			let continue =
+				if not only_around_placed_tiles then true
+				else if around_placed_tiles board y i then true
+				else false
+			in
+			let fatal_score, acc =
+				if continue then (
+					let ok, score = can_place_tile board y i is_red heuristic in
+					let fatal_score = if ok then
+							update_fatal_score is_red fatal_score score y i
+						else
+							fatal_score
+					in
+					let acc = if ok then (y, i, score) :: acc else acc in
+					(fatal_score, acc)
+				)
+				else
+					(fatal_score, acc)
+			in
 			_make_columns (fatal_score, acc) y upto (i + 1)
 		)
 	in
@@ -284,7 +328,7 @@ let valid_moves_heuristic_helper board ~is_red ~heuristic =
 	_make_rows (None, []) (Array.length board.tiles) 0
 
 let valid_moves board ~is_red ~heuristic =
-	valid_moves_heuristic_helper board ~is_red:is_red ~heuristic:(Some heuristic)
+	valid_moves_heuristic_helper board ~is_red:is_red ~heuristic:(Some heuristic) ~only_around_placed_tiles:true
 
 (** let rec print_moves = function
 	| [] -> print_endline "" ;

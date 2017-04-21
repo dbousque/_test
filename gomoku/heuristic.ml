@@ -31,6 +31,9 @@ let better_score_blue score1 score2 =
 
 let void_score = Loss
 
+let zero_heuristic board y x captures =
+	0
+
 let simple_heuristic board y x captures =
 	let tile = board.tiles.(y).(x) in
 	let rec _count_on_line _y _x y_decal x_decal miss acc =
@@ -56,7 +59,8 @@ let simple_heuristic board y x captures =
 		(0, (-1)); ((-1), 0); ((-1), (-1)); (1, (-1))
 	] in
 	let _acc_helper acc (y_decal, x_decal) =
-		acc + _count_on_line y x y_decal x_decal 0 0
+		let on_line = _count_on_line y x y_decal x_decal 0 0 in
+		acc + (if on_line > 0 then on_line + 1 else on_line)
 	in
 	let score = List.fold_left _acc_helper 0 dirs in
 	let score = score + (List.length captures * 4) in
