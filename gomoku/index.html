@@ -1,0 +1,20 @@
+
+
+<html>
+
+	<head>
+		<script type="text/javascript" src="script.js"></script>
+		<link rel="stylesheet" type="text/css" href="style.css">
+	</head>
+
+	<body onload="makeBoard(19)">
+
+		<h1>Gomoku</h1>
+		
+		<div id="board" onmousemove="onMouseMoveEvent(event);"
+			onmouseout="removeGhostTile(event);" onclick="onClickEvent(event);">
+		</div>
+
+	</body>
+
+</html>

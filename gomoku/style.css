@@ -1,0 +1,50 @@
+
+
+body {
+	text-align: center;
+	font-family: sans-serif;
+}
+
+h1 {
+	margin: 40px;
+}
+
+#board {
+	background: url('wood.jpg');
+	display: inline-block;
+	padding: 52px;
+	border-radius: 2px
+}
+
+.row {
+	white-space: nowrap;
+}
+
+.case {
+	width: 51px;
+	height: 51px;
+	display: inline-block;
+	border: 1px solid #333;
+}
+
+.no-border-right {
+	border-right: 0px;
+}
+
+.no-border-bottom {
+	border-bottom: 0px;
+}
+
+.tile-parent {
+	position: absolute;
+}
+
+.tile {
+	width: 48px;
+	height: 48px;
+}
+
+.winner-tile {
+	border-radius: 15px;
+	background-color: #ffee00;
+}

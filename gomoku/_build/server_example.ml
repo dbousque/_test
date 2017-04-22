@@ -19,7 +19,8 @@ let server =
 		let headers = req |> Request.headers |> Header.to_string in
 		if meth = "GET" then (
 			let parts = Str.split (Str.regexp "/") uri in
-			let filename = List.nth ((List.length parts) - 1) in
+			let filename = List.nth parts ((List.length parts) - 1) in
+			let filename = if List.length parts <= 2 then "" else filename in
 			if filename = "" then (
 				Hashtbl.add !games !ident (Main.make_new_game ()) ;
 				incr ident ;
@@ -29,7 +30,8 @@ let server =
 				>>= (fun body -> Server.respond_string ~status:`OK ~body ()) *)
 			) ;
 			let filename = if filename = "" then "index.html" else filename in
-			Server.respond_file
+			Lwt_io.printf "file %s\n" filename ;
+			Server.respond_file ~fname:filename ()
 		)
 		else (
 			Cohttp_lwt_body.to_string body >>= fun (body) ->
