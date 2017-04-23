@@ -2,7 +2,8 @@
 
 body {
 	text-align: center;
-	font-family: sans-serif;
+	font-family: monospace;
+	background-color: #EEE;
 }
 
 h1 {
@@ -13,10 +14,16 @@ h1 {
 	background: url('wood.jpg');
 	display: inline-block;
 	padding: 52px;
-	border-radius: 2px
+	border-radius: 2px;
+	box-shadow: 0px 8px 20px 0px #666;
+	box-sizing: initial;
 }
 
-.row {
+#authors {
+	margin-top: -15px;
+}
+
+.gomoku-row {
 	white-space: nowrap;
 }
 
@@ -47,4 +54,42 @@ h1 {
 .winner-tile {
 	border-radius: 15px;
 	background-color: #ffee00;
+}
+
+.square-helper {
+	width: 9px;
+	height: 9px;
+	position: absolute;
+	background-color: #000;
+}
+
+.slider-input {
+	width: 200px;
+	display: inline-block;
+}
+
+.bottom-container {
+	width: 600px;
+	margin: 0 auto;
+	margin-top: 30px;
+}
+
+.btn {
+	display: inline-block;
+	text-transform: inherit!important;
+	margin: 15px;
+}
+
+.btn:hover {
+	transform: translateY(-2px);
+}
+
+.inline-block {
+	display: inline-block;
+}
+
+.player-type {
+	margin: 20px;
+	margin-top: 0px;
+	margin-bottom: -10px;
 }

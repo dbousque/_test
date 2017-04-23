@@ -196,6 +196,10 @@ let can_break_alignements_or_take_ten board y x is_red =
 
 let can_place_tile board y x is_red heuristic =
 	let tile = if is_red then Tile.Red else Tile.Blue in
+	let _valid_coords () =
+		y >= 0 && y < Array.length board.tiles
+		&& x >= 0 && x < Array.length board.tiles
+	in
 	let _is_empty () =
 		board.tiles.(y).(x) = Tile.Empty
 	in
@@ -235,7 +239,7 @@ let can_place_tile board y x is_red heuristic =
 		cancel_move_raw board y x is_red capt ;
 		ok, score
 	in
-	if not (_is_empty ()) then
+	if not (_valid_coords ()) || not (_is_empty ()) then
 		(false, (Heuristic.void_score, (false, [])))
 	else
 		_no_double_threes ()
@@ -295,7 +299,7 @@ let around_placed_tiles board y x =
 	else if _check_dir (-1) 1 then true
 	else false
 
-let valid_moves_heuristic_helper board ~is_red ~heuristic ~only_around_placed_tiles =
+let rec valid_moves_heuristic_helper board ~is_red ~heuristic ~only_around_placed_tiles =
 	let rec _make_columns (fatal_score, acc) y upto = function
 		| i when i = upto -> (fatal_score, acc)
 		| i -> (
@@ -325,7 +329,11 @@ let valid_moves_heuristic_helper board ~is_red ~heuristic ~only_around_placed_ti
 		| i when i = upto -> acc
 		| i -> _make_rows (_make_columns acc i upto 0) upto (i + 1)
 	in 
-	_make_rows (None, []) (Array.length board.tiles) 0
+	let fatal_score, moves = _make_rows (None, []) (Array.length board.tiles) 0 in
+	if List.length moves = 0 && only_around_placed_tiles then
+		valid_moves_heuristic_helper board ~is_red ~heuristic ~only_around_placed_tiles:false
+	else
+		fatal_score, moves
 
 let valid_moves board ~is_red ~heuristic =
 	valid_moves_heuristic_helper board ~is_red:is_red ~heuristic:(Some heuristic) ~only_around_placed_tiles:true

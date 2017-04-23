@@ -3,6 +3,8 @@
 type game = {
 	board:		BoardType.t ;
 	red_turn:	bool ;
+	game_state:	string ;
+	heuristic:	(BoardType.t -> int -> int -> ((int * int) list) -> int) ;
 	valid_next:	(int * int) list option
 }
 
@@ -10,12 +12,67 @@ let rec print_moves = function
 	| [] -> print_endline "" ;
 	| (y, x) :: tl -> Printf.printf "(%d, %d)\n" y x ; print_moves tl
 
-let make_new_game () =
+let make_new_game dimensions heuristic =
 	{
-		board = Board.make_board 19 ;
+		board = Board.make_board dimensions ;
 		red_turn = true ;
+		game_state = "playing" ;
+		heuristic = heuristic ;
 		valid_next = None
 	}
+
+let make_actual_move game y x score forced_next valid_next =
+	let heur_change, game_state = (
+		match score with
+		| Heuristic.Win -> 0, "win"
+		| Heuristic.Loss -> 0, "loss"
+		| Heuristic.Score sc -> sc, "playing"
+	) in
+	Board.place_tile game.board y x heur_change game.red_turn ;
+	let _, next_moves = Board.valid_moves game.board ~is_red:(not game.red_turn) ~heuristic:game.heuristic in
+	let game_state = if List.length next_moves = 0 then "draw" else game_state in
+	let valid_next = if forced_next then Some valid_next else None in
+	{
+		board = game.board ;
+		red_turn = not game.red_turn ;
+		game_state = game_state ;
+		heuristic = game.heuristic ;
+		valid_next = valid_next
+	}
+
+let make_move game (y, x) =
+	let rec _move_in_valid_next nexts =
+		match nexts with
+		| [] -> false
+		| (_y, _x) :: rest -> if _y = y && _x = x then true else _move_in_valid_next rest
+	in
+	let continue = (match game.valid_next with
+		| None -> true
+		| Some nexts -> _move_in_valid_next nexts
+	) in
+	if not continue then (false, game)
+	else (
+		let ok, (score, (forced_next, valid_next)) = Board.can_place_tile game.board y x game.red_turn (Some game.heuristic) in
+		if not ok then (false, game)
+		else (
+			let new_game = make_actual_move game y x score forced_next valid_next in
+			(true, new_game)
+		)
+	)
+
+let make_ai_move game =
+	let move = Minimax.best_move game.board
+		~for_red:game.red_turn
+		~valid_next:game.valid_next
+		~heuristic:game.heuristic
+		~depth:3
+	in
+	match move with
+	| None -> (None, game)
+	| Some (y, x, (score, (forced_next, valid_next))) -> (
+		let new_game = make_actual_move game y x score forced_next valid_next in
+		(Some (y, x), new_game)
+	)
 
 let () =
 	let board = Board.make_board 19 in
@@ -37,6 +94,7 @@ let () =
 	done ; *)
 	let best = Minimax.best_move board
 		~for_red:true
+		~valid_next:None
 		~heuristic:Heuristic.simple_heuristic
 		~depth:4
 	in

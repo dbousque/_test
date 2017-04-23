@@ -1,1 +1,1 @@
-main.ml: Board BoardType Heuristic Minimax Printf
+main.ml: Board BoardType Heuristic List Minimax Printf

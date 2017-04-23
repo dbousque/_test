@@ -1,1 +1,1 @@
-ocamlbuild -use-ocamlfind -pkgs cohttp.lwt,ppx_deriving_yojson,yojson server_example.native
+ocamlbuild -use-ocamlfind -pkgs cohttp.lwt,ppx_deriving_yojson,yojson,str,netstring server_example.native

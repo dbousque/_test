@@ -1,54 +1,68 @@
 ### Starting build.
-# Target: server_example.ml.depends, tags: { package(cohttp.lwt), package(ppx_deriving_yojson), package(str), package(yojson), extension:ml, file:server_example.ml, ocaml, ocamldep, quiet }
-ocamlfind ocamldep -package str -package yojson -package ppx_deriving_yojson -package cohttp.lwt -modules server_example.ml > server_example.ml.depends # cached
-# Target: main.ml.depends, tags: { package(cohttp.lwt), package(ppx_deriving_yojson), package(str), package(yojson), extension:ml, file:main.ml, ocaml, ocamldep, quiet }
-ocamlfind ocamldep -package str -package yojson -package ppx_deriving_yojson -package cohttp.lwt -modules main.ml > main.ml.depends # cached
-# Target: board.mli.depends, tags: { package(cohttp.lwt), package(ppx_deriving_yojson), package(str), package(yojson), extension:mli, file:board.mli, ocaml, ocamldep, quiet }
-ocamlfind ocamldep -package str -package yojson -package ppx_deriving_yojson -package cohttp.lwt -modules board.mli > board.mli.depends # cached
-# Target: boardType.ml.depends, tags: { package(cohttp.lwt), package(ppx_deriving_yojson), package(str), package(yojson), extension:ml, file:boardType.ml, ocaml, ocamldep, quiet }
-ocamlfind ocamldep -package str -package yojson -package ppx_deriving_yojson -package cohttp.lwt -modules boardType.ml > boardType.ml.depends # cached
-# Target: tile.ml.depends, tags: { package(cohttp.lwt), package(ppx_deriving_yojson), package(str), package(yojson), extension:ml, file:tile.ml, ocaml, ocamldep, quiet }
-ocamlfind ocamldep -package str -package yojson -package ppx_deriving_yojson -package cohttp.lwt -modules tile.ml > tile.ml.depends # cached
-# Target: tile.cmo, tags: { package(cohttp.lwt), package(ppx_deriving_yojson), package(str), package(yojson), byte, compile, extension:cmo, extension:ml, file:tile.cmo, file:tile.ml, implem, ocaml, quiet }
-ocamlfind ocamlc -c -package str -package yojson -package ppx_deriving_yojson -package cohttp.lwt -o tile.cmo tile.ml # cached
-# Target: boardType.cmo, tags: { package(cohttp.lwt), package(ppx_deriving_yojson), package(str), package(yojson), byte, compile, extension:cmo, extension:ml, file:boardType.cmo, file:boardType.ml, implem, ocaml, quiet }
-ocamlfind ocamlc -c -package str -package yojson -package ppx_deriving_yojson -package cohttp.lwt -o boardType.cmo boardType.ml # cached
-# Target: heuristic.ml.depends, tags: { package(cohttp.lwt), package(ppx_deriving_yojson), package(str), package(yojson), extension:ml, file:heuristic.ml, ocaml, ocamldep, quiet }
-ocamlfind ocamldep -package str -package yojson -package ppx_deriving_yojson -package cohttp.lwt -modules heuristic.ml > heuristic.ml.depends # cached
-# Target: heuristic.cmo, tags: { package(cohttp.lwt), package(ppx_deriving_yojson), package(str), package(yojson), byte, compile, extension:cmo, extension:ml, file:heuristic.cmo, file:heuristic.ml, implem, ocaml, quiet }
-ocamlfind ocamlc -c -package str -package yojson -package ppx_deriving_yojson -package cohttp.lwt -o heuristic.cmo heuristic.ml # cached
-# Target: board.cmi, tags: { package(cohttp.lwt), package(ppx_deriving_yojson), package(str), package(yojson), byte, compile, extension:mli, file:board.mli, interf, ocaml, quiet }
-ocamlfind ocamlc -c -package str -package yojson -package ppx_deriving_yojson -package cohttp.lwt -o board.cmi board.mli # cached
-# Target: minimax.ml.depends, tags: { package(cohttp.lwt), package(ppx_deriving_yojson), package(str), package(yojson), extension:ml, file:minimax.ml, ocaml, ocamldep, quiet }
-ocamlfind ocamldep -package str -package yojson -package ppx_deriving_yojson -package cohttp.lwt -modules minimax.ml > minimax.ml.depends # cached
-# Target: minimax.cmo, tags: { package(cohttp.lwt), package(ppx_deriving_yojson), package(str), package(yojson), byte, compile, extension:cmo, extension:ml, file:minimax.cmo, file:minimax.ml, implem, ocaml, quiet }
-ocamlfind ocamlc -c -package str -package yojson -package ppx_deriving_yojson -package cohttp.lwt -o minimax.cmo minimax.ml # cached
-# Target: main.cmo, tags: { package(cohttp.lwt), package(ppx_deriving_yojson), package(str), package(yojson), byte, compile, extension:cmo, extension:ml, file:main.cmo, file:main.ml, implem, ocaml, quiet }
-ocamlfind ocamlc -c -package str -package yojson -package ppx_deriving_yojson -package cohttp.lwt -o main.cmo main.ml # cached
-# Target: server_example.cmo, tags: { package(cohttp.lwt), package(ppx_deriving_yojson), package(str), package(yojson), byte, compile, extension:cmo, extension:ml, file:server_example.cmo, file:server_example.ml, implem, ocaml, quiet }
-ocamlfind ocamlc -c -package str -package yojson -package ppx_deriving_yojson -package cohttp.lwt -o server_example.cmo server_example.ml # cached
-# Target: board.ml.depends, tags: { package(cohttp.lwt), package(ppx_deriving_yojson), package(str), package(yojson), extension:ml, file:board.ml, ocaml, ocamldep, quiet }
-ocamlfind ocamldep -package str -package yojson -package ppx_deriving_yojson -package cohttp.lwt -modules board.ml > board.ml.depends # cached
-# Target: tile.cmx, tags: { package(cohttp.lwt), package(ppx_deriving_yojson), package(str), package(yojson), compile, extension:cmx, extension:ml, file:tile.cmx, file:tile.ml, implem, native, ocaml, quiet }
-ocamlfind ocamlopt -c -package str -package yojson -package ppx_deriving_yojson -package cohttp.lwt -o tile.cmx tile.ml # cached
-# Target: boardType.cmx, tags: { package(cohttp.lwt), package(ppx_deriving_yojson), package(str), package(yojson), compile, extension:cmx, extension:ml, file:boardType.cmx, file:boardType.ml, implem, native, ocaml, quiet }
-ocamlfind ocamlopt -c -package str -package yojson -package ppx_deriving_yojson -package cohttp.lwt -o boardType.cmx boardType.ml # cached
-# Target: heuristic.cmx, tags: { package(cohttp.lwt), package(ppx_deriving_yojson), package(str), package(yojson), compile, extension:cmx, extension:ml, file:heuristic.cmx, file:heuristic.ml, implem, native, ocaml, quiet }
-ocamlfind ocamlopt -c -package str -package yojson -package ppx_deriving_yojson -package cohttp.lwt -o heuristic.cmx heuristic.ml # cached
-# Target: utils.ml.depends, tags: { package(cohttp.lwt), package(ppx_deriving_yojson), package(str), package(yojson), extension:ml, file:utils.ml, ocaml, ocamldep, quiet }
-ocamlfind ocamldep -package str -package yojson -package ppx_deriving_yojson -package cohttp.lwt -modules utils.ml > utils.ml.depends # cached
-# Target: utils.cmo, tags: { package(cohttp.lwt), package(ppx_deriving_yojson), package(str), package(yojson), byte, compile, extension:cmo, extension:ml, file:utils.cmo, file:utils.ml, implem, ocaml, quiet }
-ocamlfind ocamlc -c -package str -package yojson -package ppx_deriving_yojson -package cohttp.lwt -o utils.cmo utils.ml # cached
-# Target: utils.cmx, tags: { package(cohttp.lwt), package(ppx_deriving_yojson), package(str), package(yojson), compile, extension:cmx, extension:ml, file:utils.cmx, file:utils.ml, implem, native, ocaml, quiet }
-ocamlfind ocamlopt -c -package str -package yojson -package ppx_deriving_yojson -package cohttp.lwt -o utils.cmx utils.ml # cached
-# Target: board.cmx, tags: { package(cohttp.lwt), package(ppx_deriving_yojson), package(str), package(yojson), compile, extension:cmx, extension:ml, file:board.cmx, file:board.ml, implem, native, ocaml, quiet }
-ocamlfind ocamlopt -c -package str -package yojson -package ppx_deriving_yojson -package cohttp.lwt -o board.cmx board.ml # cached
-# Target: minimax.cmx, tags: { package(cohttp.lwt), package(ppx_deriving_yojson), package(str), package(yojson), compile, extension:cmx, extension:ml, file:minimax.cmx, file:minimax.ml, implem, native, ocaml, quiet }
-ocamlfind ocamlopt -c -package str -package yojson -package ppx_deriving_yojson -package cohttp.lwt -o minimax.cmx minimax.ml # cached
-# Target: main.cmx, tags: { package(cohttp.lwt), package(ppx_deriving_yojson), package(str), package(yojson), compile, extension:cmx, extension:ml, file:main.cmx, file:main.ml, implem, native, ocaml, quiet }
-ocamlfind ocamlopt -c -package str -package yojson -package ppx_deriving_yojson -package cohttp.lwt -o main.cmx main.ml # cached
-# Target: server_example.cmx, tags: { package(cohttp.lwt), package(ppx_deriving_yojson), package(str), package(yojson), compile, extension:cmx, extension:ml, file:server_example.cmx, file:server_example.ml, implem, native, ocaml, quiet }
-ocamlfind ocamlopt -c -package str -package yojson -package ppx_deriving_yojson -package cohttp.lwt -o server_example.cmx server_example.ml # cached
-# Target: server_example.native, tags: { package(cohttp.lwt), package(ppx_deriving_yojson), package(str), package(yojson), dont_link_with, extension:native, file:server_example.native, link, native, ocaml, program, quiet }
-ocamlfind ocamlopt -linkpkg -package str -package yojson -package ppx_deriving_yojson -package cohttp.lwt tile.cmx boardType.cmx heuristic.cmx utils.cmx board.cmx minimax.cmx main.cmx server_example.cmx -o server_example.native # cached
+# Target: server_example.ml.depends, tags: { package(cohttp.lwt), package(netstring), package(ppx_deriving_yojson), package(str), package(yojson), extension:ml, file:server_example.ml, ocaml, ocamldep, quiet }
+ocamlfind ocamldep -package netstring -package str -package yojson -package ppx_deriving_yojson -package cohttp.lwt -modules server_example.ml > server_example.ml.depends # cached
+# Target: boardType.ml.depends, tags: { package(cohttp.lwt), package(netstring), package(ppx_deriving_yojson), package(str), package(yojson), extension:ml, file:boardType.ml, ocaml, ocamldep, quiet }
+ocamlfind ocamldep -package netstring -package str -package yojson -package ppx_deriving_yojson -package cohttp.lwt -modules boardType.ml > boardType.ml.depends # cached
+# Target: tile.ml.depends, tags: { package(cohttp.lwt), package(netstring), package(ppx_deriving_yojson), package(str), package(yojson), extension:ml, file:tile.ml, ocaml, ocamldep, quiet }
+ocamlfind ocamldep -package netstring -package str -package yojson -package ppx_deriving_yojson -package cohttp.lwt -modules tile.ml > tile.ml.depends
+# Target: tile.cmo, tags: { package(cohttp.lwt), package(netstring), package(ppx_deriving_yojson), package(str), package(yojson), byte, compile, extension:cmo, extension:ml, file:tile.cmo, file:tile.ml, implem, ocaml, quiet }
+ocamlfind ocamlc -c -package netstring -package str -package yojson -package ppx_deriving_yojson -package cohttp.lwt -o tile.cmo tile.ml
+# Target: boardType.cmo, tags: { package(cohttp.lwt), package(netstring), package(ppx_deriving_yojson), package(str), package(yojson), byte, compile, extension:cmo, extension:ml, file:boardType.cmo, file:boardType.ml, implem, ocaml, quiet }
+ocamlfind ocamlc -c -package netstring -package str -package yojson -package ppx_deriving_yojson -package cohttp.lwt -o boardType.cmo boardType.ml # cached
+# Target: heuristic.ml.depends, tags: { package(cohttp.lwt), package(netstring), package(ppx_deriving_yojson), package(str), package(yojson), extension:ml, file:heuristic.ml, ocaml, ocamldep, quiet }
+ocamlfind ocamldep -package netstring -package str -package yojson -package ppx_deriving_yojson -package cohttp.lwt -modules heuristic.ml > heuristic.ml.depends # cached
+# Target: heuristic.cmo, tags: { package(cohttp.lwt), package(netstring), package(ppx_deriving_yojson), package(str), package(yojson), byte, compile, extension:cmo, extension:ml, file:heuristic.cmo, file:heuristic.ml, implem, ocaml, quiet }
+ocamlfind ocamlc -c -package netstring -package str -package yojson -package ppx_deriving_yojson -package cohttp.lwt -o heuristic.cmo heuristic.ml # cached
+# Target: main.ml.depends, tags: { package(cohttp.lwt), package(netstring), package(ppx_deriving_yojson), package(str), package(yojson), extension:ml, file:main.ml, ocaml, ocamldep, quiet }
+ocamlfind ocamldep -package netstring -package str -package yojson -package ppx_deriving_yojson -package cohttp.lwt -modules main.ml > main.ml.depends # cached
+# Target: board.mli.depends, tags: { package(cohttp.lwt), package(netstring), package(ppx_deriving_yojson), package(str), package(yojson), extension:mli, file:board.mli, ocaml, ocamldep, quiet }
+ocamlfind ocamldep -package netstring -package str -package yojson -package ppx_deriving_yojson -package cohttp.lwt -modules board.mli > board.mli.depends # cached
+# Target: board.cmi, tags: { package(cohttp.lwt), package(netstring), package(ppx_deriving_yojson), package(str), package(yojson), byte, compile, extension:mli, file:board.mli, interf, ocaml, quiet }
+ocamlfind ocamlc -c -package netstring -package str -package yojson -package ppx_deriving_yojson -package cohttp.lwt -o board.cmi board.mli # cached
+# Target: minimax.ml.depends, tags: { package(cohttp.lwt), package(netstring), package(ppx_deriving_yojson), package(str), package(yojson), extension:ml, file:minimax.ml, ocaml, ocamldep, quiet }
+ocamlfind ocamldep -package netstring -package str -package yojson -package ppx_deriving_yojson -package cohttp.lwt -modules minimax.ml > minimax.ml.depends # cached
+# Target: minimax.cmo, tags: { package(cohttp.lwt), package(netstring), package(ppx_deriving_yojson), package(str), package(yojson), byte, compile, extension:cmo, extension:ml, file:minimax.cmo, file:minimax.ml, implem, ocaml, quiet }
+ocamlfind ocamlc -c -package netstring -package str -package yojson -package ppx_deriving_yojson -package cohttp.lwt -o minimax.cmo minimax.ml # cached
+# Target: main.cmo, tags: { package(cohttp.lwt), package(netstring), package(ppx_deriving_yojson), package(str), package(yojson), byte, compile, extension:cmo, extension:ml, file:main.cmo, file:main.ml, implem, ocaml, quiet }
+ocamlfind ocamlc -c -package netstring -package str -package yojson -package ppx_deriving_yojson -package cohttp.lwt -o main.cmo main.ml # cached
+# Target: server_example.cmo, tags: { package(cohttp.lwt), package(netstring), package(ppx_deriving_yojson), package(str), package(yojson), byte, compile, extension:cmo, extension:ml, file:server_example.cmo, file:server_example.ml, implem, ocaml, quiet }
+ocamlfind ocamlc -c -package netstring -package str -package yojson -package ppx_deriving_yojson -package cohttp.lwt -o server_example.cmo server_example.ml # cached
+# Target: tile.cmx, tags: { package(cohttp.lwt), package(netstring), package(ppx_deriving_yojson), package(str), package(yojson), compile, extension:cmx, extension:ml, file:tile.cmx, file:tile.ml, implem, native, ocaml, quiet }
+ocamlfind ocamlopt -c -package netstring -package str -package yojson -package ppx_deriving_yojson -package cohttp.lwt -o tile.cmx tile.ml
+# Target: boardType.cmx, tags: { package(cohttp.lwt), package(netstring), package(ppx_deriving_yojson), package(str), package(yojson), compile, extension:cmx, extension:ml, file:boardType.cmx, file:boardType.ml, implem, native, ocaml, quiet }
+ocamlfind ocamlopt -c -package netstring -package str -package yojson -package ppx_deriving_yojson -package cohttp.lwt -o boardType.cmx boardType.ml
+# Target: board.ml.depends, tags: { package(cohttp.lwt), package(netstring), package(ppx_deriving_yojson), package(str), package(yojson), extension:ml, file:board.ml, ocaml, ocamldep, quiet }
+ocamlfind ocamldep -package netstring -package str -package yojson -package ppx_deriving_yojson -package cohttp.lwt -modules board.ml > board.ml.depends # cached
+# Target: heuristic.cmx, tags: { package(cohttp.lwt), package(netstring), package(ppx_deriving_yojson), package(str), package(yojson), compile, extension:cmx, extension:ml, file:heuristic.cmx, file:heuristic.ml, implem, native, ocaml, quiet }
+ocamlfind ocamlopt -c -package netstring -package str -package yojson -package ppx_deriving_yojson -package cohttp.lwt -o heuristic.cmx heuristic.ml
+# Target: utils.ml.depends, tags: { package(cohttp.lwt), package(netstring), package(ppx_deriving_yojson), package(str), package(yojson), extension:ml, file:utils.ml, ocaml, ocamldep, quiet }
+ocamlfind ocamldep -package netstring -package str -package yojson -package ppx_deriving_yojson -package cohttp.lwt -modules utils.ml > utils.ml.depends # cached
+# Target: utils.cmo, tags: { package(cohttp.lwt), package(netstring), package(ppx_deriving_yojson), package(str), package(yojson), byte, compile, extension:cmo, extension:ml, file:utils.cmo, file:utils.ml, implem, ocaml, quiet }
+ocamlfind ocamlc -c -package netstring -package str -package yojson -package ppx_deriving_yojson -package cohttp.lwt -o utils.cmo utils.ml # cached
+# Target: utils.cmx, tags: { package(cohttp.lwt), package(netstring), package(ppx_deriving_yojson), package(str), package(yojson), compile, extension:cmx, extension:ml, file:utils.cmx, file:utils.ml, implem, native, ocaml, quiet }
+ocamlfind ocamlopt -c -package netstring -package str -package yojson -package ppx_deriving_yojson -package cohttp.lwt -o utils.cmx utils.ml # cached
+# Target: board.cmx, tags: { package(cohttp.lwt), package(netstring), package(ppx_deriving_yojson), package(str), package(yojson), compile, extension:cmx, extension:ml, file:board.cmx, file:board.ml, implem, native, ocaml, quiet }
+ocamlfind ocamlopt -c -package netstring -package str -package yojson -package ppx_deriving_yojson -package cohttp.lwt -o board.cmx board.ml
+# Target: minimax.cmx, tags: { package(cohttp.lwt), package(netstring), package(ppx_deriving_yojson), package(str), package(yojson), compile, extension:cmx, extension:ml, file:minimax.cmx, file:minimax.ml, implem, native, ocaml, quiet }
+ocamlfind ocamlopt -c -package netstring -package str -package yojson -package ppx_deriving_yojson -package cohttp.lwt -o minimax.cmx minimax.ml
+# Target: main.cmx, tags: { package(cohttp.lwt), package(netstring), package(ppx_deriving_yojson), package(str), package(yojson), compile, extension:cmx, extension:ml, file:main.cmx, file:main.ml, implem, native, ocaml, quiet }
+ocamlfind ocamlopt -c -package netstring -package str -package yojson -package ppx_deriving_yojson -package cohttp.lwt -o main.cmx main.ml
++ ocamlfind ocamlopt -c -package netstring -package str -package yojson -package ppx_deriving_yojson -package cohttp.lwt -o main.cmx main.ml
+File "main.ml", line 31, characters 1-58:
+Warning 10: this expression should have type unit.
+# Target: server_example.cmx, tags: { package(cohttp.lwt), package(netstring), package(ppx_deriving_yojson), package(str), package(yojson), compile, extension:cmx, extension:ml, file:server_example.cmx, file:server_example.ml, implem, native, ocaml, quiet }
+ocamlfind ocamlopt -c -package netstring -package str -package yojson -package ppx_deriving_yojson -package cohttp.lwt -o server_example.cmx server_example.ml
++ ocamlfind ocamlopt -c -package netstring -package str -package yojson -package ppx_deriving_yojson -package cohttp.lwt -o server_example.cmx server_example.ml
+File "server_example.ml", line 193, characters 3-37:
+Warning 10: this expression should have type unit.
+File "server_example.ml", line 52, characters 5-44:
+Warning 10: this expression should have type unit.
+File "server_example.ml", line 168, characters 6-10:
+Warning 26: unused variable meth.
+File "server_example.ml", line 169, characters 6-13:
+Warning 26: unused variable headers.
+File "_none_", line 1:
+Warning 58: no cmx file was found in path for module Netencoding, and its interface was not compiled with -opaque
+# Target: server_example.native, tags: { package(cohttp.lwt), package(netstring), package(ppx_deriving_yojson), package(str), package(yojson), dont_link_with, extension:native, file:server_example.native, link, native, ocaml, program, quiet }
+ocamlfind ocamlopt -linkpkg -package netstring -package str -package yojson -package ppx_deriving_yojson -package cohttp.lwt tile.cmx boardType.cmx heuristic.cmx utils.cmx board.cmx minimax.cmx main.cmx server_example.cmx -o server_example.native
 # Compilation successful.

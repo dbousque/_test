@@ -3,16 +3,37 @@
 <html>
 
 	<head>
-		<script type="text/javascript" src="script.js"></script>
 		<link rel="stylesheet" type="text/css" href="style.css">
+		<link rel="stylesheet" type="text/css" href="materialize.min.css">
+		<script type="text/javascript" src="jquery.min.js"></script>
+		<script type="text/javascript" src="materialize.min.js"></script>
+		<script type="text/javascript" src="ajax.js"></script>
+		<script type="text/javascript" src="script.js"></script>
 	</head>
 
-	<body onload="makeBoard(19)">
+	<body onload="startGame();">
 
-		<h1>Gomoku</h1>
+		<h3>Gomoku</h3>
+		<p id='authors'>dbousque & skirkovs</p>
 		
-		<div id="board" onmousemove="onMouseMoveEvent(event);"
+		<div id='board' onmousemove="onMouseMoveEvent(event);"
 			onmouseout="removeGhostTile(event);" onclick="onClickEvent(event);">
+		</div>
+		<div class='bottom-container'>
+			<p class="inline-block player-type">
+				<input type="checkbox" class="filled-in" id="player-type1" />
+				<label for="player-type1">Player 1 AI</label>
+			</p>
+			<p class="inline-block player-type">
+				<input type="checkbox" class="filled-in" id="player-type2" checked="checked" />
+				<label for="player-type2">Player 2 AI</label>
+			</p>
+			</br>
+			<p class="inline-block">Board dimensions</p>
+			<p class="slider-input range-field">
+				<input type="range" id="board-dimensions" min="5" max="19" value="19"/>
+			</p>
+			<div class="btn" onclick="startGame();">Start new game</div>
 		</div>
 
 	</body>

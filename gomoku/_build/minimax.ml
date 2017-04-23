@@ -1,5 +1,7 @@
 
 
+open BoardType
+
 let rec best_move_helper board ~for_red ~valid_next ~alpha ~beta ~heuristic ~depth =
 	let _keep_best_score acc (y, x, score) =
 		let better_score = if for_red then
@@ -80,11 +82,31 @@ let rec best_move_helper board ~for_red ~valid_next ~alpha ~beta ~heuristic ~dep
 	in
 	List.fold_left _keep_best_score None moves
 
-let best_move board ~for_red ~heuristic ~depth =
-	best_move_helper board
-		~for_red:for_red
-		~valid_next:None
-		~alpha:Heuristic.Loss
-		~beta:Heuristic.Win
-		~heuristic:heuristic
-		~depth:depth
+let best_move board ~for_red ~valid_next ~heuristic ~depth =
+	let at_least_one_tile = Array.exists (Array.exists ((<>) Tile.Empty)) board.tiles in
+	if at_least_one_tile then (
+		best_move_helper board
+			~for_red:for_red
+			~valid_next:valid_next
+			~alpha:Heuristic.Loss
+			~beta:Heuristic.Win
+			~heuristic:heuristic
+			~depth:depth
+	)
+	else (
+		Random.self_init () ;
+		let len = Array.length board.tiles / 2 in
+		let candidates = [
+			(len - 1, len - 1);
+			(len - 1, len);
+			(len - 1, len + 1);
+			(len, len - 1);
+			(len, len);
+			(len, len + 1);
+			(len + 1, len - 1);
+			(len + 1, len);
+			(len + 1, len + 1)
+		] in
+		let (y, x) = List.nth candidates (Random.int (List.length candidates)) in
+		Some (y, x, (Heuristic.Score 0, (false, [])))
+	)
