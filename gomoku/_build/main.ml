@@ -5,6 +5,7 @@ type game = {
 	red_turn:	bool ;
 	game_state:	string ;
 	heuristic:	(BoardType.t -> int -> int -> ((int * int) list) -> int) ;
+	depth:		int ;
 	valid_next:	(int * int) list option
 }
 
@@ -12,12 +13,13 @@ let rec print_moves = function
 	| [] -> print_endline "" ;
 	| (y, x) :: tl -> Printf.printf "(%d, %d)\n" y x ; print_moves tl
 
-let make_new_game dimensions heuristic =
+let make_new_game dimensions heuristic depth =
 	{
 		board = Board.make_board dimensions ;
 		red_turn = true ;
 		game_state = "playing" ;
 		heuristic = heuristic ;
+		depth = depth ;
 		valid_next = None
 	}
 
@@ -37,6 +39,7 @@ let make_actual_move game y x score forced_next valid_next =
 		red_turn = not game.red_turn ;
 		game_state = game_state ;
 		heuristic = game.heuristic ;
+		depth = game.depth ;
 		valid_next = valid_next
 	}
 
@@ -61,19 +64,23 @@ let make_move game (y, x) =
 	)
 
 let make_ai_move game =
+	let start_time = Unix.gettimeofday () in
 	let move = Minimax.best_move game.board
 		~for_red:game.red_turn
 		~valid_next:game.valid_next
 		~heuristic:game.heuristic
-		~depth:4
+		~depth:game.depth
 	in
+	let end_time = Unix.gettimeofday () in
 	match move with
-	| None -> (None, game)
-	| Some (y, x, (score, (forced_next, valid_next))) -> (
+	| None -> (None, game), 0
+	| Some (y, x, (_, (forced_next, valid_next))) -> (
+		let _, (score, _) = Board.can_place_tile game.board y x game.red_turn (Some game.heuristic) in
 		let new_game = make_actual_move game y x score forced_next valid_next in
-		(Some (y, x), new_game)
+		(Some (y, x), new_game), (int_of_float ((end_time -. start_time) *. 1000.0))
 	)
 
+(*
 let () =
 	let board = Board.make_board 19 in
 	ignore (Board.place_tile board 1 1 0 true) ;
@@ -103,3 +110,5 @@ let () =
 	| Some (y, x, score) -> Printf.printf "best move : %d %d\n" y x
 	(**let moves = Board.valid_moves board true in
 	print_moves moves**)
+
+*)

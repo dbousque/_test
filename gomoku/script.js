@@ -27,6 +27,7 @@ function makeBoard(n) {
 		addSquareHelper(board, n - 4, 3);
 		addSquareHelper(board, n - 4, n - 4);
 	}
+	board.nbMoves = 0;
 	board.dimensions = n;
 	board.whiteTurn = false;
 	board.ghostX = -1;
@@ -134,6 +135,21 @@ function mouseXYToBoardXY(y, x) {
 	return [y, x];
 }
 
+function updateInfo(board, info) {
+	console.log(info);
+	let nbMoves = document.getElementById('nb-moves');
+	let blackTaken = document.getElementById('black-taken');
+	let whiteTaken = document.getElementById('white-taken');
+	let timeTaken = document.getElementById('time-taken');
+	nbMoves.innerHTML = 'Moves : ' + board.nbMoves;
+	blackTaken.innerHTML = 'Black tiles taken : ' + info.black_taken;
+	whiteTaken.innerHTML = 'White tiles taken : ' + info.white_taken;
+	if (info.time_taken)
+		timeTaken.innerHTML =  'AI time taken : ' + info.time_taken + ' ms';
+	else
+		timeTaken.innerHTML = '';
+}
+
 function updateBoard(board, tiles) {
 	for (var y = 0; y < tiles.length; y++) {
 		var line = "";
@@ -177,20 +193,22 @@ function onClickEvent(event) {
 	getRessource('/usermove', req, function(resp) {
 		resp = JSON.parse(resp);
 		if (!resp.ok)
-			return alert('invalid move');
+			return Materialize.toast('Invalid move', 3000, 'rounded error-toast');
+		board.nbMoves++;
+		updateInfo(board, resp);
 		board.game_state = resp.game_state;
 		board.validNext = resp.valid_next;
 		removeGhostTile();
 		updateBoard(board, resp.tiles);
 		//placeTile(y, x, board.whiteTurn, false);
-		if (resp.game_state !== "playing")
-			alert("final gamestate : " + resp.game_state);
-		board.whiteTurn = !board.whiteTurn;
-		console.log("changing turn");
-		if (aiTurn(board)) {
-			console.log("ICCIIII");
-			makeAiTurn(board);
+		if (resp.game_state !== "playing") {
+			let str = resp.game_state === "win" ? "Black wins" : "White wins";
+			str = resp.game_state === "draw" ? "Draw" : str;
+			Materialize.toast(str, 5000, 'rounded ok-toast');
 		}
+		board.whiteTurn = !board.whiteTurn;
+		if (aiTurn(board))
+			makeAiTurn(board);
 	});
 }
 
@@ -221,12 +239,17 @@ function makeAiTurn(board) {
 		let move = JSON.parse(resp);
 		if (!move.ok)
 			return console.log("invalid ai move");
+		board.nbMoves++;
+		updateInfo(board, move);
 		board.game_state = move.game_state;
 		board.validNext = move.valid_next;
 		updateBoard(board, move.tiles);
 		//placeTile(move.y, move.x, board.whiteTurn, false);
-		if (move.game_state !== "playing")
-			alert("final gamestate : " + move.game_state);
+		if (move.game_state !== "playing") {
+			let str = resp.game_state === "win" ? "Black wins" : "White wins";
+			str = resp.game_state === "draw" ? "Draw" : str;
+			Materialize.toast(str, 5000, 'rounded ok-toast');
+		}
 		board.whiteTurn = !board.whiteTurn;
 		if (aiTurn(board))
 			makeAiTurn(board);

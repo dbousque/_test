@@ -15,6 +15,12 @@
 
 		<h3>Gomoku</h3>
 		<p id='authors'>dbousque & skirkovs</p>
+		<div class="game-info">
+			<span id="nb-moves"></span>
+			<span id="black-taken"></span>
+			<span id="white-taken"></span>
+			<span id="time-taken"></span>
+		</div>
 		
 		<div id='board' onmousemove="onMouseMoveEvent(event);"
 			onmouseout="removeGhostTile(event);" onclick="onClickEvent(event);">

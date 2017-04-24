@@ -76,6 +76,7 @@ let rec best_move_helper board ~for_red ~valid_next ~alpha ~beta ~heuristic ~dep
 					else 1
 				in
 				let moves = List.sort _better_score_sort moves in
+				let moves = if List.length moves > 20 then Utils.sublist moves 0 20 else moves in
 				_alpha_beta_get_moves moves alpha beta []
 			)
 		)

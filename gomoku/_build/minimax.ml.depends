@@ -1,1 +1,1 @@
-minimax.ml: Array Board BoardType Heuristic List Random Tile
+minimax.ml: Array Board BoardType Heuristic List Random Tile Utils

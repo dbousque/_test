@@ -22,19 +22,24 @@ type makeboard = {
 } [@@deriving yojson]
 
 type usermove_response = {
-	ok:			bool ;
-	valid_next:	int list list ;
-	game_state:	string ;
-	tiles:		int list list
+	ok:				bool ;
+	valid_next:		int list list ;
+	game_state:		string ;
+	tiles:			int list list ;
+	black_taken:	int ;
+	white_taken:	int
 } [@@deriving yojson]
 
 type aimove_response = {
 	ok:			bool ;
 	y:			int ;
 	x:			int ;
+	time_taken:	int ;
 	valid_next:	int list list ;
 	game_state:	string ;
-	tiles:		int list list
+	tiles:		int list list ;
+	black_taken:	int ;
+	white_taken:	int
 } [@@deriving yojson]
 
 let make_tiles_to_front game =
@@ -68,7 +73,7 @@ let create_new_board body games ident heuristic =
 		let dimensions = options.dimensions in
 		let dimensions = if dimensions < 5 then 5 else dimensions in
 		let dimensions = if dimensions > 19 then 19 else dimensions in
-		Hashtbl.add !games new_ident (Main.make_new_game dimensions heuristic) ;
+		Hashtbl.add !games new_ident (Main.make_new_game dimensions heuristic 4) ;
 		"ok" ^ (string_of_int new_ident)
 	)
 
@@ -83,7 +88,14 @@ let coords_list_to_front lst =
 	| Some lst -> _coords_list_to_front_helper lst []
 
 let make_usermove body games =
-	let error_resp = { ok = false ; valid_next = [] ; game_state = "" ; tiles = [] } in
+	let error_resp = {
+		ok = false ;
+		valid_next = [] ;
+		game_state = "" ;
+		tiles = [] ;
+		black_taken = 0 ;
+		white_taken = 0
+	} in
 	let move = body |> Yojson.Safe.from_string |> usermove_of_yojson in
 	let response = (
 		match move with
@@ -102,7 +114,9 @@ let make_usermove body games =
 						ok = ok ;
 						valid_next = valid_next ;
 						game_state = Main.(game.game_state) ;
-						tiles = tiles
+						tiles = tiles ;
+						black_taken = Main.(game.board.red_taken) ;
+						white_taken = Main.(game.board.blue_taken)
 					}
 				)
 			) with
@@ -112,7 +126,17 @@ let make_usermove body games =
 	response |> usermove_response_to_yojson |> Yojson.Safe.to_string
 
 let make_ai_move body games =
-	let error_resp = { ok = false ; y = 0 ; x = 0 ; valid_next = [] ; game_state = "" ; tiles = [] } in
+	let error_resp = {
+		ok = false ;
+		y = 0 ;
+		x = 0 ;
+		time_taken = 0 ;
+		valid_next = [] ;
+		game_state = "" ;
+		tiles = [] ;
+		black_taken = 0 ;
+		white_taken = 0
+	} in
 	let info = body |> Yojson.Safe.from_string |> aimove_of_yojson in
 	let response = (
 		match info with
@@ -122,7 +146,7 @@ let make_ai_move body games =
 				let game = Hashtbl.find !games info.game_id in
 				if Main.(game.game_state) <> "playing" then error_resp
 				else (
-					let move, game = Main.make_ai_move game in
+					let (move, game), time_taken = Main.make_ai_move game in
 					Hashtbl.remove !games info.game_id ;
 					Hashtbl.add !games info.game_id game ;
 					match move with
@@ -134,9 +158,12 @@ let make_ai_move body games =
 							ok = true ;
 							y = y ;
 							x = x ;
+							time_taken = time_taken ;
 							valid_next = valid_next ;
 							game_state = Main.(game.game_state) ;
-							tiles = tiles
+							tiles = tiles ;
+							black_taken = Main.(game.board.red_taken) ;
+							white_taken = Main.(game.board.blue_taken)
 						}
 					)
 				)

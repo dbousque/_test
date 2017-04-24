@@ -9,3 +9,17 @@ let list_init f i =
 		| i -> _list_init ((f (i - 1)) :: acc) (i - 1)
 	in
 	_list_init [] i
+
+let sublist lst _start _end =
+	let rec _sublist lst acc i =
+		match lst with
+		| [] -> acc
+		| fst :: rest -> (
+			if i >= _end then acc
+			else (
+				let acc = if i >= _start then fst :: acc else acc in
+				_sublist rest acc (i + 1)
+			)
+		)
+	in
+	List.rev (_sublist lst [] 0)
