@@ -31,6 +31,7 @@ function makeBoard(n) {
 	board.whiteTurn = false;
 	board.ghostX = -1;
 	board.ghostY = -1;
+	board.game_state = "playing";
 	board.tiles = [];
 	board.tilesElts = [];
 	for (var y = 0; y < n; y++) {
@@ -82,10 +83,8 @@ function removeGhostTile(event) {
 function placeTile(y, x, is_white, mouseHover) {
 	removeGhostTile();
 	let board = document.getElementById('board');
-	if (!mouseHover) {
+	if (!mouseHover)
 		board.tiles[y][x] = is_white ? 2 : 1;
-		board.whiteTurn = !board.whiteTurn;
-	}
 	else {
 		board.ghostX = x;
 		board.ghostY = y;
@@ -137,22 +136,33 @@ function mouseXYToBoardXY(y, x) {
 
 function updateBoard(board, tiles) {
 	for (var y = 0; y < tiles.length; y++) {
+		var line = "";
 		for (var x = 0; x < tiles[y].length; x++) {
+			line += (tiles[y][x] + " ");
 			if (board.tiles[y][x] != tiles[y][x]) {
-				if (tiles[y][x] === 0)
+				if (tiles[y][x] === 0) {
+					console.log("REMOVING")
 					board.tilesElts[y][x].parentNode.removeChild(board.tilesElts[y][x]);
-				else if (board.tiles[y][x] === 0)
+				}
+				else if (board.tiles[y][x] === 0) {
+					console.log("ici");
 					placeTile(y, x, tiles[y][x] === 2 ? false : true, false);
+				}
 				else
 					console.log("SHOULD NOT HAPPEN");
 				board.tiles[y][x] = tiles[y][x];
 			}
 		}
+		line += "     " + y;
+		console.log(line);
 	}
+	console.log("s");
 }
 
 function onClickEvent(event) {
 	let board = document.getElementById('board');
+	if (board.game_state !== "playing")
+		return ;
 	if (aiTurn(board))
 		return ;
 	event.preventDefault();
@@ -168,15 +178,19 @@ function onClickEvent(event) {
 		resp = JSON.parse(resp);
 		if (!resp.ok)
 			return alert('invalid move');
+		board.game_state = resp.game_state;
 		board.validNext = resp.valid_next;
 		removeGhostTile();
 		updateBoard(board, resp.tiles);
-		placeTile(y, x, board.whiteTurn, false);
+		//placeTile(y, x, board.whiteTurn, false);
 		if (resp.game_state !== "playing")
 			alert("final gamestate : " + resp.game_state);
 		board.whiteTurn = !board.whiteTurn;
-		if (aiTurn(board))
+		console.log("changing turn");
+		if (aiTurn(board)) {
+			console.log("ICCIIII");
 			makeAiTurn(board);
+		}
 	});
 }
 
@@ -187,6 +201,8 @@ function aiTurn(board) {
 function onMouseMoveEvent(event) {
 	event.preventDefault();
 	let board = document.getElementById('board');
+	if (board.game_state !== "playing")
+		return ;
 	let coords = mouseXYToBoardXY(event.y, event.x);
 	let y = coords[0];
 	let x = coords[1];
@@ -196,6 +212,8 @@ function onMouseMoveEvent(event) {
 }
 
 function makeAiTurn(board) {
+	if (board.game_state !== "playing")
+		return ;
 	let req = {
 		game_id: board.game_id
 	};
@@ -203,9 +221,10 @@ function makeAiTurn(board) {
 		let move = JSON.parse(resp);
 		if (!move.ok)
 			return console.log("invalid ai move");
+		board.game_state = move.game_state;
 		board.validNext = move.valid_next;
 		updateBoard(board, move.tiles);
-		placeTile(move.y, move.x, board.whiteTurn, false);
+		//placeTile(move.y, move.x, board.whiteTurn, false);
 		if (move.game_state !== "playing")
 			alert("final gamestate : " + move.game_state);
 		board.whiteTurn = !board.whiteTurn;

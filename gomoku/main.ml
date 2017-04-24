@@ -65,7 +65,7 @@ let make_ai_move game =
 		~for_red:game.red_turn
 		~valid_next:game.valid_next
 		~heuristic:game.heuristic
-		~depth:3
+		~depth:4
 	in
 	match move with
 	| None -> (None, game)
