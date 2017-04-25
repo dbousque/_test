@@ -106,6 +106,7 @@ let make_usermove body games =
 				if Main.(game.game_state) <> "playing" then error_resp
 				else (
 					let ok, game = Main.make_move game (move.y, move.x) in
+					Lwt_io.printf "ok : %B\n" ok ;
 					Hashtbl.remove !games move.game_id ;
 					Hashtbl.add !games move.game_id game ;
 					let valid_next = coords_list_to_front Main.(game.valid_next) in

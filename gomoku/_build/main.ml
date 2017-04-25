@@ -26,9 +26,9 @@ let make_new_game dimensions heuristic depth =
 let make_actual_move game y x score forced_next valid_next =
 	let heur_change, game_state = (
 		match score with
-		| Heuristic.Win -> 0, "win"
-		| Heuristic.Loss -> 0, "loss"
-		| Heuristic.Score sc -> sc, "playing"
+		| Heuristic.Win -> Lwt_io.printf "win\n" ; 0, "win"
+		| Heuristic.Loss -> Lwt_io.printf "loss\n" ; 0, "loss"
+		| Heuristic.Score sc -> Lwt_io.printf "playing %d\n" sc ; sc, "playing"
 	) in
 	Board.place_tile game.board y x heur_change game.red_turn ;
 	let _, next_moves = Board.valid_moves game.board ~is_red:(not game.red_turn) ~heuristic:game.heuristic in

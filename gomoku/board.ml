@@ -219,8 +219,10 @@ let can_place_tile board y x is_red heuristic =
 				| None -> (Heuristic.void_score, (false, []))
 			in
 			let score = (
-				if is_red && board.blue_taken >= 10 then (Heuristic.Win, (false, []))
-				else if not is_red && board.red_taken >= 10 then (Heuristic.Loss, (false, []))
+				if is_red && board.blue_taken + (List.length capt * 2) >= 10 then
+					(Heuristic.Win, (false, []))
+				else if not is_red && board.red_taken + (List.length capt * 2) >= 10 then
+					(Heuristic.Loss, (false, []))
 				else (
 					let alignements = find_five_alignements board y x in
 					if List.length alignements = 0 then score

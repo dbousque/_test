@@ -142,12 +142,17 @@ function updateInfo(board, info) {
 	let whiteTaken = document.getElementById('white-taken');
 	let timeTaken = document.getElementById('time-taken');
 	nbMoves.innerHTML = 'Moves : ' + board.nbMoves;
-	blackTaken.innerHTML = 'Black tiles taken : ' + info.black_taken;
-	whiteTaken.innerHTML = 'White tiles taken : ' + info.white_taken;
+	blackTaken.innerHTML = 'Black taken : ' + info.black_taken;
+	whiteTaken.innerHTML = 'White taken : ' + info.white_taken;
+	let time = info.time_taken + "";
+	if (time.length === 1)
+		time = "00" + time;
+	if (time.length === 2)
+		time = "0" + time;
 	if (info.time_taken)
-		timeTaken.innerHTML =  'AI time taken : ' + info.time_taken + ' ms';
+		timeTaken.innerHTML =  'AI time : ' + time + ' ms';
 	else
-		timeTaken.innerHTML = '';
+		timeTaken.innerHTML = 'AI time : --- ms';
 }
 
 function updateBoard(board, tiles) {
@@ -200,7 +205,6 @@ function onClickEvent(event) {
 		board.validNext = resp.valid_next;
 		removeGhostTile();
 		updateBoard(board, resp.tiles);
-		//placeTile(y, x, board.whiteTurn, false);
 		if (resp.game_state !== "playing") {
 			let str = resp.game_state === "win" ? "Black wins" : "White wins";
 			str = resp.game_state === "draw" ? "Draw" : str;
@@ -244,10 +248,9 @@ function makeAiTurn(board) {
 		board.game_state = move.game_state;
 		board.validNext = move.valid_next;
 		updateBoard(board, move.tiles);
-		//placeTile(move.y, move.x, board.whiteTurn, false);
 		if (move.game_state !== "playing") {
-			let str = resp.game_state === "win" ? "Black wins" : "White wins";
-			str = resp.game_state === "draw" ? "Draw" : str;
+			let str = move.game_state === "win" ? "Black wins" : "White wins";
+			str = move.game_state === "draw" ? "Draw" : str;
 			Materialize.toast(str, 5000, 'rounded ok-toast');
 		}
 		board.whiteTurn = !board.whiteTurn;

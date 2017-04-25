@@ -2,7 +2,7 @@
 
 open BoardType
 
-let rec best_move_helper board ~for_red ~valid_next ~alpha ~beta ~heuristic ~depth =
+let rec best_move_helper board ~for_red ~valid_next ~alpha ~beta ~heuristic ~depth ~keepn =
 	let _keep_best_score acc (y, x, score) =
 		let better_score = if for_red then
 				Heuristic.better_score_red
@@ -14,7 +14,9 @@ let rec best_move_helper board ~for_red ~valid_next ~alpha ~beta ~heuristic ~dep
 		| Some (y_acc, x_acc, score_acc) -> (
 			let sc, _ = score in
 			let sc_acc, _ = score_acc in
-			if better_score sc_acc sc = sc_acc then
+		 	let keep = better_score sc_acc sc = sc_acc in
+		 	let keep = if keep && sc_acc = sc && Random.int 3 = 0 then false else keep in
+			if keep then
 				acc
 			else
 				Some (y, x, score)
@@ -31,7 +33,7 @@ let rec best_move_helper board ~for_red ~valid_next ~alpha ~beta ~heuristic ~dep
 					best_move_func ~valid_next:(None)
 			in
 			let best_move_func = best_move_func ~alpha:alpha ~beta:beta in
-			let best = best_move_func ~heuristic:heuristic ~depth:(depth - 1) in
+			let best = best_move_func ~heuristic ~depth:(depth - 1) ~keep in
 			Board.cancel_move board y x sc for_red captures ;
 			match best with
 			| None -> (y, x, (Heuristic.Score 0, (false, [])))
@@ -76,14 +78,14 @@ let rec best_move_helper board ~for_red ~valid_next ~alpha ~beta ~heuristic ~dep
 					else 1
 				in
 				let moves = List.sort _better_score_sort moves in
-				let moves = if List.length moves > 20 then Utils.sublist moves 0 20 else moves in
+				let moves = if List.length moves > keepn then Utils.sublist moves 0 keepn else moves in
 				_alpha_beta_get_moves moves alpha beta []
 			)
 		)
 	in
 	List.fold_left _keep_best_score None moves
 
-let best_move board ~for_red ~valid_next ~heuristic ~depth =
+let best_move board ~for_red ~valid_next ~heuristic ~depth ~keepn =
 	let at_least_one_tile = Array.exists (Array.exists ((<>) Tile.Empty)) board.tiles in
 	if at_least_one_tile then (
 		best_move_helper board
@@ -93,6 +95,7 @@ let best_move board ~for_red ~valid_next ~heuristic ~depth =
 			~beta:Heuristic.Win
 			~heuristic:heuristic
 			~depth:depth
+			~keepn:keepn
 	)
 	else (
 		Random.self_init () ;
