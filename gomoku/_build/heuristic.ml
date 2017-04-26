@@ -34,6 +34,9 @@ let void_score = Loss
 let zero_heuristic board y x captures =
 	0
 
+let random_heuristic board y x captures =
+	(Random.int 20) - 10
+
 let simple_heuristic board y x captures =
 	let tile = board.tiles.(y).(x) in
 	let rec _count_on_line _y _x y_decal x_decal miss acc =

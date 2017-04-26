@@ -1,1 +1,1 @@
-main.ml: Board BoardType Heuristic List Lwt_io Minimax Printf Unix
+main.ml: Board BoardType Heuristic List Minimax Printf Unix

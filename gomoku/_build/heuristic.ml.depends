@@ -1,1 +1,1 @@
-heuristic.ml: Array BoardType List Tile
+heuristic.ml: Array BoardType List Random Tile

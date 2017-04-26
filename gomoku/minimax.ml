@@ -33,7 +33,7 @@ let rec best_move_helper board ~for_red ~valid_next ~alpha ~beta ~heuristic ~dep
 					best_move_func ~valid_next:(None)
 			in
 			let best_move_func = best_move_func ~alpha:alpha ~beta:beta in
-			let best = best_move_func ~heuristic ~depth:(depth - 1) ~keep in
+			let best = best_move_func ~heuristic ~depth:(depth - 1) ~keepn in
 			Board.cancel_move board y x sc for_red captures ;
 			match best with
 			| None -> (y, x, (Heuristic.Score 0, (false, [])))

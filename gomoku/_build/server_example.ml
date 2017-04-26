@@ -46,7 +46,7 @@ let make_tiles_to_front game =
 	let tiles = Array.map (Array.map Tile.to_int) Main.(game.board.tiles) in
 	Array.map Array.to_list tiles |> Array.to_list
 
-let create_new_board body games ident heuristic =
+let create_new_board body games ident (heuristic_red, depth_red, keepn_red) (heuristic_blue, depth_blue, keepn_blue) =
 	let options = body |> Yojson.Safe.from_string |> makeboard_of_yojson in
 	match options with
 	| Result.Error str -> str
@@ -73,7 +73,10 @@ let create_new_board body games ident heuristic =
 		let dimensions = options.dimensions in
 		let dimensions = if dimensions < 5 then 5 else dimensions in
 		let dimensions = if dimensions > 19 then 19 else dimensions in
-		Hashtbl.add !games new_ident (Main.make_new_game dimensions heuristic 4) ;
+		Hashtbl.add !games new_ident
+			(Main.make_new_game dimensions
+				(heuristic_red, depth_red, keepn_red)
+				(heuristic_blue, depth_blue, keepn_blue) ) ;
 		"ok" ^ (string_of_int new_ident)
 	)
 
@@ -191,6 +194,7 @@ let server =
 	let heuristic = Heuristic.simple_heuristic in
 	let games = ref (Hashtbl.create 10) in
 	let ident = ref 0 in
+	let ai_options = (heuristic, 4, 30) in
 	let callback _conn req body =
 		let uri = req |> Request.uri |> Uri.to_string in
 		let meth = req |> Request.meth |> Code.string_of_method in
@@ -202,7 +206,7 @@ let server =
 		match address with
 		| "makeboard" -> (
 			Cohttp_lwt_body.to_string body >>= fun (body) ->
-				let res_str = create_new_board args games ident heuristic in
+				let res_str = create_new_board args games ident ai_options ai_options in
 				Server.respond_string ~status:`OK ~body:res_str ()
 		)
 		| "usermove" -> (
