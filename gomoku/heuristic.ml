@@ -37,7 +37,13 @@ let zero_heuristic board y x captures =
 let random_heuristic board y x captures =
 	(Random.int 20) - 10
 
+let simple_heuristic_time_var = ref 0.0
+
+let simple_heuristic_time () =
+	!simple_heuristic_time_var
+
 let simple_heuristic board y x captures =
+	let start = Unix.gettimeofday () in
 	let tile = board.tiles.(y).(x) in
 	let rec _count_on_line _y _x y_decal x_decal miss acc =
 		let _y = _y + y_decal in
@@ -67,4 +73,5 @@ let simple_heuristic board y x captures =
 	in
 	let score = List.fold_left _acc_helper 0 dirs in
 	let score = score + (List.length captures * 4) in
+	simple_heuristic_time_var := !simple_heuristic_time_var +. (Unix.gettimeofday () -. start) ;
 	if tile = Tile.Red then score else (- score)

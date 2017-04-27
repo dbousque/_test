@@ -1,7 +1,7 @@
 
 
 let test_match options1 options2 =
-	let game = Main.make_new_game 6 options1 options2 in
+	let game = Main.make_new_game 19 options1 options2 in
 	let rec _play_game game time_red time_blue =
 		let red_turn = Main.(game.red_turn) in
 		let (_, game), time_taken = Main.make_ai_move game in
@@ -68,7 +68,14 @@ let make_test ~nb_games options1 options2 =
 	Printf.printf "1 won : %.2f%%\n2 won : %.2f%%\ndraws : %.2f%%\nnb_moves : %d\n1 av. time : %d ms\n2 av. time : %d ms\n1 4/5th time : %d ms\n2 4/5th time : %d ms \n" wins losses draws nb_moves av_time_red av_time_blue top_time_red top_time_blue
 
 let () =
-	let options1 = (Heuristic.simple_heuristic, 5, 30) in
-	let options2 = (Heuristic.simple_heuristic, 5, 30) in
+	let options1 = (Heuristic.simple_heuristic, 4, 30) in
+	let options2 = (Heuristic.simple_heuristic, 4, 30) in
 	let nb_games = 5 in
-	make_test ~nb_games options1 options2
+	make_test ~nb_games options1 options2 ;
+	let valid_moves_time = Board.valid_moves_time () in
+	let can_place_tile_time = Board.can_place_tile_time () in
+	let around_placed_tiles_time = Board.around_placed_tiles_time () in
+	let make_rows_time = Board.make_rows_time () in
+	let simple_heuristic_time = Heuristic.simple_heuristic_time () in
+	let place_tile_time = Board.place_tile_time () in
+	Printf.printf "valid_moves         : %.2f s\ncan_place_tile      : %.2f s\naround_placed_tiles : %.2f s\nmake_rows           : %.2f s\nsimple_heuristic    : %.2f s\nplace_tile_time     : %.2f s\n" valid_moves_time can_place_tile_time around_placed_tiles_time make_rows_time simple_heuristic_time place_tile_time

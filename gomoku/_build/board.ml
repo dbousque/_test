@@ -22,7 +22,10 @@ let print_board ?(min=false) board =
 	in
 	Array.iter (_print_row) board.tiles
 
+let place_tile_time_var = ref 0.0
+
 let place_tile_raw board y x is_red =
+	let start = Unix.gettimeofday () in
 	let tile = if is_red then Tile.Red else Tile.Blue in
 	let other_tile = if is_red then Tile.Blue else Tile.Red in
 	Array.set board.(y) x tile ;
@@ -40,7 +43,12 @@ let place_tile_raw board y x is_red =
 			acc
 	in
 	let decals_list = [(0, 1); (0, (-1)); (1, 0); ((-1), 0); (1, 1); ((-1), (-1)); ((-1), 1); (1, (-1))] in
-	List.fold_left (fun acc (y_decal, x_decal) -> _make_capture y_decal x_decal acc) [] decals_list
+	let res = List.fold_left (fun acc (y_decal, x_decal) -> _make_capture y_decal x_decal acc) [] decals_list in
+	place_tile_time_var := !place_tile_time_var +. (Unix.gettimeofday () -. start) ;
+	res
+
+let place_tile_time () =
+	!place_tile_time_var
 
 let place_tile board y x heur_value_change is_red =
 	let capt = place_tile_raw board.tiles y x is_red in
@@ -273,7 +281,10 @@ let heuristic_of_moves board ~is_red ~moves ~heuristic =
 	in
 	List.fold_left _heuristic_of_move (None, []) moves
 
-let around_placed_tiles board y x =
+let around_placed_tiles_time_var = ref 0.0
+
+(*let around_placed_tiles board y x =
+	let start = Unix.gettimeofday () in
 	let board_len = Array.length board.tiles in
 	let _is_not_empty _y _x =
 		board.tiles.(_y).(_x) <> Tile.Empty
@@ -294,48 +305,102 @@ let around_placed_tiles board y x =
 		|| _check_tile (- decal_y) (- decal_x)
 		(*|| _check_tile (- (decal_y * 2)) (- (decal_x * 2)) *)
 	in
-	if _is_not_empty y x then true
-	else if _check_dir 1 0 then true
-	else if _check_dir 0 1 then true
-	else if _check_dir 1 1 then true
-	else if _check_dir (-1) 1 then true
-	else false
+	let res = (
+		if _is_not_empty y x then true
+		else if _check_dir 1 0 then true
+		else if _check_dir 0 1 then true
+		else if _check_dir 1 1 then true
+		else if _check_dir (-1) 1 then true
+		else false
+	) in
+	around_placed_tiles_time_var := !around_placed_tiles_time_var +. (Unix.gettimeofday () -. start) ;
+	res *)
+
+let valid_moves_time_var = ref 0.0
+let can_place_tile_time_var = ref 0.0
+let make_rows_time_var = ref 0.0
+
+module IntPairs =
+struct
+	type t = int * int
+	let compare (x0, y0) (x1, y1) =
+		match Pervasives.compare x0 x1 with
+		| 0 -> Pervasives.compare y0 y1
+		| c -> c
+end
+
+module PairsSet = Set.Make (IntPairs)
 
 let rec valid_moves_heuristic_helper board ~is_red ~heuristic ~only_around_placed_tiles =
-	let rec _make_columns (fatal_score, acc) y upto = function
-		| i when i = upto -> (fatal_score, acc)
+	let rec _merge_scores (y, x) (fatal_score, acc) =
+		let start_can_place = Unix.gettimeofday () in
+		let ok, score = can_place_tile board y x is_red heuristic in
+		can_place_tile_time_var := !can_place_tile_time_var +. (Unix.gettimeofday () -. start_can_place) ;
+		let fatal_score = if ok then
+				update_fatal_score is_red fatal_score score y x
+			else
+				fatal_score
+		in
+		let acc = if ok then (y, x, score) :: acc else acc in
+		(fatal_score, acc)
+	in
+	let _add_if_inside y x set =
+		if (y >= 0 && y < Array.length board.tiles
+			&& x >= 0 && x < Array.length board.tiles) then (
+			PairsSet.add (y, x) set
+		)
+		else
+			set
+	in
+	let rec _make_columns_candidates set y upto = function
+		| i when i = upto -> set
 		| i -> (
-			let continue =
-				if not only_around_placed_tiles then true
-				else if around_placed_tiles board y i then true
-				else false
-			in
-			let fatal_score, acc =
-				if continue then (
-					let ok, score = can_place_tile board y i is_red heuristic in
-					let fatal_score = if ok then
-							update_fatal_score is_red fatal_score score y i
-						else
-							fatal_score
-					in
-					let acc = if ok then (y, i, score) :: acc else acc in
-					(fatal_score, acc)
+			let set = (
+				if board.tiles.(y).(i) <> Tile.Empty then (
+					let set = _add_if_inside (y + 1) (i - 1) set in
+					let set = _add_if_inside (y - 1) (i - 1) set in
+					let set = _add_if_inside (y + 1) i set in
+					let set = _add_if_inside (y - 1) i set in
+					let set = _add_if_inside (y + 1) (i + 1) set in
+					let set = _add_if_inside (y - 1) (i + 1) set in
+					let set = _add_if_inside y (i - 1) set in
+					let set = _add_if_inside y (i + 1) set in
+					set
 				)
-				else
-					(fatal_score, acc)
-			in
-			_make_columns (fatal_score, acc) y upto (i + 1)
+				else set
+			) in
+			_make_columns_candidates set y upto (i + 1)
 		)
 	in
-	let rec _make_rows acc upto = function
-		| i when i = upto -> acc
-		| i -> _make_rows (_make_columns acc i upto 0) upto (i + 1)
-	in 
-	let fatal_score, moves = _make_rows (None, []) (Array.length board.tiles) 0 in
-	if List.length moves = 0 && only_around_placed_tiles then
+	let rec _make_rows_candidates set upto = function
+		| i when i = upto -> set
+		| i -> _make_rows_candidates (_make_columns_candidates set i upto 0) upto (i + 1)
+	in
+	let start = Unix.gettimeofday () in
+	let moves = _make_rows_candidates PairsSet.empty (Array.length board.tiles) 0 in
+	make_rows_time_var := !make_rows_time_var +. (Unix.gettimeofday () -. start) ;
+	let fatal_score, moves = PairsSet.fold _merge_scores moves (None, []) in
+	(*let fatal_score, moves = _merge_scores (None, []) moves in *)
+	if List.length moves = 0 && only_around_placed_tiles then (
+		valid_moves_time_var := !valid_moves_time_var +. (Unix.gettimeofday () -. start) ;
 		valid_moves_heuristic_helper board ~is_red ~heuristic ~only_around_placed_tiles:false
-	else
+	)
+	else (
+		valid_moves_time_var := !valid_moves_time_var +. (Unix.gettimeofday () -. start) ;
 		fatal_score, moves
+	)
+
+let valid_moves_time () =
+	!valid_moves_time_var
+
+let can_place_tile_time () =
+	!can_place_tile_time_var
+
+let around_placed_tiles_time () =
+	!around_placed_tiles_time_var
+
+let make_rows_time () =
+	!make_rows_time_var
 
 let valid_moves board ~is_red ~heuristic =
 	valid_moves_heuristic_helper board ~is_red:is_red ~heuristic:(Some heuristic) ~only_around_placed_tiles:true

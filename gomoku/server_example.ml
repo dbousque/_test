@@ -228,4 +228,4 @@ let server =
 	in
 	Server.create ~mode:(`TCP (`Port 8000)) (Server.make ~callback ())
 
-(* let () = ignore (Lwt_main.run server) *)
+let () = ignore (Lwt_main.run server)
