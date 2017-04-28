@@ -70,7 +70,7 @@ let make_test ~nb_games options1 options2 =
 let () =
 	let options1 = (Heuristic.simple_heuristic, 4, 30) in
 	let options2 = (Heuristic.simple_heuristic, 4, 30) in
-	let nb_games = 5 in
+	let nb_games = 50 in
 	make_test ~nb_games options1 options2 ;
 	let valid_moves_time = Board.valid_moves_time () in
 	let can_place_tile_time = Board.can_place_tile_time () in
@@ -78,4 +78,8 @@ let () =
 	let make_rows_time = Board.make_rows_time () in
 	let simple_heuristic_time = Heuristic.simple_heuristic_time () in
 	let place_tile_time = Board.place_tile_time () in
-	Printf.printf "valid_moves         : %.2f s\ncan_place_tile      : %.2f s\naround_placed_tiles : %.2f s\nmake_rows           : %.2f s\nsimple_heuristic    : %.2f s\nplace_tile_time     : %.2f s\n" valid_moves_time can_place_tile_time around_placed_tiles_time make_rows_time simple_heuristic_time place_tile_time
+	let free_threes_time = Board.free_threes_time () in
+	Printf.printf "valid_moves         : %.2f s\ncan_place_tile      : %.2f s\naround_placed_tiles : %.2f s\nmake_rows           : %.2f s\nsimple_heuristic    : %.2f s\nplace_tile          : %.2f s\nfree_threes         : %.2f s\n" valid_moves_time can_place_tile_time around_placed_tiles_time make_rows_time simple_heuristic_time place_tile_time free_threes_time
+
+(*let () =
+	Board.test_free_threes () *)
