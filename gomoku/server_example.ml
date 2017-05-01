@@ -191,7 +191,7 @@ let make_args address =
 	)
 
 let server =
-	let heuristic = Heuristic.standard_heuristic in
+	let heuristic = Heuristic.standard_heuristic2 in
 	let games = ref (Hashtbl.create 10) in
 	let ident = ref 0 in
 	let ai_options = (heuristic, 4, 30) in

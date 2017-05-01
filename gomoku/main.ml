@@ -5,10 +5,10 @@ type game = {
 	red_turn:		bool ;
 	game_state:		string ;
 	nb_moves:		int ;
-	heuristic_red:	(BoardType.t -> int -> int -> ((int * int) list) -> int) ;
+	heuristic_red:	(BoardType.t -> int -> int -> ((int * int) list) -> ((int * int) list) -> int) ;
 	depth_red:		int ;
 	keepn_red:		int ;
-	heuristic_blue:	(BoardType.t -> int -> int -> ((int * int) list) -> int) ;
+	heuristic_blue:	(BoardType.t -> int -> int -> ((int * int) list) -> ((int * int) list) -> int) ;
 	depth_blue:		int ;
 	keepn_blue:		int ;
 	valid_next:		(int * int) list option

@@ -31,10 +31,10 @@ let better_score_blue score1 score2 =
 
 let void_score = Loss
 
-let zero_heuristic board y x captures =
+let zero_heuristic board y x captures valid_next =
 	0
 
-let random_heuristic board y x captures =
+let random_heuristic board y x captures valid_next =
 	(Random.int 20) - 10
 
 let simple_heuristic_time_var = ref 0.0
@@ -42,7 +42,7 @@ let simple_heuristic_time_var = ref 0.0
 let simple_heuristic_time () =
 	!simple_heuristic_time_var
 
-let simple_heuristic board y x captures =
+let simple_heuristic board y x captures valid_next =
 	(*let start = Unix.gettimeofday () in *)
 	let tile = board.tiles.(y).(x) in
 	let rec _count_on_line _y _x y_decal x_decal miss acc =
@@ -76,7 +76,7 @@ let simple_heuristic board y x captures =
 	(*simple_heuristic_time_var := !simple_heuristic_time_var +. (Unix.gettimeofday () -. start) ; *)
 	if tile = Tile.Red then score else (- score)
 
-let standard_heuristic board y x captures =
+let common_standard board y x captures valid_next ~second_version =
 	let tile = board.tiles.(y).(x) in
 	let other_tile = if tile = Tile.Red then Tile.Blue else Tile.Red in
 	let board_len = Array.length board.tiles in
@@ -191,7 +191,7 @@ let standard_heuristic board y x captures =
 		let threes = FreeThrees.free_threes board.tiles y x tile in
 		List.length threes * 3
 	in
-	let _makes_free_fours () =
+	let _makes_free_fours _y _x tile =
 		let _makes_free_fours_dir y_decal x_decal =
 			let rec __makes_free_fours _y _x _y_decal _x_decal acc =
 				let _y, _x = _y + _y_decal, _x + _x_decal in
@@ -205,20 +205,59 @@ let standard_heuristic board y x captures =
 					)
 				)
 			in
-			let fst, empty1 = __makes_free_fours y x y_decal x_decal 0 in
-			let snd, empty2 = __makes_free_fours y x (- y_decal) (- x_decal) 0 in
-			let empty = empty1 || empty2 in
-			if fst + snd = 3 && empty then 1000 else 0
+			if board.tiles.(_y).(_x) <> tile then 0
+			else (
+				let fst, empty1 = __makes_free_fours y x y_decal x_decal 0 in
+				let snd, empty2 = __makes_free_fours y x (- y_decal) (- x_decal) 0 in
+				let empty = empty1 && empty2 in
+				if fst + snd >= 3 && empty then 1000 else 0
+			)
 		in
 		_makes_free_fours_dir 0 1 +
 		_makes_free_fours_dir 1 0 +
 		_makes_free_fours_dir 1 1 +
 		_makes_free_fours_dir (-1) 1
 	in
+	let _stops_other_free_threes () =
+		let _stops_other_free_threes_dir y_decal x_decal =
+			let _y, _x = y + y_decal, x + x_decal in
+			if not (_valid_coords _y _x) || board.tiles.(_y).(_x) <> other_tile then 0
+			else (
+				let threes = FreeThrees.free_threes board.tiles _y _x other_tile in
+				List.length threes * 3
+			)
+		in
+		let _stops_other_free_threes_dir_not_made y_decal x_decal =
+			let _y, _x = y + y_decal, x + x_decal in
+			if not (_valid_coords _y _x) || board.tiles.(_y).(_x) <> other_tile then 0
+			else (
+				let threes = FreeThrees.free_threes board.tiles _y _x other_tile in
+				List.length threes * 1
+			)
+		in
+		board.tiles.(y).(x) <- Tile.Empty ;
+		let res = _sum_for_all_dirs _stops_other_free_threes_dir in
+		board.tiles.(y).(x) <- other_tile ;
+		let res = res + _sum_for_all_dirs _stops_other_free_threes_dir_not_made in
+		board.tiles.(y).(x) <- tile ;
+		res
+	in
+	let _stops_other_free_fours () =
+		0
+	in
 	let score = (List.length captures * 4) in
 	let score = score + _free_to_become_five () in
 	let score = score + _score_alignements () in
 	let score = score + _makes_other_capture_possible () in
 	let score = score + _makes_free_threes () in
-	let score = score + _makes_free_fours () in
+	let score = score + _makes_free_fours y x tile in
+	(*let score = if second_version then score + _stops_other_free_threes () else score in*)
+	let score = if second_version then score + _stops_other_free_fours () else score in
+	let score = if second_version then score + (if List.length valid_next > 0 then 1000 else 0) else score in
 	if tile = Tile.Red then score else (- score)
+
+let standard_heuristic board y x captures valid_next =
+	common_standard board y x captures valid_next ~second_version:false
+
+let standard_heuristic2 board y x captures valid_next =
+	common_standard board y x captures valid_next ~second_version:true

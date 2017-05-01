@@ -69,8 +69,9 @@ let make_test ~nb_games options1 options2 =
 
 let () =
 	let options1 = (Heuristic.standard_heuristic, 4, 30) in
-	let options2 = (Heuristic.simple_heuristic, 4, 30) in
-	let nb_games = 100 in
+	(*let options2 = (Heuristic.simple_heuristic, 4, 30) in *)
+	let options2 = (Heuristic.standard_heuristic2, 4, 30) in
+	let nb_games = 50 in
 	make_test ~nb_games options1 options2 ;
 	let valid_moves_time = Board.valid_moves_time () in
 	let can_place_tile_time = Board.can_place_tile_time () in

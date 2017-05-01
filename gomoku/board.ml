@@ -118,10 +118,9 @@ let find_five_alignements board y x =
 let can_break_alignements_or_take_ten board y x is_red =
 	let tile = if is_red then Tile.Red else Tile.Blue in
 	let other_tile = if is_red then Tile.Blue else Tile.Red in
-	let could_take_ten =
-		if tile = Tile.Red && board.red_taken < 8 then false
-		else if tile = Tile.Blue && board.blue_taken < 8 then false
-		else true
+	let nb_taken =
+		if tile = Tile.Red then board.red_taken
+		else board.blue_taken
 	in
 	let _breaking_alignements () =
 		let new_alignements = find_five_alignements board y x in
@@ -156,7 +155,7 @@ let can_break_alignements_or_take_ten board y x is_red =
 			let no_threes = List.length threes < 2 || List.length capt > 0 in
 			if not no_threes then (cancel_move_raw board _y _x (not is_red) capt ; false)
 			else (
-				if could_take_ten && List.length capt > 0 then (cancel_move_raw board _y _x (not is_red) capt ; true)
+				if nb_taken + List.length capt >= 10 then (cancel_move_raw board _y _x (not is_red) capt ; true)
 				else if _breaking_alignements () then (cancel_move_raw board _y _x (not is_red) capt ; true)
 				else (cancel_move_raw board _y _x (not is_red) capt ; false)
 			)
@@ -180,6 +179,11 @@ let can_place_tile board y x is_red heuristic =
 		board.tiles.(y).(x) = Tile.Empty
 	in
 	let _no_double_threes () =
+		let _apply_heuristic capt valid_moves =
+			match heuristic with
+			| Some heur -> (Heuristic.Score (heur board y x capt valid_moves), (false, []))
+			| None -> (Heuristic.void_score, (false, []))
+		in
 		let _in_list lst elt =
 			List.exists ((=) elt) lst
 		in
@@ -193,10 +197,6 @@ let can_place_tile board y x is_red heuristic =
 		let no_threes = List.length threes < 2 in
 		let ok = no_threes || List.length capt > 0 in
 		let score = if not ok then (Heuristic.void_score, (false, [])) else (
-			let score = match heuristic with
-				| Some heur -> (Heuristic.Score (heur board y x capt), (false, []))
-				| None -> (Heuristic.void_score, (false, []))
-			in
 			let score = (
 				if is_red && board.blue_taken + (List.length capt * 2) >= 10 then
 					(Heuristic.Win, (false, []))
@@ -204,10 +204,11 @@ let can_place_tile board y x is_red heuristic =
 					(Heuristic.Loss, (false, []))
 				else (
 					let alignements = find_five_alignements board y x in
-					if List.length alignements = 0 then score
+					if List.length alignements = 0 then _apply_heuristic capt []
 					else (
 						let valid_moves = can_break_alignements_or_take_ten board y x is_red in
 						if List.length valid_moves > 0 then (
+							let score = _apply_heuristic capt valid_moves in
 							match score with
 							| score, _ -> (score, (true, valid_moves))
 						)
