@@ -6,3 +6,5 @@ type t = {
 	mutable blue_taken:		int ;
 	mutable red_taken:		int
 }
+
+type dir = Horizontal | Vertical | DiagUp | DiagDown

@@ -1,1 +1,1 @@
-board.ml: Array BoardType Heuristic List Pervasives Printf Set Tile Utils
+board.ml: Array BoardType FreeThrees Heuristic List Pervasives Set Tile Utils

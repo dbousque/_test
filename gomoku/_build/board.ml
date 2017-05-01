@@ -4,8 +4,6 @@ open BoardType
 
 type captures = (int * int) list
 
-type dir = Horizontal | Vertical | DiagUp | DiagDown
-
 let make_board n =
 	{
 		tiles = Array.init n (fun i -> Array.make n Tile.Empty) ;
@@ -92,177 +90,6 @@ let rec print_dirs = function
 	| [] -> print_endline ""
 	| h::tl -> print_dir h ; print_string " " ; print_dirs tl
 
-let free_threes_time_var = ref 0.0
-
-let free_threes_time () =
-	!free_threes_time_var
-
-(*let free_threes board y x tile =
-	let _check_four_plus_two_free _y _x y_decal x_decal =
-		_y - y_decal >= 0 && _y - y_decal < Array.length board &&
-		_x - x_decal >= 0 && _x - x_decal < Array.length board &&
-		board.(_y).(_x) = tile &&
-		_y + (y_decal * 4) >= 0 && _y + (y_decal * 4) < Array.length board &&
-		_x + (x_decal * 4) >= 0 && _x + (x_decal * 4) < Array.length board &&
-		board.(_y - y_decal).(_x - x_decal) = Tile.Empty &&
-		board.(_y + (y_decal * 4)).(_x + (x_decal * 4)) = Tile.Empty &&
-		(
-			(
-				board.(_y + (y_decal * 1)).(_x + (x_decal * 1)) = tile &&
-				board.(_y + (y_decal * 2)).(_x + (x_decal * 2)) = tile &&
-				board.(_y + (y_decal * 3)).(_x + (x_decal * 3)) = Tile.Empty
-			) ||
-			(
-				board.(_y + (y_decal * 1)).(_x + (x_decal * 1)) = Tile.Empty &&
-				board.(_y + (y_decal * 2)).(_x + (x_decal * 2)) = tile &&
-				board.(_y + (y_decal * 3)).(_x + (x_decal * 3)) = tile
-			) ||
-			(
-				board.(_y + (y_decal * 1)).(_x + (x_decal * 1)) = tile &&
-				board.(_y + (y_decal * 2)).(_x + (x_decal * 2)) = Tile.Empty &&
-				board.(_y + (y_decal * 3)).(_x + (x_decal * 3)) = tile
-			)
-		)
-	in
-	let _try_positions y_decal x_decal =
-		List.exists (fun i -> _check_four_plus_two_free (y - (i * y_decal)) (x - (i * x_decal)) y_decal x_decal) [0; 1; 2; 3]
-	in
-	let _add_to_acc acc (y_decal, x_decal, dir) =
-		if _try_positions y_decal x_decal then
-			dir :: acc 
-		else
-			acc
-	in
-	let start = Unix.gettimeofday () in
-	let dirs = [(0, 1, Horizontal); (1, 0, Vertical); (1, 1, DiagDown); ((-1), 1, DiagUp)] in
-	let res = List.fold_left _add_to_acc [] dirs in
-	free_threes_time_var := !free_threes_time_var +. (Unix.gettimeofday () -. start) ;
-	res *)
-
-let free_threes board y x tile =
-	let board_len = Array.length board in
-	let _invalid_coords y x =
-		y < 0 || y >= board_len || x < 0 || x >= board_len
-	in
-	let _valid_coords y x =
-		not (_invalid_coords y x)
-	in
-	let _check_dir y_decal x_decal =
-		if _invalid_coords (y - y_decal) (x - x_decal) then false
-		else if _invalid_coords (y + y_decal) (x + x_decal) then false
-		else if board.(y - y_decal).(x - x_decal) = Tile.Empty then (
-			if board.(y + y_decal).(x + x_decal) = Tile.Empty then (
-				if
-					_valid_coords (y + (y_decal * 4)) (x + (x_decal * 4)) &&
-					board.(y + (y_decal * 2)).(x + (x_decal * 2)) = tile &&
-					board.(y + (y_decal * 3)).(x + (x_decal * 3)) = tile &&
-					board.(y + (y_decal * 4)).(x + (x_decal * 4)) = Tile.Empty
-					then true
-				else if
-					_valid_coords (y - (y_decal * 4)) (x - (x_decal * 4)) &&
-					board.(y - (y_decal * 2)).(x - (x_decal * 2)) = tile &&
-					board.(y - (y_decal * 3)).(x - (x_decal * 3)) = tile &&
-					board.(y - (y_decal * 4)).(x - (x_decal * 4)) = Tile.Empty
-					then true
-				else false
-			)
-			else if board.(y + y_decal).(x + x_decal) = tile then (
-				if
-					_valid_coords (y + (y_decal * 3)) (x + (x_decal * 3)) &&
-					board.(y + (y_decal * 2)).(x + (x_decal * 2)) = tile &&
-					board.(y + (y_decal * 3)).(x + (x_decal * 3)) = Tile.Empty &&
-					(
-						(
-							_valid_coords (y - (y_decal * 2)) (x - (x_decal * 2)) &&
-							board.(y - (y_decal * 2)).(x - (x_decal * 2)) = Tile.Empty
-						) ||
-						(
-							_valid_coords (y + (y_decal * 4)) (x + (x_decal * 4)) &&
-							board.(y + (y_decal * 4)).(x + (x_decal * 4)) = Tile.Empty
-						)
-					)
-					then true
-				else if
-					_valid_coords (y + (y_decal * 2)) (x + (x_decal * 2)) &&
-					_valid_coords (y - (y_decal * 3)) (x - (x_decal * 3)) &&
-					board.(y + (y_decal * 2)).(x + (x_decal * 2)) = Tile.Empty &&
-					board.(y - (y_decal * 2)).(x - (x_decal * 2)) = tile &&
-					board.(y - (y_decal * 3)).(x - (x_decal * 3)) = Tile.Empty
-					then true
-				else if
-					_valid_coords (y + (y_decal * 4)) (x + (x_decal * 4)) &&
-					board.(y + (y_decal * 2)).(x + (x_decal * 2)) = Tile.Empty &&
-					board.(y + (y_decal * 3)).(x + (x_decal * 3)) = tile &&
-					board.(y + (y_decal * 4)).(x + (x_decal * 4)) = Tile.Empty
-					then true
-				else false
-			)
-			else false
-		)
-		else if board.(y - y_decal).(x - x_decal) = tile then (
-			if board.(y + y_decal).(x + x_decal) = Tile.Empty then (
-				if
-					_valid_coords (y + (y_decal * 3)) (x + (x_decal * 3)) &&
-					_valid_coords (y - (y_decal * 2)) (x - (x_decal * 2)) &&
-					board.(y + (y_decal * 2)).(x + (x_decal * 2)) = tile &&
-					board.(y - (y_decal * 2)).(x - (x_decal * 2)) = Tile.Empty &&
-					board.(y + (y_decal * 3)).(x + (x_decal * 3)) = Tile.Empty
-					then true
-				else if
-					_valid_coords (y - (y_decal * 4)) (x - (x_decal * 4)) &&
-					board.(y - (y_decal * 2)).(x - (x_decal * 2)) = Tile.Empty &&
-					board.(y - (y_decal * 3)).(x - (x_decal * 3)) = tile &&
-					board.(y - (y_decal * 4)).(x - (x_decal * 4)) = Tile.Empty
-					then true
-				else if
-					_valid_coords (y - (y_decal * 3)) (x - (x_decal * 3)) &&
-					board.(y - (y_decal * 2)).(x - (x_decal * 2)) = tile &&
-					board.(y - (y_decal * 3)).(x - (x_decal * 3)) = Tile.Empty &&
-					(
-						(
-							_valid_coords (y - (y_decal * 4)) (x - (x_decal * 4)) &&
-							board.(y - (y_decal * 4)).(x - (x_decal * 4)) = Tile.Empty
-						) ||
-						(
-							_valid_coords (y + (y_decal * 2)) (x + (x_decal * 2)) &&
-							board.(y + (y_decal * 2)).(x + (x_decal * 2)) = Tile.Empty
-						)
-					)
-					then true
-				else false
-			)
-			else if board.(y + y_decal).(x + x_decal) = tile then (
-				if
-					_valid_coords (y + (y_decal * 2)) (x + (x_decal * 2)) &&
-					_valid_coords (y - (y_decal * 2)) (x - (x_decal * 2)) &&
-					board.(y - (y_decal * 2)).(x - (x_decal * 2)) = Tile.Empty &&
-					board.(y + (y_decal * 2)).(x + (x_decal * 2)) = Tile.Empty &&
-					(
-						(
-							_valid_coords (y - (y_decal * 3)) (x - (x_decal * 3)) &&
-							board.(y - (y_decal * 3)).(x - (x_decal * 3)) = Tile.Empty
-						) ||
-						(
-							_valid_coords (y + (y_decal * 3)) (x + (x_decal * 3)) &&
-							board.(y + (y_decal * 3)).(x + (x_decal * 3)) = Tile.Empty
-						)
-					)
-					then true
-				else false
-			)
-			else false
-		)
-		else false
-	in
-	(*let start = Unix.gettimeofday () in *)
-	let dirs = [(0, 1, Horizontal); (1, 0, Vertical); (1, 1, DiagDown); ((-1), 1, DiagUp)] in
-	let _add_to_acc acc (y_decal, x_decal, dir) =
-		if _check_dir y_decal x_decal then dir :: acc else acc
-	in
-	let res = List.fold_left _add_to_acc [] dirs in
-	(*free_threes_time_var := !free_threes_time_var +. (Unix.gettimeofday () -. start) ; *)
-	res
-
 let find_five_alignements board y x =
 	let tile = board.tiles.(y).(x) in
 	let rec _alignement_helper _y _x y_decal x_decal acc =
@@ -324,7 +151,7 @@ let can_break_alignements_or_take_ten board y x is_red =
 				else if _breaking_alignements () then (cancel_move_raw board _y _x (not is_red) capt ; true)
 				else (cancel_move_raw board _y _x (not is_red) capt ; false)
 			) *)
-			let threes = free_threes board.tiles _y _x other_tile in
+			let threes = FreeThrees.free_threes board.tiles _y _x other_tile in
 			let capt = place_tile_raw board.tiles _y _x (not is_red) in
 			let no_threes = List.length threes < 2 || List.length capt > 0 in
 			if not no_threes then (cancel_move_raw board _y _x (not is_red) capt ; false)
@@ -361,7 +188,7 @@ let can_place_tile board y x is_red heuristic =
 		let new_threes = free_threes board.tiles y x tile in
 		let diff = List.filter (fun elt -> not (_in_list ori_threes elt)) new_threes in
 		let no_threes = List.length diff < 2 in *)
-		let threes = free_threes board.tiles y x tile in
+		let threes = FreeThrees.free_threes board.tiles y x tile in
 		let capt = place_tile_raw board.tiles y x is_red in
 		let no_threes = List.length threes < 2 in
 		let ok = no_threes || List.length capt > 0 in
@@ -545,29 +372,6 @@ let around_placed_tiles_time () =
 
 let make_rows_time () =
 	!make_rows_time_var
-
-let test_free_threes () =
-	let rec _print_dirs = function
-		| [] -> Printf.printf "\n"
-		| fst :: rest -> (
-			( match fst with
-			| Horizontal -> Printf.printf "Horizontal, "
-			| Vertical -> Printf.printf "Vertical, "
-			| DiagUp -> Printf.printf "DiagUp, "
-			| DiagDown -> Printf.printf "DiagDown, " ) ;
-			_print_dirs rest
-		)
-	in
-	let board = make_board 19 in
-	ignore (place_tile board 10 10 0 true) ;
-	ignore (place_tile board 10 11 0 true) ;
-	ignore (place_tile board 8 7 0 true) ;
-	ignore (place_tile board 7 6 0 true) ;
-	print_board ~min:true board ;
-	let threes = free_threes board.tiles 10 9 Tile.Red in
-	match threes with
-	| [] -> Printf.printf "EMPTY!\n"
-	| dirs -> _print_dirs dirs
 
 let valid_moves board ~is_red ~heuristic =
 	valid_moves_heuristic_helper board ~is_red:is_red ~heuristic:(Some heuristic) ~only_around_placed_tiles:true
