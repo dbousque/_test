@@ -182,7 +182,7 @@ let common_standard board y x captures valid_next ~second_version =
 						board.tiles.(y + y_decal * 1).(x + x_decal * 1) = other_tile
 					)
 				)
-				then (- 2)
+				then (if second_version = 2 then (- 6) else (- 2))
 			else 0
 		in
 		_sum_for_all_dirs _makes_other_capture_possible_dir
@@ -245,19 +245,22 @@ let common_standard board y x captures valid_next ~second_version =
 	let _stops_other_free_fours () =
 		0
 	in
-	let score = (List.length captures * 4) in
+	let score = (List.length captures * (if second_version = 2 then 12 else 4)) in
 	let score = score + _free_to_become_five () in
 	let score = score + _score_alignements () in
 	let score = score + _makes_other_capture_possible () in
 	let score = score + _makes_free_threes () in
 	let score = score + _makes_free_fours y x tile in
 	(*let score = if second_version then score + _stops_other_free_threes () else score in*)
-	let score = if second_version then score + _stops_other_free_fours () else score in
-	let score = if second_version then score + (if List.length valid_next > 0 then 1000 else 0) else score in
+	let score = if second_version >= 1 then score + _stops_other_free_fours () else score in
+	let score = if second_version >= 1 then score + (if List.length valid_next > 0 then 1000 else 0) else score in
 	if tile = Tile.Red then score else (- score)
 
 let standard_heuristic board y x captures valid_next =
-	common_standard board y x captures valid_next ~second_version:false
+	common_standard board y x captures valid_next ~second_version:0
 
 let standard_heuristic2 board y x captures valid_next =
-	common_standard board y x captures valid_next ~second_version:true
+	common_standard board y x captures valid_next ~second_version:1
+
+let standard_heuristic3 board y x captures valid_next =
+	common_standard board y x captures valid_next ~second_version:2

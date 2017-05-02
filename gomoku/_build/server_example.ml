@@ -109,7 +109,6 @@ let make_usermove body games =
 				if Main.(game.game_state) <> "playing" then error_resp
 				else (
 					let ok, game = Main.make_move game (move.y, move.x) in
-					Lwt_io.printf "ok : %B\n" ok ;
 					Hashtbl.remove !games move.game_id ;
 					Hashtbl.add !games move.game_id game ;
 					let valid_next = coords_list_to_front Main.(game.valid_next) in
@@ -191,7 +190,7 @@ let make_args address =
 	)
 
 let server =
-	let heuristic = Heuristic.standard_heuristic2 in
+	let heuristic = Heuristic.standard_heuristic3 in
 	let games = ref (Hashtbl.create 10) in
 	let ident = ref 0 in
 	let ai_options = (heuristic, 4, 30) in

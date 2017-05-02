@@ -68,9 +68,9 @@ let make_test ~nb_games options1 options2 =
 	Printf.printf "1 won : %.2f%%\n2 won : %.2f%%\ndraws : %.2f%%\nnb_moves : %d\n1 av. time : %d ms\n2 av. time : %d ms\n1 4/5th time : %d ms\n2 4/5th time : %d ms \n" wins losses draws nb_moves av_time_red av_time_blue top_time_red top_time_blue
 
 let () =
-	let options1 = (Heuristic.standard_heuristic, 4, 30) in
+	let options1 = (Heuristic.standard_heuristic2, 3, 30) in
 	(*let options2 = (Heuristic.simple_heuristic, 4, 30) in *)
-	let options2 = (Heuristic.standard_heuristic2, 4, 30) in
+	let options2 = (Heuristic.standard_heuristic3, 3, 30) in
 	let nb_games = 50 in
 	make_test ~nb_games options1 options2 ;
 	let valid_moves_time = Board.valid_moves_time () in
