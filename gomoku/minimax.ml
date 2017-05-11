@@ -117,3 +117,4 @@ let best_move_helper1 board ~for_red ~valid_next ~heuristic ~depth ~keepn =
 
 let best_move board ~for_red ~valid_next ~heuristic ~depth ~keepn =
 	let move = best_move_helper1 board ~for_red ~valid_next ~heuristic ~depth ~keepn in
+	move

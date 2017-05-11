@@ -136,7 +136,6 @@ function mouseXYToBoardXY(y, x) {
 }
 
 function updateInfo(board, info) {
-	console.log(info);
 	let nbMoves = document.getElementById('nb-moves');
 	let blackTaken = document.getElementById('black-taken');
 	let whiteTaken = document.getElementById('white-taken');
@@ -161,23 +160,17 @@ function updateBoard(board, tiles) {
 		for (var x = 0; x < tiles[y].length; x++) {
 			line += (tiles[y][x] + " ");
 			if (board.tiles[y][x] != tiles[y][x]) {
-				if (tiles[y][x] === 0) {
-					console.log("REMOVING")
+				if (tiles[y][x] === 0)
 					board.tilesElts[y][x].parentNode.removeChild(board.tilesElts[y][x]);
-				}
-				else if (board.tiles[y][x] === 0) {
-					console.log("ici");
+				else if (board.tiles[y][x] === 0)
 					placeTile(y, x, tiles[y][x] === 2 ? false : true, false);
-				}
 				else
 					console.log("SHOULD NOT HAPPEN");
 				board.tiles[y][x] = tiles[y][x];
 			}
 		}
 		line += "     " + y;
-		console.log(line);
 	}
-	console.log("s");
 }
 
 function onClickEvent(event) {
@@ -236,27 +229,64 @@ function onMouseMoveEvent(event) {
 function makeAiTurn(board) {
 	if (board.game_state !== "playing")
 		return ;
+	let move = null;
+	let exited = false;
 	let req = {
-		game_id: board.game_id
+		game_id: board.game_id,
+		depth: 4
 	};
-	getRessource('/makeaimove', req, function(resp) {
-		let move = JSON.parse(resp);
+	let req2 = {
+		game_id: board.game_id,
+		depth: 2
+	};
+	let handleMove = function(move) {
 		if (!move.ok)
 			return console.log("invalid ai move");
-		board.nbMoves++;
-		updateInfo(board, move);
-		board.game_state = move.game_state;
-		board.validNext = move.valid_next;
-		updateBoard(board, move.tiles);
-		if (move.game_state !== "playing") {
-			let str = move.game_state === "win" ? "Black wins" : "White wins";
-			str = move.game_state === "draw" ? "Draw" : str;
-			Materialize.toast(str, 5000, 'rounded ok-toast');
+		let req = {
+			game_id: board.game_id,
+			y: move.y,
+			x: move.x
+		};
+		let oriMove = move;
+		getRessource('/usermove', req, function(move) {
+			move = JSON.parse(move);
+			if (!move.ok)
+				return console.log("invalid ai move");
+			board.nbMoves++;
+			updateInfo(board, oriMove);
+			board.game_state = move.game_state;
+			board.validNext = move.valid_next;
+			updateBoard(board, move.tiles);
+			if (move.game_state !== "playing") {
+				let str = move.game_state === "win" ? "Black wins" : "White wins";
+				str = move.game_state === "draw" ? "Draw" : str;
+				Materialize.toast(str, 5000, 'rounded ok-toast');
+			}
+			board.whiteTurn = !board.whiteTurn;
+			if (aiTurn(board))
+				makeAiTurn(board);
+		});
+	}
+	let timeout = setTimeout(function() {
+		if (exited)
+			return ;
+		exited = true;
+		if (!move)
+			return console.log("COULD NOT FIND MOVE IN 500ms");
+		handleMove(move);
+	}, 600);
+	getRessource('/makeaimove', req2, function(resp) {
+		if (move === null)
+			move = JSON.parse(resp);
+	});
+	getRessource('/makeaimove', req, function(resp) {
+		move = JSON.parse(resp);
+		if (exited || move.time_taken > 500) {
+			return console.log("TAKEN TOO LONG : " + move.time_taken);
 		}
-		board.whiteTurn = !board.whiteTurn;
-		if (aiTurn(board))
-			makeAiTurn(board);
-	})
+		exited = true;
+		handleMove(move);
+	});
 }
 
 function startGame() {

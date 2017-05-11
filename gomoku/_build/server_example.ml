@@ -12,7 +12,8 @@ type usermove = {
 } [@@deriving yojson]
 
 type aimove = {
-	game_id:	int
+	game_id:	int ;
+	depth:		int
 } [@@deriving yojson]
 
 type makeboard = {
@@ -147,9 +148,9 @@ let make_ai_move body games =
 		| Result.Ok info -> (
 			try (
 				let game = Hashtbl.find !games info.game_id in
-				if Main.(game.game_state) <> "playing" then error_resp
+				if Main.(game.game_state) <> "playing" || info.depth <= 0 || info.depth > 6 then error_resp
 				else (
-					let (move, game), time_taken = Main.make_ai_move game in
+					let (move, game), time_taken = Main.make_ai_move game ~depth:info.depth in
 					Hashtbl.remove !games info.game_id ;
 					Hashtbl.add !games info.game_id game ;
 					match move with
@@ -193,7 +194,7 @@ let server =
 	let heuristic = Heuristic.standard_heuristic3 in
 	let games = ref (Hashtbl.create 10) in
 	let ident = ref 0 in
-	let ai_options = (heuristic, 4, 30) in
+	let ai_options = (heuristic, 4, 27) in
 	let callback _conn req body =
 		let uri = req |> Request.uri |> Uri.to_string in
 		let meth = req |> Request.meth |> Code.string_of_method in

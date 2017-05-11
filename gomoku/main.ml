@@ -80,13 +80,13 @@ let make_move game (y, x) =
 		)
 	)
 
-let make_ai_move game =
+let make_ai_move game ~depth =
 	let start_time = Unix.gettimeofday () in
 	let move = Minimax.best_move game.board
 		~for_red:game.red_turn
 		~valid_next:game.valid_next
 		~heuristic:(if game.red_turn then game.heuristic_red else game.heuristic_blue)
-		~depth:(if game.red_turn then game.depth_red else game.depth_blue)
+		~depth
 		~keepn:(if game.red_turn then game.keepn_red else game.keepn_blue)
 	in
 	let end_time = Unix.gettimeofday () in
@@ -94,9 +94,7 @@ let make_ai_move game =
 	| None -> (None, game), 0
 	| Some (y, x, (_, (forced_next, valid_next))) -> (
 		let heur = if game.red_turn then game.heuristic_red else game.heuristic_blue in
-		let _, (score, _) = Board.can_place_tile game.board y x game.red_turn (Some heur) in
-		let new_game = make_actual_move game y x score forced_next valid_next in
-		(Some (y, x), new_game), (int_of_float ((end_time -. start_time) *. 1000.0))
+		(Some (y, x), game), (int_of_float ((end_time -. start_time) *. 1000.0))
 	)
 
 (*

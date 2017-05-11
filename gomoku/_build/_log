@@ -36,13 +36,13 @@ ocamlfind ocamlc -c -package netstring -package str -package yojson -package ppx
 # Target: server_example.cmo, tags: { package(cohttp.lwt), package(netstring), package(ppx_deriving_yojson), package(str), package(yojson), byte, compile, extension:cmo, extension:ml, file:server_example.cmo, file:server_example.ml, implem, ocaml, quiet }
 ocamlfind ocamlc -c -package netstring -package str -package yojson -package ppx_deriving_yojson -package cohttp.lwt -o server_example.cmo server_example.ml
 + ocamlfind ocamlc -c -package netstring -package str -package yojson -package ppx_deriving_yojson -package cohttp.lwt -o server_example.cmo server_example.ml
-File "server_example.ml", line 224, characters 3-37:
+File "server_example.ml", line 225, characters 3-37:
 Warning 10: this expression should have type unit.
-File "server_example.ml", line 57, characters 5-44:
+File "server_example.ml", line 58, characters 5-44:
 Warning 10: this expression should have type unit.
-File "server_example.ml", line 199, characters 6-10:
+File "server_example.ml", line 200, characters 6-10:
 Warning 26: unused variable meth.
-File "server_example.ml", line 200, characters 6-13:
+File "server_example.ml", line 201, characters 6-13:
 Warning 26: unused variable headers.
 # Target: tile.cmx, tags: { package(cohttp.lwt), package(netstring), package(ppx_deriving_yojson), package(str), package(yojson), compile, extension:cmx, extension:ml, file:tile.cmx, file:tile.ml, implem, native, ocaml, quiet }
 ocamlfind ocamlopt -c -package netstring -package str -package yojson -package ppx_deriving_yojson -package cohttp.lwt -o tile.cmx tile.ml # cached
@@ -65,13 +65,13 @@ ocamlfind ocamlopt -c -package netstring -package str -package yojson -package p
 # Target: server_example.cmx, tags: { package(cohttp.lwt), package(netstring), package(ppx_deriving_yojson), package(str), package(yojson), compile, extension:cmx, extension:ml, file:server_example.cmx, file:server_example.ml, implem, native, ocaml, quiet }
 ocamlfind ocamlopt -c -package netstring -package str -package yojson -package ppx_deriving_yojson -package cohttp.lwt -o server_example.cmx server_example.ml
 + ocamlfind ocamlopt -c -package netstring -package str -package yojson -package ppx_deriving_yojson -package cohttp.lwt -o server_example.cmx server_example.ml
-File "server_example.ml", line 224, characters 3-37:
+File "server_example.ml", line 225, characters 3-37:
 Warning 10: this expression should have type unit.
-File "server_example.ml", line 57, characters 5-44:
+File "server_example.ml", line 58, characters 5-44:
 Warning 10: this expression should have type unit.
-File "server_example.ml", line 199, characters 6-10:
+File "server_example.ml", line 200, characters 6-10:
 Warning 26: unused variable meth.
-File "server_example.ml", line 200, characters 6-13:
+File "server_example.ml", line 201, characters 6-13:
 Warning 26: unused variable headers.
 File "_none_", line 1:
 Warning 58: no cmx file was found in path for module Netencoding, and its interface was not compiled with -opaque
