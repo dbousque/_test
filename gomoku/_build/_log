@@ -36,8 +36,6 @@ ocamlfind ocamlc -c -package netstring -package str -package yojson -package ppx
 # Target: server_example.cmo, tags: { package(cohttp.lwt), package(netstring), package(ppx_deriving_yojson), package(str), package(yojson), byte, compile, extension:cmo, extension:ml, file:server_example.cmo, file:server_example.ml, implem, ocaml, quiet }
 ocamlfind ocamlc -c -package netstring -package str -package yojson -package ppx_deriving_yojson -package cohttp.lwt -o server_example.cmo server_example.ml
 + ocamlfind ocamlc -c -package netstring -package str -package yojson -package ppx_deriving_yojson -package cohttp.lwt -o server_example.cmo server_example.ml
-File "server_example.ml", line 225, characters 3-37:
-Warning 10: this expression should have type unit.
 File "server_example.ml", line 58, characters 5-44:
 Warning 10: this expression should have type unit.
 File "server_example.ml", line 200, characters 6-10:
@@ -65,8 +63,6 @@ ocamlfind ocamlopt -c -package netstring -package str -package yojson -package p
 # Target: server_example.cmx, tags: { package(cohttp.lwt), package(netstring), package(ppx_deriving_yojson), package(str), package(yojson), compile, extension:cmx, extension:ml, file:server_example.cmx, file:server_example.ml, implem, native, ocaml, quiet }
 ocamlfind ocamlopt -c -package netstring -package str -package yojson -package ppx_deriving_yojson -package cohttp.lwt -o server_example.cmx server_example.ml
 + ocamlfind ocamlopt -c -package netstring -package str -package yojson -package ppx_deriving_yojson -package cohttp.lwt -o server_example.cmx server_example.ml
-File "server_example.ml", line 225, characters 3-37:
-Warning 10: this expression should have type unit.
 File "server_example.ml", line 58, characters 5-44:
 Warning 10: this expression should have type unit.
 File "server_example.ml", line 200, characters 6-10:

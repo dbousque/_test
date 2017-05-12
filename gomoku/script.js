@@ -202,6 +202,7 @@ function onClickEvent(event) {
 			let str = resp.game_state === "win" ? "Black wins" : "White wins";
 			str = resp.game_state === "draw" ? "Draw" : str;
 			Materialize.toast(str, 5000, 'rounded ok-toast');
+			return ;
 		}
 		board.whiteTurn = !board.whiteTurn;
 		if (aiTurn(board))
@@ -261,6 +262,7 @@ function makeAiTurn(board) {
 				let str = move.game_state === "win" ? "Black wins" : "White wins";
 				str = move.game_state === "draw" ? "Draw" : str;
 				Materialize.toast(str, 5000, 'rounded ok-toast');
+				return ;
 			}
 			board.whiteTurn = !board.whiteTurn;
 			if (aiTurn(board))
@@ -281,9 +283,8 @@ function makeAiTurn(board) {
 	});
 	getRessource('/makeaimove', req, function(resp) {
 		move = JSON.parse(resp);
-		if (exited || move.time_taken > 500) {
-			return console.log("TAKEN TOO LONG : " + move.time_taken);
-		}
+		if (exited || move.time_taken > 500)
+			return ;
 		exited = true;
 		handleMove(move);
 	});

@@ -222,7 +222,6 @@ let server =
 		| _ -> (
 			let filename = address in
 			let filename = if filename = "" then "index.html" else filename in
-			Lwt_io.printf "file %s\n" filename ;
 			Server.respond_file ~fname:filename ()
 		)
 	in
