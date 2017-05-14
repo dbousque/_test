@@ -9,6 +9,7 @@
 		<script type="text/javascript" src="materialize.min.js"></script>
 		<script type="text/javascript" src="ajax.js"></script>
 		<script type="text/javascript" src="script.js"></script>
+		<title>Gomoku - dbousque & skirkovs</title>
 	</head>
 
 	<body onload="startGame();">
@@ -30,10 +31,26 @@
 				<input type="checkbox" class="filled-in" id="player-type1" checked="checked" />
 				<label for="player-type1">Player 1 AI</label>
 			</p>
+			<div class="input-field player-strength inline-block">
+				<select id="player1-strength">
+					<option value="1" selected>Best</option>
+					<option value="2">Medium</option>
+					<option value="3">Low</option>
+				</select>
+				<label>Strength</label>
+			</div>
 			<p class="inline-block player-type">
 				<input type="checkbox" class="filled-in" id="player-type2" />
 				<label for="player-type2">Player 2 AI</label>
 			</p>
+			<div class="input-field player-strength inline-block">
+				<select id="player2-strength">
+					<option value="1" selected>Best</option>
+					<option value="2">Medium</option>
+					<option value="3">Low</option>
+				</select>
+				<label>Strength</label>
+			</div>
 			</br>
 			<p class="inline-block">Board dimensions</p>
 			<p class="slider-input range-field">

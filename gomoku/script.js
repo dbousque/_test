@@ -234,7 +234,7 @@ function makeAiTurn(board) {
 	let exited = false;
 	let req = {
 		game_id: board.game_id,
-		depth: 4
+		depth: (board.whiteTurn ? board.aiDepth2 : board.aiDepth1)
 	};
 	let req2 = {
 		game_id: board.game_id,
@@ -253,8 +253,9 @@ function makeAiTurn(board) {
 			move = JSON.parse(move);
 			if (!move.ok)
 				return console.log("invalid ai move");
+			move.time_taken = oriMove.time_taken;
 			board.nbMoves++;
-			updateInfo(board, oriMove);
+			updateInfo(board, move);
 			board.game_state = move.game_state;
 			board.validNext = move.valid_next;
 			updateBoard(board, move.tiles);
@@ -278,15 +279,15 @@ function makeAiTurn(board) {
 		handleMove(move);
 	}, 600);
 	getRessource('/makeaimove', req2, function(resp) {
-		if (move === null)
-			move = JSON.parse(resp);
-	});
-	getRessource('/makeaimove', req, function(resp) {
 		move = JSON.parse(resp);
-		if (exited || move.time_taken > 500)
-			return ;
-		exited = true;
-		handleMove(move);
+		getRessource('/makeaimove', req, function(resp) {
+			resp = JSON.parse(resp);
+			if (exited || resp.time_taken > 500)
+				return ;
+			move = resp;
+			exited = true;
+			handleMove(move);
+		});
 	});
 }
 
@@ -296,6 +297,20 @@ function startGame() {
 	let player2 = document.getElementById('player-type2');
 	board.player1AI = player1.checked;
 	board.player2AI = player2.checked;
+	board.aiDepth1 = 4;
+	let player1Strength = document.getElementById("player1-strength");
+	let player1StrengthVal = player1Strength.options[player1Strength.selectedIndex].value;
+	if (player1StrengthVal === '2')
+		board.aiDepth1 = 2;
+	if (player1StrengthVal === '3')
+		board.aiDepth1 = 1;
+	board.aiDepth2 = 4;
+	let player2Strength = document.getElementById("player2-strength");
+	let player2StrengthVal = player2Strength.options[player2Strength.selectedIndex].value;
+	if (player2StrengthVal === '2')
+		board.aiDepth2 = 2;
+	if (player2StrengthVal === '3')
+		board.aiDepth2 = 1;
 	let dimensions = Math.floor(document.getElementById('board-dimensions').value);
 	let replace_existing = board.game_id ? true : false;
 	let existing_id = board.game_id ? board.game_id : 0;
@@ -316,3 +331,7 @@ function startGame() {
 			alert("error starting game");
 	});
 }
+
+$(document).ready(function() {
+	$('select').material_select();
+});
