@@ -40,7 +40,7 @@ let make_actual_move game y x score forced_next valid_next =
 		| Heuristic.Loss -> 0, "loss"
 		| Heuristic.Score sc -> sc, "playing"
 	) in
-	Board.place_tile game.board y x heur_change game.red_turn ;
+	ignore (Board.place_tile game.board y x heur_change game.red_turn) ;
 	let heur = if game.red_turn then game.heuristic_red else game.heuristic_blue in
 	let _, next_moves = Board.valid_moves game.board ~is_red:(not game.red_turn) ~heuristic:heur in
 	let game_state = if List.length next_moves = 0 then "draw" else game_state in
@@ -93,7 +93,6 @@ let make_ai_move game ~depth =
 	match move with
 	| None -> (None, game), 0
 	| Some (y, x, (_, (forced_next, valid_next))) -> (
-		let heur = if game.red_turn then game.heuristic_red else game.heuristic_blue in
 		(Some (y, x), game), (int_of_float ((end_time -. start_time) *. 1000.0))
 	)
 

@@ -81,20 +81,23 @@ function removeGhostTile(event) {
 		tile.parentNode.removeChild(tile);
 }
 
-function placeTile(y, x, is_white, mouseHover) {
+function placeTile(y, x, is_white, mouseHover, recommendation) {
 	removeGhostTile();
 	let board = document.getElementById('board');
-	if (!mouseHover)
-		board.tiles[y][x] = is_white ? 2 : 1;
-	else {
+	if (mouseHover) {
 		board.ghostX = x;
 		board.ghostY = y;
+	}
+	else if (!recommendation) {
+		board.tiles[y][x] = is_white ? 2 : 1;
 	}
 	let imgSrc = is_white ? 'white.png' : 'black.png';
 	let imgParent = document.createElement('div');
 	imgParent.classList.add('tile-parent');
 	if (mouseHover)
 		imgParent.id = 'ghost-tile';
+	else if (recommendation)
+		imgParent.id = 'recommendation-tile';
 	else
 		board.tilesElts[y][x] = imgParent;
 	let x_decal = x * 52 - 24;
@@ -104,7 +107,7 @@ function placeTile(y, x, is_white, mouseHover) {
 	let img = document.createElement('img');
 	img.classList.add('tile');
 	img.src = imgSrc;
-	if (mouseHover)
+	if (mouseHover || recommendation)
 		img.style.opacity = '0.5';
 	imgParent.appendChild(img);
 	let firstRow = 0;
@@ -173,6 +176,19 @@ function updateBoard(board, tiles) {
 	}
 }
 
+function makeMoveRecommendation(board) {
+	const req = {
+		game_id: board.game_id,
+		depth: 3
+	};
+	getRessource('/makeaimove', req, function(resp) {
+		move = JSON.parse(resp);
+		if (!move.ok)
+			return console.log("should not happen");
+		placeTile(move.y, move.x, board.whiteTurn, false, true);
+	});
+}
+
 function onClickEvent(event) {
 	let board = document.getElementById('board');
 	if (board.game_state !== "playing")
@@ -192,6 +208,9 @@ function onClickEvent(event) {
 		resp = JSON.parse(resp);
 		if (!resp.ok)
 			return Materialize.toast('Invalid move', 3000, 'rounded error-toast');
+		const reco = document.getElementById('recommendation-tile');
+		if (reco)
+			reco.parentNode.removeChild(reco);
 		board.nbMoves++;
 		updateInfo(board, resp);
 		board.game_state = resp.game_state;
@@ -207,6 +226,8 @@ function onClickEvent(event) {
 		board.whiteTurn = !board.whiteTurn;
 		if (aiTurn(board))
 			makeAiTurn(board);
+		else
+			makeMoveRecommendation(board);
 	});
 }
 

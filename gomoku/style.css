@@ -51,9 +51,9 @@ h1 {
 	height: 48px;
 }
 
-.winner-tile {
+#recommendation-tile {
 	border-radius: 15px;
-	background-color: #ffee00;
+	background-color: rgba(255, 238, 0, 0.53);
 }
 
 .square-helper {
