@@ -10,7 +10,15 @@
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "lem_ipc.h"
+
 int		main(int argc, char **argv)
 {
-	
+	t_params	params;
+
+	if (!(parse_params(argc, argv, &params)))
+		return (0);
+	printf("params : %u %u\n", params.team_id, params.board_size);
+	return (0);
 }
+

@@ -12,15 +12,18 @@
 
 NAME		=	lemipc
 
-SOURCES		=	srcs/lem_ipc.c
+SOURCES		=	srcs/lem_ipc.c \
+				srcs/utils.c \
+				srcs/list.c \
+				srcs/parse_params.c
 
-HEADERS	=	-I./includes/
+HEADERS		=	-I./includes/
 
-OBJECTS	=	$(subst .c,.o,$(SOURCES))
+OBJECTS		=	$(subst .c,.o,$(SOURCES))
 
-WFLAGS	=	-Wall -Werror -Wextra
+WFLAGS		=	-Wall -Werror -Wextra
 
-CC		=	gcc
+CC			=	clang
 
 .SILENT:
 
