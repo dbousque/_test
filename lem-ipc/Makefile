@@ -28,7 +28,7 @@ CC			=	clang
 .SILENT:
 
 $(NAME): $(OBJECTS)
-	$(CC) $(WFLAGS) $(OBJECTS) -o $(NAME)
+	$(CC) $(WFLAGS) -lpthread $(OBJECTS) -o $(NAME)
 	printf "\e[32m----------------------------------\e[36m\n"
 	printf "\e[32m[✔]\e[36m $@"
 	printf "\n\e[32m----------------------------------\e[36m"

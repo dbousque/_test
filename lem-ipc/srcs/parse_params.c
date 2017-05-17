@@ -37,24 +37,43 @@ unsigned int	parse_uint(char *str, char *error)
 	return ((unsigned int)res);
 }
 
+char			set_params(char error, unsigned int tmp, char **argv,
+															t_params *params)
+{
+	tmp = parse_uint(argv[1], &error);
+	if (error)
+		return (0);
+	params->team_id = tmp;
+	tmp = parse_uint(argv[2], &error);
+	if (error)
+		return (0);
+	params->move_sleep_millis = tmp;
+	tmp = parse_uint(argv[3], &error);
+	if (error)
+		return (0);
+	params->initial_sleep = tmp;
+	return (1);
+}
+
 char			parse_params(int argc, char **argv, t_params *params)
 {
 	char			error;
 	unsigned int	tmp;
 
-	if (argc < 2 || argc > 3)
+	if (argc < 4 || argc > 5)
 	{
-		printf("format : ./lemipc <team_id:uint> ?<board_size:uint>\n");
+		printf("format : ./lemipc <team_id:uint> <move_sleep_millis:unint>");
+		printf(" <initial_sleep:unint> ?<board_size:uint>\n");
 		return (0);
 	}
-	tmp = parse_uint(argv[1], &error);
-	if (error)
+	error = 0;
+	tmp = 0;
+	if (!(set_params(error, tmp, argv, params)))
 		return (0);
-	params->team_id = tmp;
 	params->board_size = DEFAULT_BOARD_SIZE;
-	if (argc == 3)
+	if (argc == 5)
 	{
-		tmp = parse_uint(argv[2], &error);
+		tmp = parse_uint(argv[4], &error);
 		if (error)
 			return (0);
 		if (tmp < 2 || tmp > 100)
