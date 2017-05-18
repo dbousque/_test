@@ -19,6 +19,7 @@ int	main()
   //name the shared memory segment
   key = 4242;
 
+  printf("SALUT\n");
   //create & initialize semaphore
   mutex = sem_open("_sem_lemipc_board_", O_CREAT, 0644, 1);
   if(mutex == SEM_FAILED)
