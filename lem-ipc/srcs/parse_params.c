@@ -1,4 +1,14 @@
-
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   parse_params.c                                     :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: dbousque <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2017/05/18 18:05:46 by dbousque          #+#    #+#             */
+/*   Updated: 2017/05/18 18:05:49 by dbousque         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
 #include "lem_ipc.h"
 
@@ -55,6 +65,12 @@ char			set_params(char error, unsigned int tmp, char **argv,
 	return (1);
 }
 
+char			parse_er(char *msg)
+{
+	printf("%s\n", msg);
+	return (0);
+}
+
 char			parse_params(int argc, char **argv, t_params *params)
 {
 	char			error;
@@ -63,8 +79,7 @@ char			parse_params(int argc, char **argv, t_params *params)
 	if (argc < 4 || argc > 5)
 	{
 		printf("format : ./lemipc <team_id:uint> <move_sleep_millis:unint>");
-		printf(" <initial_sleep:unint> ?<board_size:uint>\n");
-		return (0);
+		return (parse_er(" <initial_sleep:unint> ?<board_size:uint>"));
 	}
 	error = 0;
 	tmp = 0;
@@ -77,10 +92,7 @@ char			parse_params(int argc, char **argv, t_params *params)
 		if (error)
 			return (0);
 		if (tmp < 2 || tmp > 100)
-		{
-			printf("board_size too big or too small, expect 2-100\n");
-			return (0);
-		}
+			return (parse_er("board_size too big or too small, expect 2-100"));
 		params->board_size = tmp;
 	}
 	return (1);

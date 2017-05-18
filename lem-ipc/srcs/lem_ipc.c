@@ -12,7 +12,7 @@
 
 #include "lem_ipc.h"
 
-
+/*
 #include <semaphore.h>
 #include <sys/shm.h>
 #include <fcntl.h>
@@ -69,15 +69,21 @@ char	create_ressources(void)
 
   return (1);
 }
-
+*/
 int		main(int argc, char **argv)
 {
-	t_params	params;
+	t_params		params;
+	t_player		player;
+	t_lemipc_msg	msg;
 
 	if (!(parse_params(argc, argv, &params)))
 		return (0);
-	if (!(create_ressources()))
-		return (0);
+
+	//if (!(create_ressources()))
+	//	return (0);
+	player.team_id = params.team_id;
+	player.player_id = 2;
+	msg.attack_target = 4;
+	if (argc == )
 	return (0);
 }
-
