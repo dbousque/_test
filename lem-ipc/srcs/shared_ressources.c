@@ -1,0 +1,81 @@
+
+
+#include "shared_ressources.h"
+
+char	set_mutex(t_shared *shared, char *mutex_name)
+{
+	shared->mutex = sem_open(mutex_name, O_CREAT, 0644, 1);
+	if(shared->mutex == SEM_FAILED)
+	{
+		printf("unable to create or get semaphore\n");
+		sem_unlink(mutex_name);
+		shared->mutex = NULL;
+		return (0);
+	}
+	return (1);
+}
+
+char	init_shared(t_shared *shared, char *mutex_name)
+{
+	if (!(set_mutex(shared, mutex_name)))
+		return (0);
+	if (!(init_list(&(shared->ressources), sizeof(t_shared_ressource))))
+		return (0);
+	return (1);
+}
+
+void	*get_shm(int key, size_t size, char *error)
+{
+  int	shmid;
+
+  shmid = shmget(key, size, IPC_CREAT | 0666);
+  if(shmid<0)
+    {
+      printf("failure in shmget\n");
+      *error = 1;
+      return (NULL);
+    }
+
+  //attach this segment to virtual memory
+  if (shm = shmat(shmid, NULL, 0) < 0)
+    return (0)
+}
+
+char	add_shared_ressource(t_shared *shared, key_t key, size_t size)
+{
+	t_shared_ressource	res;
+
+	res.key = key;
+	res.size = size;
+	res.shmid = shmget(key, size, IPC_CREAT | 0666);
+	if (res.shmid < 0)
+	{
+		printf("failure in shmget\n");
+		return (0);
+	}
+	res.data = shmat(res.shmid, NULL, 0);
+	if (res.data < 0 || !(res.data))
+		return (0);
+	if (!(add_to_list(&(shared->ressources), &res)))
+		return (0);
+	return (1);
+}
+
+void	*get_shared_ressource(t_shared *shared, key_t key, char *error)
+{
+	size_t				i;
+	t_list				*ressources;
+	t_shared_ressource	*res;
+
+	ressources = &(shared->ressources);
+	i = 0;
+	while (i < ressources->len)
+	{
+		res = ((t_shared_ressource**)ressources->elts)[i];
+		if (res->key == key)
+			return (res->data);
+		i++;
+	}
+	*error = 1;
+	return (NULL);
+}

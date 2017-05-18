@@ -9,9 +9,12 @@
 # include <limits.h>
 # include <time.h>
 # include "list.h"
-# include "msq_queue.h"
+# include "msg_queue.h"
 
 # define DEFAULT_BOARD_SIZE 20
+# define MUTEX_NAME "_sem_lemipc_"
+# define BOARD_SIZE_KEY 4242
+# define BOARD_KEY 4243
 
 typedef struct		s_params
 {
@@ -48,14 +51,14 @@ typedef struct		s_player
 
 typedef struct		s_lemipc_msg
 {
+	char			attack_or_take_team_lead;
 	unsigned int	attack_target;
 }					t_lemipc_msg;
 
 size_t				ft_strlen(char *str);
 void				millis_sleep(unsigned int millis);
 char				parse_params(int argc, char **argv, t_params *params);
-char				send_message_to_player(t_player *player,
-															t_lemipc_msg *msg);
-char				get_received_message(t_player *player, t_lemipc_msg *msg);
+char				send_message(t_player *player, t_lemipc_msg *msg);
+char				receive_message(t_player *player, t_lemipc_msg *msg);
 
 #endif

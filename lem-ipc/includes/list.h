@@ -11,7 +11,7 @@ typedef struct			s_list
 	size_t				elt_size;
 }						t_list;
 
-void					init_list(t_list *list, size_t elt_size);
-void					add_to_list(t_list *lst, void *elt);
+char					init_list(t_list *list, size_t elt_size);
+char					add_to_list(t_list *lst, void *elt);
 
 #endif

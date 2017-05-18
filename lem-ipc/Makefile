@@ -15,7 +15,9 @@ NAME		=	lemipc
 SOURCES		=	srcs/lem_ipc.c \
 				srcs/utils.c \
 				srcs/list.c \
-				srcs/parse_params.c
+				srcs/parse_params.c \
+				srcs/msg_queue.c \
+				srcs/lem_ipc_msg.c
 
 HEADERS		=	-I./includes/
 

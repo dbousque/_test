@@ -12,19 +12,20 @@
 
 #include "lem_ipc.h"
 
-char	send_message_to_player(t_player *player, t_lemipc_msg *msg)
+char	send_message(t_player *player, t_lemipc_msg *msg)
 {
 	int		queue_id;
 	char	error;
 
 	error = 0;
-	queue_id = get_msq_queue(player.team_id, &error);
+	queue_id = get_msq_queue(player->team_id, &error);
 	if (error)
 	{
 		printf("could not get msg queue\n");
 		return (0);
 	}
-	if (!(send_msq_queue(queue_id, msg, sizeof(msg), player.player_id)))
+	if (!(send_msq_queue(queue_id, (char*)msg, sizeof(msg),
+														player->player_id)))
 	{
 		printf("could not send msg\n");
 		return (0);
@@ -32,19 +33,19 @@ char	send_message_to_player(t_player *player, t_lemipc_msg *msg)
 	return (1);
 }
 
-char	get_received_message(t_player *player, t_lemipc_msg *msg)
+char	receive_message(t_player *player, t_lemipc_msg *msg)
 {
 	int		queue_id;
 	char	error;
 
 	error = 0;
-	queue_id = get_msq_queue(player.team_id, &error);
+	queue_id = get_msq_queue(player->team_id, &error);
 	if (error)
 	{
 		printf("could not get msg queue\n");
 		return (0);
 	}
-	if (!(receive_msq_queue(queue_id, sizeof(t_lemipc_msg), player.player_id,
+	if (!(receive_msq_queue(queue_id, sizeof(t_lemipc_msg), player->player_id,
 																(char*)msg)))
 	{
 		printf("could not receive msg\n");

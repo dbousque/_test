@@ -12,19 +12,20 @@
 
 #include "lem_ipc.h"
 
-void	init_list(t_list *list, size_t elt_size)
+char	init_list(t_list *list, size_t elt_size)
 {
 	if (!(list->elts = malloc(elt_size * 4)))
 	{
 		list = NULL;
-		return ;
+		return (0);
 	}
 	list->size = 4;
 	list->len = 0;
 	list->elt_size = elt_size;
+	return (1);
 }
 
-void	double_list_size(t_list *lst)
+char	double_list_size(t_list *lst)
 {
 	char	*new_elts;
 	char	*elts;
@@ -33,7 +34,7 @@ void	double_list_size(t_list *lst)
 
 	lst->size *= 2;
 	if (!(new_elts = (char*)malloc(lst->elt_size * lst->size)))
-		return ;
+		return (0);
 	elts = (char*)lst->elts;
 	i = 0;
 	while (i < lst->len)
@@ -48,18 +49,23 @@ void	double_list_size(t_list *lst)
 	}
 	free(lst->elts);
 	lst->elts = (void*)new_elts;
+	return (1);
 }
 
-void	add_to_list(t_list *lst, void *elt)
+char	add_to_list(t_list *lst, void *elt)
 {
 	size_t	i;
 	char	*elts;
 	char	*elt_bytes;
 
 	if (lst->size == lst->len)
-		double_list_size(lst);
-	if (!lst->elts)
-		return ;
+	{
+		if (!double_list_size(lst))
+		{
+			lst = NULL;
+			return (0);
+		}
+	}
 	i = 0;
 	elts = (char*)lst->elts;
 	elt_bytes = (char*)elt;
@@ -69,4 +75,5 @@ void	add_to_list(t_list *lst, void *elt)
 		i++;
 	}
 	lst->len++;
+	return (1);
 }
