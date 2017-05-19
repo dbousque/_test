@@ -17,7 +17,9 @@ SOURCES		=	srcs/lem_ipc.c \
 				srcs/list.c \
 				srcs/parse_params.c \
 				srcs/msg_queue.c \
-				srcs/lem_ipc_msg.c
+				srcs/lem_ipc_msg.c \
+				srcs/shared_ressources.c \
+				srcs/shared_ressources2.c
 
 HEADERS		=	-I./includes/
 

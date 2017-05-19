@@ -10,6 +10,7 @@
 # include <time.h>
 # include "list.h"
 # include "msg_queue.h"
+# include "shared_ressources.h"
 
 # define DEFAULT_BOARD_SIZE 20
 # define MUTEX_NAME "_sem_lemipc_"

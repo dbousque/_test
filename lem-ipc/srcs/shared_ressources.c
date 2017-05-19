@@ -12,6 +12,7 @@ char	set_mutex(t_shared *shared, char *mutex_name)
 		shared->mutex = NULL;
 		return (0);
 	}
+	shared->mutex_name = mutex_name;
 	return (1);
 }
 
@@ -22,23 +23,6 @@ char	init_shared(t_shared *shared, char *mutex_name)
 	if (!(init_list(&(shared->ressources), sizeof(t_shared_ressource))))
 		return (0);
 	return (1);
-}
-
-void	*get_shm(int key, size_t size, char *error)
-{
-  int	shmid;
-
-  shmid = shmget(key, size, IPC_CREAT | 0666);
-  if(shmid<0)
-    {
-      printf("failure in shmget\n");
-      *error = 1;
-      return (NULL);
-    }
-
-  //attach this segment to virtual memory
-  if (shm = shmat(shmid, NULL, 0) < 0)
-    return (0)
 }
 
 char	add_shared_ressource(t_shared *shared, key_t key, size_t size)
@@ -71,7 +55,7 @@ void	*get_shared_ressource(t_shared *shared, key_t key, char *error)
 	i = 0;
 	while (i < ressources->len)
 	{
-		res = ((t_shared_ressource**)ressources->elts)[i];
+		res = &(((t_shared_ressource*)ressources->elts)[i]);
 		if (res->key == key)
 			return (res->data);
 		i++;
