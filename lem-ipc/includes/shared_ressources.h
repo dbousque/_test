@@ -25,7 +25,8 @@ typedef struct	s_shared_ressource
 }				t_shared_ressource;
 
 char			init_shared(t_shared *shared, char *mutex_name);
-char			add_shared_ressource(t_shared *shared, key_t key, size_t size);
+char			add_shared_ressource(t_shared *shared, key_t key, size_t size,
+															char *creation);
 void			*get_shared_ressource(t_shared *shared, key_t key,
 																char *error);
 char			lock_ressources(t_shared *shared);

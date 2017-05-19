@@ -12,6 +12,7 @@
 
 #include "lem_ipc.h"
 
+/*
 void	test_msq_queue(int argc, t_params *params)
 {
 	t_player		player;
@@ -39,46 +40,19 @@ void	test_msq_queue(int argc, t_params *params)
     printf("received target : %d\n", msg2.attack_target);
   }
 }
+*/
 
 int		main(int argc, char **argv)
 {
-	t_params		params;
-	t_shared		shared;
-	unsigned int	*board_size;
-	char			error;
+	t_params	params;
+	t_shared	shared;
 
-	error = 0;
 	if (!(parse_params(argc, argv, &params)))
 		return (0);
-	init_shared(&shared, MUTEX_NAME);
-	if (!(add_shared_ressource(&shared, BOARD_SIZE_KEY, sizeof(unsigned int))))
-	{
-		printf("could not add board_size\n");
+	if (!(init_ressources(&params, &shared)))
 		return (0);
-	}
-	board_size = (unsigned int*)get_shared_ressource(&shared, BOARD_SIZE_KEY,
-																	&error);
-	if (error)
-	{
-		printf("could not get board_size\n");
+	if (!(add_player(&shared)))
 		return (0);
-	}
-	printf("board_size : %u\n", *board_size);
-	if (!(lock_ressources(&shared)))
-	{
-		printf("could not lock ressources\n");
-		return (0);
-	}
-	*board_size = params.board_size;
-	unlock_ressources(&shared);
-	board_size = (unsigned int*)get_shared_ressource(&shared, BOARD_SIZE_KEY,
-																	&error);
-	if (error)
-	{
-		printf("could not get board_size\n");
-		return (0);
-	}
-	printf("board_size : %u\n", *board_size);
-	free_ressources(&shared);
+	free_ressources(&shared, &params);
 	return (0);
 }

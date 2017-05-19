@@ -19,7 +19,10 @@ SOURCES		=	srcs/lem_ipc.c \
 				srcs/msg_queue.c \
 				srcs/lem_ipc_msg.c \
 				srcs/shared_ressources.c \
-				srcs/shared_ressources2.c
+				srcs/shared_ressources2.c \
+				srcs/init_ressources.c \
+				srcs/init_ressources2.c \
+				srcs/player.c
 
 HEADERS		=	-I./includes/
 

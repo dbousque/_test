@@ -35,9 +35,9 @@ unsigned int	parse_uint(char *str, char *error)
 	while (str[i] >= '0' && str[i] <= '9')
 	{
 		res = res * 10 + (str[i] - '0');
-		if (res > UINT_MAX)
+		if (res > INT_MAX)
 		{
-			return (parse_uint_error("number is higher than UINT_MAX\n",
+			return (parse_uint_error("number is higher than INT_MAX\n",
 																	error));
 		}
 		i++;
@@ -78,8 +78,8 @@ char			parse_params(int argc, char **argv, t_params *params)
 
 	if (argc < 4 || argc > 5)
 	{
-		printf("format : ./lemipc <team_id:uint> <move_sleep_millis:unint>");
-		return (parse_er(" <initial_sleep:unint> ?<board_size:uint>"));
+		printf("format : ./lemipc <team_id:int> <move_sleep_millis:int>");
+		return (parse_er(" <initial_sleep:int> ?<board_size:int>"));
 	}
 	error = 0;
 	tmp = 0;

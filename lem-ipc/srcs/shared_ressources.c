@@ -1,4 +1,14 @@
-
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   shared_ressources.c                                :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: dbousque <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2017/05/19 15:11:47 by dbousque          #+#    #+#             */
+/*   Updated: 2017/05/19 15:11:49 by dbousque         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
 #include "shared_ressources.h"
 
@@ -25,13 +35,20 @@ char	init_shared(t_shared *shared, char *mutex_name)
 	return (1);
 }
 
-char	add_shared_ressource(t_shared *shared, key_t key, size_t size)
+char	add_shared_ressource(t_shared *shared, key_t key, size_t size,
+																char *creation)
 {
 	t_shared_ressource	res;
 
+	*creation = 1;
 	res.key = key;
 	res.size = size;
-	res.shmid = shmget(key, size, IPC_CREAT | 0666);
+	res.shmid = shmget(key, size, IPC_CREAT | IPC_EXCL | 0666);
+	if (res.shmid < 0)
+	{
+		*creation = 0;
+		res.shmid = shmget(key, size, IPC_CREAT | 0666);
+	}
 	if (res.shmid < 0)
 	{
 		printf("failure in shmget\n");
