@@ -12,6 +12,7 @@
 typedef struct	s_shared
 {
 	sem_t		*mutex;
+	char		is_locked;
 	char		*mutex_name;
 	t_list		ressources;
 }				t_shared;

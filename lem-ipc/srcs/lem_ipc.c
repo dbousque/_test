@@ -42,17 +42,136 @@ void	test_msq_queue(int argc, t_params *params)
 }
 */
 
+void	remove_player_from_team(t_team_data *team, unsigned int player_id)
+{
+	unsigned int	i;
+	char			decal;
+
+	decal = 0;
+	i = 0;
+	while (i < team->players_len)
+	{
+		if (team->players_elts[i].player_id == player_id)
+			decal = 1;
+		if (i < team->players_len - 1)
+			team->players_elts[i] = team->players_elts[i + decal];
+		i++;
+	}
+	team->players_len--;
+	team->nb_killed_self++;
+}
+
+void	exit_player(t_shared *shared, unsigned int team_id,
+										unsigned int player_id)
+{
+	t_team_data		*team;
+	t_player		*player;
+
+	team = NULL;
+	player = NULL;
+	g_game_data->nb_alive_players--;
+	unlock_ressources(shared);
+	printf("exiting player %u in team %u...\n", player_id, team_id);
+	if (!(lock_ressources(shared)))
+	{
+		printf("could not lock ressources during player %u exit\n", player_id);
+		return ;
+	}
+	update_ressources(shared);
+	if (!(get_player_and_team(team_id, player_id, &team, &player)))
+	{
+		printf("could not find player %u while exiting\n", player_id);
+		unlock_ressources(shared);
+		return ;
+	}
+	remove_player_from_team(team, player_id);
+	unlock_ressources(shared);
+	if (g_game_data->nb_alive_players == 0)
+		free_ressources(shared);
+	printf("done.\n");
+}
+
+void	could_not_lock(t_shared *shared, unsigned int team_id,
+														unsigned int player_id)
+{
+	printf("player %u could not lock ressources, exiting...\n", player_id);
+	exit_player(shared, team_id, player_id);
+}
+
+void	signal_handler(int dummy)
+{
+	(void)dummy;
+	if (!g_shared)
+	{
+		printf("CTRL-C catched but no data\n");
+		return ;
+	}
+	printf("catched CTRL-C\n");
+	exit_player(g_shared, g_team_id, g_player_id);
+}
+
+void	update_leader_if_necessary(t_team_data *team, t_player *player)
+{
+	unsigned int	i;
+
+	i = 0;
+	while (i < team->players_len)
+	{
+		if (team->players_elts[i].is_team_leader)
+			return ;
+		i++;
+	}
+	player->is_team_leader = 1;
+}
+
+void	launch(t_params *params, t_shared *shared)
+{
+	t_team_data		*team;
+	t_player		*player;
+	unsigned int	player_id;
+	unsigned int	team_id;
+
+	team = NULL;
+	player = NULL;
+	if (!(add_player(shared, params, &player_id)))
+		return ;
+	team_id = params->team_id;
+	g_shared = shared;
+	g_team_id = team_id;
+	g_player_id = player_id;
+	while (1)
+	{
+		printf("enter loop\n");
+		if (!(lock_ressources(shared)))
+			return (could_not_lock(shared, team_id, player_id));
+		printf("locked\n");
+		update_ressources(shared);
+		printf("updated\n");
+		g_game_data->nb_moves++;
+		if (!(get_player_and_team(team_id, player_id, &team, &player)))
+			return (exit_player(shared, team_id, player_id));
+		update_leader_if_necessary(team, player);
+		if (!(make_move(shared, team, player)))
+			return (exit_player(shared, team_id, player_id));
+		unlock_ressources(shared);
+	}
+}
+
 int		main(int argc, char **argv)
 {
 	t_params	params;
 	t_shared	shared;
 
+	srand(time(NULL));
+	g_shared = NULL;
+	g_team_id = 0;
+	g_player_id = 0;
+	signal(SIGINT, signal_handler);
 	if (!(parse_params(argc, argv, &params)))
 		return (0);
 	if (!(init_ressources(&params, &shared)))
 		return (0);
-	if (!(add_player(&shared)))
-		return (0);
-	free_ressources(&shared, &params);
+	launch(&params, &shared);
+	free_ressources(&shared);
 	return (0);
 }

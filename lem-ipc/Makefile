@@ -22,7 +22,13 @@ SOURCES		=	srcs/lem_ipc.c \
 				srcs/shared_ressources2.c \
 				srcs/init_ressources.c \
 				srcs/init_ressources2.c \
-				srcs/player.c
+				srcs/player.c \
+				srcs/player2.c \
+				srcs/player3.c \
+				srcs/make_move.c \
+				srcs/is_surrounded.c \
+				srcs/find_player_team.c \
+				srcs/attack_strategy.c
 
 HEADERS		=	-I./includes/
 

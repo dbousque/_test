@@ -22,6 +22,7 @@ char	set_mutex(t_shared *shared, char *mutex_name)
 		shared->mutex = NULL;
 		return (0);
 	}
+	shared->is_locked = 0;
 	shared->mutex_name = mutex_name;
 	return (1);
 }

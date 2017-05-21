@@ -12,7 +12,7 @@
 
 #include "lem_ipc.h"
 
-size_t	ft_strlen(char *str)
+size_t			ft_strlen(char *str)
 {
 	size_t	len;
 
@@ -22,7 +22,7 @@ size_t	ft_strlen(char *str)
 	return (len);
 }
 
-void	millis_sleep(unsigned int millis)
+void			millis_sleep(unsigned int millis)
 {
 	struct timespec	time;
 	struct timespec	ignore;

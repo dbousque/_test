@@ -4,14 +4,22 @@
 
 char	lock_ressources(t_shared *shared)
 {
+	if (shared->is_locked)
+	{
+		printf("locking already locked ressources\n");
+		return (0);
+	}
 	if (sem_wait(shared->mutex) == -1)
 		return (0);
+	shared->is_locked = 1;
 	return (1);
 }
 
 void	unlock_ressources(t_shared *shared)
 {
-	sem_post(shared->mutex);
+	if (shared->is_locked)
+		sem_post(shared->mutex);
+	shared->is_locked = 0;
 }
 
 void	free_ressources(t_shared *shared)

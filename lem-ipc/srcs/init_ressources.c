@@ -22,7 +22,19 @@ void	init_game_data(t_params *params)
 	g_game_data->team_data_size = 4;
 }
 
-char	get_ressources(t_shared *shared)
+void	make_board_empty(void)
+{
+	size_t	i;
+
+	i = 0;
+	while (i < g_game_data->board_size * g_game_data->board_size)
+	{
+		g_game_data->board[i] = FREE_BOARD_TILE;
+		i++;
+	}
+}
+
+char	get_ressources(t_shared *shared, char first_exec)
 {
 	char	error;
 	char	creation;
@@ -44,18 +56,14 @@ char	get_ressources(t_shared *shared)
 		printf("could not get board\n");
 		return (0);
 	}
+	if (first_exec)
+		make_board_empty();
 	return (update_ressources(shared));
 }
 
 char	init_ressources2(t_params *params, t_shared *shared, char error,
 																char creation)
 {
-	init_shared(shared, MUTEX_NAME);
-	if (!(lock_ressources(shared)))
-	{
-		printf("could not lock ressources\n");
-		return (0);
-	}
 	creation = 0;
 	if (!(add_shared_ressource(shared, GAME_DATA_KEY, sizeof(t_game_data),
 																&creation)))
@@ -75,11 +83,21 @@ char	init_ressources2(t_params *params, t_shared *shared, char error,
 	if (creation)
 		init_game_data(params);
 	printf("board_size : %u\n", g_game_data->board_size);
-	unlock_ressources(shared);
-	return (get_ressources(shared));
+	return (get_ressources(shared, creation));
 }
 
 char	init_ressources(t_params *params, t_shared *shared)
 {
-	return (init_ressources2(params, shared, 0, 0));
+	char	res;
+
+	init_shared(shared, MUTEX_NAME);
+	//free_ressources(shared);
+	if (!(lock_ressources(shared)))
+	{
+		printf("could not lock ressources\n");
+		return (0);
+	}
+	res = init_ressources2(params, shared, 0, 0);
+	unlock_ressources(shared);
+	return (res);
 }

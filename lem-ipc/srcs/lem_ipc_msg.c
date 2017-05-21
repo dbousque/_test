@@ -24,7 +24,7 @@ char	send_message(t_player *player, t_lemipc_msg *msg)
 		printf("could not get msg queue\n");
 		return (0);
 	}
-	if (!(send_msq_queue(queue_id, (char*)msg, sizeof(msg),
+	if (!(send_msq_queue(queue_id, (char*)msg, sizeof(t_lemipc_msg),
 														player->player_id)))
 	{
 		printf("could not send msg\n");
@@ -48,7 +48,6 @@ char	receive_message(t_player *player, t_lemipc_msg *msg)
 	if (!(receive_msq_queue(queue_id, sizeof(t_lemipc_msg), player->player_id,
 																(char*)msg)))
 	{
-		printf("could not receive msg\n");
 		return (0);
 	}
 	return (1);
