@@ -36,6 +36,31 @@ char	init_shared(t_shared *shared, char *mutex_name)
 	return (1);
 }
 
+char	find_shared_in_list_or_add(t_shared *shared, key_t key,
+													t_shared_ressource *res)
+{
+	size_t				i;
+	t_shared_ressource	*tmp;
+
+	i = 0;
+	while (i < shared->ressources.len)
+	{
+		tmp = &(((t_shared_ressource*)shared->ressources.elts)[i]);
+		if (tmp->key == key)
+		{
+			printf("key : %d, shmid : %d, data : %p, size : %lu\n", tmp->key, tmp->shmid, tmp->data, tmp->size);
+			*tmp = *res;
+			printf("after\n");
+			printf("key : %d, shmid : %d, data : %p, size : %lu\n", tmp->key, tmp->shmid, tmp->data, tmp->size);
+			return (1);
+		}
+		i++;
+	}
+	if (!(add_to_list(&(shared->ressources), res)))
+		return (0);
+	return (1);
+}
+
 char	add_shared_ressource(t_shared *shared, key_t key, size_t size,
 																char *creation)
 {
@@ -56,11 +81,44 @@ char	add_shared_ressource(t_shared *shared, key_t key, size_t size,
 		return (0);
 	}
 	res.data = shmat(res.shmid, NULL, 0);
-	if (res.data < 0 || !(res.data))
+	if (res.data == (void*)-1 || !(res.data))
+	{
+		printf("shmat failed\n");
 		return (0);
-	if (!(add_to_list(&(shared->ressources), &res)))
-		return (0);
-	return (1);
+	}
+	return (find_shared_in_list_or_add(shared, key, &res));
+}
+
+char	remove_shared_ressource(t_shared *shared, key_t key, void *addr)
+{
+	t_shared_ressource	*res;
+	size_t				i;
+	char				found;
+	int					decal;
+
+	decal = 0;
+	found = 0;
+	i = 0;
+	while (i < shared->ressources.len)
+	{
+		res = &(((t_shared_ressource*)shared->ressources.elts)[i]);
+		if (res->key == key)
+		{
+			decal = 1;
+			found = 1;
+			if (shmctl(res->shmid, IPC_RMID, 0) == -1 || shmdt(addr) == -1)
+			{
+				printf("could not remove ressource\n");
+				return (0);
+			}
+		}
+		if (i < shared->ressources.len - 1)
+			*res = ((t_shared_ressource*)shared->ressources.elts)[i + decal];
+		i++;
+	}
+	if (found)
+		shared->ressources.len--;
+	return (found);
 }
 
 void	*get_shared_ressource(t_shared *shared, key_t key, char *error)

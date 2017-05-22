@@ -75,13 +75,27 @@ void	exit_player(t_shared *shared, unsigned int team_id,
 	if (!(lock_ressources(shared)))
 	{
 		printf("could not lock ressources during player %u exit\n", player_id);
+		if (g_game_data->nb_alive_players == 0)
+			free_ressources(shared);
+		exit(0);
 		return ;
 	}
-	update_ressources(shared);
+	if (!(update_ressources(shared)))
+	{
+		printf("could not update ressources while exiting\n");
+		unlock_ressources(shared);
+		if (g_game_data->nb_alive_players == 0)
+			free_ressources(shared);
+		exit(0);
+		return ;
+	}
 	if (!(get_player_and_team(team_id, player_id, &team, &player)))
 	{
 		printf("could not find player %u while exiting\n", player_id);
 		unlock_ressources(shared);
+		if (g_game_data->nb_alive_players == 0)
+			free_ressources(shared);
+		exit(0);
 		return ;
 	}
 	remove_player_from_team(team, player_id);
@@ -89,6 +103,7 @@ void	exit_player(t_shared *shared, unsigned int team_id,
 	if (g_game_data->nb_alive_players == 0)
 		free_ressources(shared);
 	printf("done.\n");
+	exit(0);
 }
 
 void	could_not_lock(t_shared *shared, unsigned int team_id,
@@ -104,6 +119,7 @@ void	signal_handler(int dummy)
 	if (!g_shared)
 	{
 		printf("CTRL-C catched but no data\n");
+		exit(0);
 		return ;
 	}
 	printf("catched CTRL-C\n");
@@ -145,7 +161,11 @@ void	launch(t_params *params, t_shared *shared)
 		if (!(lock_ressources(shared)))
 			return (could_not_lock(shared, team_id, player_id));
 		printf("locked\n");
-		update_ressources(shared);
+		if (!(update_ressources(shared)))
+		{
+			printf("could not update ressources. exiting...\n");
+			return (exit_player(shared, team_id, player_id));
+		}
 		printf("updated\n");
 		g_game_data->nb_moves++;
 		if (!(get_player_and_team(team_id, player_id, &team, &player)))

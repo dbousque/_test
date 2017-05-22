@@ -9,9 +9,12 @@ char	lock_ressources(t_shared *shared)
 		printf("locking already locked ressources\n");
 		return (0);
 	}
-	if (sem_wait(shared->mutex) == -1)
-		return (0);
 	shared->is_locked = 1;
+	if (sem_wait(shared->mutex) == -1)
+	{
+		shared->is_locked = 0;
+		return (0);
+	}
 	return (1);
 }
 
@@ -38,4 +41,7 @@ void	free_ressources(t_shared *shared)
 		shmctl(res->shmid, IPC_RMID, 0);
 		i++;
 	}
+	free(shared->ressources.elts);
+	shared->ressources.len = 0;
+	shared->ressources.size = 0;
 }

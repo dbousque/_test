@@ -7,6 +7,7 @@
 # include <sys/shm.h>
 # include <fcntl.h>
 # include <stdio.h>
+# include <stdlib.h>
 # include "list.h"
 
 typedef struct	s_shared
@@ -33,5 +34,7 @@ void			*get_shared_ressource(t_shared *shared, key_t key,
 char			lock_ressources(t_shared *shared);
 void			unlock_ressources(t_shared *shared);
 void			free_ressources(t_shared *shared);
+char			remove_shared_ressource(t_shared *shared, key_t key,
+																void *addr);
 
 #endif

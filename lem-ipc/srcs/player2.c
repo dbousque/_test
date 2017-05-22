@@ -36,6 +36,12 @@ void	make_new_players_size(t_shared *shared, t_team_data *team, char *error)
 	char	creation;
 	size_t	size;
 
+	if (!(remove_shared_ressource(shared, team->team_id, team->players_elts)))
+	{
+		printf("could not remove players on team %u\n", team->team_id);
+		*error = 1;
+		return ;
+	}
 	size = sizeof(t_player) * (team->players_size * 2);
 	creation = 0;
 	if (!(add_shared_ressource(shared, team->team_id, size, &creation)))
@@ -94,6 +100,13 @@ void	make_new_teams_size(t_shared *shared, char *error)
 	char	creation;
 	size_t	size;
 
+	if (!(remove_shared_ressource(shared, TEAM_DATA_KEY,
+												g_game_data->team_data_elts)))
+	{
+		printf("could not remove teams_elts\n");
+		*error = 1;
+		return ;
+	}
 	size = sizeof(t_team_data) * (g_game_data->team_data_size * 2);
 	creation = 0;
 	if (!(add_shared_ressource(shared, TEAM_DATA_KEY, size, &creation)))
