@@ -111,7 +111,11 @@ char			add_player(t_shared *shared, t_params *params,
 		printf("could not lock ressources\n");
 		return (0);
 	}
-	update_ressources(shared);
+	if (!(update_ressources(shared)))
+	{
+		printf("could not update ressources\n");
+		return (0);
+	}
 	error = 0;
 	team = find_or_make_team(shared, params->team_id, &error);
 	if (error)

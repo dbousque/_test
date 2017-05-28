@@ -72,6 +72,8 @@ t_game_data			*g_game_data;
 unsigned int		g_team_id;
 unsigned int		g_player_id;
 t_shared			*g_shared;
+char				g_exit;
+char				g_exiting;
 
 size_t				ft_strlen(char *str);
 void				millis_sleep(unsigned int millis);
@@ -79,6 +81,7 @@ unsigned int		board_get(unsigned int y, unsigned int x);
 char				parse_params(int argc, char **argv, t_params *params);
 char				send_message(t_player *player, t_lemipc_msg *msg);
 char				receive_message(t_player *player, t_lemipc_msg *msg);
+void				remove_queue(int key);
 char				update_ressources(t_shared *shared);
 char				init_ressources(t_params *params, t_shared *shared);
 char				add_player(t_shared *shared, t_params *params,

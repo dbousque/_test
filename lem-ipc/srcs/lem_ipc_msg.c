@@ -52,3 +52,8 @@ char	receive_message(t_player *player, t_lemipc_msg *msg)
 	}
 	return (1);
 }
+
+void	remove_queue(int key)
+{
+	remove_msq_queue(key);
+}

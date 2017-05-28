@@ -12,11 +12,6 @@
 
 #include "msg_queue.h"
 
-void	remove_msq_queue(int id)
-{
-	msgctl(id, IPC_RMID, NULL);
-}
-
 int		get_msq_queue(int key, char *error)
 {
 	int		id;
@@ -29,6 +24,18 @@ int		get_msq_queue(int key, char *error)
 		return (0);
 	}
 	return (id);
+}
+
+void	remove_msq_queue(int id)
+{
+	int		queue_id;
+	char	error;
+
+	error = 0;
+	queue_id = get_msq_queue(id, &error);
+	if (error)
+		return ;
+	msgctl(queue_id, IPC_RMID, NULL);
 }
 
 char	receive_msq_queue(int id, size_t len, long type, char *res)
