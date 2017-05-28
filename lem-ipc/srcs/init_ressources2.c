@@ -43,6 +43,21 @@ char	update_ressources2(t_shared *shared, char error, char creation)
 	size_t	size;
 	size_t	i;
 
+	size = sizeof(unsigned int) * g_game_data->board_size *
+													g_game_data->board_size;
+	if (!(add_shared_ressource(shared, BOARD_KEY, size, &creation)))
+	{
+		printf("could not add board\n");
+		return (0);
+	}
+	g_game_data->board = (unsigned int*)get_shared_ressource(shared,
+														BOARD_KEY, &error);
+	if (error)
+	{
+		printf("could not get board\n");
+		return (0);
+	}
+
 	size = sizeof(t_team_data) * g_game_data->team_data_size;
 	if (!(add_shared_ressource(shared, TEAM_DATA_KEY, size, &creation)))
 	{

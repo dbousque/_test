@@ -36,8 +36,8 @@ char	init_shared(t_shared *shared, char *mutex_name)
 	return (1);
 }
 
-char	find_shared_in_list_or_add(t_shared *shared, key_t key,
-													t_shared_ressource *res)
+char	find_shared_ressource(t_shared *shared, key_t key,
+												t_shared_ressource **existing)
 {
 	size_t				i;
 	t_shared_ressource	*tmp;
@@ -48,24 +48,23 @@ char	find_shared_in_list_or_add(t_shared *shared, key_t key,
 		tmp = &(((t_shared_ressource*)shared->ressources.elts)[i]);
 		if (tmp->key == key)
 		{
-			printf("key : %d, shmid : %d, data : %p, size : %lu\n", tmp->key, tmp->shmid, tmp->data, tmp->size);
-			*tmp = *res;
-			printf("after\n");
-			printf("key : %d, shmid : %d, data : %p, size : %lu\n", tmp->key, tmp->shmid, tmp->data, tmp->size);
+			*existing = tmp;
 			return (1);
 		}
 		i++;
 	}
-	if (!(add_to_list(&(shared->ressources), res)))
-		return (0);
-	return (1);
+	return (0);
 }
 
 char	add_shared_ressource(t_shared *shared, key_t key, size_t size,
 																char *creation)
 {
 	t_shared_ressource	res;
+	t_shared_ressource	*existing;
+	char				already_set_in_process;
 
+	//printf("adding %d of size %lu\n", key, size);
+	already_set_in_process = find_shared_ressource(shared, key, &existing);
 	*creation = 1;
 	res.key = key;
 	res.size = size;
@@ -80,13 +79,27 @@ char	add_shared_ressource(t_shared *shared, key_t key, size_t size,
 		printf("failure in shmget\n");
 		return (0);
 	}
+	//printf("shmid : %d\n", res.shmid);
+	if (already_set_in_process)
+	{
+		if (shmdt(existing->data) == -1)
+			return (0);
+	}
 	res.data = shmat(res.shmid, NULL, 0);
 	if (res.data == (void*)-1 || !(res.data))
 	{
+		//perror("la");
 		printf("shmat failed\n");
 		return (0);
 	}
-	return (find_shared_in_list_or_add(shared, key, &res));
+	if (!already_set_in_process)
+	{
+		if (!(add_to_list(&(shared->ressources), &res)))
+			return (0);
+	}
+	else
+		*existing = res;
+	return (1);
 }
 
 char	remove_shared_ressource(t_shared *shared, key_t key, void *addr)
@@ -96,6 +109,7 @@ char	remove_shared_ressource(t_shared *shared, key_t key, void *addr)
 	char				found;
 	int					decal;
 
+	//printf("removing %d\n", key);
 	decal = 0;
 	found = 0;
 	i = 0;
@@ -104,6 +118,7 @@ char	remove_shared_ressource(t_shared *shared, key_t key, void *addr)
 		res = &(((t_shared_ressource*)shared->ressources.elts)[i]);
 		if (res->key == key)
 		{
+			//printf("shmid : %d\n", res->shmid);
 			decal = 1;
 			found = 1;
 			if (shmctl(res->shmid, IPC_RMID, 0) == -1 || shmdt(addr) == -1)

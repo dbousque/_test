@@ -58,18 +58,30 @@ char	make_move(t_shared *shared, t_team_data *team, t_player *player)
 	t_team_data		*ennemy_team;
 
 	ennemy_team = NULL;
+	//printf("before receive messages\n");
+	//fflush(stdout);
 	set = receive_messages(player, &attack_target);
+	//printf("after receive messages\n");
+	//fflush(stdout);
 	if (is_surrounded(player, &ennemy_id))
 	{
+		//printf("is_surrounded\n");
+		//fflush(stdout);
 		if (!(find_team(ennemy_id, &ennemy_team)))
 			return (0);
 		ennemy_team->nb_killed_others++;
-		exit_player(shared, player->team_id, player->player_id);
+		exit_player(shared, player->team_id, player->player_id, 1);
 	}
+	//printf("is_team_leader?\n");
+	//fflush(stdout);
 	if (player->is_team_leader)
 		make_attack_strategy(team, player, &attack_target, &set);
+	//printf("after make strategy\n");
+	//fflush(stdout);
 	if (set)
 	{
+		//printf("navigate_towards\n");
+		//fflush(stdout);
 		if (!(navigate_towards(team, player, attack_target)))
 			return (1);
 	}

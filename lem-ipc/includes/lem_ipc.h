@@ -18,6 +18,7 @@
 # define GAME_DATA_KEY -4242
 # define BOARD_KEY -4243
 # define TEAM_DATA_KEY -4244
+# define REMOVE_PLAYER_KEY -4245
 # define FREE_BOARD_TILE (((unsigned int)INT_MAX) + 1)
 # define BOARD_GET(y, x) (g_game_data->board[y * g_game_data->board_size + x])
 
@@ -63,6 +64,8 @@ typedef struct		s_game_data
 typedef struct		s_lemipc_msg
 {
 	unsigned int	attack_target;
+	unsigned int	team_id;
+	unsigned int	player_id;
 }					t_lemipc_msg;
 
 t_game_data			*g_game_data;
@@ -95,6 +98,6 @@ char				find_team(unsigned int team_id, t_team_data **team);
 void				make_attack_strategy(t_team_data *team, t_player *player,
 									unsigned int *attack_target, char *set);
 void				exit_player(t_shared *shared, unsigned int team_id,
-													unsigned int player_id);
+										unsigned int player_id, char quit);
 
 #endif
