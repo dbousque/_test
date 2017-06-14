@@ -6,7 +6,7 @@
 /*   By: dbousque <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/09/22 17:50:59 by dbousque          #+#    #+#             */
-/*   Updated: 2016/09/22 17:51:07 by dbousque         ###   ########.fr       */
+/*   Updated: 2017/05/27 15:22:32 by dbousque         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,7 @@ void	print_local_or_ext_64(struct nlist_64 *symbol, char c)
 {
 	char	to_print;
 
+	(void)symbol;
 	to_print = c;
 	if (c >= 'A' && c <= 'Z' && !(symbol->n_type & N_EXT))
 		to_print = c - 'A' + 'a';
