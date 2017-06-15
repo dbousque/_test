@@ -42,6 +42,24 @@ void	test_msq_queue(int argc, t_params *params)
 }
 */
 
+void	exit_if_necessary(void)
+{
+	struct timespec		req;
+
+	req.tv_sec = 0;
+	req.tv_nsec = 1 * 1000000;
+	while (g_exiting)
+	{
+		if (g_exit)
+		{
+			printf("it's over\n");
+			fflush(stdout);
+			exit(0);
+		}
+		nanosleep(&req, &req);
+	}
+}
+
 void	remove_player_from_team(t_team_data *team, unsigned int player_id)
 {
 	unsigned int	i;
@@ -182,24 +200,6 @@ void	signal_handler(int dummy)
 	//exit_player(g_shared, g_team_id, g_player_id);
 }
 
-void	exit_if_necessary(void)
-{
-	struct timespec		req;
-
-	req.tv_sec = 0;
-	req.tv_nsec = 1 * 1000000;
-	while (g_exiting)
-	{
-		if (g_exit)
-		{
-			printf("it's over\n");
-			fflush(stdout);
-			exit(0);
-		}
-		nanosleep(&req, &req);
-	}
-}
-
 void	remove_dead_players(t_shared *shared)
 {
 	t_player		mock_player;
@@ -225,6 +225,7 @@ void	update_leader_if_necessary(t_team_data *team, t_player *player)
 	i = 0;
 	while (i < team->players_len)
 	{
+		exit_if_necessary();
 		if (team->players_elts[i].is_team_leader)
 			return ;
 		i++;
@@ -234,6 +235,7 @@ void	update_leader_if_necessary(t_team_data *team, t_player *player)
 
 void	print_player(t_player *player)
 {
+	exit_if_necessary();
 	printf("\n  is_team_leader: %d\n  x: %u\n  y: %u\n  team_id: %u\n  player_id: %u\n", player->is_team_leader, player->x, player->y, player->team_id, player->player_id);
 }
 
@@ -245,10 +247,12 @@ void	print_team(t_team_data *team)
 	printf("\nteam_id: %u\nnb_killed_others: %u\nnb_killed_self: %u\n", team->team_id, team->nb_killed_others, team->nb_killed_self);
 	printf("players_elts: %p\nplayers_len: %lu\nplayers_size: %lu\n", team->players_elts, team->players_len, team->players_size);
 	i = 0;
+	exit_if_necessary();
 	while (i < team->players_len)
 	{
 		printf("printing player %lu\n", i);
 		fflush(stdout);
+		exit_if_necessary();
 		print_player(&(team->players_elts[i]));
 		printf("after printing player %lu\n", i);
 		fflush(stdout);
@@ -264,9 +268,11 @@ void	print_data(t_shared *shared)
 	printf("\nboard_size: %u\nboard: %p\nnb_moves: %lu\nnb_alive_players: %u\n", g_game_data->board_size, g_game_data->board, g_game_data->nb_moves, g_game_data->nb_alive_players);
 	printf("  first team len : %lu\n", g_game_data->team_data_elts[0].players_len);
 	printf("player_counter: %u\nteam_data_elts: %p\nteam_data_len: %lu\nteam_data_size: %lu\n", g_game_data->player_counter, g_game_data->team_data_elts, g_game_data->team_data_len, g_game_data->team_data_size);
+	exit_if_necessary();
 	i = 0;
 	while (i < g_game_data->team_data_len)
 	{
+		exit_if_necessary();
 		print_team(&(g_game_data->team_data_elts[i]));
 		i++;
 	}
@@ -295,6 +301,7 @@ void	launch(t_params *params, t_shared *shared)
 		i++;
 		//printf("enter loop\n");
 		//fflush(stdout);
+		//sleep(2);
 		exit_if_necessary();
 		if (!(lock_ressources(shared)))
 		{
@@ -311,7 +318,7 @@ void	launch(t_params *params, t_shared *shared)
 			printf("could not update ressources. exiting...\n");
 			return (exit_player(shared, team_id, player_id, 1));
 		}
-		print_data(shared);
+		//print_data(shared);
 		exit_if_necessary();
 		//printf("removing\n");
 		//fflush(stdout);

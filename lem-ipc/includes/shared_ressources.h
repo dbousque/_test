@@ -8,6 +8,7 @@
 # include <fcntl.h>
 # include <stdio.h>
 # include <stdlib.h>
+# include <errno.h>
 # include "list.h"
 
 typedef struct	s_shared

@@ -10,7 +10,7 @@
 #                                                                              #
 # **************************************************************************** #
 
-NAME		=	lemipc
+NAME		=	lemipc2
 
 SOURCES		=	srcs/lem_ipc.c \
 				srcs/utils.c \

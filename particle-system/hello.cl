@@ -7,9 +7,9 @@ typedef struct	s_particle
 }				t_particle;
 
 __kernel void calculate_particles_position(float center_gravity_x, float center_gravity_y,
-										size_t nb_particles, __global t_particle* particles)
+								unsigned int nb_particles, __global t_particle *particles)
 {
-	size_t		i;
+	unsigned int	i;
 
 	i = 0;
 	while (i < nb_particles)

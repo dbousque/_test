@@ -8,22 +8,30 @@
 
 char	lock_ressources(t_shared *shared)
 {
+	int		r;
 	if (shared->is_locked)
 	{
 		printf("locking already locked ressources\n");
 		return (0);
 	}
+	//int		sem_val;
 	struct timeval my_time;
+	//sem_getvalue(shared->mutex, &sem_val);
+	//printf("semaphore value : %d\n", sem_val);
 	gettimeofday(&my_time, NULL);
 	printf("at : %d\n", my_time.tv_usec);
 	printf("LOCKING!\n");
-	if (sem_wait(shared->mutex) == -1)
+	while ((r = sem_wait(shared->mutex)) == -1 && errno == EINTR)
 	{
 		printf("LOCCCCIINGGG EERRRORR!\n");
-		shared->is_locked = 0;
+	}
+	if (r == -1)
+	{
 		return (0);
 	}
 	shared->is_locked = 1;
+	//sem_getvalue(shared->mutex, &sem_val);
+	//printf("semaphore value : %d\n", sem_val);
 	gettimeofday(&my_time, NULL);
 	printf("received lock at : %d\n", my_time.tv_usec);
 	return (1);
@@ -31,22 +39,31 @@ char	lock_ressources(t_shared *shared)
 
 void	unlock_ressources(t_shared *shared)
 {
+	//int		sem_val;
 	struct timeval my_time;
+	//sem_getvalue(shared->mutex, &sem_val);
+	//printf("semaphore value : %d\n", sem_val);
 	gettimeofday(&my_time, NULL);
 	printf("at : %d\n", my_time.tv_usec);
 	if (shared->is_locked)
 	{
 		printf("UNLOCKING!\n");
 		if (sem_post(shared->mutex) == -1)
+		{
 			printf("ERROR WHILE UNLOCKING!\n");
+			return ;
+		}
 	}
 	else
 	{
 		printf("UNLOCKING BUT ALREADY UNLOCKED\n");
 		fflush(stdout);
-		sem_post(shared->mutex);
+		if (sem_post(shared->mutex) == -1)
+			return ;
 	}
 	shared->is_locked = 0;
+	//sem_getvalue(shared->mutex, &sem_val);
+	//printf("semaphore value : %d\n", sem_val);
 }
 
 void	free_ressources(t_shared *shared)

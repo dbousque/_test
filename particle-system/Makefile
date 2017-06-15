@@ -3,7 +3,12 @@
 NAME		=	particle-system
 
 SOURCES		=	hello.c \
-				window.c
+				window.c \
+				cl_buffer.c \
+				utils.c \
+				gl_buffer.c \
+				gl_program.c \
+				cl_program.c
 
 OBJECTS	=	$(subst .c,.o,$(SOURCES))
 
@@ -16,7 +21,7 @@ else
 FLAGS	=	-framework opencl -framework OpenGL -lglfw -lGLEW -lSOIL
 endif
 
-CC		=	gcc
+CC		=	clang
 
 .SILENT:
 
