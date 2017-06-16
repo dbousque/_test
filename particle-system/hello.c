@@ -23,22 +23,26 @@ char	call_kernel_with_args(t_cl_program *program, void **args, size_t *sizes, si
 
 char	call_kernel(t_cl_program *program, t_cl_buffer *buffer, unsigned int nb_particles)
 {
-	void	*args[4];
-	size_t	args_size[4];
+	void	*args[5];
+	size_t	args_size[5];
 	float center_gravity_x;
 	float center_gravity_y;
+	float time_delta;
 
+	time_delta = 0.23;
 	center_gravity_x = 12.4;
 	center_gravity_y = 4.2;
-	args[0] = &center_gravity_x;
-	args[1] = &center_gravity_y;
-	args[2] = &nb_particles;
-	args[3] = &(buffer->buffer);
+	args[0] = &time_delta;
+	args[1] = &center_gravity_x;
+	args[2] = &center_gravity_y;
+	args[3] = &nb_particles;
+	args[4] = &(buffer->buffer);
 	args_size[0] = sizeof(float);
 	args_size[1] = sizeof(float);
-	args_size[2] = sizeof(unsigned int);
-	args_size[3] = sizeof(cl_mem);
-	if (!(call_kernel_with_args(program, args, args_size, 4)))
+	args_size[2] = sizeof(float);
+	args_size[3] = sizeof(unsigned int);
+	args_size[4] = sizeof(cl_mem);
+	if (!(call_kernel_with_args(program, args, args_size, 5)))
 		return (0);
 	return (1);
 }
@@ -69,30 +73,70 @@ char	print_buffer_content(t_cl_program *program, t_cl_buffer *buffer,
 	return (1);
 }
 
-char	init_opengl(int width, int height, char *title_name)
+char	init_opengl(int width, int height, char *title_name, t_window *window)
 {
-	t_window	window;
-
-	if (!(setup_window(width, height, title_name, &window)))
+	if (!(setup_window(width, height, title_name, window)))
 		return (0);
 	return (1);
 }
 
+char	update_particles_positions(t_cl_program *cl_program, t_cl_buffer *cl_buffer,
+														unsigned int nb_particles)
+{
+	glFinish();
+	clEnqueueAcquireGLObjects(cl_program->command_queue, 1,
+										&(cl_buffer->buffer), 0, NULL, NULL);
+	if (!call_kernel(cl_program, cl_buffer, nb_particles))
+		return (0);
+	if (!print_buffer_content(cl_program, cl_buffer, nb_particles))
+		return (0);
+	clEnqueueReleaseGLObjects(cl_program->command_queue, 1,
+										&(cl_buffer->buffer), 0, NULL, NULL);
+	clFinish(cl_program->command_queue);
+	return (1);
+}
+
+void	main_loop(t_window *window, t_cl_program *cl_program, t_cl_buffer *cl_buffer,
+		t_gl_program *gl_program, t_gl_buffer *gl_buffer, unsigned int nb_particles)
+{
+	while (!glfwWindowShouldClose(window->win))
+	{
+		glfwPollEvents();
+	
+		glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		
+		if (!(update_particles_positions(cl_program, cl_buffer, nb_particles)))
+		{
+			printf("could not update particles position. Exiting...\n");
+			break ;
+		}
+
+		draw_gl_buffer(gl_program, gl_buffer, nb_particles);
+
+		glfwSwapBuffers(window->win);
+	}
+	finalize_cl_program(cl_program);
+}
+
 int		main(void)
 {
-	unsigned int		nb_particles;
-	size_t				file_size;
+	t_window			window;
 	t_cl_program		cl_program;
 	t_cl_buffer			cl_buffer;
 	t_gl_program		gl_program;
 	t_gl_buffer			gl_buffer;
+	unsigned int		nb_particles;
+	size_t				file_size;
 	char				*source_str;
 
 	nb_particles = 120;
 
-	use clGetGLContextInfoKHR to create (?) CL context from GL context
+	//use clGetGLContextInfoKHR to create (?) CL context from GL context
 
-	init_opengl(800, 800, "salut title");
+	if (!(init_opengl(800, 800, "salut title", &window)))
+		return (0);
+
 	if (!(make_gl_program("shaders/vertex.vs", "shaders/fragment.fs", &gl_program)))
 		return (0);
 	if (!(make_gl_buffer(nb_particles, &gl_buffer)))
@@ -106,22 +150,6 @@ int		main(void)
 	if (!(make_cl_buffer(&cl_program, &gl_buffer, &cl_buffer)))
 		return (0);
 
-	clFinish(cl_program.command_queue);
-	glFinish();
-	// LOOK FOR EVENTS TO FINISH ???
-	clEnqueueAcquireGLObjects(cl_program.command_queue, 1, &(cl_buffer.buffer), 0, NULL, NULL);
-
-	clFinish(cl_program.command_queue);
-
-	if (!call_kernel(&cl_program, &cl_buffer, nb_particles))
-		return (0);
-	if (!print_buffer_content(&cl_program, &cl_buffer, nb_particles))
-		return (0);
-
-	finalize_buffer(&cl_buffer);
-	finalize_cl_program(&cl_program);
-
-	//sleep(3);
- 
+	main_loop(&window, &cl_program, &cl_buffer, &gl_program, &gl_buffer, nb_particles); 
 	return (0);
 }

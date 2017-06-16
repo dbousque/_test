@@ -1,6 +1,6 @@
 #version 410 core
 
-layout(location = 0) out vec3 color;
+layout (location = 0) out vec3 color;
 
 in vec2 Coords;
 

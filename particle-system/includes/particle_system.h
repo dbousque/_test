@@ -20,6 +20,14 @@
 #	include <CL/cl_gl.h>
 # endif
 
+//# ifdef UNIX
+#	include <GL/glx.h>
+//# endif
+
+/*# ifdef _WIN32
+#  include <windows.h>
+# endif*/
+
 # define FILE_MAX_SIZE (5 * 1024 * 1024)
 
 typedef struct			s_window

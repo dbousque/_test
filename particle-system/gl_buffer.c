@@ -7,7 +7,7 @@ void	draw_gl_buffer(t_gl_program *gl_program, t_gl_buffer *buffer,
 {
 	glUseProgram(gl_program->program);
 	glBindVertexArray(buffer->vao);
-	glDrawArrays(GL_TRIANGLES, 0, nb_particles);
+	glDrawArrays(GL_POINTS, 0, nb_particles);
 	glBindVertexArray(0);
 }
 

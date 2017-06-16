@@ -22,7 +22,8 @@ void	init_cl_program_struct(t_cl_program *program)
 	program->platform_id = NULL;
 }
 
-char	make_cl_program(char *source_str, size_t file_size, char *kernel_name, t_cl_program *res)
+char	make_cl_program(char *source_str, size_t file_size, char *kernel_name,
+															t_cl_program *res)
 {
 	cl_uint		ret_num_devices;
 	cl_uint		ret_num_platforms;
@@ -35,9 +36,30 @@ char	make_cl_program(char *source_str, size_t file_size, char *kernel_name, t_cl
 	ret = clGetDeviceIDs(res->platform_id, CL_DEVICE_TYPE_DEFAULT, 1, &(res->device_id), &ret_num_devices);
 	if (ret != CL_SUCCESS)
 		return (cl_operation_failed(res, "clGetDeviceIDs", ret));
-	res->context = clCreateContext(NULL, 1, &(res->device_id), NULL, NULL, &ret);
+
+	//#ifdef UNIX
+        cl_context_properties props[] = 
+        {
+            CL_GL_CONTEXT_KHR, (cl_context_properties)glXGetCurrentContext(), 
+            CL_GLX_DISPLAY_KHR, (cl_context_properties)glXGetCurrentDisplay(), 
+            CL_CONTEXT_PLATFORM, (cl_context_properties)res->platform_id, 
+            0
+        };
+    /*#else // Win32
+        cl_context_properties props[] = 
+        {
+            CL_GL_CONTEXT_KHR, (cl_context_properties)wglGetCurrentContext(), 
+            CL_WGL_HDC_KHR, (cl_context_properties)wglGetCurrentDC(), 
+            CL_CONTEXT_PLATFORM, (cl_context_properties)res->platform_id, 
+            0
+        };
+    #endif*/
+
+	res->context = clCreateContext(props, 1, &(res->device_id), NULL, NULL, &ret);
 	if (ret != CL_SUCCESS)
 		return (cl_operation_failed(res, "clCreateContext", ret));
+	printf("herre2\n");
+	fflush(stdout);
 	res->command_queue = clCreateCommandQueue(res->context, res->device_id, 0, &ret);
 	if (ret != CL_SUCCESS)
 		return (cl_operation_failed(res, "clCreateCommandQueue", ret));

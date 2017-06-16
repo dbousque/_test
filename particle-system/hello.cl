@@ -6,16 +6,20 @@ typedef struct	s_particle
 	float		y;
 }				t_particle;
 
-__kernel void calculate_particles_position(float center_gravity_x, float center_gravity_y,
-								unsigned int nb_particles, __global t_particle *particles)
+__kernel void calculate_particles_position(
+		float time_delta,
+		float center_gravity_x,
+		float center_gravity_y,
+		unsigned int nb_particles,
+		__global t_particle *particles)
 {
 	unsigned int	i;
 
 	i = 0;
 	while (i < nb_particles)
 	{
-		particles[i].x = 0.4;
-		particles[i].y = 0.7;
+		particles[i].x = ((float)i) / ((float)nb_particles);
+		particles[i].y = ((float)i) / ((float)nb_particles);
 		i++;
 	}
 	/*string[0] = 'H';

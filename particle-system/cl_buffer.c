@@ -15,8 +15,6 @@ char	make_cl_buffer(t_cl_program *program, t_gl_buffer *gl_buffer,
 	res->buffer = NULL;
 	res->buffer = clCreateFromGLBuffer(program->context, CL_MEM_READ_WRITE,
 														gl_buffer->vbo, &ret);
-	//res->buffer = clCreateBuffer(program->context, CL_MEM_READ_WRITE,
-	//											buffer_size, NULL, &ret);
 	if (ret != CL_SUCCESS)
 		return (cl_operation_failed(program, "clCreateFromGLBuffer", ret));
 	return (1);
