@@ -17,12 +17,17 @@ char	make_gl_buffer(int nb_particles, t_gl_buffer *buffer)
 	glBindVertexArray(buffer->vao);
 	glGenBuffers(1, &(buffer->vbo));
 	glBindBuffer(GL_ARRAY_BUFFER, buffer->vbo);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(GL_FLOAT) * 2 * nb_particles,
+	glBufferData(GL_ARRAY_BUFFER, sizeof(GL_FLOAT) * 5 * nb_particles,
 													NULL, GL_STATIC_DRAW);
-	
-	// 2 for vec2 input (x,y) for particles
-	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(GL_FLOAT) * 2, (GLvoid*)0);
+
+	glVertexAttribPointer(0, 1, GL_FLOAT, GL_FALSE, sizeof(GL_FLOAT) * 5, (GLvoid*)0);
 	glEnableVertexAttribArray(0);
+
+	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(GL_FLOAT) * 5, (GLvoid*)sizeof(float));
+	glEnableVertexAttribArray(1);
+
+	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(GL_FLOAT) * 5, (GLvoid*)(3 * sizeof(float)));
+	glEnableVertexAttribArray(2);
 
 	glBindVertexArray(0);
 	return (1);

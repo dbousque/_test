@@ -47,7 +47,6 @@ typedef struct			s_cl_program
 	cl_command_queue	command_queue;
 	cl_context			context;
 	cl_program			program;
-	cl_kernel			kernel;
 	cl_device_id		device_id;
 	cl_platform_id		platform_id;
 }						t_cl_program;
@@ -65,8 +64,11 @@ typedef struct			s_gl_buffer
 
 typedef struct			s_particle
 {
+	float				mass;
 	float				x;
 	float				y;
+	float				velocity_x;
+	float				velocity_y;
 }						t_particle;
 
 char					*get_file_source(char *filename, size_t *size);
@@ -83,7 +85,9 @@ void					draw_gl_buffer(t_gl_program *gl_program,
 char					make_gl_program(char *vertex_shader_path,
 							char *fragment_shader_path, t_gl_program *program);
 char					make_cl_program(char *source_str, size_t file_size,
-										char *kernel_name, t_cl_program *res);
+															t_cl_program *res);
 void					finalize_cl_program(t_cl_program *program);
+char					make_kernel(t_cl_program *program, char *name,
+															cl_kernel *kernel);
 
 #endif

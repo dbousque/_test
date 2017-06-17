@@ -2,7 +2,8 @@
 
 #include "particle_system.h"
 
-char	call_kernel_with_args(t_cl_program *program, void **args, size_t *sizes, size_t nb_args)
+char	call_kernel_with_args(t_cl_program *program, cl_kernel *kernel,
+									void **args, size_t *sizes, size_t nb_args)
 {
 	cl_int	ret;
 	size_t	i;
@@ -10,39 +11,52 @@ char	call_kernel_with_args(t_cl_program *program, void **args, size_t *sizes, si
 	i = 0;
 	while (i < nb_args)
 	{
-		ret = clSetKernelArg(program->kernel, i, sizes[i], args[i]);
+		ret = clSetKernelArg(*kernel, i, sizes[i], args[i]);
 		if (ret != CL_SUCCESS)
 			return (cl_operation_failed(program, "clSetKernelArg", ret));
 		i++;
 	}
-	ret = clEnqueueTask(program->command_queue, program->kernel, 0, NULL, NULL);
+	ret = clEnqueueTask(program->command_queue, *kernel, 0, NULL, NULL);
 	if (ret != CL_SUCCESS)
 		return (cl_operation_failed(program, "clEnqueueTask", ret));
 	return (1);
 }
 
-char	call_kernel(t_cl_program *program, t_cl_buffer *buffer, unsigned int nb_particles)
+char	call_set_kernel(t_cl_program *program, cl_kernel *kernel, t_cl_buffer *buffer,
+															unsigned int nb_particles)
 {
-	void	*args[5];
-	size_t	args_size[5];
-	float center_gravity_x;
-	float center_gravity_y;
-	float time_delta;
+	void	*args[2];
+	size_t	args_size[2];
 
-	time_delta = 0.23;
-	center_gravity_x = 12.4;
-	center_gravity_y = 4.2;
+	args[0] = &nb_particles;
+	args[1] = &(buffer->buffer);
+	args_size[0] = sizeof(unsigned int);
+	args_size[1] = sizeof(cl_mem);
+	if (!(call_kernel_with_args(program, kernel, args, args_size, 2)))
+		return (0);
+	return (1);
+}
+
+char	call_update_kernel(t_cl_program *program, cl_kernel *kernel, t_cl_buffer *buffer,
+				unsigned int nb_particles, float time_delta, float center_gravity_mass,
+											float center_gravity_x, float center_gravity_y)
+{
+	void	*args[6];
+	size_t	args_size[6];
+
 	args[0] = &time_delta;
-	args[1] = &center_gravity_x;
-	args[2] = &center_gravity_y;
-	args[3] = &nb_particles;
-	args[4] = &(buffer->buffer);
+	args[1] = &center_gravity_mass;
+	args[2] = &center_gravity_x;
+	args[3] = &center_gravity_y;
+	args[4] = &nb_particles;
+	args[5] = &(buffer->buffer);
 	args_size[0] = sizeof(float);
 	args_size[1] = sizeof(float);
 	args_size[2] = sizeof(float);
-	args_size[3] = sizeof(unsigned int);
-	args_size[4] = sizeof(cl_mem);
-	if (!(call_kernel_with_args(program, args, args_size, 5)))
+	args_size[3] = sizeof(float);
+	args_size[4] = sizeof(unsigned int);
+	args_size[5] = sizeof(cl_mem);
+	if (!(call_kernel_with_args(program, kernel, args, args_size, 6)))
 		return (0);
 	return (1);
 }
@@ -67,7 +81,7 @@ char	print_buffer_content(t_cl_program *program, t_cl_buffer *buffer,
 	i = 0;
 	while (i < nb_particles)
 	{
-		printf("[x : %.3f, y : %.3f]\n", particles[i].x, particles[i].y);
+		printf("[x : %.3f, y : %.3f, vel_x : %.3f, vel_y : %.3f]\n", particles[i].x, particles[i].y, particles[i].velocity_x, particles[i].velocity_y);
 		i++;
 	}
 	return (1);
@@ -80,16 +94,33 @@ char	init_opengl(int width, int height, char *title_name, t_window *window)
 	return (1);
 }
 
-char	update_particles_positions(t_cl_program *cl_program, t_cl_buffer *cl_buffer,
-														unsigned int nb_particles)
+char	update_particles_positions(t_cl_program *cl_program, cl_kernel *update_kernel,
+			t_cl_buffer *cl_buffer, unsigned int nb_particles, float time_delta,
+			float center_gravity_mass, float center_gravity_x, float center_gravity_y)
 {
 	glFinish();
 	clEnqueueAcquireGLObjects(cl_program->command_queue, 1,
 										&(cl_buffer->buffer), 0, NULL, NULL);
-	if (!call_kernel(cl_program, cl_buffer, nb_particles))
+	if (!call_update_kernel(cl_program, update_kernel, cl_buffer, nb_particles, time_delta, center_gravity_mass, center_gravity_x, center_gravity_y))
 		return (0);
-	if (!print_buffer_content(cl_program, cl_buffer, nb_particles))
+	//if (!print_buffer_content(cl_program, cl_buffer, nb_particles))
+	//	return (0);
+	clEnqueueReleaseGLObjects(cl_program->command_queue, 1,
+										&(cl_buffer->buffer), 0, NULL, NULL);
+	clFinish(cl_program->command_queue);
+	return (1);
+}
+
+char	set_particles_values(t_cl_program *cl_program, cl_kernel *set_kernel,
+								t_cl_buffer *cl_buffer, unsigned int nb_particles)
+{
+	glFinish();
+	clEnqueueAcquireGLObjects(cl_program->command_queue, 1,
+										&(cl_buffer->buffer), 0, NULL, NULL);
+	if (!call_set_kernel(cl_program, set_kernel, cl_buffer, nb_particles))
 		return (0);
+	//if (!print_buffer_content(cl_program, cl_buffer, nb_particles))
+	//	return (0);
 	clEnqueueReleaseGLObjects(cl_program->command_queue, 1,
 										&(cl_buffer->buffer), 0, NULL, NULL);
 	clFinish(cl_program->command_queue);
@@ -97,25 +128,49 @@ char	update_particles_positions(t_cl_program *cl_program, t_cl_buffer *cl_buffer
 }
 
 void	main_loop(t_window *window, t_cl_program *cl_program, t_cl_buffer *cl_buffer,
-		t_gl_program *gl_program, t_gl_buffer *gl_buffer, unsigned int nb_particles)
+		t_gl_program *gl_program, t_gl_buffer *gl_buffer, cl_kernel *update_kernel,
+								cl_kernel *set_kernel, unsigned int nb_particles)
 {
-	while (!glfwWindowShouldClose(window->win))
+	char	exit;
+	float	tmp_time;
+	float	time_delta;
+	float	center_gravity_mass;
+	float	center_gravity_x;
+	float	center_gravity_y;
+
+	center_gravity_mass = 1.0;
+	center_gravity_x = 0.0;
+	center_gravity_y = 0.0;
+	exit = 0;
+	if (!(set_particles_values(cl_program, set_kernel, cl_buffer, nb_particles)))
+	{
+		printf("could not set particles values. Exiting...\n");
+		exit = 1;
+	}
+	tmp_time = glfwGetTime();
+	while (!exit)
 	{
 		glfwPollEvents();
-	
 		glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-		
-		if (!(update_particles_positions(cl_program, cl_buffer, nb_particles)))
+
+		time_delta = glfwGetTime() - tmp_time;
+		tmp_time = glfwGetTime();
+		if (!(update_particles_positions(cl_program, update_kernel,
+			cl_buffer, nb_particles, time_delta, center_gravity_mass, center_gravity_x, center_gravity_y)))
 		{
 			printf("could not update particles position. Exiting...\n");
-			break ;
+			exit = 1;
 		}
 
 		draw_gl_buffer(gl_program, gl_buffer, nb_particles);
 
 		glfwSwapBuffers(window->win);
+		if (!exit && glfwWindowShouldClose(window->win))
+			exit = 1;
 	}
+	clReleaseKernel(*update_kernel);
+	clReleaseKernel(*set_kernel);
 	finalize_cl_program(cl_program);
 }
 
@@ -126,12 +181,13 @@ int		main(void)
 	t_cl_buffer			cl_buffer;
 	t_gl_program		gl_program;
 	t_gl_buffer			gl_buffer;
+	cl_kernel			update_kernel;
+	cl_kernel			set_kernel;
 	unsigned int		nb_particles;
 	size_t				file_size;
 	char				*source_str;
 
-	nb_particles = 120;
-
+	nb_particles = 20;
 	//use clGetGLContextInfoKHR to create (?) CL context from GL context
 
 	if (!(init_opengl(800, 800, "salut title", &window)))
@@ -144,12 +200,20 @@ int		main(void)
 
 	if (!(source_str = get_file_source("hello.cl", &file_size)))
 		return (0);
-	if (!(make_cl_program(source_str, file_size, "calculate_particles_position", &cl_program)))
+	if (!(make_cl_program(source_str, file_size, &cl_program)))
 		return (0);
+	if (!(make_kernel(&cl_program, "calculate_particles_position", &update_kernel)))
+		return (0);
+	//if (!(make_kernel(&cl_program, "set_particles_values", &set_kernel)))
+	//	return (0);
+	if (!(make_kernel(&cl_program, "set_particles_values_with_initial_velocity", &set_kernel)))
+		return (0);
+	
 	free(source_str);
 	if (!(make_cl_buffer(&cl_program, &gl_buffer, &cl_buffer)))
 		return (0);
 
-	main_loop(&window, &cl_program, &cl_buffer, &gl_program, &gl_buffer, nb_particles); 
+	main_loop(&window, &cl_program, &cl_buffer, &gl_program, &gl_buffer,
+									&update_kernel, &set_kernel, nb_particles); 
 	return (0);
 }
