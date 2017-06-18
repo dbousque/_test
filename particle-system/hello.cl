@@ -29,9 +29,6 @@ __kernel void set_particles_values_with_initial_velocity(unsigned int nb_particl
 {
 	unsigned int	i;
 
-	ulong seed = 56 + get_global_id(1);
-	seed = (seed * 0x5DEECE66DL + 0xBL) & ((1L << 48) - 1);
-	uint result = seed >> 16;
 	i = 0;
 	while (i < nb_particles)
 	{
@@ -39,30 +36,31 @@ __kernel void set_particles_values_with_initial_velocity(unsigned int nb_particl
 		particles[i].x = ((float)i) / ((float)nb_particles);
 		particles[i].y = ((float)i) / ((float)nb_particles);
 		// generate random values for velocity
-		particles[i].velocity_x = (float)((seed >> 16) % 1000) / 1000.0;
-		particles[i].velocity_y = (float)((seed >> 16) % 1000) / 1000.0;
+		uint seed = 42 + i;
+		uint t = seed ^ (seed << 11);  
+		uint result = 67 ^ (6518415 >> 19) ^ (t ^ (t >> 8));
+		particles[i].velocity_x = ((float)(result % 10000)) / 100 / 50.0 - 1.0;
+		particles[i].velocity_y = 0.0;
 		i++;
 	}
 }
 
 __kernel void calculate_particles_position(
 		float time_delta,
-		float center_gravity_mass,
+		float gravity_strength,
 		float center_gravity_x,
 		float center_gravity_y,
-		unsigned int nb_particles,
+		char center_gravity_activated,
 		__global t_particle *particles)
 {
-	unsigned int	i;
-	float			gravity_force;
+	int				i;
 	float			gravity_vector_x;
 	float			gravity_vector_y;
 	float			distance_from_center;
 
-	i = 0;
-	while (i < nb_particles)
+	i = get_global_id(0);
+	if (center_gravity_activated)
 	{
-		gravity_force = 0.05;
 		gravity_vector_x = center_gravity_x - particles[i].x;
 		gravity_vector_y = center_gravity_y - particles[i].y;
 		distance_from_center = sqrt((gravity_vector_x * gravity_vector_x) + (gravity_vector_y * gravity_vector_y));
@@ -76,24 +74,17 @@ __kernel void calculate_particles_position(
 			gravity_vector_y = gravity_vector_y >= 0.0 ? 1.0 : -1.0;
 			gravity_vector_x = gravity_vector_x / fabs(gravity_vector_y);
 		}
+		gravity_vector_x *= gravity_strength;
+		gravity_vector_y *= gravity_strength;
+		/*if (particles[i].velocity_x >= 1.4)
+			particles[i].velocity_x = 1.4;
+		if (particles[i].velocity_y >= 1.4)
+			particles[i].velocity_y = 1.4;*/
 		particles[i].velocity_x += gravity_vector_x * time_delta;
 		particles[i].velocity_y += gravity_vector_y * time_delta;
-		particles[i].x += particles[i].velocity_x * time_delta;
-		particles[i].y += particles[i].velocity_y * time_delta;
-		i++;
 	}
-	/*string[0] = 'H';
-	string[1] = 'e';
-	string[2] = 'l';
-	string[3] = 'l';
-	string[4] = 'o';
-	string[5] = ',';
-	string[6] = ' ';
-	string[7] = 'W';
-	string[8] = 'o';
-	string[9] = 'r';
-	string[10] = 'l';
-	string[11] = 'd';
-	string[12] = '!';
-	string[13] = '\0';*/
+	particles[i].velocity_x *= 0.9985;
+	particles[i].velocity_y *= 0.9985;
+	particles[i].x += particles[i].velocity_x * time_delta;
+	particles[i].y += particles[i].velocity_y * time_delta;
 }

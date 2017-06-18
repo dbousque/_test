@@ -8,7 +8,8 @@ SOURCES		=	hello.c \
 				utils.c \
 				gl_buffer.c \
 				gl_program.c \
-				cl_program.c
+				cl_program.c \
+				input.c
 
 OBJECTS	=	$(subst .c,.o,$(SOURCES))
 

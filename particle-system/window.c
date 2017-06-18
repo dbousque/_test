@@ -9,6 +9,57 @@ char	init_error(char *str)
 	return (0);
 }
 
+void	key_callback(GLFWwindow *window, int key, int scancode, int action, int mode)
+{
+	(void)scancode;
+	(void)mode;
+	if (action == GLFW_PRESS)
+		g_keys[key] = 1;
+	if (action == GLFW_RELEASE)
+		g_keys[key] = 0;
+	if (action != GLFW_PRESS)
+		return ;
+	if (key == GLFW_KEY_L)
+	{
+		if (g_center_gravity_lock)
+			g_center_gravity_lock = 0;
+		else
+			g_center_gravity_lock = 1;
+	}
+	if (key == GLFW_KEY_G)
+	{
+		if (g_center_gravity_activated)
+			g_center_gravity_activated = 0;
+		else
+			g_center_gravity_activated = 1;
+	}
+	if (key == GLFW_KEY_P)
+	{
+		if (g_particles_locked)
+			g_particles_locked = 0;
+		else
+			g_particles_locked = 1;
+	}
+	if (key == GLFW_KEY_ESCAPE)
+		glfwSetWindowShouldClose(window, GL_TRUE);
+}
+
+static void	mouse_callback(GLFWwindow* window, double xpos, double ypos)
+{
+	(void)window;
+	if (!g_center_gravity_lock)
+	{
+		g_center_gravity_x = (((float)xpos) / g_screen_width) * 2.0 - 1.0;
+		g_center_gravity_y = -((((float)ypos) / g_screen_height) * 2.0 - 1.0);
+		g_center_gravity_x -= g_view_decal_x;
+		g_center_gravity_y += g_view_decal_y;
+		g_center_gravity_x /= g_zoom_factor;
+		g_center_gravity_y /= g_zoom_factor;
+	}
+	g_mouse_position_x = (((float)xpos) / g_screen_width) * 2.0 - 1.0;
+	g_mouse_position_y = -((((float)ypos) / g_screen_height) * 2.0 - 1.0);
+}
+
 char	setup_window(int width, int height, char *title_name, t_window *window)
 {
 	int			actual_width;
@@ -29,6 +80,7 @@ char	setup_window(int width, int height, char *title_name, t_window *window)
 		return (init_error("Failed to initialize GLEW\n"));
 	glfwGetFramebufferSize(window->win, &actual_width, &actual_height);
 	glViewport(0, 0, actual_width, actual_height);
-	// glfwSetKeyCallback(window->win, key_callback);
+	glfwSetKeyCallback(window->win, key_callback);
+	glfwSetCursorPosCallback(window->win, mouse_callback);
 	return (1);
 }

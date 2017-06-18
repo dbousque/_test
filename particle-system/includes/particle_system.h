@@ -20,13 +20,7 @@
 #	include <CL/cl_gl.h>
 # endif
 
-//# ifdef UNIX
-#	include <GL/glx.h>
-//# endif
-
-/*# ifdef _WIN32
-#  include <windows.h>
-# endif*/
+# include <GL/glx.h>
 
 # define FILE_MAX_SIZE (5 * 1024 * 1024)
 
@@ -71,6 +65,21 @@ typedef struct			s_particle
 	float				velocity_y;
 }						t_particle;
 
+char					g_keys[1024];
+unsigned int			g_screen_width;
+unsigned int			g_screen_height;
+float					g_zoom_factor;
+float					g_gravity_strength;
+float					g_center_gravity_x;
+float					g_center_gravity_y;
+float					g_view_decal_x;
+float					g_view_decal_y;
+char					g_center_gravity_lock;
+char					g_center_gravity_activated;
+char					g_particles_locked;
+float					g_mouse_position_x;
+float					g_mouse_position_y;
+
 char					*get_file_source(char *filename, size_t *size);
 char					setup_window(int width, int height, char *title_name,
 															t_window *window);
@@ -89,5 +98,6 @@ char					make_cl_program(char *source_str, size_t file_size,
 void					finalize_cl_program(t_cl_program *program);
 char					make_kernel(t_cl_program *program, char *name,
 															cl_kernel *kernel);
+void					update_values_with_keys(void);
 
 #endif
