@@ -11,7 +11,7 @@ char	call_kernel_with_args(t_cl_program *program, cl_kernel *kernel,
 	size_t	work_size;
 	size_t	local_size;
 
-	work_size = nb_particles;
+	work_size = nb_particles / 30;
 	local_size = 1;
 	i = 0;
 	while (i < nb_args)
@@ -52,22 +52,28 @@ char	call_update_kernel(t_cl_program *program, cl_kernel *kernel, t_cl_buffer *b
 				unsigned int nb_particles, float time_delta, float gravity_strength,
 											float center_gravity_x, float center_gravity_y)
 {
-	void	*args[6];
-	size_t	args_size[6];
+	void			*args[8];
+	unsigned int	batch_size;
+	size_t			args_size[8];
 
+	batch_size = 30;
 	args[0] = &time_delta;
 	args[1] = &gravity_strength;
 	args[2] = &center_gravity_x;
 	args[3] = &center_gravity_y;
 	args[4] = &g_center_gravity_activated;
-	args[5] = &(buffer->buffer);
+	args[5] = &nb_particles;
+	args[6] = &batch_size;
+	args[7] = &(buffer->buffer);
 	args_size[0] = sizeof(float);
 	args_size[1] = sizeof(float);
 	args_size[2] = sizeof(float);
 	args_size[3] = sizeof(float);
 	args_size[4] = sizeof(char);
-	args_size[5] = sizeof(cl_mem);
-	if (!(call_kernel_with_args(program, kernel, args, args_size, 6, 1, nb_particles)))
+	args_size[5] = sizeof(unsigned int);
+	args_size[6] = sizeof(unsigned int);
+	args_size[7] = sizeof(cl_mem);
+	if (!(call_kernel_with_args(program, kernel, args, args_size, 8, 1, nb_particles)))
 		return (0);
 	return (1);
 }
@@ -192,7 +198,7 @@ void	main_loop(t_window *window, t_cl_program *cl_program, t_cl_buffer *cl_buffe
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		time_delta = glfwGetTime() - tmp_time;
-		if (i % 100 == 0)
+		if (i % 50 == 0)
 			set_window_title_with_time(window, time_delta);
 		tmp_time = glfwGetTime();
 		if (!g_particles_locked)
@@ -243,7 +249,7 @@ int		main(void)
 	g_center_gravity_lock = 0;
 	g_center_gravity_activated = 1;
 	g_particles_locked = 1;
-	nb_particles = 300000;
+	nb_particles = 3000000;
 
 	if (!(init_opengl(g_screen_width, g_screen_height, "60 fps", &window)))
 		return (0);

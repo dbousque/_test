@@ -44,7 +44,16 @@ char	make_cl_program(char *source_str, size_t file_size, t_cl_program *res)
 	if (ret != CL_SUCCESS)
 		return (cl_operation_failed(res, "clGetDeviceIDs", ret));
 
-	//#ifdef UNIX
+	#if defined(__APPLE__)                                                                
+		CGLContextObj     kCGLContext     = CGLGetCurrentContext();
+		CGLShareGroupObj  kCGLShareGroup  = CGLGetShareGroup(kCGLContext);
+
+		cl_context_properties props[] = {
+			CL_CONTEXT_PROPERTY_USE_CGL_SHAREGROUP_APPLE,
+			(cl_context_properties) kCGLShareGroup,
+			0
+		};
+	#else
         cl_context_properties props[] = 
         {
             CL_GL_CONTEXT_KHR, (cl_context_properties)glXGetCurrentContext(), 
@@ -52,6 +61,7 @@ char	make_cl_program(char *source_str, size_t file_size, t_cl_program *res)
             CL_CONTEXT_PLATFORM, (cl_context_properties)res->platform_id, 
             0
         };
+    #endif
     /*#else // Win32
         cl_context_properties props[] = 
         {

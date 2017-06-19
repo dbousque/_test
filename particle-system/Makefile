@@ -13,14 +13,17 @@ SOURCES		=	hello.c \
 
 OBJECTS	=	$(subst .c,.o,$(SOURCES))
 
-WFLAGS	=	-Wall -Werror -Wextra -I includes -I ~/libSOIL
+WFLAGS	=	-Wall -Werror -Wextra -I includes -I/opt/X11/include
 
 OS := $(shell uname)
 ifneq ($(OS), Darwin)
-FLAGS	=	-lOpenCL -lSOIL -lGL -lGLU -lglut -lglfw3 -lX11 -lXxf86vm -lXrandr -pthread -lXi -ldl -lXinerama -lXcursor -lrt -lm -lGLEW
+FLAGS	=	-lOpenCL -lGL -lGLU -lglut -lglfw3 -lX11 -lXxf86vm -lXrandr -pthread -lXi -ldl -lXinerama -lXcursor -lrt -lm -lGLEW
 else
-FLAGS	=	-framework opencl -framework OpenGL -lglfw -lGLEW -lSOIL
+FLAGS	=	-framework opencl -framework OpenGL -lglfw -lGLEW
 endif
+
+
+# -L/opt/X11/lib -lGL -lX11 
 
 CC		=	clang
 

@@ -10,17 +10,19 @@
 # include <GLFW/glfw3.h>
  
 # ifdef __APPLE__
+#	include <GL/glx.h>
 #	include <OpenCL/opencl.h>
 #	include <OpenCL/cl_gl.h>
+#	include <OpenCL/cl_gl_ext.h>
 #	include <OpenGL/gl.h>
+#	include <OpenGL/OpenGL.h>
 #	include <GLUT/glut.h>
 #	include <OpenGL/glu.h>
 # else
+#	include <GL/glx.h>
 #	include <CL/cl.h>
 #	include <CL/cl_gl.h>
 # endif
-
-# include <GL/glx.h>
 
 # define FILE_MAX_SIZE (5 * 1024 * 1024)
 
