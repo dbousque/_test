@@ -16,7 +16,7 @@ void main()
 {
 	RawCoords = coords;
 	float x = coords.x / screen_ratio * zoom_factor + view_decal_x;
-	float y = coords.y * screen_ratio * zoom_factor - view_decal_y;
+	float y = coords.y * zoom_factor - view_decal_y;
 	gl_Position = vec4(x, y, 0.0, 1.0);
 	Coords = coords;
 }

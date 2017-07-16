@@ -82,6 +82,7 @@ char					g_particles_locked;
 float					g_mouse_position_x;
 float					g_mouse_position_y;
 
+char					parse_params(int argc, char **argv, unsigned int *nb_particles, char *mode);
 char					*get_file_source(char *filename, size_t *size);
 char					setup_window(int width, int height, char *title_name,
 															t_window *window);

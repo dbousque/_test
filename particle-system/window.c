@@ -55,6 +55,7 @@ static void	mouse_callback(GLFWwindow* window, double xpos, double ypos)
 		g_center_gravity_y += g_view_decal_y;
 		g_center_gravity_x /= g_zoom_factor;
 		g_center_gravity_y /= g_zoom_factor;
+		g_center_gravity_x = g_center_gravity_x * g_screen_width / g_screen_height;
 	}
 	g_mouse_position_x = (((float)xpos) / g_screen_width) * 2.0 - 1.0;
 	g_mouse_position_y = -((((float)ypos) / g_screen_height) * 2.0 - 1.0);

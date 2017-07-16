@@ -25,45 +25,16 @@ __kernel void set_particles_values(unsigned int nb_particles, __global t_particl
 	}
 }
 
-__kernel void set_particles_values_with_initial_velocity(unsigned int nb_particles, char mode, __global t_particle *particles)
+__kernel void set_particles_values_with_initial_velocity(unsigned int nb_particles, __global t_particle *particles)
 {
 	unsigned int	i;
-	unsigned int	y;
-	unsigned int	square_size;
 
 	i = 0;
-	y = 0;
-	square_size = (unsigned int)sqrt((float)nb_particles);
 	while (i < nb_particles)
 	{
-		if ((i + 1) % square_size == 0)
-		{
-			y++;
-		}
 		particles[i].mass = 1.0;
-		if (mode == 1)
-		{
-			// line
-			particles[i].x = ((float)i) / ((float)nb_particles);
-			particles[i].y = ((float)i) / ((float)nb_particles);
-		}
-		else if (mode == 2)
-		{
-			// square
-			particles[i].x = (float)(i % square_size) / (square_size / 2) - 1.0;
-			particles[i].y = (float)(y % square_size) / (square_size / 2) - 1.0;
-		}
-		else if (mode == 3)
-		{
-			// circle
-			particles[i].x = (float)(i % square_size) / (square_size / 2) - 1.0;
-			particles[i].y = (float)(y % square_size) / (square_size / 2) - 1.0;
-			float limit = sqrt(1.0 - pow(fabs(particles[i].y), 2));
-			if (fabs(particles[i].x) > fabs(limit))
-			{
-				particles[i].x = ((int)(particles[i].x * 100000.0) % (int)(limit * 100000.0)) / 100000.0;
-			}
-		}
+		particles[i].x = ((float)i) / ((float)nb_particles);
+		particles[i].y = ((float)i) / ((float)nb_particles);
 		// generate random values for velocity
 		uint seed = 42 + i;
 		uint t = seed ^ (seed << 11);  
@@ -76,10 +47,8 @@ __kernel void set_particles_values_with_initial_velocity(unsigned int nb_particl
 
 __kernel void calculate_particles_position(
 		const float time_delta,
-		const float gravity_strength,
 		const float center_gravity_x,
 		const float center_gravity_y,
-		const char center_gravity_activated,
 		const unsigned int nb_particles,
 		const unsigned int batch_size,
 		__global t_particle *particles)
@@ -91,26 +60,12 @@ __kernel void calculate_particles_position(
 
 	id = get_global_id(0);
 	int i = id * batch_size;
-	while (i < id * batch_size + batch_size && i < nb_particles)
+	int limit = id * batch_size + batch_size;
+	while (i < limit && i < nb_particles)
 	{
 		particle = particles[i];
-		if (!center_gravity_activated)
-		{
-			particle.velocity_x *= 0.997;
-			particle.velocity_y *= 0.997;
-			particle.x += particle.velocity_x * time_delta;
-			particle.y += particle.velocity_y * time_delta;
-			particles[i] = particle;
-			particles[i + 1] = particle;
-			particles[i + 2] = particle;
-			particles[i + 3] = particle;
-			particles[i + 4] = particle;
-			i += 5;
-			continue ;
-		}
 		gravity_vector_x = center_gravity_x - particle.x;
 		gravity_vector_y = center_gravity_y - particle.y;
-		//distance_from_center = sqrt((gravity_vector_x * gravity_vector_x) + (gravity_vector_y * gravity_vector_y));
 		if (fabs(gravity_vector_x) > fabs(gravity_vector_y))
 		{
 			gravity_vector_y = gravity_vector_y / fabs(gravity_vector_x);
@@ -121,8 +76,6 @@ __kernel void calculate_particles_position(
 			gravity_vector_y = gravity_vector_y >= 0.0 ? 1.0 : -1.0;
 			gravity_vector_x = gravity_vector_x / fabs(gravity_vector_y);
 		}
-		gravity_vector_x *= gravity_strength;
-		gravity_vector_y *= gravity_strength;
 
 		particle.velocity_x += gravity_vector_x * time_delta;
 		particle.velocity_y += gravity_vector_y * time_delta;

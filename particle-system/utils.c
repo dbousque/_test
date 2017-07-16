@@ -2,6 +2,26 @@
 
 #include "particle_system.h"
 
+char	parse_params(int argc, char **argv, unsigned int *nb_particles, char *mode)
+{
+	if (argc <= 1)
+		return (1);
+	*nb_particles = (unsigned int)atoi(argv[1]);
+	if (argc <= 2)
+		return (1);
+	if (argv[2][0] == 's' && argv[2][1] == 'q' && argv[2][2] == 'u' && argv[2][3] == 'a'
+				&& argv[2][4] == 'r' && argv[2][5] == 'e' && argv[2][6] == '\0')
+	{
+		*mode = 2;
+	}
+	if (argv[2][0] == 'c' && argv[2][1] == 'i' && argv[2][2] == 'r' && argv[2][3] == 'c'
+				&& argv[2][4] == 'l' && argv[2][5] == 'e' && argv[2][6] == '\0')
+	{
+		*mode = 3;
+	}
+	return (1);
+}
+
 char	cl_operation_failed(t_cl_program *program, char *msg, cl_int error_code)
 {
 	size_t	log_size;

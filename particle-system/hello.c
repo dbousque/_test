@@ -11,7 +11,7 @@ char	call_kernel_with_args(t_cl_program *program, cl_kernel *kernel,
 	size_t	work_size;
 	size_t	local_size;
 
-	work_size = nb_particles / 30;
+	work_size = nb_particles / 30 + 1;
 	local_size = 1;
 	i = 0;
 	while (i < nb_args)
@@ -34,16 +34,18 @@ char	call_kernel_with_args(t_cl_program *program, cl_kernel *kernel,
 }
 
 char	call_set_kernel(t_cl_program *program, cl_kernel *kernel, t_cl_buffer *buffer,
-															unsigned int nb_particles)
+													char mode, unsigned int nb_particles)
 {
-	void	*args[2];
-	size_t	args_size[2];
+	void	*args[3];
+	size_t	args_size[3];
 
 	args[0] = &nb_particles;
-	args[1] = &(buffer->buffer);
+	args[1] = &mode;
+	args[2] = &(buffer->buffer);
 	args_size[0] = sizeof(unsigned int);
-	args_size[1] = sizeof(cl_mem);
-	if (!(call_kernel_with_args(program, kernel, args, args_size, 2, 0, nb_particles)))
+	args_size[1] = sizeof(char);
+	args_size[2] = sizeof(cl_mem);
+	if (!(call_kernel_with_args(program, kernel, args, args_size, 3, 0, nb_particles)))
 		return (0);
 	return (1);
 }
@@ -74,6 +76,33 @@ char	call_update_kernel(t_cl_program *program, cl_kernel *kernel, t_cl_buffer *b
 	args_size[6] = sizeof(unsigned int);
 	args_size[7] = sizeof(cl_mem);
 	if (!(call_kernel_with_args(program, kernel, args, args_size, 8, 1, nb_particles)))
+		return (0);
+	return (1);
+}
+
+char	call_update_kernel2(t_cl_program *program, cl_kernel *kernel, t_cl_buffer *buffer,
+				unsigned int nb_particles, float time_delta, float gravity_strength,
+											float center_gravity_x, float center_gravity_y)
+{
+	void			*args[6];
+	unsigned int	batch_size;
+	size_t			args_size[6];
+
+	(void)gravity_strength;
+	batch_size = 30;
+	args[0] = &time_delta;
+	args[1] = &center_gravity_x;
+	args[2] = &center_gravity_y;
+	args[3] = &nb_particles;
+	args[4] = &batch_size;
+	args[5] = &(buffer->buffer);
+	args_size[0] = sizeof(float);
+	args_size[1] = sizeof(float);
+	args_size[2] = sizeof(float);
+	args_size[3] = sizeof(unsigned int);
+	args_size[4] = sizeof(unsigned int);
+	args_size[5] = sizeof(cl_mem);
+	if (!(call_kernel_with_args(program, kernel, args, args_size, 6, 1, nb_particles)))
 		return (0);
 	return (1);
 }
@@ -111,11 +140,20 @@ char	init_opengl(int width, int height, char *title_name, t_window *window)
 	return (1);
 }
 
+
+	#include <time.h>
+
 char	update_particles_positions(t_cl_program *cl_program, cl_kernel *update_kernel,
 			t_cl_buffer *cl_buffer, unsigned int nb_particles, float time_delta,
 			float gravity_strength, float center_gravity_x, float center_gravity_y)
 {
+	 clock_t t1, t2;  
+	 t1 = clock();
 	glFinish();
+	t2 = clock();
+	float diff = ((float)(t2 - t1) / CLOCKS_PER_SEC ) * 1000 * 100;  
+	printf("opengl : %.0f\n", diff);
+	t1 = clock();
 	clEnqueueAcquireGLObjects(cl_program->command_queue, 1,
 										&(cl_buffer->buffer), 0, NULL, NULL);
 	if (!call_update_kernel(cl_program, update_kernel, cl_buffer, nb_particles, time_delta,
@@ -128,16 +166,19 @@ char	update_particles_positions(t_cl_program *cl_program, cl_kernel *update_kern
 	clEnqueueReleaseGLObjects(cl_program->command_queue, 1,
 										&(cl_buffer->buffer), 0, NULL, NULL);
 	clFinish(cl_program->command_queue);
+	t2 = clock();
+	 diff = ((float)(t2 - t1) / CLOCKS_PER_SEC ) * 1000 * 100;  
+	printf("opencl : %.0f\n", diff);
 	return (1);
 }
 
 char	set_particles_values(t_cl_program *cl_program, cl_kernel *set_kernel,
-								t_cl_buffer *cl_buffer, unsigned int nb_particles)
+							t_cl_buffer *cl_buffer, char mode, unsigned int nb_particles)
 {
 	glFinish();
 	clEnqueueAcquireGLObjects(cl_program->command_queue, 1,
 										&(cl_buffer->buffer), 0, NULL, NULL);
-	if (!call_set_kernel(cl_program, set_kernel, cl_buffer, nb_particles))
+	if (!call_set_kernel(cl_program, set_kernel, cl_buffer, mode, nb_particles))
 		return (0);
 	//if (!print_buffer_content(cl_program, cl_buffer, nb_particles))
 	//	return (0);
@@ -161,7 +202,7 @@ void	set_window_title_with_time(t_window *window, float time_delta)
 
 void	main_loop(t_window *window, t_cl_program *cl_program, t_cl_buffer *cl_buffer,
 		t_gl_program *gl_program, t_gl_buffer *gl_buffer, cl_kernel *update_kernel,
-								cl_kernel *set_kernel, unsigned int nb_particles)
+								cl_kernel *set_kernel, char mode, unsigned int nb_particles)
 {
 	char	exit;
 	float	tmp_time;
@@ -171,7 +212,7 @@ void	main_loop(t_window *window, t_cl_program *cl_program, t_cl_buffer *cl_buffe
 
 	i = 0;
 	exit = 0;
-	if (!(set_particles_values(cl_program, set_kernel, cl_buffer, nb_particles)))
+	if (!(set_particles_values(cl_program, set_kernel, cl_buffer, mode, nb_particles)))
 	{
 		printf("could not set particles values. Exiting...\n");
 		exit = 1;
@@ -188,7 +229,7 @@ void	main_loop(t_window *window, t_cl_program *cl_program, t_cl_buffer *cl_buffe
 		loc = glGetUniformLocation(gl_program->program, "view_decal_y");
 		glUniform1f(loc, g_view_decal_y);
 		loc = glGetUniformLocation(gl_program->program, "mouse_position_x");
-		glUniform1f(loc, g_mouse_position_x);
+		glUniform1f(loc, g_mouse_position_x * g_screen_width / g_screen_height);
 		loc = glGetUniformLocation(gl_program->program, "mouse_position_y");
 		glUniform1f(loc, g_mouse_position_y);
 		loc = glGetUniformLocation(gl_program->program, "time");
@@ -224,7 +265,7 @@ void	main_loop(t_window *window, t_cl_program *cl_program, t_cl_buffer *cl_buffe
 	finalize_cl_program(cl_program);
 }
 
-int		main(void)
+int		main(int argc, char **argv)
 {
 	t_window			window;
 	t_cl_program		cl_program;
@@ -235,6 +276,7 @@ int		main(void)
 	cl_kernel			set_kernel;
 	GLint				loc;
 	unsigned int		nb_particles;
+	char				mode;
 	size_t				file_size;
 	char				*source_str;
 
@@ -249,19 +291,20 @@ int		main(void)
 	g_center_gravity_lock = 0;
 	g_center_gravity_activated = 1;
 	g_particles_locked = 1;
-	nb_particles = 3000000;
 
+	nb_particles = 100000;
+	mode = 1;
+	if (!(parse_params(argc, argv, &nb_particles, &mode)))
+		return (0);
 	if (!(init_opengl(g_screen_width, g_screen_height, "60 fps", &window)))
 		return (0);
-
 	if (!(make_gl_program("shaders/vertex.vs", "shaders/fragment.fs", &gl_program)))
 		return (0);
 	if (!(make_gl_buffer(nb_particles, &gl_buffer)))
 		return (0);
-
 	glUseProgram(gl_program.program);
 	loc = glGetUniformLocation(gl_program.program, "screen_ratio");
-	glUniform1f(loc, (float)(g_screen_width / g_screen_height));
+	glUniform1f(loc, ((float)g_screen_width / g_screen_height));
 
 	if (!(source_str = get_file_source("hello.cl", &file_size)))
 		return (0);
@@ -279,6 +322,6 @@ int		main(void)
 		return (0);
 
 	main_loop(&window, &cl_program, &cl_buffer, &gl_program, &gl_buffer,
-									&update_kernel, &set_kernel, nb_particles); 
+									&update_kernel, &set_kernel, mode, nb_particles); 
 	return (0);
 }
