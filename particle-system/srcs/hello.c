@@ -51,58 +51,37 @@ char	call_set_kernel(t_cl_program *program, cl_kernel *kernel, t_cl_buffer *buff
 }
 
 char	call_update_kernel(t_cl_program *program, cl_kernel *kernel, t_cl_buffer *buffer,
-				unsigned int nb_particles, float time_delta, float gravity_strength,
+				unsigned int nb, float time_delta, float gravity_strength,
 											float center_gravity_x, float center_gravity_y)
 {
-	void			*args[8];
+	void			*args[10];
 	unsigned int	batch_size;
-	size_t			args_size[8];
+	int				n;
+	size_t			args_size[10];
 
 	batch_size = 30;
+	n = nb <100000?1:5;
 	args[0] = &time_delta;
 	args[1] = &gravity_strength;
 	args[2] = &center_gravity_x;
 	args[3] = &center_gravity_y;
 	args[4] = &g_center_gravity_activated;
-	args[5] = &nb_particles;
-	args[6] = &batch_size;
-	args[7] = &(buffer->buffer);
+	args[5] = &n;
+	args[6] = &nb;
+	args[7] = &g_decay;
+	args[8] = &batch_size;
+	args[9] = &(buffer->buffer);
 	args_size[0] = sizeof(float);
 	args_size[1] = sizeof(float);
 	args_size[2] = sizeof(float);
 	args_size[3] = sizeof(float);
 	args_size[4] = sizeof(char);
-	args_size[5] = sizeof(unsigned int);
+	args_size[5] = sizeof(int);
 	args_size[6] = sizeof(unsigned int);
-	args_size[7] = sizeof(cl_mem);
-	if (!(call_kernel_with_args(program, kernel, args, args_size, 8, 1, nb_particles)))
-		return (0);
-	return (1);
-}
-
-char	call_update_kernel2(t_cl_program *program, cl_kernel *kernel, t_cl_buffer *buffer,
-				unsigned int nb_particles, float time_delta, float gravity_strength,
-											float center_gravity_x, float center_gravity_y)
-{
-	void			*args[6];
-	unsigned int	batch_size;
-	size_t			args_size[6];
-
-	(void)gravity_strength;
-	batch_size = 30;
-	args[0] = &time_delta;
-	args[1] = &center_gravity_x;
-	args[2] = &center_gravity_y;
-	args[3] = &nb_particles;
-	args[4] = &batch_size;
-	args[5] = &(buffer->buffer);
-	args_size[0] = sizeof(float);
-	args_size[1] = sizeof(float);
-	args_size[2] = sizeof(float);
-	args_size[3] = sizeof(unsigned int);
-	args_size[4] = sizeof(unsigned int);
-	args_size[5] = sizeof(cl_mem);
-	if (!(call_kernel_with_args(program, kernel, args, args_size, 6, 1, nb_particles)))
+	args_size[7] = sizeof(char);
+	args_size[8] = sizeof(unsigned int);
+	args_size[9] = sizeof(cl_mem);
+	if (!(call_kernel_with_args(program, kernel, args, args_size, 10, 1, nb)))
 		return (0);
 	return (1);
 }
@@ -147,13 +126,7 @@ char	update_particles_positions(t_cl_program *cl_program, cl_kernel *update_kern
 			t_cl_buffer *cl_buffer, unsigned int nb_particles, float time_delta,
 			float gravity_strength, float center_gravity_x, float center_gravity_y)
 {
-	 clock_t t1, t2;  
-	 t1 = clock();
 	glFinish();
-	t2 = clock();
-	float diff = ((float)(t2 - t1) / CLOCKS_PER_SEC ) * 1000 * 100;  
-	printf("opengl : %.0f\n", diff);
-	t1 = clock();
 	clEnqueueAcquireGLObjects(cl_program->command_queue, 1,
 										&(cl_buffer->buffer), 0, NULL, NULL);
 	if (!call_update_kernel(cl_program, update_kernel, cl_buffer, nb_particles, time_delta,
@@ -166,9 +139,6 @@ char	update_particles_positions(t_cl_program *cl_program, cl_kernel *update_kern
 	clEnqueueReleaseGLObjects(cl_program->command_queue, 1,
 										&(cl_buffer->buffer), 0, NULL, NULL);
 	clFinish(cl_program->command_queue);
-	t2 = clock();
-	 diff = ((float)(t2 - t1) / CLOCKS_PER_SEC ) * 1000 * 100;  
-	printf("opencl : %.0f\n", diff);
 	return (1);
 }
 
@@ -185,6 +155,7 @@ char	set_particles_values(t_cl_program *cl_program, cl_kernel *set_kernel,
 	clEnqueueReleaseGLObjects(cl_program->command_queue, 1,
 										&(cl_buffer->buffer), 0, NULL, NULL);
 	clFinish(cl_program->command_queue);
+	glFinish();
 	return (1);
 }
 
@@ -212,7 +183,8 @@ void	main_loop(t_window *window, t_cl_program *cl_program, t_cl_buffer *cl_buffe
 
 	i = 0;
 	exit = 0;
-	if (!(set_particles_values(cl_program, set_kernel, cl_buffer, mode, nb_particles)))
+	g_position = mode;
+	if (!(set_particles_values(cl_program, set_kernel, cl_buffer, g_position, nb_particles)))
 	{
 		printf("could not set particles values. Exiting...\n");
 		exit = 1;
@@ -222,6 +194,15 @@ void	main_loop(t_window *window, t_cl_program *cl_program, t_cl_buffer *cl_buffe
 	{
 		glfwPollEvents();
 		update_values_with_keys();
+		if (g_position != 0)
+		{
+			if (!(set_particles_values(cl_program, set_kernel, cl_buffer, g_position, nb_particles)))
+			{
+				printf("could not set particles values. Exiting...\n");
+				exit = 1;
+			}
+			g_position = 0;
+		}
 		loc = glGetUniformLocation(gl_program->program, "zoom_factor");
 		glUniform1f(loc, g_zoom_factor);
 		loc = glGetUniformLocation(gl_program->program, "view_decal_x");
@@ -280,6 +261,7 @@ int		main(int argc, char **argv)
 	size_t				file_size;
 	char				*source_str;
 
+	g_decay = 0;
 	g_screen_width = 1800;
 	g_screen_height = 1350;
 	g_zoom_factor = 0.5;
@@ -296,6 +278,11 @@ int		main(int argc, char **argv)
 	mode = 1;
 	if (!(parse_params(argc, argv, &nb_particles, &mode)))
 		return (0);
+	if (nb_particles <= 0)
+	{
+		printf("Needs at least 1 particle\n");
+		return (0);
+	}
 	if (!(init_opengl(g_screen_width, g_screen_height, "60 fps", &window)))
 		return (0);
 	if (!(make_gl_program("shaders/vertex.vs", "shaders/fragment.fs", &gl_program)))
@@ -306,7 +293,7 @@ int		main(int argc, char **argv)
 	loc = glGetUniformLocation(gl_program.program, "screen_ratio");
 	glUniform1f(loc, ((float)g_screen_width / g_screen_height));
 
-	if (!(source_str = get_file_source("hello.cl", &file_size)))
+	if (!(source_str = get_file_source("cl/hello.cl", &file_size)))
 		return (0);
 	if (!(make_cl_program(source_str, file_size, &cl_program)))
 		return (0);

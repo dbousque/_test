@@ -67,6 +67,8 @@ typedef struct			s_particle
 	float				velocity_y;
 }						t_particle;
 
+char					g_decay;
+char					g_position;
 char					g_keys[1024];
 unsigned int			g_screen_width;
 unsigned int			g_screen_height;

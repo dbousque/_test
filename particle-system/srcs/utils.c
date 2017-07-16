@@ -4,9 +4,14 @@
 
 char	parse_params(int argc, char **argv, unsigned int *nb_particles, char *mode)
 {
+	int		res;
+
 	if (argc <= 1)
 		return (1);
-	*nb_particles = (unsigned int)atoi(argv[1]);
+	res = atoi(argv[1]);
+	if (res < 0)
+		res = 0;
+	*nb_particles = (unsigned int)res;
 	if (argc <= 2)
 		return (1);
 	if (argv[2][0] == 's' && argv[2][1] == 'q' && argv[2][2] == 'u' && argv[2][3] == 'a'
@@ -19,6 +24,18 @@ char	parse_params(int argc, char **argv, unsigned int *nb_particles, char *mode)
 	{
 		*mode = 3;
 	}
+	if (argc <= 3)
+		return (1);
+	res = atoi(argv[3]);
+	if (res < 200 || res > 2560)
+		res = 1800;
+	g_screen_width = res;
+	if (argc <= 4)
+		return (1);
+	res = atoi(argv[4]);
+	if (res < 200 || res > 2560)
+		res = 1350;
+	g_screen_height = res;
 	return (1);
 }
 

@@ -2,14 +2,14 @@
 
 NAME		=	particle-system
 
-SOURCES		=	hello.c \
-				window.c \
-				cl_buffer.c \
-				utils.c \
-				gl_buffer.c \
-				gl_program.c \
-				cl_program.c \
-				input.c
+SOURCES		=	srcs/hello.c \
+				srcs/window.c \
+				srcs/cl_buffer.c \
+				srcs/utils.c \
+				srcs/gl_buffer.c \
+				srcs/gl_program.c \
+				srcs/cl_program.c \
+				srcs/input.c
 
 OBJECTS	=	$(subst .c,.o,$(SOURCES))
 

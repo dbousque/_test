@@ -75,8 +75,6 @@ char	make_cl_program(char *source_str, size_t file_size, t_cl_program *res)
 	res->context = clCreateContext(props, 1, &(res->device_id), NULL, NULL, &ret);
 	if (ret != CL_SUCCESS)
 		return (cl_operation_failed(res, "clCreateContext", ret));
-	printf("herre2\n");
-	fflush(stdout);
 	res->command_queue = clCreateCommandQueue(res->context, res->device_id, 0, &ret);
 	if (ret != CL_SUCCESS)
 		return (cl_operation_failed(res, "clCreateCommandQueue", ret));

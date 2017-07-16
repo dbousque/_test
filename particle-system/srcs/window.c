@@ -42,6 +42,14 @@ void	key_callback(GLFWwindow *window, int key, int scancode, int action, int mod
 	}
 	if (key == GLFW_KEY_ESCAPE)
 		glfwSetWindowShouldClose(window, GL_TRUE);
+	if (key == GLFW_KEY_KP_1)
+		g_position = 1;
+	if (key == GLFW_KEY_KP_2)
+		g_position = 2;
+	if (key == GLFW_KEY_KP_3)
+		g_position = 3;
+	if (key == GLFW_KEY_M)
+		g_decay = g_decay ? 0 : 1;
 }
 
 static void	mouse_callback(GLFWwindow* window, double xpos, double ypos)

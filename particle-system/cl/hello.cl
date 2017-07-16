@@ -80,36 +80,38 @@ __kernel void calculate_particles_position(
 		const float center_gravity_x,
 		const float center_gravity_y,
 		const char center_gravity_activated,
+		const int n,
 		const unsigned int nb_particles,
+		const char decay,
 		const unsigned int batch_size,
-		__global t_particle *particles)
+		__global t_particle *ps)
 {
 	float			gravity_vector_x;
 	float			gravity_vector_y;
 	int				id;
-	t_particle		particle;
+	t_particle		p;
 
 	id = get_global_id(0);
 	int i = id * batch_size;
 	while (i < id * batch_size + batch_size && i < nb_particles)
 	{
-		particle = particles[i];
+		p = ps[i];
 		if (!center_gravity_activated)
 		{
-			particle.velocity_x *= 0.997;
-			particle.velocity_y *= 0.997;
-			particle.x += particle.velocity_x * time_delta;
-			particle.y += particle.velocity_y * time_delta;
-			particles[i] = particle;
-			particles[i + 1] = particle;
-			particles[i + 2] = particle;
-			particles[i + 3] = particle;
-			particles[i + 4] = particle;
-			i += 5;
+			p.velocity_x *= 0.997;
+			p.velocity_y *= 0.997;
+			p.x += p.velocity_x * time_delta;
+			p.y += p.velocity_y * time_delta;
+			int x = 0;
+			while (x < n) {
+				ps[i + x] = p;
+				x++;
+			}
+			i+=n;
 			continue ;
 		}
-		gravity_vector_x = center_gravity_x - particle.x;
-		gravity_vector_y = center_gravity_y - particle.y;
+		gravity_vector_x = center_gravity_x - p.x;
+		gravity_vector_y = center_gravity_y - p.y;
 		//distance_from_center = sqrt((gravity_vector_x * gravity_vector_x) + (gravity_vector_y * gravity_vector_y));
 		if (fabs(gravity_vector_x) > fabs(gravity_vector_y))
 		{
@@ -124,15 +126,19 @@ __kernel void calculate_particles_position(
 		gravity_vector_x *= gravity_strength;
 		gravity_vector_y *= gravity_strength;
 
-		particle.velocity_x += gravity_vector_x * time_delta;
-		particle.velocity_y += gravity_vector_y * time_delta;
-		particle.x += particle.velocity_x * time_delta;
-		particle.y += particle.velocity_y * time_delta;
-		particles[i] = particle;
-		particles[i + 1] = particle;
-		particles[i + 2] = particle;
-		particles[i + 3] = particle;
-		particles[i + 4] = particle;
-		i += 5;
+		p.velocity_x += gravity_vector_x * time_delta;
+		p.velocity_y += gravity_vector_y * time_delta;
+		if (decay) {
+			p.velocity_x *= 0.997;
+			p.velocity_y *= 0.997;
+		}
+		p.x += p.velocity_x * time_delta;
+		p.y += p.velocity_y * time_delta;
+		int x = 0;
+		while (x < n) {
+			ps[i + x] = p;
+			x++;
+		}
+		i+=n;
 	}
 }
