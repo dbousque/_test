@@ -37,7 +37,7 @@ IOperand const *Float::operator+(IOperand const &rhs) const
   eOperandType  highestPrecision;
 
   highest = this->getPrecision() > rhs.getPrecision() ? this->getPrecision() : rhs.getPrecision;
-  return createOperand(highestPrecision)
+  return createOperand(highestPrecision, )
 }
 
 IOperand const *Float::operator-(IOperand const &rhs) const
