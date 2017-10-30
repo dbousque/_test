@@ -17,3 +17,4 @@ bonus :
   - 'help' command
   - friends
   - description for a channel
+  - password for channels

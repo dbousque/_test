@@ -157,7 +157,8 @@ t_parse_message_res		read_params(char *msg, t_msg *res, int command_end,
 				return (TOO_MANY_PARAMS);
 			res->params[params_ind] = &(msg[i]);
 		}
-		i++;
+		else
+			i++;
 	}
 	if (msg[i] != '\r' || msg[i + 1] != '\n')
 		return (MISSING_CL_LF);
@@ -237,36 +238,15 @@ void	print_msg(t_msg *msg)
 	}
 }
 
-int		main(void)
+int		main(int argc, char **argv)
 {
 	t_parse_message_res		res;
-	char					msg[100];
 	t_msg					parsed_msg;
 
 	init_msg(&parsed_msg);
-	msg[0] = '/';
-	msg[1] = 'n';
-	msg[2] = 'i';
-	msg[3] = 'c';
-	msg[4] = 'k';
-	msg[5] = ' ';
-	msg[6] = '\t';
-	msg[7] = ' ';
-	msg[8] = ' ';
-	msg[9] = 'e';
-	msg[10] = 't';
-	msg[11] = ' ';
-	msg[12] = ' ';
-	msg[13] = 'h';
-	msg[14] = 'a';
-	msg[15] = ' ';
-	msg[16] = '\r';
-	msg[17] = '\n';
-	msg[18] = '\0';
-	res = parse_message(msg, ft_strlen(msg), &parsed_msg);
+	res = parse_message(argv[1], ft_strlen(argv[1]), &parsed_msg);
 	if (res != OK)
-		return parse_message_error(msg, res);
-	printf("msg ok\n");
+		return parse_message_error(argv[1], res);
 	print_msg(&parsed_msg);
 	return (0);
 }

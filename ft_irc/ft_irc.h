@@ -43,6 +43,7 @@ typedef struct	s_msg
 
 typedef struct	s_channel
 {
+	int			id;
 	char		name[200];
 	char		description[300];
 }				t_channel;
@@ -57,15 +58,16 @@ typedef struct	s_user t_user;
 
 typedef struct	s_user
 {
+	int			id;
 	int			fd;
-	t_channel	*channels[10];
+	int			channels[10];
 	char		nickname[9];
 	char		*address;
 	int			msg_sent;
 	int			command_sent;
 	t_mode		mode;
-	t_user		*priv_msg_user;
-	t_user		*friends[10];
+	int			priv_msg_user;
+	int			friends[10];
 }				t_user;
 
 #endif
