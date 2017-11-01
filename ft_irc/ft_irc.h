@@ -54,8 +54,6 @@ typedef enum
 	PRIV_MSG
 } t_mode;
 
-typedef struct	s_user t_user;
-
 typedef struct	s_user
 {
 	int			id;
