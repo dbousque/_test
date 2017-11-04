@@ -372,6 +372,18 @@ void  init_users(t_user *users)
 void  clear_removed_users(t_user *users, int *nb_users)
 {
   // REMOVE ALL USERS WITH FREE=1
+  int   i;
+  int   decal;
+
+  decal = 0;
+  i = 0;
+  while (i + decal < *nb_users)
+  {
+    if (users[i].free)
+      decal++;
+    users[i] = users[i + decal];
+  }
+  *nb_users -= decal;
 }
 
 int   main(void)
