@@ -2,12 +2,12 @@
 
 #include "ft_irc.h"
 
-int	 create_server(int port)
+int		create_server(int port)
 {
-	int				 sock;
-	struct protoent	 *proto;
+	int					sock;
+	struct protoent		*proto;
 	struct sockaddr_in	sin;
-	int				 ret;
+	int					ret;
 
 	proto = getprotobyname("tcp");
 	if (!proto)
@@ -25,156 +25,6 @@ int	 create_server(int port)
 	if (ret == -1)
 		return (-1);
 	return (sock);
-}
-
-int	 unique_user_id(t_user *users, int nb_users)
-{
-	int	i;
-	int	id;
-
-	id = -1;
-	while (1)
-	{
-		id = rand();
-		if (id < 1)
-		i = 0;
-		while (i < nb_users)
-		{
-			if (users[i].id == id)
-			{
-				id = -1;
-				break ;
-			}
-			i++;
-		}
-		if (id != -1)
-			break ;
-	}
-	return (id);
-}
-
-char	ft_streq(char *str1, char *str2)
-{
-	int	 i;
-
-	i = 0;
-	while (str1[i] && str1[i] == str2[i])
-		i++;
-	if (!str1[i] && !str2[i])
-		return (1);
-	return (0);
-}
-
-void	set_unique_nickname(t_user *user, t_user *users, int nb_users)
-{
-	int	i;
-	char	ok;
-
-	while (1)
-	{
-		i = 0;
-		while (i < 9)
-		{
-			user->nickname[i] = (rand() % 26) + 'a';
-			i++;
-		}
-		user->nickname[9] = '\0';
-		ok = 1;
-		i = 0;
-		while (i < nb_users)
-		{
-			if (ft_streq(user->nickname, users[i].nickname))
-			{
-				ok = 0;
-				break ;
-			}
-			i++;
-		}
-		if (ok)
-			return ;
-	}
-}
-
-void	accept_user(int sock_fd, t_user *users, int *nb_users)
-{
-	struct sockaddr_in	sin;
-	socklen_t len;
-	t_user		*user;
-	char			*ip_name;
-	int		 i;
-
-	user = &(users[*nb_users]);
-	user->fd = accept(sock_fd, (struct sockaddr*)&sin, &len);
-	if (user->fd == -1)
-	{
-		printf("accept failed");
-		return ;
-	}
-	user->free = 0;
-	user->id = unique_user_id(users, *nb_users);
-	user->nb_in_write_buffer = 0;
-	user->nb_in_read_buffer = 0;
-	user->channels[0] = -1;
-	user->nickname[0] = '\0';
-	set_unique_nickname(user, users, *nb_users);
-	user->msg_sent = 0;
-	user->command_sent = 0;
-	user->mode = STD;
-	user->priv_msg_user = 0;
-	user->friends[0] = -1;
-	ip_name = inet_ntoa(sin.sin_addr);
-	i = 0;
-	while (ip_name[i] && i < 19)
-	{
-		user->ip_name[i] = ip_name[i];
-		i++;
-	}
-	user->ip_name[i] = '\0';
-	printf("client IP : %s\n", user->ip_name);
-	(*nb_users)++;
-}
-
-void	remove_user_from_friends(int *friends, int id)
-{
-	int		i;
-	int		decal;
-
-	decal = 0;
-	i = 0;
-	while (friends[i + decal] != -1)
-	{
-		while (friends[i + decal] == id)
-			decal++;
-		if (decal > 0)
-			friends[i] = friends[i + decal];
-		i++;
-	}
-	friends[i] = -1;
-}
-
-void	remove_user(t_user *users, int i, int nb_users)
-{
-	t_user	*user;
-
-	user = &(users[i]);
-	close(user->fd);
-	i = 0;
-	while (i < nb_users)
-	{
-		if (!users[i].free)
-		{
-			if (users[i].mode == PRIV_MSG && users[i].priv_msg_user == user->id)
-			{
-				users[i].mode = STD;
-				users[i].priv_msg_user = -1;
-			}
-			remove_user_from_friends(users[i].friends, user->id);
-		}
-		i++;
-	}
-	user->free = 1;
-	user->id = -1;
-	user->nickname[0] = '\0';
 }
 
 void	read_user_input(t_user *users, int i, t_list *channels, int nb_users)
@@ -202,48 +52,7 @@ void	write_user_output(t_user *users, int i, t_list *channels, int nb_users)
 
 }
 
-void	init_commands_names(void)
-{
-	g_irc_commands[0] = "/nick";
-	g_irc_commands[1] = "/join";
-	g_irc_commands[2] = "/leave";
-	g_irc_commands[3] = "/who";
-	g_irc_commands[4] = "/msg";
-	g_irc_commands[5] = "/connect";
-	g_irc_commands[6] = NULL;
-}
-
-void	init_users(t_user *users)
-{
-	int		i;
-
-	i = 0;
-	while (i < MAX_NB_CONNECTIONS)
-	{
-		users[i].free = 1;
-		i++;
-	}
-}
-
-void	clear_removed_users(t_user *users, int *nb_users)
-{
-	int		i;
-	int		decal;
-
-	decal = 0;
-	i = 0;
-	while (i + decal < *nb_users)
-	{
-		while (users[i + decal].free && i + decal < *nb_users)
-			decal++;
-		if (decal > 0 && i + decal < *nb_users)
-			users[i] = users[i + decal];
-		i++;
-	}
-	*nb_users -= decal;
-}
-
-int	 main(void)
+int		main(void)
 {
 	int		port;
 	int		sock_fd;

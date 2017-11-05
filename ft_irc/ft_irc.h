@@ -13,8 +13,9 @@
 
 # define MAX_NB_CONNECTIONS 512
 # define USER_BUFFER_SIZE 4096
+# define DEFAULT_PORT 4242
 
-char  *g_irc_commands[7];
+char	*g_irc_commands[7];
 
 typedef enum
 {
@@ -58,7 +59,7 @@ typedef enum
 
 typedef struct	s_user
 {
-	char 		free;
+	char		free;
 	int			id;
 	int			fd;
 	char		write_buffer[USER_BUFFER_SIZE];
@@ -85,5 +86,10 @@ typedef struct	s_list
 
 char			init_list(t_list *list, size_t elt_size);
 void			*new_elt(t_list *lst);
+void			init_commands_names(void);
+void			init_users(t_user *users);
+void			clear_removed_users(t_user *users, int *nb_users);
+void			accept_user(int sock_fd, t_user *users, int *nb_users);
+void			remove_user(t_user *users, int i, int nb_users);
 
 #endif
