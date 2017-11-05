@@ -294,10 +294,27 @@ void  accept_user(int sock_fd, t_user *users, int *nb_users)
   (*nb_users)++;
 }
 
+void  remove_user_from_friends(int *friends, int id)
+{
+  int   i;
+  int   decal;
+
+  decal = 0;
+  i = 0;
+  while (friends[i + decal] != -1)
+  {
+    while (friends[i + decal] == id)
+      decal++;
+    if (decal > 0)
+      friends[i] = friends[i + decal];
+    i++;
+  }
+  friends[i] = -1;
+}
+
 void  remove_user(t_user *users, int i, int nb_users)
 {
   t_user    *user;
-  int       x;
 
   user = &(users[i]);
   close(user->fd);
@@ -306,13 +323,12 @@ void  remove_user(t_user *users, int i, int nb_users)
   {
     if (!users[i].free)
     {
-      x = 0;
-      while (users[i]->friends[x] != -1)
+      if (users[i].mode == PRIVMSG && users[i].priv_msg_user == user->id)
       {
-        if (users[i]->friends[x] == user->id)
-          /// REMOVE USER FROM FRIENDS LIST
-        x++;
+        users[i].mode = STD;
+        users[i].priv_msg_user = -1;
       }
+      remove_user_from_friends(users[i].friends, user->id);
     }
     i++;
   }
@@ -371,7 +387,6 @@ void  init_users(t_user *users)
 
 void  clear_removed_users(t_user *users, int *nb_users)
 {
-  // REMOVE ALL USERS WITH FREE=1
   int   i;
   int   decal;
 
@@ -379,9 +394,11 @@ void  clear_removed_users(t_user *users, int *nb_users)
   i = 0;
   while (i + decal < *nb_users)
   {
-    if (users[i].free)
+    while (users[i + decal].free && i + decal < *nb_users)
       decal++;
-    users[i] = users[i + decal];
+    if (decal > 0 && i + decal < *nb_users)
+      users[i] = users[i + decal];
+    i++;
   }
   *nb_users -= decal;
 }
