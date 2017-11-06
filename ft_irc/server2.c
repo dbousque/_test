@@ -52,86 +52,93 @@ void	write_user_output(t_user *users, int i, t_list *channels, int nb_users)
 
 }
 
+void	perform_select(t_env *e, int highest_fd)
+{
+	int		nb_ready;
+	int		i;
+
+	nb_ready = select(highest_fd + 1, &(e->read_fds), &(e->write_fds), NULL, NULL);
+	if (nb_ready == -1)
+	{
+		LOG(ERROR, "select error");
+		return ;
+	}
+	if (nb_ready > 0)
+	{
+		LOG(INFO, "%d fd%s ready", nb_ready, nb_ready == 1 ? "" : "s");
+		if (FD_ISSET(e->sock_fd, &(e->read_fds)))
+		{
+			// printf("before\n");
+			accept_user(e->sock_fd, e->users, &(e->nb_users));
+			// printf("after\n");
+			nb_ready--;
+		}
+		i = 0;
+		while (i < e->nb_users && nb_ready > 0)
+		{
+			if (FD_ISSET((e->users)[i].fd, &(e->read_fds)))
+			{
+				read_user_input(e->users, i, &(e->channels), e->nb_users);
+				nb_ready--;
+			}
+			if (FD_ISSET((e->users)[i].fd, &(e->write_fds)))
+			{
+				write_user_output(e->users, i, &(e->channels), e->nb_users);
+				nb_ready--;
+			}
+			i++;
+		}
+		if (nb_ready > 0)
+			LOG(DEBUG, "weird thing, nb_ready at %d, but no client left", nb_ready);
+		clear_removed_users(e->users, &(e->nb_users));
+	}
+}
+
+void	main_loop(t_env *e)
+{
+	int		highest_fd;
+	int		i;
+
+	e->nb_users = 0;
+	while (1)
+	{
+		LOG(INFO, "loop start, nb_users %d", e->nb_users);
+		FD_ZERO(&(e->write_fds));
+		FD_ZERO(&(e->read_fds));
+		FD_SET(e->sock_fd, &(e->read_fds));
+		highest_fd = e->sock_fd;
+		i = 0;
+		while (i < e->nb_users)
+		{
+			if (e->users[i].fd > highest_fd)
+				highest_fd = e->users[i].fd;
+			FD_SET(e->users[i].fd, &(e->read_fds));
+			if (e->users[i].nb_in_write_buffer > 0)
+				FD_SET(e->users[i].fd, &(e->write_fds));
+			i++;
+		}
+		perform_select(e, highest_fd);
+	}
+}
+
 int		main(void)
 {
 	int		port;
-	int		sock_fd;
-	fd_set	read_fds;
-	fd_set	write_fds;
-	t_user	users[MAX_NB_CONNECTIONS];
-	int		nb_users;
-	t_list	channels;
+	t_env	e;
 
-	port = 4242;
-	if ((sock_fd = create_server(port)) == -1)
-	{
-		printf("could not create server on port %d\n", port);
-		return (1);
-	}
 	srand(time(NULL));
-	nb_users = 0;
 	init_commands_names();
-	init_users(users);
-	if (!(init_list(&channels, sizeof(t_channel))))
+	port = 4242;
+	if ((e.sock_fd = create_server(port)) == -1)
 	{
-		printf("could not initialize\n");
+		LOG(ERROR, "could not create server on port %d", port);
 		return (1);
 	}
-	while (1)
+	init_users(e.users);
+	if (!(init_list(&(e.channels), sizeof(t_channel))))
 	{
-		printf("loop start, nb_users %d\n", nb_users);
-
-		FD_ZERO(&write_fds);
-		FD_ZERO(&read_fds);
-
-		FD_SET(sock_fd, &read_fds);
-
-		int highest_fd = sock_fd;
-
-		int i = 0;
-		while (i < nb_users)
-		{
-			if (users[i].fd > highest_fd)
-				highest_fd = users[i].fd;
-			FD_SET(users[i].fd, &read_fds);
-			if (users[i].nb_in_write_buffer > 0)
-				FD_SET(users[i].fd, &write_fds);
-			i++;
-		}
-
-		int nb_ready = select(highest_fd + 1, &read_fds, &write_fds, NULL, NULL);
-		if (nb_ready == -1)
-		{
-			printf("select error\n");
-			continue ;
-		}
-		if (nb_ready > 0)
-		{
-			printf("%d fds ready\n", nb_ready);
-			if (FD_ISSET(sock_fd, &read_fds))
-			{
-				accept_user(sock_fd, users, &nb_users);
-				nb_ready--;
-			}
-			i = 0;
-			while (i < nb_users && nb_ready > 0)
-			{
-				if (FD_ISSET(users[i].fd, &read_fds))
-				{
-					read_user_input(users, i, &channels, nb_users);
-					nb_ready--;
-				}
-				if (FD_ISSET(users[i].fd, &write_fds))
-				{
-					write_user_output(users, i, &channels, nb_users);
-					nb_ready--;
-				}
-				i++;
-			}
-			if (nb_ready > 0)
-				printf("weird thing, nb_ready at %d, but no client left\n", nb_ready);
-			clear_removed_users(users, &nb_users);
-		}
+		LOG(ERROR, "could not initialize");
+		return (1);
 	}
-	return (0);
+	main_loop(&e);
 }

@@ -15,7 +15,16 @@
 # define USER_BUFFER_SIZE 4096
 # define DEFAULT_PORT 4242
 
+# define LOG(mode, ...) log_start(mode); printf(__VA_ARGS__); log_end(mode);
+
 char	*g_irc_commands[7];
+
+typedef enum
+{
+	INFO,
+	DEBUG,
+	ERROR
+} t_log_mode;
 
 typedef enum
 {
@@ -84,6 +93,18 @@ typedef struct	s_list
 	size_t		elt_size;
 }				t_list;
 
+typedef struct	s_env
+{
+	int			sock_fd;
+	t_user		users[MAX_NB_CONNECTIONS];
+	t_list		channels;
+	int			nb_users;
+	fd_set		read_fds;
+	fd_set		write_fds;
+}				t_env;
+
+void			log_start(t_log_mode mode);
+void			log_end(t_log_mode mode);
 char			init_list(t_list *list, size_t elt_size);
 void			*new_elt(t_list *lst);
 void			init_commands_names(void);
