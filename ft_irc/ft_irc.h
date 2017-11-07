@@ -15,7 +15,8 @@
 # define USER_BUFFER_SIZE 4096
 # define DEFAULT_PORT 4242
 
-# define LOG(mode, ...) log_start(mode); printf(__VA_ARGS__); log_end(mode);
+# define LOG(mode, ...) \
+	do { log_start(mode); printf(__VA_ARGS__); log_end(mode); } while (0)
 
 char	*g_irc_commands[7];
 

@@ -52,12 +52,12 @@ void	*new_elt(t_list *lst)
 {
 	size_t	i;
 	char	*elts;
-	char	*elt_bytes;
 
 	if (lst->size == lst->len)
 		double_list_size(lst);
 	if (!lst->elts)
 		return (NULL);
 	lst->len++;
-	return (&(lst->elts[lst->elt_size * (lst->len - 1)]));
+	elts = (char*)lst->elts;
+	return (&(elts[lst->elt_size * (lst->len - 1)]));
 }

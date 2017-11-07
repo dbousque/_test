@@ -37,14 +37,14 @@ void	read_user_input(t_user *users, int i, t_list *channels, int nb_users)
 	if (ret <= 0)
 	{
 		if (ret == 0)
-			printf("user '%s' exiting\n", user->nickname);
+			LOG(INFO, "user '%s' exiting\n", user->nickname);
 		else
-			printf("error while reading '%s' input\n", user->nickname);
+			LOG(ERROR, "error while reading '%s' input\n", user->nickname);
 		remove_user(users, i, nb_users);
 		return ;
 	}
 	user->read_buffer[ret] = '\0';
-	printf("user sent : %s\n", user->read_buffer);
+	LOG(INFO, "user sent : %s\n", user->read_buffer);
 }
 
 void	write_user_output(t_user *users, int i, t_list *channels, int nb_users)
@@ -68,9 +68,7 @@ void	perform_select(t_env *e, int highest_fd)
 		LOG(INFO, "%d fd%s ready", nb_ready, nb_ready == 1 ? "" : "s");
 		if (FD_ISSET(e->sock_fd, &(e->read_fds)))
 		{
-			// printf("before\n");
 			accept_user(e->sock_fd, e->users, &(e->nb_users));
-			// printf("after\n");
 			nb_ready--;
 		}
 		i = 0;

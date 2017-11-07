@@ -12,6 +12,7 @@ int		unique_user_id(t_user *users, int nb_users)
 	{
 		id = rand();
 		if (id < 1)
+			continue ;
 		i = 0;
 		while (i < nb_users)
 		{
@@ -108,10 +109,10 @@ void	accept_user(int sock_fd, t_user *users, int *nb_users)
 	user->fd = accept(sock_fd, (struct sockaddr*)&sin, &len);
 	if (user->fd == -1)
 	{
-		printf("accept failed");
+		LOG(DEBUG, "accept failed");
 		return ;
 	}
 	init_user(users, user, *nb_users, &sin);
-	printf("client IP : %s\n", user->ip_name);
+	LOG(INFO, "new client : '%s' from %s", user->nickname, user->ip_name);
 	(*nb_users)++;
 }
