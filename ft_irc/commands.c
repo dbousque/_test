@@ -19,3 +19,17 @@ void	nick(connection, char *new_name)
 			delete all instances of it as well
 	}
 }
+
+/*
+ * 8.13 Channel membership
+ *
+ * The current server allows any registered local user to join upto 10
+ * different channels.  There is no limit imposed on non-local users so
+ * that the server remains (reasonably) consistant with all others on a
+ * channel membership basis
+ */
+
+void	join()
+{
+
+}

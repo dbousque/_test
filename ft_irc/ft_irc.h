@@ -19,6 +19,7 @@
 	do { log_start(mode); printf(__VA_ARGS__); log_end(mode); } while (0)
 
 char	*g_irc_commands[7];
+char	g_tmp_buffer[USER_BUFFER_SIZE + 1];
 
 typedef enum
 {
@@ -48,6 +49,25 @@ typedef enum
 	TOO_MANY_PARAMS
 } t_parse_message_res;
 
+typedef t_parse_message_res t_parse_msg_res;
+
+typedef struct	s_list
+{
+	void		*elts;
+	int			size;
+	int			len;
+	size_t		elt_size;
+}				t_list;
+
+typedef struct	s_circular_buffer
+{
+	char		data[USER_BUFFER_SIZE];
+	int			start;
+	int			end;
+}				t_circular_buffer;
+
+typedef t_circular_buffer t_circ_buf;
+
 typedef struct	s_msg
 {
 	t_command	command;
@@ -72,10 +92,8 @@ typedef struct	s_user
 	char		free;
 	int			id;
 	int			fd;
-	char		write_buffer[USER_BUFFER_SIZE];
-	char		read_buffer[513];
-	int			nb_in_write_buffer;
-	int			nb_in_read_buffer;
+	t_circ_buf	read_buffer;
+	t_circ_buf	write_buffer;
 	int			channels[10];
 	char		nickname[10];
 	char		ip_name[20];
@@ -85,14 +103,6 @@ typedef struct	s_user
 	int			priv_msg_user;
 	int			friends[11];
 }				t_user;
-
-typedef struct	s_list
-{
-	void		*elts;
-	int			size;
-	int			len;
-	size_t		elt_size;
-}				t_list;
 
 typedef struct	s_env
 {
@@ -106,12 +116,28 @@ typedef struct	s_env
 
 void			log_start(t_log_mode mode);
 void			log_end(t_log_mode mode);
+int				ft_strlen(char *str);
+char			startswith(char *str, char *start);
+char			contains(char *str, int len, char c);
+void			print_parse_message_error(t_parse_message_res res);
+void			print_msg(t_msg *msg);
 char			init_list(t_list *list, size_t elt_size);
 void			*new_elt(t_list *lst);
+void			init_circular_buffer(t_circular_buffer *b);
+void			circular_buffer_write(t_circular_buffer *b, char *data,
+																	int len);
+int				circular_buffer_cpy(t_circular_buffer *b, char *dest);
+int				circular_buffer_read(t_circular_buffer *b, char *dest);
+char			empty(t_circular_buffer *b);
 void			init_commands_names(void);
 void			init_users(t_user *users);
 void			clear_removed_users(t_user *users, int *nb_users);
 void			accept_user(int sock_fd, t_user *users, int *nb_users);
 void			remove_user(t_user *users, int i, int nb_users);
+void			read_user_input(t_env *e, int i);
+void			write_user_output(t_user *users, int i, t_list *channels,
+																int nb_users);
+t_parse_msg_res	parse_message(char *msg, int len, t_msg *res);
+void			init_msg(t_msg *msg);
 
 #endif

@@ -79,8 +79,8 @@ void	init_user(t_user *users, t_user *user, int nb_users,
 
 	user->free = 0;
 	user->id = unique_user_id(users, nb_users);
-	user->nb_in_write_buffer = 0;
-	user->nb_in_read_buffer = 0;
+	init_circular_buffer(&(user->read_buffer));
+	init_circular_buffer(&(user->write_buffer));
 	user->channels[0] = -1;
 	user->nickname[0] = '\0';
 	set_unique_nickname(user, users, nb_users);
