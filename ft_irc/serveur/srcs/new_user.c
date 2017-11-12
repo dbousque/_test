@@ -37,12 +37,12 @@ void	set_unique_nickname(t_user *user, t_user *users, int nb_users)
 	while (1)
 	{
 		i = 0;
-		while (i < 9)
+		while (i < 5)
 		{
 			user->nickname[i] = (rand() % 26) + 'a';
 			i++;
 		}
-		user->nickname[9] = '\0';
+		user->nickname[5] = '\0';
 		ok = 1;
 		i = 0;
 		while (i < nb_users)
@@ -107,5 +107,6 @@ void	accept_user(int sock_fd, t_user *users, int *nb_users)
 	}
 	init_user(users, user, *nb_users, &sin);
 	LOG(INFO, "New client : '%s' from %s", user->nickname, user->ip_name);
+	log_user(user, "|> Welcome to this amazing IRC server");
 	(*nb_users)++;
 }

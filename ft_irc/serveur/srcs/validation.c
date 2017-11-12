@@ -18,7 +18,7 @@ char	valid_nickname(char *str)
  * separator by the protocol).
  */
 
-char		valid_channel_name(char *str)
+char	valid_channel_name(char *str)
 {
 	int		i;
 

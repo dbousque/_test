@@ -44,6 +44,35 @@ t_channel	*find_channel_by_id(t_env *e, int id)
 	return (NULL);
 }
 
+int		unique_channel_id(t_list *channels)
+{
+	int			i;
+	int			id;
+	t_channel	*channel;
+
+	id = -1;
+	while (1)
+	{
+		id = rand();
+		if (id < 1)
+			continue ;
+		i = 0;
+		while (i < channels->len)
+		{
+			channel = &(((t_channel*)channels->elts)[i]);
+			if (channel->id == id)
+			{
+				id = -1;
+				break ;
+			}
+			i++;
+		}
+		if (id != -1)
+			break ;
+	}
+	return (id);
+}
+
 t_channel	*create_channel(t_env *e, char *channel_name, char *description)
 {
 	t_channel	*channel;
@@ -54,6 +83,7 @@ t_channel	*create_channel(t_env *e, char *channel_name, char *description)
 	channel = new_elt(&(e->channels));
 	if (!channel)
 		return (NULL);
+	channel->id = unique_channel_id(&(e->channels));
 	i = 0;
 	while (channel_name[i])
 	{

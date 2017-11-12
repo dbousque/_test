@@ -24,7 +24,10 @@ void	clear_removed_users(t_user *users, int *nb_users)
 	while (i + decal < *nb_users)
 	{
 		while (users[i + decal].free && i + decal < *nb_users)
+		{
+			close(users[i + decal].fd);
 			decal++;
+		}
 		if (decal > 0 && i + decal < *nb_users)
 			users[i] = users[i + decal];
 		i++;
@@ -54,7 +57,6 @@ void	remove_user(t_env *e, t_user *user)
 {
 	int		i;
 
-	close(user->fd);
 	i = 0;
 	while (i < e->nb_users)
 	{

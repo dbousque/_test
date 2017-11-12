@@ -120,7 +120,8 @@ int				ft_strlen(char *str);
 char			startswith(char *str, char *start);
 char			contains(char *str, int len, char c);
 char			ft_streq(char *str1, char *str2);
-void			print_parse_message_error(t_parse_message_res res);
+void			print_parse_message_error(t_parse_message_res res,
+																t_user *user);
 void			print_msg(t_msg *msg);
 void			log_user(t_user *user, char *str);
 void			wrong_nb_params(t_user *user, char *command_name,
@@ -133,6 +134,8 @@ char			remove_channel_from_user(t_env *e, t_user *user,
 														t_channel *channel);
 void			remove_channels_from_user(t_env *e, t_user *user);
 char			user_in_channel(t_user *user, int channel_id);
+void			welcome_user_to_channel(t_user *user, t_channel *channel);
+int				parse_port(char *str);
 char			init_list(t_list *list, size_t elt_size);
 void			*new_elt(t_list *lst);
 void			remove_elt(t_list *lst, char *addr);

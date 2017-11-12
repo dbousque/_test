@@ -86,6 +86,7 @@ void	join(t_env *e, t_user *user, char **params, int nb_params)
 	user->channels[i] = channel->id;
 	user->channels[i + 1] = -1;
 	log_user(user, "|> Successfully joined the channel");
+	welcome_user_to_channel(user, channel);
 }
 
 void	leave(t_env *e, t_user *user, char **params, int nb_params)
@@ -132,8 +133,30 @@ void	who(t_env *e, t_user *user, char **params, int nb_params)
 
 void	msg(t_env *e, t_user *user, char **params, int nb_params)
 {
-	(void)e;
-	(void)user;
-	(void)params;
-	(void)nb_params;
+	int			i;
+	t_user		*tmp_user;
+	char		msg[600];
+
+	if (nb_params != 2)
+		return (wrong_nb_params(user, "msg", nb_params, 2));
+	i = 0;
+	while (i < e->nb_users)
+	{
+		tmp_user = &(e->users[i]);
+		if (!tmp_user->free && ft_streq(tmp_user->nickname, params[0]))
+		{
+			snprintf(msg, 600, "'%s' > %s", user->nickname, params[1]);
+			log_user(tmp_user, msg);
+			snprintf(msg, 600, "'%s' < %s", tmp_user->nickname, params[1]);
+			log_user(user, msg);
+			return ;
+		}
+		i++;
+	}
+	log_user(user, "User not found");
 }
+
+// privmode <nick>
+// stdmode
+// befriend <nick>
+// unfriend <nick>

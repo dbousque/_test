@@ -101,14 +101,23 @@ void	main_loop(t_env *e)
 	}
 }
 
-int		main(void)
+int		main(int argc, char **argv)
 {
 	int		port;
 	t_env	e;
 
+	if (argc != 2)
+	{
+		printf("Usage : %s <port:uint16_t>\n", argv[0]);
+		return (0);
+	}
+	if ((port = parse_port(argv[1])) == -1)
+	{
+		printf("Invalid port\n");
+		return (0);
+	}
 	srand(time(NULL));
 	init_commands_names();
-	port = 4242;
 	if ((e.sock_fd = create_server(port)) == -1)
 	{
 		LOG(ERROR, "could not create server on port %d", port);
@@ -121,4 +130,5 @@ int		main(void)
 		return (1);
 	}
 	main_loop(&e);
+	return (1);
 }

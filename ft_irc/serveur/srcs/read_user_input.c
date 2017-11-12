@@ -30,7 +30,7 @@ void	interpret_message(t_env *e, t_user *user, int len)
 	init_msg(&parsed_msg);
 	res = parse_message(g_tmp_buffer, len, &parsed_msg);
 	if (res != OK)
-		return print_parse_message_error(res);
+		return print_parse_message_error(res, user);
 	print_msg(&parsed_msg);
 	nb_params = 0;
 	while (parsed_msg.params[nb_params])
@@ -46,10 +46,9 @@ void	interpret_message(t_env *e, t_user *user, int len)
 
 void	read_user_input_error(t_env *e, int ret, t_user *user)
 {
-	if (ret == 0)
-		LOG(INFO, "User '%s' exiting", user->nickname);
-	else
+	if (ret != 0)
 		LOG(ERROR, "Error while reading '%s' input", user->nickname);
+	LOG(INFO, "User '%s' exiting", user->nickname);
 	remove_user(e, user);
 	return ;
 }
