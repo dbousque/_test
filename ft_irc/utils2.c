@@ -8,15 +8,15 @@ void	log_start(t_log_mode mode)
 	struct tm	tm;
 
 	if (mode == INFO)
-		printf("\033[1;33mINFO ");
+		printf("\033[1;33m[INFO] ");
 	if (mode == DEBUG)
-		printf("\033[1;34mDEBUG");
+		printf("\033[1;34m[DEBUG]");
 	if (mode == ERROR)
-		printf("\033[1;31mERROR");
-	printf("\033[0m | ");
+		printf("\033[1;31m[ERROR]");
+	printf("\033[0m ");
 	t = time(NULL);
 	tm = *localtime(&t);
-	printf("%d-%02d-%02d %02d:%02d:%02d | ", tm.tm_year + 1900, tm.tm_mon + 1,
+	printf("[%d-%02d-%02d %02d:%02d:%02d] ", tm.tm_year + 1900, tm.tm_mon + 1,
 								tm.tm_mday, tm.tm_hour, tm.tm_min, tm.tm_sec);
 	if (mode == INFO)
 		printf("\033[1;33m");
@@ -28,6 +28,7 @@ void	log_start(t_log_mode mode)
 
 void	log_end(t_log_mode mode)
 {
+	(void)mode;
 	printf("\033[0m\n");
 }
 

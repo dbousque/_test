@@ -34,14 +34,14 @@ void	handle_user_fds(t_env *e, int nb_ready)
 	i = 0;
 	while (i < e->nb_users && nb_ready > 0)
 	{
+		if (FD_ISSET((e->users)[i].fd, &(e->write_fds)))
+		{
+			write_user_output(e, i);
+			nb_ready--;
+		}
 		if (FD_ISSET((e->users)[i].fd, &(e->read_fds)))
 		{
 			read_user_input(e, i);
-			nb_ready--;
-		}
-		if (FD_ISSET((e->users)[i].fd, &(e->write_fds)))
-		{
-			write_user_output(e->users, i, &(e->channels), e->nb_users);
 			nb_ready--;
 		}
 		i++;
@@ -53,7 +53,6 @@ void	handle_user_fds(t_env *e, int nb_ready)
 void	perform_select(t_env *e, int highest_fd)
 {
 	int		nb_ready;
-	int		i;
 
 	nb_ready = select(highest_fd + 1, &(e->read_fds), &(e->write_fds),
 																NULL, NULL);
@@ -83,7 +82,7 @@ void	main_loop(t_env *e)
 	e->nb_users = 0;
 	while (1)
 	{
-		LOG(DEBUG, "loop start, nb_users %d", e->nb_users);
+		LOG(DEBUG, "Loop start, nb_users %d", e->nb_users);
 		FD_ZERO(&(e->write_fds));
 		FD_ZERO(&(e->read_fds));
 		FD_SET(e->sock_fd, &(e->read_fds));
@@ -93,9 +92,9 @@ void	main_loop(t_env *e)
 		{
 			if (e->users[i].fd > highest_fd)
 				highest_fd = e->users[i].fd;
-			FD_SET(e->users[i].fd, &(e->read_fds));
 			if (!empty(&(e->users[i].write_buffer)))
 				FD_SET(e->users[i].fd, &(e->write_fds));
+			FD_SET(e->users[i].fd, &(e->read_fds));
 			i++;
 		}
 		perform_select(e, highest_fd);

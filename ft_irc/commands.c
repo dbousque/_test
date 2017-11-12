@@ -1,5 +1,7 @@
 
 
+#include "ft_irc.h"
+
 /*
  * If a NICK message arrives at a server which already knows about an
  * identical nickname for another client, a nickname collision occurs.
@@ -10,14 +12,36 @@
  * original (old) nick must be removed as well.
  */
 
-void	nick(connection, char *new_name)
+void	nick(t_env *e, t_user *user, char **params, int nb_params)
 {
-	if (new_name already exists)
+	char	*new_nick;
+	int		i;
+
+	if (nb_params != 1)
+		return (wrong_nb_params(user, "nick", nb_params, 1));
+	new_nick = params[0];
+	if (!valid_nickname(new_nick))
+		return (log_user(user, "Invalid nickname"));
+	i = 0;
+	while (i < e->nb_users)
 	{
-		delete all instances of the name (including friends)
-		if connection->nickname exists
-			delete all instances of it as well
+		if (!e->users[i].free && ft_streq(new_nick, e->users[i].nickname))
+		{
+			remove_user(e, user);
+			remove_user(e, &(e->users[i]));
+			log_user(&(e->users[i]), "Someone tried to use your nickname");
+			return (log_user(user, "Nickname already taken, disconnecting"));
+		}
+		i++;
 	}
+	i = 0;
+	while (new_nick[i])
+	{
+		user->nickname[i] = new_nick[i];
+		i++;
+	}
+	user->nickname[i] = '\0';
+	log_user(user, "|> Successfully changed your nickname");
 }
 
 /*
@@ -27,9 +51,89 @@ void	nick(connection, char *new_name)
  * different channels.  There is no limit imposed on non-local users so
  * that the server remains (reasonably) consistant with all others on a
  * channel membership basis
+ *
+ * To create a new channel or become part of an existing channel, a user
+ * is required to JOIN the channel.  If the channel doesn't exist prior
+ * to joining, the channel is created and the creating user becomes a
+ * channel operator.
  */
 
-void	join()
+void	join(t_env *e, t_user *user, char **params, int nb_params)
 {
+	char		*channel_name;
+	char		*description;
+	t_channel	*channel;
+	int			i;
 
+	if (nb_params < 1 || nb_params > 2)
+		return (wrong_nb_params(user, "join", nb_params, 1));
+	description = nb_params == 2 ? params[1] : "<give me a description>";
+	channel_name = params[0];
+	if (!(channel = find_channel(e, channel_name)))
+	{
+		if (!(channel = create_channel(e, channel_name, description)))
+			return (log_user(user, "Could not create channel"));
+	}
+	i = 0;
+	while (user->channels[i] != -1)
+	{
+		if (user->channels[i] == channel->id)
+			return (log_user(user, "Already a member of the channel"));
+		i++;
+	}
+	if (i >= 10)
+		return (log_user(user, "Already joined 10 channels, can't join"));
+	user->channels[i] = channel->id;
+	user->channels[i + 1] = -1;
+	log_user(user, "|> Successfully joined the channel");
+}
+
+void	leave(t_env *e, t_user *user, char **params, int nb_params)
+{
+	t_channel	*channel;
+
+	if (user->channels[0] == -1)
+		return (log_user(user, "You are not a member of any channel"));
+	if (user->channels[1] != -1 && nb_params != 1)
+		return (wrong_nb_params(user, "leave", nb_params, 1));
+	if (nb_params < 0 || nb_params > 1)
+		return (wrong_nb_params(user, "leave", nb_params, 1));
+	if (nb_params > 0)
+		channel = find_channel(e, params[0]);
+	else
+		channel = find_channel_by_id(e, user->channels[0]);
+	if (!channel)
+		return (log_user(user, "Channel not found"));
+	if (!remove_channel_from_user(e, user, channel))
+		return (log_user(user, "Your are not registered to this channel"));
+	log_user(user, "|> Successfully left the channel");
+}
+
+void	who(t_env *e, t_user *user, char **params, int nb_params)
+{
+	t_channel	*channel;
+	t_user		*tmp_user;
+	int			i;
+
+	if (nb_params != 1)
+		return (wrong_nb_params(user, "who", nb_params, 1));
+	channel = find_channel(e, params[0]);
+	if (!channel)
+		return (log_user(user, "Channel not found"));
+	i = 0;
+	while (i < e->nb_users)
+	{
+		tmp_user = &(e->users[i]);
+		if (!tmp_user->free && user_in_channel(tmp_user, channel->id))
+			log_user(user, tmp_user->nickname);
+		i++;
+	}
+}
+
+void	msg(t_env *e, t_user *user, char **params, int nb_params)
+{
+	(void)e;
+	(void)user;
+	(void)params;
+	(void)nb_params;
 }

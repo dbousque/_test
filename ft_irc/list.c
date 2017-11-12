@@ -50,7 +50,6 @@ void	double_list_size(t_list *lst)
 
 void	*new_elt(t_list *lst)
 {
-	size_t	i;
 	char	*elts;
 
 	if (lst->size == lst->len)
@@ -60,4 +59,19 @@ void	*new_elt(t_list *lst)
 	lst->len++;
 	elts = (char*)lst->elts;
 	return (&(elts[lst->elt_size * (lst->len - 1)]));
+}
+
+void	remove_elt(t_list *lst, char *addr)
+{
+	char	*elts;
+
+	elts = lst->elts;
+	addr += lst->elt_size;
+	while (addr < elts + (lst->len * lst->elt_size))
+	{
+		if (addr - lst->elt_size >= elts)
+			*(addr - lst->elt_size) = *addr;
+		addr++;
+	}
+	lst->len--;
 }

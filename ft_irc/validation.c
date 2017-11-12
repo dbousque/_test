@@ -2,6 +2,13 @@
 
 #include "ft_irc.h"
 
+char	valid_nickname(char *str)
+{
+	if (ft_strlen(str) <= 9)
+		return (1);
+	return (0);
+}
+
 /*
  * Channels names are strings (beginning with a '&' or '#' character) of
  * length up to 200 characters. Apart from the the requirement that the

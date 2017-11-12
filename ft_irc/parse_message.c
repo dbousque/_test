@@ -40,7 +40,7 @@
  *  <crlf>     ::= CR LF
  */
 
-int		identify_command(char *msg, t_msg *res)
+int						identify_command(char *msg, t_msg *res)
 {
 	int		i;
 	int		end;
@@ -78,8 +78,7 @@ char					read_params2(char *msg, int *i, char trailing_param)
 	return (trailing_param);
 }
 
-t_parse_message_res		read_params(char *msg, t_msg *res, int command_end,
-																		int i)
+t_parse_message_res		read_params(char *msg, t_msg *res, int i)
 {
 	int		params_ind;
 	char	trailing_param;
@@ -123,10 +122,10 @@ t_parse_message_res		parse_message(char *msg, int len, t_msg *res)
 		return (CONTAINS_NUL);
 	if ((command_end = identify_command(msg, res)) == -1)
 		return (NO_COMMAND);
-	return read_params(msg, res, command_end, command_end);
+	return read_params(msg, res, command_end);
 }
 
-void	init_msg(t_msg *msg)
+void					init_msg(t_msg *msg)
 {
 	int		i;
 

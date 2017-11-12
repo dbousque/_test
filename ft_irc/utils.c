@@ -2,17 +2,6 @@
 
 #include "ft_irc.h"
 
-void	init_commands_names(void)
-{
-	g_irc_commands[0] = "/nick";
-	g_irc_commands[1] = "/join";
-	g_irc_commands[2] = "/leave";
-	g_irc_commands[3] = "/who";
-	g_irc_commands[4] = "/msg";
-	g_irc_commands[5] = "/connect";
-	g_irc_commands[6] = NULL;
-}
-
 void	init_users(t_user *users)
 {
 	int		i;
@@ -61,27 +50,36 @@ void	remove_user_from_friends(int *friends, int id)
 	friends[i] = -1;
 }
 
-void	remove_user(t_user *users, int i, int nb_users)
+void	remove_user(t_env *e, t_user *user)
 {
-	t_user	*user;
+	int		i;
 
-	user = &(users[i]);
 	close(user->fd);
 	i = 0;
-	while (i < nb_users)
+	while (i < e->nb_users)
 	{
-		if (!users[i].free)
+		if (!e->users[i].free)
 		{
-			if (users[i].mode == PRIV_MSG && users[i].priv_msg_user == user->id)
+			if (e->users[i].mode == PRIV_MSG
+				&& e->users[i].priv_msg_user == user->id)
 			{
-				users[i].mode = STD;
-				users[i].priv_msg_user = -1;
+				e->users[i].mode = STD;
+				e->users[i].priv_msg_user = -1;
 			}
-			remove_user_from_friends(users[i].friends, user->id);
+			remove_user_from_friends(e->users[i].friends, user->id);
 		}
 		i++;
 	}
+	remove_channels_from_user(e, user);
 	user->free = 1;
 	user->id = -1;
 	user->nickname[0] = '\0';
+}
+
+void	remove_user_ind(t_env *e, int i)
+{
+	t_user	*user;
+
+	user = &(e->users[i]);
+	remove_user(e, user);
 }

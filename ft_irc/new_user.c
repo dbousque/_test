@@ -29,18 +29,6 @@ int		unique_user_id(t_user *users, int nb_users)
 	return (id);
 }
 
-char	ft_streq(char *str1, char *str2)
-{
-	int		i;
-
-	i = 0;
-	while (str1[i] && str1[i] == str2[i])
-		i++;
-	if (!str1[i] && !str2[i])
-		return (1);
-	return (0);
-}
-
 void	set_unique_nickname(t_user *user, t_user *users, int nb_users)
 {
 	int		i;
@@ -105,6 +93,11 @@ void	accept_user(int sock_fd, t_user *users, int *nb_users)
 	socklen_t			len;
 	t_user				*user;
 
+	if (*nb_users >= MAX_NB_CONNECTIONS)
+	{
+		LOG(INFO, "Could not accept new client, too many clients");
+		return ;
+	}
 	user = &(users[*nb_users]);
 	user->fd = accept(sock_fd, (struct sockaddr*)&sin, &len);
 	if (user->fd == -1)
@@ -113,6 +106,6 @@ void	accept_user(int sock_fd, t_user *users, int *nb_users)
 		return ;
 	}
 	init_user(users, user, *nb_users, &sin);
-	LOG(INFO, "new client : '%s' from %s", user->nickname, user->ip_name);
+	LOG(INFO, "New client : '%s' from %s", user->nickname, user->ip_name);
 	(*nb_users)++;
 }
