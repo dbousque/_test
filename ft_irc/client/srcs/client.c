@@ -27,6 +27,12 @@ char	connect_to_server(t_env *e, t_opts *opts)
 	return (1);
 }
 
+char	reconnect_if_connect_command(t_env *e, char *buffer, int ret)
+{
+	starts with /connect + spaces + string + spaces + number
+	return (1);
+}
+
 char	send_user_input_to_server(t_env *e, char *buffer)
 {
 	int		ret;
@@ -45,7 +51,8 @@ char	send_user_input_to_server(t_env *e, char *buffer)
 		ret++;
 	}
 	buffer[ret] = '\0';
-	//if (startswith(buffer, "/connect"))
+	if (!reconnect_if_connect_command(e, buffer, ret))
+		return (0);
 	if ((write(e->server_fd, buffer, ret)) == -1)
 	{
 		printf("Error while sending input to server\n");
@@ -53,6 +60,58 @@ char	send_user_input_to_server(t_env *e, char *buffer)
 		return (0);
 	}
 	return (1);
+}
+
+char	green_instruction(char *str, int ind)
+{
+	if (str[ind] == '|' && str[ind + 1] == '>' && str[ind + 2] == ' ')
+		return (1);
+	return (0);
+}
+
+char	red_instruction(char *str, int ind)
+{
+	if (str[ind] == '|' && str[ind + 1] == 'x' && str[ind + 2] == ' ')
+		return (1);
+	return (0);
+}
+
+void	maybe_green_or_red_instruction(char *buffer, int *start)
+{
+	if (green_instruction(buffer, *start))
+	{
+		write(1, "\033[1;32m", 7);
+		*start += 3;
+	}
+	else if (red_instruction(buffer, *start))
+	{
+		write(1, "\033[1;31m", 7);
+		*start += 3;
+	}
+}
+
+void	write_server_output(char *buffer, int ret)
+{
+	int		start;
+	int		i;
+
+	start = 0;
+	maybe_green_or_red_instruction(buffer, &start);
+	i = start;
+	while (i < ret)
+	{
+		if (buffer[i] == '\n')
+		{
+			write(1, buffer + start, i - start + 1);
+			write(1, "\033[0m", 4);
+			start = i + 1;
+			maybe_green_or_red_instruction(buffer, &start);
+		}
+		i++;
+	}
+	if (i - start > 1)
+		write(1, buffer + start, i - start);
+	write(1, "\033[0m", 4);
 }
 
 char	read_server_input(t_env *e, char *buffer)
@@ -67,8 +126,10 @@ char	read_server_input(t_env *e, char *buffer)
 		return (0);
 	}
 	buffer[ret] = '\0';
-	if (ret > 0)
-		printf("%s\n", buffer);
+	if (ret < 4)
+		write(1, buffer, ret);
+	else
+		write_server_output(buffer, ret);
 	return (1);
 }
 

@@ -17,17 +17,17 @@ char	ft_streq(char *str1, char *str2)
 void	print_parse_message_error(t_parse_message_res res, t_user *user)
 {
 	if (res == NO_COMMAND)
-		log_user(user, "Invalid message, doesn't start with a valid command");
+		log_user(user, "|x Invalid message, not starting with valid command");
 	else if (res == TOO_LONG)
-		log_user(user, "Invalid message, too long (512 characters max)");
+		log_user(user, "|x Invalid message, too long (512 characters max)");
 	else if (res == CONTAINS_NUL)
-		log_user(user, "Invalid message, contains NUL ('\\0')");
+		log_user(user, "|x Invalid message, contains NUL ('\\0')");
 	else if (res == FORBIDDEN_CHARACTER)
-		log_user(user, "Invalid message, contains a forbidden character");
+		log_user(user, "|x Invalid message, contains a forbidden character");
 	else if (res == TOO_MANY_PARAMS)
-		log_user(user, "Invalid message, too many parameters (15 max)");
+		log_user(user, "|x Invalid message, too many parameters (15 max)");
 	else if (res == MISSING_CL_LF)
-		log_user(user, "Invalid message, must end with \"\\r\\n\"");
+		log_user(user, "|x Invalid message, must end with \"\\r\\n\"");
 }
 
 void	print_msg(t_msg *msg)
@@ -50,6 +50,7 @@ void	print_msg(t_msg *msg)
 void	log_user(t_user *user, char *str)
 {
 	int		i;
+	char	nl;
 
 	i = 0;
 	while (str[i])
@@ -58,6 +59,8 @@ void	log_user(t_user *user, char *str)
 	printf("<- ('%s') %s", user->nickname, str);
 	log_end(INFO);
 	circular_buffer_write(&(user->write_buffer), str, i);
+	nl = '\n';
+	circular_buffer_write(&(user->write_buffer), &nl, 1);
 }
 
 void	wrong_nb_params(t_user *user, char *command_name, int nb_params,
@@ -65,7 +68,7 @@ void	wrong_nb_params(t_user *user, char *command_name, int nb_params,
 {
 	char	str[200];
 
-	snprintf(str, 200, "Command '%s' expects %d parameter%s, but got %d",
+	snprintf(str, 200, "|x Command '%s' expects %d parameter%s, but got %d",
 				command_name, expected, expected > 1 ? "s" : "", nb_params);
 	log_user(user, str);
 }

@@ -21,7 +21,7 @@ void	nick(t_env *e, t_user *user, char **params, int nb_params)
 		return (wrong_nb_params(user, "nick", nb_params, 1));
 	new_nick = params[0];
 	if (!valid_nickname(new_nick))
-		return (log_user(user, "Invalid nickname"));
+		return (log_user(user, "|x Invalid nickname"));
 	i = 0;
 	while (i < e->nb_users)
 	{
@@ -29,8 +29,8 @@ void	nick(t_env *e, t_user *user, char **params, int nb_params)
 		{
 			remove_user(e, user);
 			remove_user(e, &(e->users[i]));
-			log_user(&(e->users[i]), "Someone tried to use your nickname");
-			return (log_user(user, "Nickname already taken, disconnecting"));
+			log_user(&(e->users[i]), "|x Someone tried to use your nickname");
+			return (log_user(user, "|x Nick already taken, disconnecting"));
 		}
 		i++;
 	}
@@ -72,17 +72,17 @@ void	join(t_env *e, t_user *user, char **params, int nb_params)
 	if (!(channel = find_channel(e, channel_name)))
 	{
 		if (!(channel = create_channel(e, channel_name, description)))
-			return (log_user(user, "Could not create channel"));
+			return (log_user(user, "|x Could not create channel"));
 	}
 	i = 0;
 	while (user->channels[i] != -1)
 	{
 		if (user->channels[i] == channel->id)
-			return (log_user(user, "Already a member of the channel"));
+			return (log_user(user, "|x Already a member of the channel"));
 		i++;
 	}
 	if (i >= 10)
-		return (log_user(user, "Already joined 10 channels, can't join"));
+		return (log_user(user, "|x Already joined 10 channels, can't join"));
 	user->channels[i] = channel->id;
 	user->channels[i + 1] = -1;
 	log_user(user, "|> Successfully joined the channel");
@@ -94,7 +94,7 @@ void	leave(t_env *e, t_user *user, char **params, int nb_params)
 	t_channel	*channel;
 
 	if (user->channels[0] == -1)
-		return (log_user(user, "You are not a member of any channel"));
+		return (log_user(user, "|x You are not a member of any channel"));
 	if (user->channels[1] != -1 && nb_params != 1)
 		return (wrong_nb_params(user, "leave", nb_params, 1));
 	if (nb_params < 0 || nb_params > 1)
@@ -104,9 +104,9 @@ void	leave(t_env *e, t_user *user, char **params, int nb_params)
 	else
 		channel = find_channel_by_id(e, user->channels[0]);
 	if (!channel)
-		return (log_user(user, "Channel not found"));
+		return (log_user(user, "|x Channel not found"));
 	if (!remove_channel_from_user(e, user, channel))
-		return (log_user(user, "Your are not registered to this channel"));
+		return (log_user(user, "|x Your are not registered to this channel"));
 	log_user(user, "|> Successfully left the channel");
 }
 
@@ -120,13 +120,22 @@ void	who(t_env *e, t_user *user, char **params, int nb_params)
 		return (wrong_nb_params(user, "who", nb_params, 1));
 	channel = find_channel(e, params[0]);
 	if (!channel)
-		return (log_user(user, "Channel not found"));
+		return (log_user(user, "|x Channel not found"));
 	i = 0;
 	while (i < e->nb_users)
 	{
 		tmp_user = &(e->users[i]);
 		if (!tmp_user->free && user_in_channel(tmp_user, channel->id))
-			log_user(user, tmp_user->nickname);
+		{
+			if (tmp_user->id == user->id)
+			{
+				snprintf(g_tmp_buffer, USER_BUFFER_SIZE,
+												"|> %s", tmp_user->nickname);
+				log_user(user, g_tmp_buffer);
+			}
+			else
+				log_user(user, tmp_user->nickname);
+		}
 		i++;
 	}
 }
@@ -153,7 +162,7 @@ void	msg(t_env *e, t_user *user, char **params, int nb_params)
 		}
 		i++;
 	}
-	log_user(user, "User not found");
+	log_user(user, "|x User not found");
 }
 
 // privmode <nick>

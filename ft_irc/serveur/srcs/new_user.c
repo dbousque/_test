@@ -108,5 +108,8 @@ void	accept_user(int sock_fd, t_user *users, int *nb_users)
 	init_user(users, user, *nb_users, &sin);
 	LOG(INFO, "New client : '%s' from %s", user->nickname, user->ip_name);
 	log_user(user, "|> Welcome to this amazing IRC server");
+	snprintf(g_tmp_buffer, USER_BUFFER_SIZE,
+									"Your nickname is '%s'", user->nickname);
+	log_user(user, g_tmp_buffer);
 	(*nb_users)++;
 }
