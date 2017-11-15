@@ -30,5 +30,6 @@ typedef struct	s_env
 
 void			init_env(t_env *e);
 char			parse_options(t_opts *opts, int argc, char **argv);
+char			startswith(char *str, char *start);
 
 #endif

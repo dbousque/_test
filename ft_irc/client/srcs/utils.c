@@ -63,3 +63,15 @@ char	parse_options(t_opts *opts, int argc, char **argv)
 	}
 	return (1);
 }
+
+char	startswith(char *str, char *start)
+{
+	int		i;
+
+	i = 0;
+	while (start[i] && str[i] == start[i])
+		i++;
+	if (!start[i])
+		return (1);
+	return (0);
+}
