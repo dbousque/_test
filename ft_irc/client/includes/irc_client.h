@@ -15,6 +15,26 @@
 # define SERVER_DEFAULT_PORT 4242
 # define READ_BUFFER_SIZE 4096
 
+char	*g_irc_commands[2];
+
+typedef enum
+{
+	CONNECT
+} t_command;
+
+typedef enum
+{
+	OK,
+	NO_COMMAND,
+	MISSING_CL_LF,
+	TOO_LONG,
+	CONTAINS_NUL,
+	FORBIDDEN_CHARACTER,
+	TOO_MANY_PARAMS
+} t_parse_message_res;
+
+typedef t_parse_message_res t_parse_msg_res;
+
 typedef struct	s_opts
 {
 	char		*host;
@@ -28,8 +48,20 @@ typedef struct	s_env
 	fd_set		read_fds;
 }				t_env;
 
+typedef struct	s_msg
+{
+	t_command	command;
+	char		*params[16];
+}				t_msg;
+
 void			init_env(t_env *e);
 char			parse_options(t_opts *opts, int argc, char **argv);
 char			startswith(char *str, char *start);
+int				ft_strlen(char *str);
+char			contains(char *str, int len, char c);
+int				parse_port(char *str);
+void			init_msg(t_msg *msg);
+t_parse_msg_res	parse_message(char *msg, int len, t_msg *res);
+void			init_commands_names(void);
 
 #endif

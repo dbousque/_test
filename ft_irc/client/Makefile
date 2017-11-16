@@ -13,7 +13,9 @@
 NAME	=	client
 
 SOURCES	=	srcs/client.c \
-			srcs/utils.c
+			srcs/parse_message.c \
+			srcs/utils.c \
+			srcs/utils2.c
 
 HEADERS	=	-I./includes/
 

@@ -20,9 +20,7 @@ char	connect_to_server(t_env *e, t_opts *opts)
 		return (0);
 	if (connect(e->server_fd, (struct sockaddr *)&serv_addr,
 		sizeof(serv_addr)) == -1)
-	{
 		return (0);
-	}
 	e->connected = 1;
 	return (1);
 }
@@ -30,61 +28,61 @@ char	connect_to_server(t_env *e, t_opts *opts)
 char	try_connect(t_env *e, char *host, char *port)
 {
 	int		argc;
-	char	*argv[2];
+	char	*argv[3];
 	t_opts	opts;
 
-	argc = 1;
-	argv[0] = host;
+	argc = 2;
+	argv[1] = host;
 	if (port)
 	{
-		argc = 2;
-		argv[1] = port;
+		argc = 3;
+		argv[2] = port;
 	}
 	if (!parse_options(&opts, argc, argv))
-		return (0);
+		return (1);
+	if (e->connected)
+	{
+		printf("Disconnecting from current server...\n");
+		close(e->server_fd);
+		e->connected = 0;
+	}
 	if (opts.host && opts.port && !connect_to_server(e, &opts))
 		printf("Could not connect to server\n");
-	return (0);
+	return (1);
 }
 
-char	reconnect_if_connect_command(t_env *e, char *buffer)
+char	reconnect_if_connect_command(t_env *e, char *buffer, int len)
 {
-	int		i;
-	char	*host;
-	char	tmp;
-	char	tmp2;
-	int		end;
+	t_msg					msg;
+	t_parse_message_res		parse_res;
+	int						nb_params;
+	char					*port;
 
 	if (!startswith(buffer, "/connect "))
 		return (0);
-	buffer += 9;
-	while (*buffer == ' ')
-		buffer++;
-	host = buffer;
-	i = 0;
-	while (buffer[i] && buffer[i] != ' ' && buffer[i] != '\r')
-		i++;
-	end = i;
-	while (buffer[i] == ' ')
-		i++;
-	if ((!buffer[i] || buffer[i] == '\r') && end == 0)
-		return (0);
-	if (!buffer[i] || buffer[i] == '\r')
+	init_msg(&msg);
+	parse_res = parse_message(buffer, len, &msg);
+	if (parse_res != OK)
 	{
-		tmp = buffer[end];
-		buffer[end] = '\0';
-		tmp2 = try_connect(e, host, NULL);
-		buffer[end] = tmp;
-		return (tmp2);
+		printf("Invalid /connect command\n");
+		return (1);
 	}
-	buffer += i;
-	i = 0;
-	while (buffer[i] >= '0' && buffer[i] <= '9')
-		i++;
-	if (i == 0)
-		return (0);
-	buffer[i] = '\0';
-	return (try_connect(e, host, buffer));
+	if (msg.command != CONNECT)
+		return (1);
+	nb_params = 0;
+	while (msg.params[nb_params])
+		nb_params++;
+	if (nb_params > 0 && msg.params[nb_params - 1][0] == '\0')
+		nb_params--;
+	if (nb_params <= 0 || nb_params > 2)
+	{
+		printf("Wrong number of params for /connect, expects 1 or 2");
+		printf(", but got %d\n", nb_params);
+		return (1);
+	}
+	port = nb_params > 1 ? msg.params[1] : NULL;
+	try_connect(e, msg.params[0], port);
+	return (1);
 }
 
 char	send_user_input_to_server(t_env *e, char *buffer)
@@ -106,12 +104,10 @@ char	send_user_input_to_server(t_env *e, char *buffer)
 		ret++;
 	}
 	buffer[ret] = '\0';
-	connect_ret = reconnect_if_connect_command(e, buffer);
-	if (connect_ret == -1)
-		return (0);
+	connect_ret = reconnect_if_connect_command(e, buffer, ret);
 	if (connect_ret == 1)
 		return (1);
-	if (e->server_fd == -1)
+	if (!e->connected)
 	{
 		printf("You are not connected, connect before sending commands\n");
 		return (1);
@@ -239,6 +235,7 @@ int		main(int argc, char **argv)
 	t_opts	opts;
 	t_env	e;
 
+	init_commands_names();
 	init_env(&e);
 	if (!parse_options(&opts, argc, argv))
 		return (0);
