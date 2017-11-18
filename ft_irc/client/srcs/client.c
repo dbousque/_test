@@ -2,7 +2,7 @@
 
 #include "irc_client.h"
 
-char	connect_to_server(t_env *e, t_opts *opts)
+char	connect_to_server_ipv4(t_env *e, t_opts *opts)
 {
 	struct sockaddr_in	serv_addr;
 	struct protoent		*proto;
@@ -20,9 +20,56 @@ char	connect_to_server(t_env *e, t_opts *opts)
 		return (0);
 	if (connect(e->server_fd, (struct sockaddr *)&serv_addr,
 		sizeof(serv_addr)) == -1)
+	{
 		return (0);
+	}
 	e->connected = 1;
 	return (1);
+}
+
+char	connect_to_server_ipv6(t_env *e, t_opts *opts)
+{
+	struct sockaddr_in6	serv_addr;
+	struct protoent		*proto;
+
+	proto = getprotobyname("tcp");
+	if (!proto)
+		return (0);
+	e->server_fd = socket(AF_INET6, SOCK_STREAM, proto->p_proto);
+	if (e->server_fd == -1)
+		return (0);
+	serv_addr.sin6_family = AF_INET6;
+	serv_addr.sin6_port = htons(opts->port);
+	if (inet_pton(AF_INET6, opts->host, &serv_addr.sin6_addr) != 1)
+		return (0);
+	if (connect(e->server_fd, (struct sockaddr *)&serv_addr,
+		sizeof(serv_addr)) == -1)
+	{
+		return (0);
+	}
+	e->connected = 1;
+	return (1);
+}
+
+char	connect_to_server(t_env *e, t_opts *opts)
+{
+	char	is_ipv6;
+	int		i;
+
+	is_ipv6 = 0;
+	i = 0;
+	while (opts->host[i])
+	{
+		if (opts->host[i] == ':')
+		{
+			is_ipv6 = 1;
+			break ;
+		}
+		i++;
+	}
+	if (is_ipv6)
+		return (connect_to_server_ipv6(e, opts));
+	return (connect_to_server_ipv4(e, opts));
 }
 
 char	try_connect(t_env *e, char *host, char *port)
