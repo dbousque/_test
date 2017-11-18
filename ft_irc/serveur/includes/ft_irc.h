@@ -19,7 +19,7 @@
 # define LOG(mode, ...) \
 	do { log_start(mode); printf(__VA_ARGS__); log_end(mode); } while (0)
 
-char	*g_irc_commands[6];
+char	*g_irc_commands[7];
 char	g_tmp_buffer[USER_BUFFER_SIZE + 1];
 
 typedef enum
@@ -35,7 +35,8 @@ typedef enum
 	JOIN,
 	LEAVE,
 	WHO,
-	MSG
+	MSG,
+	CHANNELS
 } t_command;
 
 typedef enum
@@ -160,6 +161,7 @@ void			join(t_env *e, t_user *user, char **params, int nb_params);
 void			leave(t_env *e, t_user *user, char **params, int nb_params);
 void			who(t_env *e, t_user *user, char **params, int nb_params);
 void			msg(t_env *e, t_user *user, char **params, int nb_params);
+void			channels(t_env *e, t_user *user, char **params, int nb_params);
 char			valid_channel_name(char *str);
 char			valid_nickname(char *str);
 

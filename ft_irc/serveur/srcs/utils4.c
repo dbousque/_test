@@ -9,7 +9,8 @@ void		init_commands_names(void)
 	g_irc_commands[2] = "/leave";
 	g_irc_commands[3] = "/who";
 	g_irc_commands[4] = "/msg";
-	g_irc_commands[5] = NULL;
+	g_irc_commands[5] = "/channels";
+	g_irc_commands[6] = NULL;
 }
 
 t_channel	*find_channel(t_env *e, char *channel_name)

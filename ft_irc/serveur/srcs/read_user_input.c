@@ -15,6 +15,8 @@ void	dispatch_command(t_env *e, t_user *user, t_msg *parsed_msg,
 		return who(e, user, parsed_msg->params, nb_params);
 	if (parsed_msg->command == MSG)
 		return msg(e, user, parsed_msg->params, nb_params);
+	if (parsed_msg->command == CHANNELS)
+		return channels(e, user, parsed_msg->params, nb_params);
 	LOG(ERROR, "Unimplemented command");
 }
 

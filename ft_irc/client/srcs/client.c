@@ -158,9 +158,12 @@ char	read_user_input(t_env *e, char *read_buffer, int *n_chars)
 		if (*n_chars > 0)
 			(*n_chars)--;
 		read_buffer[*n_chars] = '\0';
-		tmp[0] = character;
+		tmp[0] = ' ';
 		tmp[1] = '\0';
+		wmove(g_windows.input_win, 0, *n_chars);
 		win_input_write(tmp);
+		wmove(g_windows.input_win, 0, *n_chars);
+		wrefresh(g_windows.input_win);
 		return (1);
 	}
 	read_buffer[*n_chars] = character;
@@ -183,7 +186,11 @@ char	read_user_input(t_env *e, char *read_buffer, int *n_chars)
 	wrefresh(g_windows.input_win);
 	connect_ret = reconnect_if_connect_command(e, read_buffer, *n_chars);
 	if (connect_ret == 1)
+	{
+		*n_chars = 0;
+		read_buffer[0] = '\0';
 		return (1);
+	}
 	if (!e->connected)
 	{
 		*n_chars = 0;
@@ -243,12 +250,7 @@ void	main_loop(t_env *e)
 		highest_fd = e->server_fd > 0 ? e->server_fd : 0;
 		nb_ready = select(highest_fd + 1, &(e->read_fds), NULL, NULL, NULL);
 		if (nb_ready == -1)
-		{
-			close_windows();
-			printf("Select error\n");
-			close(e->server_fd);
-			return ;
-		}
+			continue ;
 		if (nb_ready > 0)
 		{
 			if (e->connected && FD_ISSET(e->server_fd, &(e->read_fds)))

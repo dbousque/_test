@@ -165,6 +165,24 @@ void	msg(t_env *e, t_user *user, char **params, int nb_params)
 	log_user(user, "|x User not found");
 }
 
+void	channels(t_env *e, t_user *user, char **params, int nb_params)
+{
+	int			i;
+	t_channel	*channel;
+
+	(void)params;
+	if (nb_params != 0)
+		return (wrong_nb_params(user, "channels", nb_params, 0));
+	i = 0;
+	while (i < e->channels.len)
+	{
+		channel = &(((t_channel*)e->channels.elts)[i]);
+		log_user(user, channel->name);
+		i++;
+	}
+}
+
+// channels
 // privmode <nick>
 // stdmode
 // befriend <nick>
