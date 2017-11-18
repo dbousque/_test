@@ -105,7 +105,7 @@ t_parse_message_res		read_params(char *msg, t_msg *res, int i)
 	if (msg[i] != '\r' || msg[i + 1] != '\n')
 		return (MISSING_CL_LF);
 	msg[i] = '\0';
-	return (OK);
+	return (COMMAND_OK);
 }
 
 /*

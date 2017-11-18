@@ -6,7 +6,7 @@
 /*   By: dbousque <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/03 13:58:05 by dbousque          #+#    #+#             */
-/*   Updated: 2017/03/03 13:58:07 by dbousque         ###   ########.fr       */
+/*   Updated: 2017/08/27 19:11:51 by dbousque         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,8 +15,8 @@
 void	setup_conf(void)
 {
 	g_conf.lines = 0;
-	g_conf.win_width = 1200;
-	g_conf.win_height = 850;
+	g_conf.win_width = 1800;
+	g_conf.win_height = 1250;
 	g_conf.obj_ind = 0;
 	g_conf.normal_mode = 0;
 	g_conf.texture_strength = 0.0;

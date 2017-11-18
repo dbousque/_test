@@ -15,7 +15,8 @@ NAME	=	client
 SOURCES	=	srcs/client.c \
 			srcs/parse_message.c \
 			srcs/utils.c \
-			srcs/utils2.c
+			srcs/utils2.c \
+			srcs/windows.c
 
 HEADERS	=	-I./includes/
 
@@ -28,7 +29,7 @@ CC		=	clang
 .SILENT:
 
 $(NAME): $(OBJECTS)
-	$(CC) $(WFLAGS) $(OBJECTS) -o $(NAME)
+	$(CC) $(WFLAGS) $(OBJECTS) -o $(NAME) -lncurses
 	printf "\e[32m----------------------------------\e[36m\n"
 	printf "\e[32m[✔]\e[36m $@"
 	printf "\n\e[32m----------------------------------\e[36m"

@@ -89,12 +89,12 @@ char	try_connect(t_env *e, char *host, char *port)
 		return (1);
 	if (e->connected)
 	{
-		printf("Disconnecting from current server...\n");
+		win_write("Disconnecting from current server...\n");
 		close(e->server_fd);
 		e->connected = 0;
 	}
 	if (opts.host && opts.port && !connect_to_server(e, &opts))
-		printf("Could not connect to server\n");
+		win_write("|x Could not connect to server\n");
 	return (1);
 }
 
@@ -109,9 +109,9 @@ char	reconnect_if_connect_command(t_env *e, char *buffer, int len)
 		return (0);
 	init_msg(&msg);
 	parse_res = parse_message(buffer, len, &msg);
-	if (parse_res != OK)
+	if (parse_res != COMMAND_OK)
 	{
-		printf("Invalid /connect command\n");
+		win_write("|x Invalid /connect command\n");
 		return (1);
 	}
 	if (msg.command != CONNECT)
@@ -123,8 +123,7 @@ char	reconnect_if_connect_command(t_env *e, char *buffer, int len)
 		nb_params--;
 	if (nb_params <= 0 || nb_params > 2)
 	{
-		printf("Wrong number of params for /connect, expects 1 or 2");
-		printf(", but got %d\n", nb_params);
+		win_write("|x Wrong number of params for /connect, expects 1 or 2\n");
 		return (1);
 	}
 	port = nb_params > 1 ? msg.params[1] : NULL;
@@ -132,92 +131,78 @@ char	reconnect_if_connect_command(t_env *e, char *buffer, int len)
 	return (1);
 }
 
-char	send_user_input_to_server(t_env *e, char *buffer)
+char	read_user_input(t_env *e, char *read_buffer, int *n_chars)
 {
 	int		ret;
 	char	connect_ret;
+	char	character;
+	char	tmp[2];
 
-	ret = read(0, buffer, READ_BUFFER_SIZE - 2);
+	if (*n_chars > READ_BUFFER_SIZE - 3)
+	{
+		win_write("|x Input too long, flushing it\n");
+		read_buffer[0] = '\0';
+		*n_chars = 0;
+		return (1);
+	}
+	ret = read(0, &character, 1);
 	if (ret == -1 || ret == 0)
 	{
+		close_windows();
 		printf(ret == -1 ? "Error while reading input\n" : "Bye\n");
 		close(e->server_fd);
 		return (0);
 	}
-	if (buffer[ret - 1] == '\n')
+	if (character == 127)
 	{
-		buffer[ret - 1] = '\r';
-		buffer[ret] = '\n';
-		ret++;
+		if (*n_chars > 0)
+			(*n_chars)--;
+		read_buffer[*n_chars] = '\0';
+		tmp[0] = character;
+		tmp[1] = '\0';
+		win_input_write(tmp);
+		return (1);
 	}
-	buffer[ret] = '\0';
-	connect_ret = reconnect_if_connect_command(e, buffer, ret);
+	read_buffer[*n_chars] = character;
+	(*n_chars)++;
+	if (character == '\r')
+	{
+		read_buffer[*n_chars] = '\n';
+		(*n_chars)++;
+	}
+	read_buffer[*n_chars] = '\0';
+	if (character != '\r')
+	{
+		tmp[0] = character;
+		tmp[1] = '\0';
+		win_input_write(tmp);
+		return (1);
+	}
+	wclear(g_windows.input_win);
+	wmove(g_windows.input_win, 0, 0);
+	wrefresh(g_windows.input_win);
+	connect_ret = reconnect_if_connect_command(e, read_buffer, *n_chars);
 	if (connect_ret == 1)
 		return (1);
 	if (!e->connected)
 	{
-		printf("You are not connected, connect before sending commands\n");
+		*n_chars = 0;
+		read_buffer[0] = '\0';
+		win_write("You are not connected, connect before sending commands\n");
 		return (1);
 	}
-	if (!connect_ret && (write(e->server_fd, buffer, ret)) == -1)
+	if (!connect_ret && (write(e->server_fd, read_buffer, *n_chars)) == -1)
 	{
+		*n_chars = 0;
+		read_buffer[0] = '\0';
+		close_windows();
 		printf("Error while sending input to server\n");
 		close(e->server_fd);
 		return (0);
 	}
+	*n_chars = 0;
+	read_buffer[0] = '\0';
 	return (1);
-}
-
-char	green_instruction(char *str, int ind)
-{
-	if (str[ind] == '|' && str[ind + 1] == '>' && str[ind + 2] == ' ')
-		return (1);
-	return (0);
-}
-
-char	red_instruction(char *str, int ind)
-{
-	if (str[ind] == '|' && str[ind + 1] == 'x' && str[ind + 2] == ' ')
-		return (1);
-	return (0);
-}
-
-void	maybe_green_or_red_instruction(char *buffer, int *start)
-{
-	if (green_instruction(buffer, *start))
-	{
-		write(1, "\033[1;32m", 7);
-		*start += 3;
-	}
-	else if (red_instruction(buffer, *start))
-	{
-		write(1, "\033[1;31m", 7);
-		*start += 3;
-	}
-}
-
-void	write_server_output(char *buffer, int ret)
-{
-	int		start;
-	int		i;
-
-	start = 0;
-	maybe_green_or_red_instruction(buffer, &start);
-	i = start;
-	while (i < ret)
-	{
-		if (buffer[i] == '\n')
-		{
-			write(1, buffer + start, i - start + 1);
-			write(1, "\033[0m", 4);
-			start = i + 1;
-			maybe_green_or_red_instruction(buffer, &start);
-		}
-		i++;
-	}
-	if (i - start > 1)
-		write(1, buffer + start, i - start);
-	write(1, "\033[0m", 4);
 }
 
 char	read_server_input(t_env *e, char *buffer)
@@ -227,24 +212,28 @@ char	read_server_input(t_env *e, char *buffer)
 	ret = read(e->server_fd, buffer, READ_BUFFER_SIZE - 1);
 	if (ret == -1)
 	{
+		close_windows();
 		printf("Error while reading server input\n");
 		close(e->server_fd);
 		return (0);
 	}
 	buffer[ret] = '\0';
 	if (ret < 4)
-		write(1, buffer, ret);
+		win_write(buffer);
 	else
-		write_server_output(buffer, ret);
+		win_write(buffer);
 	return (1);
 }
 
 void	main_loop(t_env *e)
 {
 	char	buffer[READ_BUFFER_SIZE];
+	char	read_buffer[READ_BUFFER_SIZE];
+	int		n_chars;
 	int		highest_fd;
 	int		nb_ready;
 
+	n_chars = 0;
 	while (1)
 	{
 		FD_ZERO(&(e->read_fds));
@@ -255,6 +244,7 @@ void	main_loop(t_env *e)
 		nb_ready = select(highest_fd + 1, &(e->read_fds), NULL, NULL, NULL);
 		if (nb_ready == -1)
 		{
+			close_windows();
 			printf("Select error\n");
 			close(e->server_fd);
 			return ;
@@ -269,7 +259,7 @@ void	main_loop(t_env *e)
 			}
 			if (nb_ready > 0 && FD_ISSET(0, &(e->read_fds)))
 			{
-				if (!send_user_input_to_server(e, buffer))
+				if (!read_user_input(e, read_buffer, &n_chars))
 					return ;
 				nb_ready--;
 			}
@@ -279,15 +269,17 @@ void	main_loop(t_env *e)
 
 int		main(int argc, char **argv)
 {
-	t_opts	opts;
-	t_env	e;
+	t_opts		opts;
+	t_env		e;
 
 	init_commands_names();
 	init_env(&e);
 	if (!parse_options(&opts, argc, argv))
 		return (0);
+	init_windows();
 	if (opts.host && opts.port && !connect_to_server(&e, &opts))
-		printf("Could not connect to server\n");
+		win_write("|x Could not connect to server\n");
 	main_loop(&e);
+	close_windows();
 	return (1);
 }
