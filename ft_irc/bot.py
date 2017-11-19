@@ -6,7 +6,7 @@ import requests as r
 import re
 
 def get_recast_response(user, inp):
-  headers = { 'Authorization': 'Token 73d15a9cf67b61ede25874cd4ea01081' }
+  headers = { 'Authorization': 'Token c46ba906e94f1bf22599982dc29831b4' }
   msg = { 'attachment': { 'type': 'text', 'content': inp } }
   json = { 'message': msg, 'conversation_id': user }
   res = r.post('https://api.recast.ai/build/v1/dialog', headers=headers, json=json).json()
