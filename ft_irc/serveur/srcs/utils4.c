@@ -10,7 +10,16 @@ void		init_commands_names(void)
 	g_irc_commands[3] = "/who";
 	g_irc_commands[4] = "/msg";
 	g_irc_commands[5] = "/channels";
-	g_irc_commands[6] = NULL;
+	g_irc_commands[6] = "/users";
+	g_irc_commands[7] = "/ping";
+	g_irc_commands[8] = "/mynick";
+	g_irc_commands[9] = "/befriend";
+	g_irc_commands[10] = "/unfriend";
+	g_irc_commands[11] = "/msgchan";
+	g_irc_commands[12] = "/privmode";
+	g_irc_commands[13] = "/stdmode";
+	g_irc_commands[14] = "/privuser";
+	g_irc_commands[15] = NULL;
 }
 
 t_channel	*find_channel(t_env *e, char *channel_name)
@@ -157,6 +166,27 @@ char	remove_channel_from_user(t_env *e, t_user *user, t_channel *channel)
 	if (decal == 0)
 		return (0);
 	remove_channel_if_empty(e, channel);
+	return (1);
+}
+
+char	remove_user_from_friends2(t_user *user, t_user *friend)
+{
+	int		i;
+	int		decal;
+
+	i = 0;
+	decal = 0;
+	while (user->friends[i] != -1)
+	{
+		if (user->friends[i] == friend->id)
+			decal = 1;
+		if (i - decal >= 0)
+			user->friends[i - decal] = user->friends[i];
+		i++;
+	}
+	user->friends[i - decal] = -1;
+	if (decal == 0)
+		return (0);
 	return (1);
 }
 

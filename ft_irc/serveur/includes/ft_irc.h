@@ -19,7 +19,7 @@
 # define LOG(mode, ...) \
 	do { log_start(mode); printf(__VA_ARGS__); log_end(mode); } while (0)
 
-char	*g_irc_commands[7];
+char	*g_irc_commands[16];
 char	g_tmp_buffer[USER_BUFFER_SIZE + 1];
 
 typedef enum
@@ -36,7 +36,16 @@ typedef enum
 	LEAVE,
 	WHO,
 	MSG,
-	CHANNELS
+	CHANNELS,
+	USERS,
+	PING,
+	MYNICK,
+	BEFRIEND,
+	UNFRIEND,
+	MSGCHAN,
+	PRIVMODE,
+	STDMODE,
+	PRIVUSER
 } t_command;
 
 typedef enum
@@ -133,10 +142,12 @@ t_channel		*create_channel(t_env *e, char *channel_name,
 															char *description);
 char			remove_channel_from_user(t_env *e, t_user *user,
 														t_channel *channel);
+char			remove_user_from_friends2(t_user *user, t_user *friend);
 void			remove_channels_from_user(t_env *e, t_user *user);
 char			user_in_channel(t_user *user, int channel_id);
 void			welcome_user_to_channel(t_user *user, t_channel *channel);
 int				parse_port(char *str);
+char			befriends(t_user *user1, t_user *user2);
 char			init_list(t_list *list, size_t elt_size);
 void			*new_elt(t_list *lst);
 void			remove_elt(t_list *lst, char *addr);
@@ -162,6 +173,15 @@ void			leave(t_env *e, t_user *user, char **params, int nb_params);
 void			who(t_env *e, t_user *user, char **params, int nb_params);
 void			msg(t_env *e, t_user *user, char **params, int nb_params);
 void			channels(t_env *e, t_user *user, char **params, int nb_params);
+void			users(t_env *e, t_user *user, char **params, int nb_params);
+void			ping(t_env *e, t_user *user, char **params, int nb_params);
+void			mynick(t_env *e, t_user *user, char **params, int nb_params);
+void			befriend(t_env *e, t_user *user, char **params, int nb_params);
+void			unfriend(t_env *e, t_user *user, char **params, int nb_params);
+void			msgchan(t_env *e, t_user *user, char **params, int nb_params);
+void			privmode(t_env *e, t_user *user, char **params, int nb_params);
+void			stdmode(t_env *e, t_user *user, char **params, int nb_params);
+void			privuser(t_env *e, t_user *user, char **params, int nb_params);
 char			valid_channel_name(char *str);
 char			valid_nickname(char *str);
 

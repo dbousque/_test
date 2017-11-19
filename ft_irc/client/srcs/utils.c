@@ -6,6 +6,12 @@ void	init_env(t_env *e)
 {
 	e->connected = 0;
 	e->server_fd = -1;
+	e->last_users_update.tv_sec = 0;
+	e->last_users_update.tv_usec = 0;
+	e->last_nick_update.tv_sec = 0;
+	e->last_nick_update.tv_usec = 0;
+	e->last_privuser_update.tv_sec = 0;
+	e->last_privuser_update.tv_usec = 0;
 }
 
 int		parse_port(char *str)

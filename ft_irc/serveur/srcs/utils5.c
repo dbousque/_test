@@ -31,3 +31,17 @@ int		parse_port(char *str)
 	}
 	return (res);
 }
+
+char	befriends(t_user *user1, t_user *user2)
+{
+	int		i;
+
+	i = 0;
+	while (user1->friends[i] != -1)
+	{
+		if (user1->friends[i] == user2->id)
+			return (1);
+		i++;
+	}
+	return (0);
+}

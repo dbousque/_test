@@ -17,6 +17,24 @@ void	dispatch_command(t_env *e, t_user *user, t_msg *parsed_msg,
 		return msg(e, user, parsed_msg->params, nb_params);
 	if (parsed_msg->command == CHANNELS)
 		return channels(e, user, parsed_msg->params, nb_params);
+	if (parsed_msg->command == USERS)
+		return users(e, user, parsed_msg->params, nb_params);
+	if (parsed_msg->command == PING)
+		return ping(e, user, parsed_msg->params, nb_params);
+	if (parsed_msg->command == MYNICK)
+		return mynick(e, user, parsed_msg->params, nb_params);
+	if (parsed_msg->command == BEFRIEND)
+		return befriend(e, user, parsed_msg->params, nb_params);
+	if (parsed_msg->command == UNFRIEND)
+		return unfriend(e, user, parsed_msg->params, nb_params);
+	if (parsed_msg->command == MSGCHAN)
+		return msgchan(e, user, parsed_msg->params, nb_params);
+	if (parsed_msg->command == PRIVMODE)
+		return privmode(e, user, parsed_msg->params, nb_params);
+	if (parsed_msg->command == STDMODE)
+		return stdmode(e, user, parsed_msg->params, nb_params);
+	if (parsed_msg->command == PRIVUSER)
+		return privuser(e, user, parsed_msg->params, nb_params);
 	LOG(ERROR, "Unimplemented command");
 }
 

@@ -17,6 +17,8 @@
 # define READ_BUFFER_SIZE 4096
 
 char	*g_irc_commands[2];
+char	g_priv_user[30];
+char	g_priv_user_mode;
 
 typedef enum
 {
@@ -37,6 +39,8 @@ typedef enum
 typedef t_parse_message_res	t_parse_msg_res;
 
 typedef WINDOW	t_window;
+
+typedef struct timeval	t_time;
 
 typedef struct	s_windows
 {
@@ -59,6 +63,9 @@ typedef struct	s_env
 	char		connected;
 	int			server_fd;
 	fd_set		read_fds;
+	t_time		last_users_update;
+	t_time		last_nick_update;
+	t_time		last_privuser_update;
 }				t_env;
 
 typedef struct	s_msg
@@ -72,10 +79,13 @@ char			parse_options(t_opts *opts, int argc, char **argv);
 char			startswith(char *str, char *start);
 int				ft_strlen(char *str);
 char			contains(char *str, int len, char c);
+char			ft_streq(char *str1, char *str2);
+void			update_nick_info(char *nick);
 int				parse_port(char *str);
 void			init_msg(t_msg *msg);
 void			init_windows(void);
 void			close_windows(void);
+void			wwrite(t_window *window, char *str);
 void			win_write(char *str);
 void			win_input_write(char *str);
 t_parse_msg_res	parse_message(char *msg, int len, t_msg *res);

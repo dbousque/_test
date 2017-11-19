@@ -15,11 +15,63 @@
 void	wwrite_chars(t_window *window, char *str, int len, char color)
 {
 	int		i;
+	char	ori;
 
-	i = 0;
-	while (i < len)
+	if (startswith(str, "[USERS]"))
 	{
-		waddch(window, str[i] | COLOR_PAIR(color));
+		wclear(g_windows.users_win);
+		wrefresh(g_windows.users_win);
+		wrefresh(g_windows.input_win);
+		return ;
+	}
+	if (startswith(str, "[USER] "))
+	{
+		ori = str[len];
+		str[len] = '\0';
+		wwrite(g_windows.users_win, str + 7);
+		str[len] = ori;
+		wrefresh(g_windows.users_win);
+		wrefresh(g_windows.input_win);
+		return ;
+	}
+	if (startswith(str, "[NICK] "))
+	{
+		update_nick_info("          ");
+		update_nick_info(str + 7);
+		wrefresh(g_windows.info_win);
+		wrefresh(g_windows.input_win);
+		return ;
+	}
+	if (startswith(str, "[NOPRIVUSER]"))
+	{
+		g_priv_user_mode = 0;
+		return ;
+	}
+	if (startswith(str, "[PRIVUSER] "))
+	{
+		g_priv_user_mode = 1;
+		i = 0;
+		str += 11;
+		while (str[i] && str[i] != '\r' && str[i] != '\n')
+		{
+			g_priv_user[i] = str[i];
+			i++;
+		}
+		while (i < 9)
+		{
+			g_priv_user[i] = ' ';
+			i++;
+		}
+		g_priv_user[i] = '\0';
+		return ;
+	}
+	i = 0;
+	while (i < len || (len == -1 && str[i]))
+	{
+		if (len == -1)
+			waddch(window, str[i] | COLOR_PAIR(color) | A_BOLD);
+		else
+			waddch(window, str[i] | COLOR_PAIR(color));
 		i++;
 	}
 }
@@ -116,6 +168,7 @@ void	init_windows(void)
 {
 	t_window	*input_win_container;
 	t_window	*text_win_container;
+	t_window	*users_win_container;
 
 	initscr();
 	start_color();
@@ -127,28 +180,29 @@ void	init_windows(void)
 	}
 	init_pair(1, COLOR_RED, COLOR_BLACK);
     init_pair(2, COLOR_GREEN, COLOR_BLACK);
+    init_pair(3, COLOR_YELLOW, COLOR_BLACK);
 	curs_set(2);
 	refresh();
 	text_win_container = newwin(LINES - 9, COLS - 21, 6, 0);
 	input_win_container = newwin(3, COLS, LINES - 3, 0);
-	g_windows.users_win = newwin(LINES - 3, 20, 0, COLS - 20);
+	users_win_container = newwin(LINES - 3, 20, 0, COLS - 20);
+	g_windows.users_win = newwin(LINES - 7, 17, 3, COLS - 18);
 	g_windows.info_win = newwin(6, COLS - 21, 0, 0);
 	g_windows.input_win = newwin(1, COLS - 3, LINES - 2, 2);
 	g_windows.text_win = newwin(LINES - 13, COLS - 24, 9, 2);
 	box(text_win_container, 0, 0);
 	box(input_win_container, 0, 0);
-	box(g_windows.users_win, 0, 0);
+	box(users_win_container, 0, 0);
 	box(g_windows.info_win, 0, 0);
 	wmove(text_win_container, 1, 2);
-	attron(COLOR_PAIR(1));
-	wprintw(text_win_container, "SERVER OUTPUT");
-	attroff(COLOR_PAIR(1));
-	wmove(g_windows.users_win, 1, 2);
-	wprintw(g_windows.users_win, "USERS ON SERVER");
+	wwrite_chars(text_win_container, "SERVER OUTPUT", -1, 3);
+	wmove(users_win_container, 1, 2);
+	wwrite_chars(users_win_container, "USERS ON SERVER", -1, 3);
 	wmove(g_windows.info_win, 1, 2);
-	wprintw(g_windows.info_win, "INFO");
+	wwrite_chars(g_windows.info_win, "INFO", -1, 3);
 	scrollok(g_windows.text_win, TRUE);
 	wrefresh(input_win_container);
 	wrefresh(text_win_container);
+	wrefresh(users_win_container);
 	init_windows2();
 }

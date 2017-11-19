@@ -131,6 +131,33 @@ char	reconnect_if_connect_command(t_env *e, char *buffer, int len)
 	return (1);
 }
 
+void	ft_strcpy(char *dest, char *src)
+{
+	int		i;
+
+	i = 0;
+	while (src[i])
+	{
+		dest[i] = src[i];
+		i++;
+	}
+}
+
+void	prepend_privmsg(char *buffer, int len)
+{
+	int		i;
+
+	i = len;
+	while (i >= 0)
+	{
+		buffer[i + 16] = buffer[i];
+		i--;
+	}
+	ft_strcpy(buffer, "/msg ");
+	ft_strcpy(buffer + 5, g_priv_user);
+	ft_strcpy(buffer + 14, " :");
+}
+
 char	read_user_input(t_env *e, char *read_buffer, int *n_chars)
 {
 	int		ret;
@@ -146,8 +173,10 @@ char	read_user_input(t_env *e, char *read_buffer, int *n_chars)
 		return (1);
 	}
 	ret = read(0, &character, 1);
-	if (ret == -1 || ret == 0)
+	if (ret == -1 || ret == 0 || character == 4)
 	{
+		if (ret != -1 && character == 4 && *n_chars)
+			return (1);
 		close_windows();
 		printf(ret == -1 ? "Error while reading input\n" : "Bye\n");
 		close(e->server_fd);
@@ -184,6 +213,12 @@ char	read_user_input(t_env *e, char *read_buffer, int *n_chars)
 	wclear(g_windows.input_win);
 	wmove(g_windows.input_win, 0, 0);
 	wrefresh(g_windows.input_win);
+	if (g_priv_user_mode && !startswith(read_buffer, "/stdmode")
+		&& *n_chars + 16 < READ_BUFFER_SIZE - 2)
+	{
+		prepend_privmsg(read_buffer, *n_chars);
+		*n_chars += 16;
+	}
 	connect_ret = reconnect_if_connect_command(e, read_buffer, *n_chars);
 	if (connect_ret == 1)
 	{
@@ -217,6 +252,12 @@ char	read_server_input(t_env *e, char *buffer)
 	int		ret;
 
 	ret = read(e->server_fd, buffer, READ_BUFFER_SIZE - 1);
+	if (ret == 0)
+	{
+		win_write("|x Server disconnected\n");
+		e->connected = 0;
+		e->server_fd = -1;
+	}
 	if (ret == -1)
 	{
 		close_windows();
@@ -232,7 +273,71 @@ char	read_server_input(t_env *e, char *buffer)
 	return (1);
 }
 
-void	main_loop(t_env *e)
+void	update_connected_info(char connected)
+{
+	wmove(g_windows.info_win, 3, COLS - 37);
+	wprintw(g_windows.info_win, "connection ");
+	if (connected)
+	{
+		waddch(g_windows.info_win, ' ' | A_REVERSE | COLOR_PAIR(2));
+		waddch(g_windows.info_win, ' ' | A_REVERSE | COLOR_PAIR(2));
+	}
+	else
+	{
+		waddch(g_windows.info_win, ' ' | A_REVERSE | COLOR_PAIR(1));
+		waddch(g_windows.info_win, ' ' | A_REVERSE | COLOR_PAIR(1));
+	}
+}
+
+void	update_nick_info(char *nick)
+{
+	wmove(g_windows.info_win, 3, 2);
+	wprintw(g_windows.info_win, "nick : ");
+	wwrite(g_windows.info_win, nick);
+}
+
+void	set_info(char *nick, char connected)
+{
+	update_nick_info("          ");
+	update_nick_info(nick);
+	update_connected_info(connected);
+	wrefresh(g_windows.info_win);
+	wrefresh(g_windows.input_win);
+}
+
+void	update_info(t_env *e)
+{
+	struct timeval	now;
+
+	if (!e->connected)
+	{
+		wclear(g_windows.users_win);
+		wrefresh(g_windows.users_win);
+		set_info("-", 0);
+		return ;
+	}
+	update_connected_info(1);
+	wrefresh(g_windows.info_win);
+	wrefresh(g_windows.input_win);
+	gettimeofday(&now, NULL);
+	if (now.tv_sec - e->last_users_update.tv_sec > 4)
+	{
+		write(e->server_fd, "/users\r\n", 8);
+		e->last_users_update = now;
+	}
+	else if (now.tv_sec - e->last_nick_update.tv_sec > 4)
+	{
+		write(e->server_fd, "/mynick\r\n", 9);
+		e->last_nick_update = now;
+	}
+	else if (now.tv_sec - e->last_privuser_update.tv_sec > 4)
+	{
+		write(e->server_fd, "/privuser\r\n", 11);
+		e->last_privuser_update = now;
+	}
+}
+
+void	main_loop(t_env *e, struct timeval *timeout)
 {
 	char	buffer[READ_BUFFER_SIZE];
 	char	read_buffer[READ_BUFFER_SIZE];
@@ -243,12 +348,15 @@ void	main_loop(t_env *e)
 	n_chars = 0;
 	while (1)
 	{
+		update_info(e);
 		FD_ZERO(&(e->read_fds));
 		FD_SET(0, &(e->read_fds));
 		if (e->connected)
 			FD_SET(e->server_fd, &(e->read_fds));
 		highest_fd = e->server_fd > 0 ? e->server_fd : 0;
-		nb_ready = select(highest_fd + 1, &(e->read_fds), NULL, NULL, NULL);
+		timeout->tv_sec = 2;
+		timeout->tv_usec = 0;
+		nb_ready = select(highest_fd + 1, &(e->read_fds), NULL, NULL, timeout);
 		if (nb_ready == -1)
 			continue ;
 		if (nb_ready > 0)
@@ -271,9 +379,11 @@ void	main_loop(t_env *e)
 
 int		main(int argc, char **argv)
 {
-	t_opts		opts;
-	t_env		e;
+	t_opts			opts;
+	t_env			e;
+	struct timeval	timeout;
 
+	g_priv_user_mode = 0;
 	init_commands_names();
 	init_env(&e);
 	if (!parse_options(&opts, argc, argv))
@@ -281,7 +391,7 @@ int		main(int argc, char **argv)
 	init_windows();
 	if (opts.host && opts.port && !connect_to_server(&e, &opts))
 		win_write("|x Could not connect to server\n");
-	main_loop(&e);
+	main_loop(&e, &timeout);
 	close_windows();
 	return (1);
 }
