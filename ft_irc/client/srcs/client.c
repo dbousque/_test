@@ -158,6 +158,42 @@ void	prepend_privmsg(char *buffer, int len)
 	ft_strcpy(buffer + 14, " :");
 }
 
+char	remove_char(char *read_buffer, int *n_chars)
+{
+	char	tmp[2];
+
+	if (*n_chars > 0)
+		(*n_chars)--;
+	read_buffer[*n_chars] = '\0';
+	tmp[0] = ' ';
+	tmp[1] = '\0';
+	wmove(g_windows.input_win, 0, *n_chars);
+	win_input_write(tmp);
+	wmove(g_windows.input_win, 0, *n_chars);
+	wrefresh(g_windows.input_win);
+	return (1);
+}
+
+char	dont_send_to_server(t_env *e, char *read_buffer, int *n_chars,
+															char connect_ret)
+{
+	*n_chars = 0;
+	read_buffer[0] = '\0';
+	if (connect_ret != 1 && !e->connected)
+		win_write("Connect before sending commands\n");
+	return (1);
+}
+
+char	read_error_or_ctrl_d(t_env *e, char character, int *n_chars, int ret)
+{
+	if (ret != -1 && character == 4 && *n_chars)
+		return (1);
+	close_windows();
+	printf(ret == -1 ? "Error while reading input\n" : "Bye\n");
+	close(e->server_fd);
+	return (0);
+}
+
 char	read_user_input(t_env *e, char *read_buffer, int *n_chars)
 {
 	int		ret;
@@ -174,27 +210,9 @@ char	read_user_input(t_env *e, char *read_buffer, int *n_chars)
 	}
 	ret = read(0, &character, 1);
 	if (ret == -1 || ret == 0 || character == 4)
-	{
-		if (ret != -1 && character == 4 && *n_chars)
-			return (1);
-		close_windows();
-		printf(ret == -1 ? "Error while reading input\n" : "Bye\n");
-		close(e->server_fd);
-		return (0);
-	}
+		return (read_error_or_ctrl_d(e, character, n_chars, ret));
 	if (character == 127)
-	{
-		if (*n_chars > 0)
-			(*n_chars)--;
-		read_buffer[*n_chars] = '\0';
-		tmp[0] = ' ';
-		tmp[1] = '\0';
-		wmove(g_windows.input_win, 0, *n_chars);
-		win_input_write(tmp);
-		wmove(g_windows.input_win, 0, *n_chars);
-		wrefresh(g_windows.input_win);
-		return (1);
-	}
+		return (remove_char(read_buffer, n_chars));
 	read_buffer[*n_chars] = character;
 	(*n_chars)++;
 	if (character == '\r')
@@ -220,19 +238,8 @@ char	read_user_input(t_env *e, char *read_buffer, int *n_chars)
 		*n_chars += 16;
 	}
 	connect_ret = reconnect_if_connect_command(e, read_buffer, *n_chars);
-	if (connect_ret == 1)
-	{
-		*n_chars = 0;
-		read_buffer[0] = '\0';
-		return (1);
-	}
-	if (!e->connected)
-	{
-		*n_chars = 0;
-		read_buffer[0] = '\0';
-		win_write("You are not connected, connect before sending commands\n");
-		return (1);
-	}
+	if (connect_ret == 1 || !e->connected)
+		return (dont_send_to_server(e, read_buffer, n_chars, connect_ret));
 	if (!connect_ret && (write(e->server_fd, read_buffer, *n_chars)) == -1)
 	{
 		*n_chars = 0;
