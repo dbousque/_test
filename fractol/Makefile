@@ -13,8 +13,10 @@
 NAME	=	fractol
 
 SOURCES	=	srcs/events.c \
+			srcs/fractals.c \
 			srcs/main.c \
 			srcs/utils.c \
+			srcs/utils2.c \
 			srcs/window.c
 
 LIB_DIR	=	libmlx

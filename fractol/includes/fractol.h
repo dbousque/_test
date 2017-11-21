@@ -5,13 +5,15 @@
 
 # include <unistd.h>
 # include <stdlib.h>
+# include <sys/time.h>
 
 # include "mlx.h"
 
 # define DEFAULT_WIDTH 1200
 # define DEFAULT_HEIGHT 800
+# define NB_FRACTALS 1
 
-# define PIXEL_AT(window, x, y) window->pixels[x + y * window->width]
+# define PIXEL_AT(window, x, y) window.pixels[x + y * window.width]
 
 # define IS_W(k) (k == 13 || k == 119)
 # define IS_A(k) (k == 0 || k == 97)
@@ -29,6 +31,12 @@
 # define IS_F(k) (k == 3 || k == 102)
 # define IS_ESC(k) (k == 53 || k == 65307)
 
+typedef struct	s_mouse
+{
+	int			x;
+	int			y;
+}				t_mouse;
+
 typedef struct	s_window
 {
 	void		*mlx;
@@ -36,16 +44,38 @@ typedef struct	s_window
 	void		*img;
 	int			*pixels;
 	int			width;
+	int			height;
+	t_mouse		mouse;
 }				t_window;
 
+typedef struct	s_fractal
+{
+	float		params[1];
+	int			max_iter;
+	int			(*handle)(struct s_fractal *f, int x, int y, t_window *w);
+}				t_fractal;
+
+typedef struct	s_fractol
+{
+	t_window	window;
+	t_fractal	fractals[1];
+	int			current_fractal;
+	char		changed;
+}				t_fractol;
+
 void			ft_putstr(char *str);
-int				exit_fractol(t_window *window);
+int				exit_fractol(t_fractol *fractol);
 void			parse_opts(int argc, char **argv, int *width, int *height);
+void			maybe_update_current_fractal(t_fractol *fractol, int argc,
+																char **argv);
+void			ft_itoa(int n, char *res);
 int				expose_hook(void *param);
 int				key_hook(int keycode, void *param);
 int				mouse_hook(int keycode, int x, int y, void *param);
+void			apply_image_to_window(t_window *window);
 char			init_window(t_window *window, int width, int height,
 																char *title);
-void			render_window(t_window *window);
+void			render_fractol(t_fractol *fractol);
+int				mandelbrot(t_fractal *fractal, int x, int y, t_window *window);
 
 #endif

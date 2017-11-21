@@ -12,18 +12,6 @@ void	clear_window(t_window *window)
 	mlx_clear_window(window->mlx, window->win);
 }
 
-void	render_window(t_window *window)
-{
-	// clear_window(window);
-	PIXEL_AT(window, 100, 100) = 0xFFFFFF;
-	PIXEL_AT(window, 101, 100) = 0xFFFFFF;
-	PIXEL_AT(window, 100, 101) = 0xFFFFFF;
-	PIXEL_AT(window, 101, 101) = 0xFFFFFF;
-	PIXEL_AT(window, 99, 100) = 0xFFFFFF;
-	PIXEL_AT(window, 100, 99) = 0xFFFFFF;
-	apply_image_to_window(window);
-}
-
 char	init_window(t_window *window, int width, int height, char *title)
 {
 	int		z;
@@ -37,6 +25,7 @@ char	init_window(t_window *window, int width, int height, char *title)
 	if (!(window->pixels = (int*)mlx_get_data_addr(window->img, &z, &z, &z)))
 		return (0);
 	window->width = width;
+	window->height = height;
 	mlx_expose_hook(window->win, expose_hook, (void*)window);
 	mlx_hook(window->win, 2, 3, key_hook, (void*)window);
 	mlx_mouse_hook(window->win, mouse_hook, (void*)window);

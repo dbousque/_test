@@ -12,10 +12,10 @@ void	ft_putstr(char *str)
 	write(1, str, i);
 }
 
-int		exit_fractol(t_window *window)
+int		exit_fractol(t_fractol *fractol)
 {
-	mlx_destroy_image(window->mlx, window->img);
-	mlx_destroy_window(window->mlx, window->win);
+	mlx_destroy_image(fractol->window.mlx, fractol->window.img);
+	mlx_destroy_window(fractol->window.mlx, fractol->window.win);
 	ft_putstr("bye\n");
 	exit(0);
 	return (0);
@@ -44,18 +44,18 @@ void	parse_opts(int argc, char **argv, int *width, int *height)
 {
 	*width = DEFAULT_WIDTH;
 	*height = DEFAULT_HEIGHT;
-	if (argc > 1)
+	if (argc > 2)
 	{
-		*width = parse_int(argv[1]);
+		*width = parse_int(argv[2]);
 		if (*width == -1 || *width > 4000)
 		{
 			ft_putstr("Invalid width, setting default value\n");
 			*width = DEFAULT_WIDTH;
 		}
 	}
-	if (argc > 2)
+	if (argc > 3)
 	{
-		*height = parse_int(argv[2]);
+		*height = parse_int(argv[3]);
 		if (*height == -1 || *height > 3000)
 		{
 			ft_putstr("Invalid height, setting default value\n");
