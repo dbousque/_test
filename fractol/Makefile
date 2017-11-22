@@ -29,12 +29,21 @@ OBJECTS	=	$(subst .c,.o,$(SOURCES))
 
 WFLAGS	=	-Wall -Werror -Wextra
 
+UNAME_S := $(shell uname -s)
+ifeq ($(UNAME_S), Linux)
+	XLIB	=	-lXext -lX11
+endif
+ifeq ($(UNAME_S), Darwin)
+	XLIB	=	-framework OpenGL -framework AppKit
+endif
+
 CC		=	clang
 
-.SILENT:
+#.SILENT:
 
 $(NAME): $(OBJECTS)
-	$(CC) $(WFLAGS) $(OBJECTS) -o $(NAME) $(LIB) -lXext -lX11
+	make -C libmlx
+	$(CC) $(WFLAGS) $(OBJECTS) -o $(NAME) $(LIB) $(XLIB)
 	printf "\e[32m----------------------------------\e[36m\n"
 	printf "\e[32m[✔]\e[36m $@"
 	printf "\n\e[32m----------------------------------\e[36m"
@@ -48,6 +57,7 @@ all: $(NAME)
 	printf "\033[0m\n"
 
 clean:
+	make clean -C libmlx
 	rm -Rf $(OBJECTS)
 	printf "\e[31m----------------------------------\n"
 	printf "[✔]\e[36m $(NAME): Objects deleted\n"
@@ -55,6 +65,7 @@ clean:
 	printf "\033[0m\n"
 
 fclean: clean
+	make clean -C libmlx
 	rm -Rf $(NAME)
 	printf "\e[31m----------------------------------\n"
 	printf "[✔]\e[36m $(NAME): All deleted\n"
