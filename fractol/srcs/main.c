@@ -59,7 +59,7 @@ void	*compute_part(void *param)
 				fractal,
 				(x + fractal->decal_x) / fractal->zoom,
 				(y + fractal->decal_y) / fractal->zoom,
-				&(d->dimensions)
+				&(d->f->window)
 			);
 			co = d->f->palettes[d->f->current_palette][it % PALETTE_LEN];
 			co = it == d->f->fractals[d->f->current_fractal].max_iter ? 0 : co;
@@ -99,8 +99,6 @@ void	compute_fractol(t_fractol *fractol)
 	while (i < NB_THREADS)
 	{
 		data[i].f = fractol;
-		data[i].dimensions.width = fractol->window.width;
-		data[i].dimensions.height = fractol->window.height;
 		data[i].from_x = fractol->window.width / NB_THREADS * i;
 		data[i].until_x = fractol->window.width / NB_THREADS * (i + 1);
 		data[i].from_y = 0;
@@ -143,6 +141,13 @@ char	init_fractol(t_fractol *fractol, int width, int height, char *title)
 		ft_putstr("Could not initialize window\n");
 		return (0);
 	}
+	mlx_expose_hook(fractol->window.win, expose_hook, (void*)fractol);
+	mlx_mouse_hook(fractol->window.win, mouse_hook, (void*)fractol);
+	mlx_hook(fractol->window.win, 6, 1L<<6, mouse_move_hook, (void*)fractol);
+	mlx_hook(fractol->window.win, KeyPress, KeyPressMask,
+										key_pressed_hook, (void*)fractol);
+	mlx_hook(fractol->window.win, KeyRelease, KeyReleaseMask,
+										key_released_hook, (void*)fractol);
 	return (1);
 }
 

@@ -49,7 +49,7 @@ void	zoom_on_point(t_fractal *fractal, int x, int y, float quantity, t_fractol *
 }
 
 #include <stdio.h>
-int		key_hook(int keycode, void *param)
+int		key_pressed_hook(int keycode, void *param)
 {
 	t_fractol	*fractol;
 	t_fractal	*fractal;
@@ -89,14 +89,39 @@ int		key_hook(int keycode, void *param)
 	return (0);
 }
 
-int		mouse_hook(int keycode, int x, int y, void *param)
+int		key_released_hook(int keycode, void *param)
+{
+	printf("KEY PRESSED : %d\n", keycode);
+	(void)param;
+	return (0);
+}
+
+int		mouse_move_hook(int x, int y, void *param)
 {
 	t_fractol	*fractol;
 
-	(void)keycode;
 	fractol = (t_fractol*)param;
 	fractol->changed = 1;
 	fractol->window.mouse.x = x;
 	fractol->window.mouse.y = y;
+	ft_putstr("MOUSE MOVE\n");
+	return (0);
+}
+
+int		mouse_hook(int keycode, int x, int y, void *param)
+{
+	t_fractol	*fractol;
+	t_fractal	*fractal;
+
+	printf("key : %d\n", keycode);
+	fractol = (t_fractol*)param;
+	fractal = &(fractol->fractals[fractol->current_fractal]);
+	fractol->changed = 1;
+	fractol->window.mouse.x = x;
+	fractol->window.mouse.y = y;
+	if (IS_MOUSE_FORWARD(keycode))
+		zoom_on_point(fractal, fractol->window.width / 2, fractol->window.height / 2, 1.05, fractol);
+	if (IS_MOUSE_BACKWARDS(keycode))
+		zoom_on_point(fractal, fractol->window.width / 2, fractol->window.height / 2, 0.95, fractol);
 	return (0);
 }

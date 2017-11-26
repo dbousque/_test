@@ -7,6 +7,7 @@
 # include <stdlib.h>
 # include <sys/time.h>
 # include <pthread.h>
+# include <X11/Xlib.h>
 
 # include "mlx.h"
 
@@ -36,16 +37,12 @@
 # define IS_ESC(k) (k == 53 || k == 65307)
 # define IS_P(k) (k == 35 || k == 112)
 # define IS_B(k) (k == 11 || k == 98)
-# define IS_PLUS(k) (k == 24)
-# define IS_MINUS(k) (k == 27)
-# define IS_PLUS_BIS(k) (k == 44)
-# define IS_MINUS_BIS(k) (k == 47)
-
-typedef struct	s_dims
-{
-	int			width;
-	int			height;
-}				t_dims;
+# define IS_PLUS(k) (k == 24 || k == 61)
+# define IS_MINUS(k) (k == 27 || k == 45)
+# define IS_PLUS_BIS(k) (k == 44 || k == 47)
+# define IS_MINUS_BIS(k) (k == 47 || k == 46)
+# define IS_MOUSE_FORWARD(k) (k == 4)
+# define IS_MOUSE_BACKWARDS(k) (k == 5)
 
 typedef struct	s_mouse
 {
@@ -62,6 +59,7 @@ typedef struct	s_window
 	int			width;
 	int			height;
 	t_mouse		mouse;
+	char		pressed_keys
 }				t_window;
 
 typedef struct	s_fractal
@@ -71,7 +69,7 @@ typedef struct	s_fractal
 	float		zoom;
 	float		decal_x;
 	float		decal_y;
-	int			(*handle)(struct s_fractal *f, float x, float y, t_dims *w);
+	int			(*handle)(struct s_fractal *f, float x, float y, t_window *w);
 }				t_fractal;
 
 typedef struct	s_fractol
@@ -88,7 +86,6 @@ typedef struct	s_fractol
 typedef struct	s_thread_data
 {
 	t_fractol	*f;
-	t_dims		dimensions;
 	int			from_x;
 	int			until_x;
 	int			from_y;
@@ -102,16 +99,16 @@ void			maybe_update_current_fractal(t_fractol *fractol, int argc,
 																char **argv);
 void			ft_itoa(int n, char *res);
 int				expose_hook(void *param);
-int				key_hook(int keycode, void *param);
+int				key_pressed_hook(int keycode, void *param);
+int				key_released_hook(int keycode, void *param);
 int				mouse_hook(int keycode, int x, int y, void *param);
+int				mouse_move_hook(int x, int y, void *param);
 void			apply_image_to_window(t_window *window);
 char			init_window(t_window *window, int width, int height,
 																char *title);
 void			render_fractol(t_fractol *fractol);
 void			init_palettes(int palettes[NB_PALETTES][PALETTE_LEN]);
-int				mandelbrot(t_fractal *fractal, float x, float y,
-														t_dims *dimensions);
-int				modulo(t_fractal *fractal, float x, float y,
-														t_dims *dimensions);
+int				mandelbrot(t_fractal *fractal, float x, float y, t_window *w);
+int				modulo(t_fractal *fractal, float x, float y, t_window *w);
 
 #endif

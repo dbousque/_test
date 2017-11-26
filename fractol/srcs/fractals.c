@@ -2,7 +2,7 @@
 
 #include "fractol.h"
 
-int		mandelbrot(t_fractal *fractal, float x, float y, t_dims *dimensions)
+int		mandelbrot(t_fractal *fractal, float x, float y, t_window *w)
 {
 	float		*params;
 	float		decals[3];
@@ -11,8 +11,8 @@ int		mandelbrot(t_fractal *fractal, float x, float y, t_dims *dimensions)
 	int			iteration;
 
 	params = fractal->params;
-	decals[0] = x / (dimensions->width / 3.0) - 2.5;
-	decals[1] = y / (dimensions->height / 2.0) - 1.0;
+	decals[0] = x / (w->width / 3.0) - 2.5;
+	decals[1] = y / (w->height / 2.0) - 1.0;
 	_x = 0.0;
 	_y = 0.0;
 	iteration = 0;
@@ -26,7 +26,7 @@ int		mandelbrot(t_fractal *fractal, float x, float y, t_dims *dimensions)
 	return (iteration);
 }
 
-int		modulo(t_fractal *fractal, float x, float y, t_dims *dimensions)
+int		modulo(t_fractal *fractal, float x, float y, t_window *w)
 {
 	float		*params;
 	float		decals[3];
@@ -35,8 +35,8 @@ int		modulo(t_fractal *fractal, float x, float y, t_dims *dimensions)
 	int			iteration;
 
 	params = fractal->params;
-	decals[0] = x / (dimensions->width / 3.5) - 2.5;
-	decals[1] = y / (dimensions->height / 2.0) - 1.0;
+	decals[0] = x / (w->width / 3.5) - 2.5;
+	decals[1] = y / (w->height / 2.0) - 1.0;
 	_x = 0.0;
 	_y = 0.0;
 	iteration = 0;

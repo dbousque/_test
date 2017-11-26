@@ -26,8 +26,5 @@ char	init_window(t_window *window, int width, int height, char *title)
 		return (0);
 	window->width = width;
 	window->height = height;
-	mlx_expose_hook(window->win, expose_hook, (void*)window);
-	mlx_hook(window->win, 2, 3, key_hook, (void*)window);
-	mlx_mouse_hook(window->win, mouse_hook, (void*)window);
 	return (1);
 }
