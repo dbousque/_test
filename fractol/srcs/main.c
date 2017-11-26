@@ -45,19 +45,21 @@ void	*compute_part(void *param)
 	int				it;
 	int				co;
 	t_thread_data	*d;
+	t_fractal		*fractal;
 
 	d = (t_thread_data*)param;
+	fractal = &(d->f->fractals[d->f->current_fractal]);
 	y = d->from_y;
 	while (y < d->until_y)
 	{
 		x = d->from_x;
 		while (x < d->until_x)
 		{
-			it = d->f->fractals[d->f->current_fractal].handle(
-				&(d->f->fractals[d->f->current_fractal]),
-				x,
-				y,
-				&(d->f->window)
+			it = fractal->handle(
+				fractal,
+				(x + fractal->decal_x) / fractal->zoom,
+				(y + fractal->decal_y) / fractal->zoom,
+				&(d->dimensions)
 			);
 			co = d->f->palettes[d->f->current_palette][it % PALETTE_LEN];
 			co = it == d->f->fractals[d->f->current_fractal].max_iter ? 0 : co;
@@ -67,6 +69,22 @@ void	*compute_part(void *param)
 		y += 1 + d->f->big_mode;
 	}
 	return (NULL);
+}
+
+void	wait_for_threads_to_finish(pthread_t *threads)
+{
+	int		i;
+
+	i = 0;
+	while (i < NB_THREADS)
+	{
+		if (pthread_join(threads[i], NULL) != 0)
+		{
+			ft_putstr("Error while waiting for thread\n");
+			exit(1);
+		}
+		i++;
+	}
 }
 
 void	compute_fractol(t_fractol *fractol)
@@ -81,6 +99,8 @@ void	compute_fractol(t_fractol *fractol)
 	while (i < NB_THREADS)
 	{
 		data[i].f = fractol;
+		data[i].dimensions.width = fractol->window.width;
+		data[i].dimensions.height = fractol->window.height;
 		data[i].from_x = fractol->window.width / NB_THREADS * i;
 		data[i].until_x = fractol->window.width / NB_THREADS * (i + 1);
 		data[i].from_y = 0;
@@ -92,16 +112,7 @@ void	compute_fractol(t_fractol *fractol)
 		}
 		i++;
 	}
-	i = 0;
-	while (i < NB_THREADS)
-	{
-		if (pthread_join(threads[i], NULL) != 0)
-		{
-			ft_putstr("Error while waiting for thread\n");
-			exit(1);
-		}
-		i++;
-	}
+	wait_for_threads_to_finish(threads);
 	print_time_taken(&start, "Computing took ", "\n");
 }
 
@@ -109,9 +120,21 @@ char	init_fractol(t_fractol *fractol, int width, int height, char *title)
 {
 	fractol->changed = 1;
 	fractol->current_fractal = 0;
+
 	fractol->fractals[0].handle = mandelbrot;
+	fractol->fractals[0].zoom = 1.0;
+	fractol->fractals[0].decal_x = 0.0;
+	fractol->fractals[0].decal_y = 0.0;
 	fractol->fractals[0].max_iter = 49;
 	fractol->fractals[0].params[0] = 4.0;
+
+	fractol->fractals[1].handle = mandelbrot;
+	fractol->fractals[1].zoom = 1.0;
+	fractol->fractals[1].decal_x = 0.0;
+	fractol->fractals[1].decal_y = 0.0;
+	fractol->fractals[1].max_iter = 49;
+	fractol->fractals[1].params[0] = 4.0;
+
 	fractol->current_palette = 0;
 	fractol->big_mode = 0;
 	init_palettes(fractol->palettes);

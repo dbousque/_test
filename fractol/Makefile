@@ -20,9 +20,15 @@ SOURCES	=	srcs/events.c \
 			srcs/utils2.c \
 			srcs/window.c
 
-LIB_DIR	=	libmlx
+UNAME_S := $(shell uname -s)
+ifeq ($(UNAME_S), Linux)
+	LIB_DIR	=	libmlx
+endif
+ifeq ($(UNAME_S), Darwin)
+	LIB_DIR	=	libmlxosx
+endif
 
-LIB		=	$(LIB_DIR)/$(LIB_DIR).a
+LIB		=	$(LIB_DIR)/libmlx.a
 
 HEADERS	=	-I./includes/ -I./$(LIB_DIR)
 
@@ -30,7 +36,6 @@ OBJECTS	=	$(subst .c,.o,$(SOURCES))
 
 WFLAGS	=	-Wall -Werror -Wextra -O3
 
-UNAME_S := $(shell uname -s)
 ifeq ($(UNAME_S), Linux)
 	XLIB	=	-lXext -lX11
 endif
@@ -43,7 +48,7 @@ CC		=	clang
 .SILENT:
 
 $(NAME): $(OBJECTS)
-	make -C libmlx
+	make -C $(LIB_DIR)
 	$(CC) $(WFLAGS) $(OBJECTS) -o $(NAME) $(LIB) $(XLIB) -lpthread
 	printf "\e[32m----------------------------------\e[36m\n"
 	printf "\e[32m[✔]\e[36m $@"
@@ -58,7 +63,7 @@ all: $(NAME)
 	printf "\033[0m\n"
 
 clean:
-	make clean -C libmlx
+	make clean -C $(LIB_DIR)
 	rm -Rf $(OBJECTS)
 	printf "\e[31m----------------------------------\n"
 	printf "[✔]\e[36m $(NAME): Objects deleted\n"
@@ -66,7 +71,6 @@ clean:
 	printf "\033[0m\n"
 
 fclean: clean
-	make clean -C libmlx
 	rm -Rf $(NAME)
 	printf "\e[31m----------------------------------\n"
 	printf "[✔]\e[36m $(NAME): All deleted\n"

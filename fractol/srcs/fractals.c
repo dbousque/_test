@@ -2,23 +2,49 @@
 
 #include "fractol.h"
 
-int		mandelbrot(t_fractal *fractal, int x, int y, t_window *window)
+int		mandelbrot(t_fractal *fractal, float x, float y, t_dims *dimensions)
 {
-	t_mouse		*mouse;
 	float		*params;
+	float		decals[3];
+	float		_x;
+	float		_y;
+	int			iteration;
 
-	mouse = &(window->mouse);
 	params = fractal->params;
-	float x0 = x / (window->width / 3.5) - 2.5;
-	float y0 = y / (window->height / 2.0) - 1.0;
-	float _x = 0.0;
-	float _y = 0.0;
-	int iteration = 0;
+	decals[0] = x / (dimensions->width / 3.0) - 2.5;
+	decals[1] = y / (dimensions->height / 2.0) - 1.0;
+	_x = 0.0;
+	_y = 0.0;
+	iteration = 0;
 	while (_x*_x + _y*_y < params[0] && iteration < fractal->max_iter)
 	{
-		float xtemp = _x*_x - _y*_y + x0;
-		_y = 2*_x*_y + y0;
-		_x = xtemp;
+		decals[2] = _x*_x - _y*_y + decals[0];
+		_y = 2*_x*_y + decals[1];
+		_x = decals[2];
+		iteration++;
+	}
+	return (iteration);
+}
+
+int		modulo(t_fractal *fractal, float x, float y, t_dims *dimensions)
+{
+	float		*params;
+	float		decals[3];
+	float		_x;
+	float		_y;
+	int			iteration;
+
+	params = fractal->params;
+	decals[0] = x / (dimensions->width / 3.5) - 2.5;
+	decals[1] = y / (dimensions->height / 2.0) - 1.0;
+	_x = 0.0;
+	_y = 0.0;
+	iteration = 0;
+	while (_x*_x * _y*_y < params[0] && iteration < fractal->max_iter)
+	{
+		decals[2] = _x*_x - _y*_y + decals[0];
+		_y = 2*_x*_y + decals[1];
+		_x = decals[2];
 		iteration++;
 	}
 	return (iteration);

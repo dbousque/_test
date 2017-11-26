@@ -12,8 +12,8 @@
 
 # define DEFAULT_WIDTH 1200
 # define DEFAULT_HEIGHT 800
-# define NB_THREADS 4
-# define NB_FRACTALS 1
+# define NB_THREADS 32
+# define NB_FRACTALS 2
 # define NB_PALETTES 6
 # define PALETTE_LEN 50
 
@@ -34,8 +34,18 @@
 # define IS_M(k) (k == 46 || k == 109)
 # define IS_F(k) (k == 3 || k == 102)
 # define IS_ESC(k) (k == 53 || k == 65307)
-# define IS_P(k) (k == 112)
-# define IS_B(k) (k == 98)
+# define IS_P(k) (k == 35 || k == 112)
+# define IS_B(k) (k == 11 || k == 98)
+# define IS_PLUS(k) (k == 24)
+# define IS_MINUS(k) (k == 27)
+# define IS_PLUS_BIS(k) (k == 44)
+# define IS_MINUS_BIS(k) (k == 47)
+
+typedef struct	s_dims
+{
+	int			width;
+	int			height;
+}				t_dims;
 
 typedef struct	s_mouse
 {
@@ -58,13 +68,16 @@ typedef struct	s_fractal
 {
 	float		params[1];
 	int			max_iter;
-	int			(*handle)(struct s_fractal *f, int x, int y, t_window *w);
+	float		zoom;
+	float		decal_x;
+	float		decal_y;
+	int			(*handle)(struct s_fractal *f, float x, float y, t_dims *w);
 }				t_fractal;
 
 typedef struct	s_fractol
 {
 	t_window	window;
-	t_fractal	fractals[1];
+	t_fractal	fractals[NB_FRACTALS];
 	int			current_fractal;
 	int			palettes[NB_PALETTES][PALETTE_LEN];
 	int			current_palette;
@@ -75,6 +88,7 @@ typedef struct	s_fractol
 typedef struct	s_thread_data
 {
 	t_fractol	*f;
+	t_dims		dimensions;
 	int			from_x;
 	int			until_x;
 	int			from_y;
@@ -95,6 +109,9 @@ char			init_window(t_window *window, int width, int height,
 																char *title);
 void			render_fractol(t_fractol *fractol);
 void			init_palettes(int palettes[NB_PALETTES][PALETTE_LEN]);
-int				mandelbrot(t_fractal *fractal, int x, int y, t_window *window);
+int				mandelbrot(t_fractal *fractal, float x, float y,
+														t_dims *dimensions);
+int				modulo(t_fractal *fractal, float x, float y,
+														t_dims *dimensions);
 
 #endif
