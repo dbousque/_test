@@ -17,6 +17,7 @@
 # define NB_FRACTALS 2
 # define NB_PALETTES 6
 # define PALETTE_LEN 50
+# define NB_KEY_PRESS 8
 
 # define PIXEL_AT(window, x, y) window.pixels[(x) + (y) * window.width]
 
@@ -44,6 +45,8 @@
 # define IS_MOUSE_FORWARD(k) (k == 4)
 # define IS_MOUSE_BACKWARDS(k) (k == 5)
 
+typedef struct timeval	t_timeval;
+
 typedef struct	s_mouse
 {
 	int			x;
@@ -59,7 +62,7 @@ typedef struct	s_window
 	int			width;
 	int			height;
 	t_mouse		mouse;
-	char		pressed_keys
+	char		pressed_keys[NB_KEY_PRESS];
 }				t_window;
 
 typedef struct	s_fractal
@@ -81,6 +84,7 @@ typedef struct	s_fractol
 	int			current_palette;
 	char		big_mode;
 	char		changed;
+	t_timeval	last_frame;
 }				t_fractol;
 
 typedef struct	s_thread_data
@@ -110,5 +114,7 @@ void			render_fractol(t_fractol *fractol);
 void			init_palettes(int palettes[NB_PALETTES][PALETTE_LEN]);
 int				mandelbrot(t_fractal *fractal, float x, float y, t_window *w);
 int				modulo(t_fractal *fractal, float x, float y, t_window *w);
+void			zoom_on_point(t_fractal *fractal, int x, int y, float quantity,
+														t_fractol *fractol);
 
 #endif

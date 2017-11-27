@@ -14,7 +14,7 @@ void	clear_window(t_window *window)
 
 char	init_window(t_window *window, int width, int height, char *title)
 {
-	int		z;
+	int		i;
 
 	if (!(window->mlx = mlx_init()))
 		return (0);
@@ -22,9 +22,15 @@ char	init_window(t_window *window, int width, int height, char *title)
 		return (0);
 	if (!(window->img = mlx_new_image(window->mlx, width, height)))
 		return (0);
-	if (!(window->pixels = (int*)mlx_get_data_addr(window->img, &z, &z, &z)))
+	if (!(window->pixels = (int*)mlx_get_data_addr(window->img, &i, &i, &i)))
 		return (0);
 	window->width = width;
 	window->height = height;
+	i = 0;
+	while (i < NB_KEY_PRESS)
+	{
+		window->pressed_keys[i] = 0;
+		i++;
+	}
 	return (1);
 }

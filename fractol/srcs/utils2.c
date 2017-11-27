@@ -56,3 +56,20 @@ void	ft_itoa(int n, char *res)
 	}
 	res[i] = '\0';
 }
+
+void	zoom_on_point(t_fractal *fractal, int x, int y, float quantity, t_fractol *fractol)
+{
+	(void)x;
+	(void)y;
+	fractal->zoom *= quantity;
+	if (quantity >= 1.0)
+	{
+		fractal->decal_x += (x / (float)fractol->window.width) * 60 * fractal->zoom;
+		fractal->decal_y += (y / (float)fractol->window.height) * 40 * fractal->zoom;
+	}
+	else
+	{
+		fractal->decal_x -= (x / (float)fractol->window.width) * 60 * fractal->zoom;
+		fractal->decal_y -= (y / (float)fractol->window.height) * 40 * fractal->zoom;
+	}
+}

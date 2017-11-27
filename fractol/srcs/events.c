@@ -31,23 +31,6 @@ void	increment_fractal(t_fractol *fractol)
 	fractol->current_fractal = new_fractal_ind;
 }
 
-void	zoom_on_point(t_fractal *fractal, int x, int y, float quantity, t_fractol *fractol)
-{
-	(void)x;
-	(void)y;
-	fractal->zoom *= quantity;
-	if (quantity >= 1.0)
-	{
-		fractal->decal_x += (x / (float)fractol->window.width) * 60 * fractal->zoom;
-		fractal->decal_y += (y / (float)fractol->window.height) * 40 * fractal->zoom;
-	}
-	else
-	{
-		fractal->decal_x -= (x / (float)fractol->window.width) * 60 * fractal->zoom;
-		fractal->decal_y -= (y / (float)fractol->window.height) * 40 * fractal->zoom;
-	}
-}
-
 #include <stdio.h>
 int		key_pressed_hook(int keycode, void *param)
 {
@@ -60,9 +43,9 @@ int		key_pressed_hook(int keycode, void *param)
 	if (IS_ESC(keycode))
 		return (exit_fractol(fractol));
 	if (IS_X(keycode))
-		fractal->params[0] *= 1.05;
+		fractol->window.pressed_keys[4] = 1;
 	if (IS_Z(keycode))
-		fractal->params[0] /= 1.05;
+		fractol->window.pressed_keys[5] = 1;
 	if (IS_P(keycode))
 		increment_palette(fractol);
 	if (IS_F(keycode))
@@ -70,29 +53,46 @@ int		key_pressed_hook(int keycode, void *param)
 	if (IS_B(keycode))
 		fractol->big_mode = fractol->big_mode ? 0 : 1;
 	if (IS_PLUS(keycode))
-		zoom_on_point(fractal, fractol->window.width / 2, fractol->window.height / 2, 1.05, fractol);
+		fractol->window.pressed_keys[6] = 1;
 	if (IS_MINUS(keycode))
-		zoom_on_point(fractal, fractol->window.width / 2, fractol->window.height / 2, 0.95, fractol);
+		fractol->window.pressed_keys[7] = 1;
 	if (IS_PLUS_BIS(keycode))
 		fractal->max_iter++;
 	if (IS_MINUS_BIS(keycode))
 		fractal->max_iter--;
 	if (IS_W(keycode))
-		fractal->decal_y -= 30.0;
+		fractol->window.pressed_keys[0] = 1;
 	if (IS_A(keycode))
-		fractal->decal_x -= 30.0;
+		fractol->window.pressed_keys[1] = 1;
 	if (IS_S(keycode))
-		fractal->decal_y += 30.0;
+		fractol->window.pressed_keys[2] = 1;
 	if (IS_D(keycode))
-		fractal->decal_x += 30.0;
+		fractol->window.pressed_keys[3] = 1;
 	fractol->changed = 1;
 	return (0);
 }
 
 int		key_released_hook(int keycode, void *param)
 {
-	printf("KEY PRESSED : %d\n", keycode);
-	(void)param;
+	t_fractol	*fractol;
+
+	fractol = (t_fractol*)param;
+	if (IS_X(keycode))
+		fractol->window.pressed_keys[4] = 0;
+	if (IS_Z(keycode))
+		fractol->window.pressed_keys[5] = 0;
+	if (IS_PLUS(keycode))
+		fractol->window.pressed_keys[6] = 0;
+	if (IS_MINUS(keycode))
+		fractol->window.pressed_keys[7] = 0;
+	if (IS_W(keycode))
+		fractol->window.pressed_keys[0] = 0;
+	if (IS_A(keycode))
+		fractol->window.pressed_keys[1] = 0;
+	if (IS_S(keycode))
+		fractol->window.pressed_keys[2] = 0;
+	if (IS_D(keycode))
+		fractol->window.pressed_keys[3] = 0;
 	return (0);
 }
 

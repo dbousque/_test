@@ -2,16 +2,22 @@
 
 #include "fractol.h"
 
+int		millis_since(struct timeval *start)
+{
+	struct timeval	end;
+
+	gettimeofday(&end, NULL);
+	return (1000 * (end.tv_sec - start->tv_sec)
+		+ (end.tv_usec - start->tv_usec) / 1000);
+}
+
 void	print_time_taken(struct timeval *start, char *before, char *after)
 {
 	char			ms[30];
 	int				time_taken;
-	struct timeval	end;
 
-	gettimeofday(&end, NULL);
 	ft_putstr(before);
-	time_taken = 1000 * (end.tv_sec - start->tv_sec)
-		+ (end.tv_usec - start->tv_usec) / 1000;
+	time_taken = millis_since(start);
 	ft_itoa(time_taken, ms);
 	ft_putstr(ms);
 	ft_putstr(" ms");
@@ -133,6 +139,8 @@ char	init_fractol(t_fractol *fractol, int width, int height, char *title)
 	fractol->fractals[1].max_iter = 49;
 	fractol->fractals[1].params[0] = 4.0;
 
+	gettimeofday(&(fractol->last_frame), NULL);
+
 	fractol->current_palette = 0;
 	fractol->big_mode = 0;
 	init_palettes(fractol->palettes);
@@ -151,14 +159,66 @@ char	init_fractol(t_fractol *fractol, int width, int height, char *title)
 	return (1);
 }
 
+void	update_values_with_input(t_fractol *fractol)
+{
+	float		delta;
+	t_fractal	*fractal;
+
+	fractal = &(fractol->fractals[fractol->current_fractal]);
+	delta = millis_since(&(fractol->last_frame));
+	delta /= 30.0;
+	if (fractol->window.pressed_keys[0])
+		fractal->decal_y -= 20.0 * delta;
+	if (fractol->window.pressed_keys[1])
+		fractal->decal_x -= 20.0 * delta;
+	if (fractol->window.pressed_keys[2])
+		fractal->decal_y += 20.0 * delta;
+	if (fractol->window.pressed_keys[3])
+		fractal->decal_x += 20.0 * delta;
+	if (fractol->window.pressed_keys[4])
+		fractal->params[0] *= (1.0 + (delta / 20));
+	if (fractol->window.pressed_keys[5])
+		fractal->params[0] *= (1.0 - (delta / 20));
+	if (fractol->window.pressed_keys[6])
+	{
+		zoom_on_point(fractal, fractol->window.width / 2, fractol->window.height / 2,
+			1.0 + (delta / 20),
+			fractol
+		);
+	}
+	if (fractol->window.pressed_keys[7])
+	{
+		zoom_on_point(fractal, fractol->window.width / 2, fractol->window.height / 2,
+			1.0 - (delta / 20),
+			fractol
+		);
+	}
+}
+
 int		loop(void *param)
 {
 	t_fractol	*fractol;
+	int			i;
+	char		key_pressed;
 
 	fractol = (t_fractol*)param;
-	if (!fractol->changed)
+	key_pressed = 0;
+	i = 0;
+	while (i < NB_KEY_PRESS)
+	{
+		if (fractol->window.pressed_keys[i])
+			key_pressed = 1;
+		i++;
+	}
+	if (!fractol->changed && !key_pressed)
+	{
+		gettimeofday(&(fractol->last_frame), NULL);
 		return (0);
+	}
 	fractol->changed = 0;
+	if (key_pressed)
+		update_values_with_input(fractol);
+	gettimeofday(&(fractol->last_frame), NULL);
 	compute_fractol(fractol);
 	render_fractol(fractol);
 	return (0);
