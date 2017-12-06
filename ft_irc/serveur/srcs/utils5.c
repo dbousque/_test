@@ -45,3 +45,25 @@ char	befriends(t_user *user1, t_user *user2)
 	}
 	return (0);
 }
+
+int		print_usage(char **argv)
+{
+	printf("Usage : %s <port:uint16_t>\n", argv[0]);
+	return (0);
+}
+
+t_user	*find_user_by_nick(t_env *e, char *nick)
+{
+	t_user	*tmp_user;
+	int		i;
+
+	i = 0;
+	while (i < e->nb_users)
+	{
+		tmp_user = &(e->users[i]);
+		if (!tmp_user->free && ft_streq(tmp_user->nickname, nick))
+			return (tmp_user);
+		i++;
+	}
+	return (NULL);
+}

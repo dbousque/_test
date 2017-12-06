@@ -38,22 +38,6 @@ t_channel	*find_channel(t_env *e, char *channel_name)
 	return (NULL);
 }
 
-t_channel	*find_channel_by_id(t_env *e, int id)
-{
-	int			i;
-	t_channel	*channel;
-
-	i = 0;
-	while (i < e->channels.len)
-	{
-		channel = &(((t_channel*)e->channels.elts)[i]);
-		if (channel->id == id)
-			return (channel);
-		i++;
-	}
-	return (NULL);
-}
-
 int		unique_channel_id(t_list *channels)
 {
 	int			i;
@@ -111,64 +95,6 @@ t_channel	*create_channel(t_env *e, char *channel_name, char *description)
 	return (channel);
 }
 
-void	remove_channel_if_empty(t_env *e, t_channel *channel)
-{
-	int		i;
-	int		x;
-	t_user	*user;
-	char	mentioned;
-
-	mentioned = 0;
-	i = 0;
-	while (i < e->nb_users)
-	{
-		user = &(e->users[i]);
-		if (!user->free)
-		{
-			x = 0;
-			while (user->channels[x] != -1)
-			{
-				if (user->channels[x] == channel->id)
-				{
-					mentioned = 1;
-					break ;
-				}
-				x++;
-			}
-			if (mentioned)
-				break ;
-		}
-		i++;
-	}
-	if (!mentioned)
-	{
-		LOG(DEBUG, "No user left in channel '%s', removing it", channel->name);
-		remove_elt(&(e->channels), (char*)channel);
-	}
-}
-
-char	remove_channel_from_user(t_env *e, t_user *user, t_channel *channel)
-{
-	int		i;
-	int		decal;
-
-	i = 0;
-	decal = 0;
-	while (user->channels[i] != -1)
-	{
-		if (user->channels[i] == channel->id)
-			decal = 1;
-		if (i - decal >= 0)
-			user->channels[i - decal] = user->channels[i];
-		i++;
-	}
-	user->channels[i - decal] = -1;
-	if (decal == 0)
-		return (0);
-	remove_channel_if_empty(e, channel);
-	return (1);
-}
-
 char	remove_user_from_friends2(t_user *user, t_user *friend)
 {
 	int		i;
@@ -188,38 +114,4 @@ char	remove_user_from_friends2(t_user *user, t_user *friend)
 	if (decal == 0)
 		return (0);
 	return (1);
-}
-
-void	remove_channels_from_user(t_env *e, t_user *user)
-{
-	int			i;
-	t_channel	*channel;
-
-	i = 0;
-	while (user->channels[i] != -1)
-	{
-		channel = find_channel_by_id(e, user->channels[i]);
-		if (!channel)
-		{
-			LOG(ERROR, "Channel with id '%d' not found !", user->channels[i]);
-			i++;
-			continue ;
-		}
-		remove_channel_from_user(e, user, channel);
-		i++;
-	}
-}
-
-char	user_in_channel(t_user *user, int channel_id)
-{
-	int		i;
-
-	i = 0;
-	while (user->channels[i] != -1)
-	{
-		if (user->channels[i] == channel_id)
-			return (1);
-		i++;
-	}
-	return (0);
 }

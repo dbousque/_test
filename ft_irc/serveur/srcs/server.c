@@ -109,10 +109,7 @@ int		main(int argc, char **argv)
 	t_env	e;
 
 	if (argc != 2)
-	{
-		printf("Usage : %s <port:uint16_t>\n", argv[0]);
-		return (0);
-	}
+		return (print_usage(argv));
 	if ((port = parse_port(argv[1])) == -1)
 	{
 		printf("Invalid port\n");

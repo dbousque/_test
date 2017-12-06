@@ -23,6 +23,7 @@ SOURCES	=	srcs/circular_buffer.c \
 			srcs/utils3.c \
 			srcs/utils4.c \
 			srcs/utils5.c \
+			srcs/utils6.c \
 			srcs/utils.c \
 			srcs/validation.c \
 			srcs/write_user_output.c

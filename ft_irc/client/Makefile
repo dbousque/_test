@@ -13,10 +13,16 @@
 NAME	=	client
 
 SOURCES	=	srcs/client.c \
+			srcs/connect_to_server.c \
 			srcs/parse_message.c \
+			srcs/read_user_input.c \
+			srcs/read_user_input2.c \
+			srcs/update_info.c \
 			srcs/utils.c \
 			srcs/utils2.c \
-			srcs/windows.c
+			srcs/windows.c \
+			srcs/wwrite.c \
+			srcs/wwrite2.c
 
 HEADERS	=	-I./includes/
 

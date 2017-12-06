@@ -60,7 +60,6 @@ void	nick(t_env *e, t_user *user, char **params, int nb_params)
 
 void	join(t_env *e, t_user *user, char **params, int nb_params)
 {
-	char		*channel_name;
 	char		*description;
 	t_channel	*channel;
 	int			i;
@@ -68,10 +67,9 @@ void	join(t_env *e, t_user *user, char **params, int nb_params)
 	if (nb_params < 1 || nb_params > 2)
 		return (wrong_nb_params(user, "join", nb_params, 1));
 	description = nb_params == 2 ? params[1] : "<give me a description>";
-	channel_name = params[0];
-	if (!(channel = find_channel(e, channel_name)))
+	if (!(channel = find_channel(e, params[0])))
 	{
-		if (!(channel = create_channel(e, channel_name, description)))
+		if (!(channel = create_channel(e, params[0], description)))
 			return (log_user(user, "|x Could not create channel"));
 	}
 	i = 0;
@@ -238,15 +236,7 @@ void	befriend(t_env *e, t_user *user, char **params, int nb_params)
 
 	if (nb_params != 1)
 		return (wrong_nb_params(user, "befriend", nb_params, 1));
-	i = 0;
-	while (i < e->nb_users)
-	{
-		tmp_user = &(e->users[i]);
-		if (!tmp_user->free && ft_streq(tmp_user->nickname, params[0]))
-			break ;
-		tmp_user = NULL;
-		i++;
-	}
+	tmp_user = find_user_by_nick(e, params[0]);
 	if (!tmp_user)
 		return (log_user(user, "|x User not found"));
 	i = 0;

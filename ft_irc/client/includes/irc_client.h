@@ -90,5 +90,16 @@ void			win_write(char *str);
 void			win_input_write(char *str);
 t_parse_msg_res	parse_message(char *msg, int len, t_msg *res);
 void			init_commands_names(void);
+char			read_user_input(t_env *e, char *read_buffer, int *n_chars);
+char			dont_send_to_server(t_env *e, char *read_buffer, int *n_chars,
+															char connect_ret);
+char			remove_char(char *read_buffer, int *n_chars);
+void			prepend_privmsg(char *buffer, int len);
+char			reconnect_if_connect_command(t_env *e, char *buffer, int len);
+char			connect_to_server(t_env *e, t_opts *opts);
+char			handle_reconnect_command_parse_res(t_env *e, t_msg *msg);
+void			update_info(t_env *e);
+void			wwrite(t_window *window, char *str);
+void			wwrite_chars(t_window *window, char *str, int len, char color);
 
 #endif

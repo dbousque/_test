@@ -148,6 +148,8 @@ char			user_in_channel(t_user *user, int channel_id);
 void			welcome_user_to_channel(t_user *user, t_channel *channel);
 int				parse_port(char *str);
 char			befriends(t_user *user1, t_user *user2);
+int				print_usage(char **argv);
+t_user			*find_user_by_nick(t_env *e, char *nick);
 char			init_list(t_list *list, size_t elt_size);
 void			*new_elt(t_list *lst);
 void			remove_elt(t_list *lst, char *addr);
