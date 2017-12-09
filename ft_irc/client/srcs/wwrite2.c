@@ -1,15 +1,25 @@
-
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   wwrite2.c                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: dbousque <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2017/12/09 16:53:59 by dbousque          #+#    #+#             */
+/*   Updated: 2017/12/09 16:54:03 by dbousque         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
 #include "irc_client.h"
 
-char	server_info(char *str, int len, char ori)
+void	server_info(char *str, int len, char ori, char *ret)
 {
 	if (startswith(str, "[USERS]"))
 	{
 		wclear(g_windows.users_win);
 		wrefresh(g_windows.users_win);
 		wrefresh(g_windows.input_win);
-		return (1);
+		*ret = 1;
 	}
 	if (startswith(str, "[USER] "))
 	{
@@ -19,7 +29,7 @@ char	server_info(char *str, int len, char ori)
 		str[len] = ori;
 		wrefresh(g_windows.users_win);
 		wrefresh(g_windows.input_win);
-		return (1);
+		*ret = 1;
 	}
 	if (startswith(str, "[NICK] "))
 	{
@@ -27,17 +37,16 @@ char	server_info(char *str, int len, char ori)
 		update_nick_info(str + 7);
 		wrefresh(g_windows.info_win);
 		wrefresh(g_windows.input_win);
-		return (1);
+		*ret = 1;
 	}
-	return (0);
 }
 
-char	server_info2(char *str, int i)
+void	server_info2(char *str, int i, char *ret)
 {
 	if (startswith(str, "[NOPRIVUSER]"))
 	{
 		g_priv_user_mode = 0;
-		return (1);
+		*ret = 1;
 	}
 	if (startswith(str, "[PRIVUSER] "))
 	{
@@ -55,17 +64,22 @@ char	server_info2(char *str, int i)
 			i++;
 		}
 		g_priv_user[i] = '\0';
-		return (1);
+		*ret = 1;
 	}
-	return (0);
 }
 
 void	wwrite_chars(t_window *window, char *str, int len, char color)
 {
 	int		i;
+	char	ret;
 
 	i = 0;
-	if (server_info(str, len, 0) || server_info2(str, i))
+	ret = 0;
+	server_info(str, len, 0, &ret);
+	if (ret)
+		return ;
+	server_info2(str, i, &ret);
+	if (ret)
 		return ;
 	i = 0;
 	while (i < len || (len == -1 && str[i]))

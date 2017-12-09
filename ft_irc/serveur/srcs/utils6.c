@@ -1,8 +1,18 @@
-
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   utils6.c                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: dbousque <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2017/12/09 17:57:51 by dbousque          #+#    #+#             */
+/*   Updated: 2017/12/09 17:57:52 by dbousque         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
 #include "ft_irc.h"
 
-char	user_in_channel(t_user *user, int channel_id)
+char		user_in_channel(t_user *user, int channel_id)
 {
 	int		i;
 
@@ -16,7 +26,7 @@ char	user_in_channel(t_user *user, int channel_id)
 	return (0);
 }
 
-void	remove_channel_if_empty(t_env *e, t_channel *channel)
+void		remove_channel_if_empty(t_env *e, t_channel *channel)
 {
 	int		i;
 	t_user	*user;
@@ -42,7 +52,8 @@ void	remove_channel_if_empty(t_env *e, t_channel *channel)
 	}
 }
 
-char	remove_channel_from_user(t_env *e, t_user *user, t_channel *channel)
+char		remove_channel_from_user(t_env *e, t_user *user,
+															t_channel *channel)
 {
 	int		i;
 	int		decal;
@@ -80,7 +91,7 @@ t_channel	*find_channel_by_id(t_env *e, int id)
 	return (NULL);
 }
 
-void	remove_channels_from_user(t_env *e, t_user *user)
+void		remove_channels_from_user(t_env *e, t_user *user)
 {
 	int			i;
 	t_channel	*channel;

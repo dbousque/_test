@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_irc.h                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: dbousque <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2017/12/09 17:50:10 by dbousque          #+#    #+#             */
+/*   Updated: 2017/12/09 17:50:12 by dbousque         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef FT_IRC_H
 # define FT_IRC_H
 
@@ -16,8 +28,7 @@
 # define USER_BUFFER_SIZE 4096
 # define DEFAULT_PORT 4242
 
-# define LOG(mode, ...) \
-	do { log_start(mode); printf(__VA_ARGS__); log_end(mode); } while (0)
+# define LOG(m, ...) do { log_s(m); printf(__VA_ARGS__); log_e(m); } while (0)
 
 char	*g_irc_commands[16];
 char	g_tmp_buffer[USER_BUFFER_SIZE + 1];
@@ -27,7 +38,7 @@ typedef enum
 	INFO,
 	DEBUG,
 	ERROR
-} t_log_mode;
+}	t_log_mode;
 
 typedef enum
 {
@@ -46,7 +57,7 @@ typedef enum
 	PRIVMODE,
 	STDMODE,
 	PRIVUSER
-} t_command;
+}	t_command;
 
 typedef enum
 {
@@ -57,9 +68,9 @@ typedef enum
 	CONTAINS_NUL,
 	FORBIDDEN_CHARACTER,
 	TOO_MANY_PARAMS
-} t_parse_message_res;
+}	t_parse_message_res;
 
-typedef t_parse_message_res t_parse_msg_res;
+typedef t_parse_message_res	t_parse_msg_res;
 
 typedef struct	s_list
 {
@@ -76,7 +87,7 @@ typedef struct	s_circular_buffer
 	int			end;
 }				t_circular_buffer;
 
-typedef t_circular_buffer t_circ_buf;
+typedef t_circular_buffer	t_circ_buf;
 
 typedef struct	s_msg
 {
@@ -95,7 +106,7 @@ typedef enum
 {
 	STD,
 	PRIV_MSG
-} t_mode;
+}	t_mode;
 
 typedef struct	s_user
 {
@@ -124,8 +135,8 @@ typedef struct	s_env
 	fd_set		write_fds;
 }				t_env;
 
-void			log_start(t_log_mode mode);
-void			log_end(t_log_mode mode);
+void			log_s(t_log_mode mode);
+void			log_e(t_log_mode mode);
 int				ft_strlen(char *str);
 char			startswith(char *str, char *start);
 char			contains(char *str, int len, char c);
@@ -150,6 +161,8 @@ int				parse_port(char *str);
 char			befriends(t_user *user1, t_user *user2);
 int				print_usage(char **argv);
 t_user			*find_user_by_nick(t_env *e, char *nick);
+void			ft_strcpy(char *dest, char *src);
+t_user			*find_user_by_id(t_env *e, int id);
 char			init_list(t_list *list, size_t elt_size);
 void			*new_elt(t_list *lst);
 void			remove_elt(t_list *lst, char *addr);

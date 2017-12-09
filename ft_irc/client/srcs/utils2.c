@@ -1,4 +1,14 @@
-
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   utils2.c                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: dbousque <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2017/12/09 16:53:34 by dbousque          #+#    #+#             */
+/*   Updated: 2017/12/09 16:53:37 by dbousque         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
 #include "irc_client.h"
 
@@ -26,7 +36,7 @@ char	contains(char *str, int len, char c)
 	return (0);
 }
 
-void		init_commands_names(void)
+void	init_commands_names(void)
 {
 	g_irc_commands[0] = "/connect";
 	g_irc_commands[1] = NULL;

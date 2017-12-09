@@ -1,4 +1,14 @@
-
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   read_user_input.c                                  :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: dbousque <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2017/12/09 16:53:06 by dbousque          #+#    #+#             */
+/*   Updated: 2017/12/09 16:53:09 by dbousque         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
 #include "irc_client.h"
 
@@ -12,10 +22,9 @@ char	read_error_or_ctrl_d(t_env *e, char character, int *n_chars, int ret)
 	return (0);
 }
 
-char	read_user_input2(t_env *e, char *read_buffer, int *n_chars)
+char	read_user_input2(t_env *e, char *read_buffer, int *n_chars,
+															char connect_ret)
 {
-	char	connect_ret;
-
 	wclear(g_windows.input_win);
 	wmove(g_windows.input_win, 0, 0);
 	wrefresh(g_windows.input_win);
@@ -82,5 +91,5 @@ char	read_user_input(t_env *e, char *read_buffer, int *n_chars)
 	read_buffer[*n_chars] = '\0';
 	if (character != '\r')
 		return (read_user_input_put_to_window(character));
-	return (read_user_input2(e, read_buffer, n_chars));
+	return (read_user_input2(e, read_buffer, n_chars, 0));
 }

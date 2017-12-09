@@ -1,27 +1,42 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   write_user_output.c                                :+:      :+:    :+:   */
+/*   utils7.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: dbousque <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2017/12/09 18:15:09 by dbousque          #+#    #+#             */
-/*   Updated: 2017/12/09 18:15:12 by dbousque         ###   ########.fr       */
+/*   Created: 2017/12/09 18:10:39 by dbousque          #+#    #+#             */
+/*   Updated: 2017/12/09 18:10:42 by dbousque         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_irc.h"
 
-void	write_user_output(t_env *e, int i)
+void	ft_strcpy(char *dest, char *src)
 {
-	t_user	*user;
-	int		n;
+	int		i;
 
-	user = &(e->users[i]);
-	n = circular_buffer_read(&(user->write_buffer), g_tmp_buffer);
-	if (write(user->fd, g_tmp_buffer, n) == -1)
+	i = 0;
+	while (src[i])
 	{
-		LOG(ERROR, "error while writing to '%s' output", user->nickname);
-		remove_user(e, user);
+		dest[i] = src[i];
+		i++;
 	}
+	dest[i] = '\0';
+}
+
+t_user	*find_user_by_id(t_env *e, int id)
+{
+	t_user	*tmp_user;
+	int		i;
+
+	i = 0;
+	while (i < e->nb_users)
+	{
+		tmp_user = &(e->users[i]);
+		if (!tmp_user->free && tmp_user->id == id)
+			return (tmp_user);
+		i++;
+	}
+	return (NULL);
 }

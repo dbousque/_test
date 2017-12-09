@@ -1,16 +1,26 @@
-
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   commands.c                                         :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: dbousque <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2017/12/09 17:53:14 by dbousque          #+#    #+#             */
+/*   Updated: 2017/12/09 17:53:16 by dbousque         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
 #include "ft_irc.h"
 
 /*
- * If a NICK message arrives at a server which already knows about an
- * identical nickname for another client, a nickname collision occurs.
- * As a result of a nickname collision, all instances of the nickname
- * are removed from the server's database, and a KILL command is issued
- * to remove the nickname from all other server's database. If the NICK
- * message causing the collision was a nickname change, then the
- * original (old) nick must be removed as well.
- */
+** If a NICK message arrives at a server which already knows about an
+** identical nickname for another client, a nickname collision occurs.
+** As a result of a nickname collision, all instances of the nickname
+** are removed from the server's database, and a KILL command is issued
+** to remove the nickname from all other server's database. If the NICK
+** message causing the collision was a nickname change, then the
+** original (old) nick must be removed as well.
+*/
 
 void	nick(t_env *e, t_user *user, char **params, int nb_params)
 {
@@ -34,29 +44,23 @@ void	nick(t_env *e, t_user *user, char **params, int nb_params)
 		}
 		i++;
 	}
-	i = 0;
-	while (new_nick[i])
-	{
-		user->nickname[i] = new_nick[i];
-		i++;
-	}
-	user->nickname[i] = '\0';
+	ft_strcpy(user->nickname, new_nick);
 	log_user(user, "|> Successfully changed your nickname");
 }
 
 /*
- * 8.13 Channel membership
- *
- * The current server allows any registered local user to join upto 10
- * different channels.  There is no limit imposed on non-local users so
- * that the server remains (reasonably) consistant with all others on a
- * channel membership basis
- *
- * To create a new channel or become part of an existing channel, a user
- * is required to JOIN the channel.  If the channel doesn't exist prior
- * to joining, the channel is created and the creating user becomes a
- * channel operator.
- */
+** 8.13 Channel membership
+**
+** The current server allows any registered local user to join upto 10
+** different channels.  There is no limit imposed on non-local users so
+** that the server remains (reasonably) consistant with all others on a
+** channel membership basis
+**
+** To create a new channel or become part of an existing channel, a user
+** is required to JOIN the channel.  If the channel doesn't exist prior
+** to joining, the channel is created and the creating user becomes a
+** channel operator.
+*/
 
 void	join(t_env *e, t_user *user, char **params, int nb_params)
 {
@@ -111,7 +115,7 @@ void	leave(t_env *e, t_user *user, char **params, int nb_params)
 void	who(t_env *e, t_user *user, char **params, int nb_params)
 {
 	t_channel	*channel;
-	t_user		*tmp_user;
+	t_user		*t;
 	int			i;
 
 	if (nb_params != 1)
@@ -122,17 +126,16 @@ void	who(t_env *e, t_user *user, char **params, int nb_params)
 	i = 0;
 	while (i < e->nb_users)
 	{
-		tmp_user = &(e->users[i]);
-		if (!tmp_user->free && user_in_channel(tmp_user, channel->id))
+		t = &(e->users[i]);
+		if (!t->free && user_in_channel(t, channel->id))
 		{
-			if (tmp_user->id == user->id)
+			if (t->id == user->id)
 			{
-				snprintf(g_tmp_buffer, USER_BUFFER_SIZE,
-												"|> %s", tmp_user->nickname);
+				snprintf(g_tmp_buffer, USER_BUFFER_SIZE, "|> %s", t->nickname);
 				log_user(user, g_tmp_buffer);
 			}
 			else
-				log_user(user, tmp_user->nickname);
+				log_user(user, t->nickname);
 		}
 		i++;
 	}
@@ -161,209 +164,4 @@ void	msg(t_env *e, t_user *user, char **params, int nb_params)
 		i++;
 	}
 	log_user(user, "|x User not found");
-}
-
-void	channels(t_env *e, t_user *user, char **params, int nb_params)
-{
-	int			i;
-	t_channel	*channel;
-
-	(void)params;
-	if (nb_params != 0)
-		return (wrong_nb_params(user, "channels", nb_params, 0));
-	i = 0;
-	while (i < e->channels.len)
-	{
-		channel = &(((t_channel*)e->channels.elts)[i]);
-		log_user(user, channel->name);
-		i++;
-	}
-}
-
-void	users(t_env *e, t_user *user, char **params, int nb_params)
-{
-	int			i;
-	t_user		*tmp_user;
-	char		tmp[30];
-
-	(void)params;
-	if (nb_params != 0)
-		return (wrong_nb_params(user, "users", nb_params, 0));
-	log_user(user, "[USERS]");
-	i = 0;
-	while (i < e->nb_users)
-	{
-		tmp_user = &(e->users[i]);
-		if (!tmp_user->free)
-		{
-			if (tmp_user->id == user->id)
-				snprintf(tmp, 30, "[USER] |x %s", tmp_user->nickname);
-			else if (befriends(user, tmp_user))
-				snprintf(tmp, 30, "[USER] |> %s", tmp_user->nickname);
-			else
-				snprintf(tmp, 30, "[USER] %s", tmp_user->nickname);
-			log_user(user, tmp);
-		}
-		i++;
-	}
-}
-
-void	ping(t_env *e, t_user *user, char **params, int nb_params)
-{
-	(void)e;
-	(void)params;
-	if (nb_params != 0)
-		return (wrong_nb_params(user, "ping", nb_params, 0));
-	log_user(user, "[PONG]");
-}
-
-void	mynick(t_env *e, t_user *user, char **params, int nb_params)
-{
-	char		tmp[30];
-
-	(void)e;
-	(void)params;
-	if (nb_params != 0)
-		return (wrong_nb_params(user, "mynick", nb_params, 0));
-	snprintf(tmp, 30, "[NICK] |x %s", user->nickname);
-	log_user(user, tmp);
-}
-
-void	befriend(t_env *e, t_user *user, char **params, int nb_params)
-{
-	int		i;
-	t_user	*tmp_user;
-
-	if (nb_params != 1)
-		return (wrong_nb_params(user, "befriend", nb_params, 1));
-	tmp_user = find_user_by_nick(e, params[0]);
-	if (!tmp_user)
-		return (log_user(user, "|x User not found"));
-	i = 0;
-	while (user->friends[i] != -1)
-	{
-		if (user->friends[i] == tmp_user->id)
-			return (log_user(user, "|x Already friends"));
-		i++;
-	}
-	if (i >= 10)
-		return (log_user(user, "|x Too many friends"));
-	user->friends[i] = tmp_user->id;
-	user->friends[i + 1] = -1;
-	log_user(user, "|> Successfully befriended");
-}
-
-void	unfriend(t_env *e, t_user *user, char **params, int nb_params)
-{
-	int		i;
-	t_user	*tmp_user;
-
-	if (nb_params != 1)
-		return (wrong_nb_params(user, "unfriend", nb_params, 1));
-	i = 0;
-	while (i < e->nb_users)
-	{
-		tmp_user = &(e->users[i]);
-		if (!tmp_user->free && ft_streq(tmp_user->nickname, params[0]))
-			break ;
-		tmp_user = NULL;
-		i++;
-	}
-	if (!tmp_user)
-		return (log_user(user, "|x User not found"));
-	if (!remove_user_from_friends2(user, tmp_user))
-		return (log_user(user, "|x Not befriended"));
-	log_user(user, "|> Successfully unfriended");
-}
-
-void	msgchan(t_env *e, t_user *user, char **params, int nb_params)
-{
-	int			i;
-	t_channel	*channel;
-	t_user		*tmp_user;
-	char		msg[600];
-
-	if (nb_params != 2)
-		return (wrong_nb_params(user, "msgchan", nb_params, 2));
-	channel = find_channel(e, params[0]);
-	if (!channel)
-		return (log_user(user, "|x Channel not found"));
-	i = 0;
-	snprintf(msg, 600, "'%s' in %s > %s", user->nickname,
-													channel->name, params[1]);
-	while (i < e->nb_users)
-	{
-		tmp_user = &(e->users[i]);
-		if (!tmp_user->free && user_in_channel(tmp_user, channel->id)
-			&& tmp_user->id != user->id)
-			log_user(tmp_user, msg);
-		i++;
-	}
-	snprintf(msg, 600, "'%s' in %s < %s", user->nickname,
-													channel->name, params[1]);
-	log_user(user, msg);
-}
-
-void	privmode(t_env *e, t_user *user, char **params, int nb_params)
-{
-	int			i;
-	t_user		*tmp_user;
-
-	if (nb_params != 1)
-		return (wrong_nb_params(user, "privmode", nb_params, 1));
-	i = 0;
-	while (i < e->nb_users)
-	{
-		tmp_user = &(e->users[i]);
-		if (!tmp_user->free && ft_streq(tmp_user->nickname, params[0]))
-			break ;
-		tmp_user = NULL;
-		i++;
-	}
-	if (!tmp_user)
-		return (log_user(user, "|x User not found"));
-	user->mode = PRIV_MSG;
-	user->priv_msg_user = tmp_user->id;
-	log_user(user, "|> Successfully entered private messaging mode");
-}
-
-void	stdmode(t_env *e, t_user *user, char **params, int nb_params)
-{
-	(void)e;
-	(void)params;
-	if (nb_params != 0)
-		return (wrong_nb_params(user, "stdmode", nb_params, 0));
-	user->mode = STD;
-	user->priv_msg_user = 0;
-	log_user(user, "|> Successfully entered standard mode");
-}
-
-void	privuser(t_env *e, t_user *user, char **params, int nb_params)
-{
-	int			i;
-	t_user		*tmp_user;
-	char		msg[50];
-
-	(void)params;
-	if (nb_params != 0)
-		return (wrong_nb_params(user, "privuser", nb_params, 0));
-	if (user->mode != PRIV_MSG)
-		return (log_user(user, "[NOPRIVUSER]"));
-	i = 0;
-	while (i < e->nb_users)
-	{
-		tmp_user = &(e->users[i]);
-		if (!tmp_user->free && tmp_user->id == user->priv_msg_user)
-			break ;
-		tmp_user = NULL;
-		i++;
-	}
-	if (!tmp_user)
-	{
-		user->mode = STD;
-		user->priv_msg_user = 0;
-		return (log_user(user, "|x Unexpected error"));
-	}
-	snprintf(msg, 50, "[PRIVUSER] %s", tmp_user->nickname);
-	log_user(user, msg);
 }

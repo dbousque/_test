@@ -1,4 +1,14 @@
-
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   read_user_input.c                                  :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: dbousque <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2017/12/09 17:57:09 by dbousque          #+#    #+#             */
+/*   Updated: 2017/12/09 17:57:11 by dbousque         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
 #include "ft_irc.h"
 
@@ -52,7 +62,7 @@ void	interpret_message(t_env *e, t_user *user, int len)
 	struct timeval			start;
 	struct timeval			end;
 
-    gettimeofday(&start, NULL);
+	gettimeofday(&start, NULL);
 	init_msg(&parsed_msg);
 	res = parse_message(g_tmp_buffer, len, &parsed_msg);
 	if (res != OK)

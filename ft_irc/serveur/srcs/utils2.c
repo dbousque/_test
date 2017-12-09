@@ -1,8 +1,18 @@
-
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   utils2.c                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: dbousque <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2017/12/09 17:57:29 by dbousque          #+#    #+#             */
+/*   Updated: 2017/12/09 17:57:31 by dbousque         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
 #include "ft_irc.h"
 
-void	log_start(t_log_mode mode)
+void	log_s(t_log_mode mode)
 {
 	time_t		t;
 	struct tm	tm;
@@ -26,7 +36,7 @@ void	log_start(t_log_mode mode)
 		printf("\033[1;31m");
 }
 
-void	log_end(t_log_mode mode)
+void	log_e(t_log_mode mode)
 {
 	(void)mode;
 	printf("\033[0m\n");

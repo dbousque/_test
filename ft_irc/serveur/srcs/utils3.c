@@ -1,4 +1,14 @@
-
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   utils3.c                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: dbousque <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2017/12/09 17:57:35 by dbousque          #+#    #+#             */
+/*   Updated: 2017/12/09 17:57:36 by dbousque         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
 #include "ft_irc.h"
 
@@ -55,9 +65,9 @@ void	log_user(t_user *user, char *str)
 	i = 0;
 	while (str[i])
 		i++;
-	log_start(INFO);
+	log_s(INFO);
 	printf("<- ('%s') %s", user->nickname, str);
-	log_end(INFO);
+	log_e(INFO);
 	circular_buffer_write(&(user->write_buffer), str, i);
 	nl = '\n';
 	circular_buffer_write(&(user->write_buffer), &nl, 1);

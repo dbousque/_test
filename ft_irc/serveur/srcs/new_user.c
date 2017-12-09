@@ -1,4 +1,14 @@
-
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   new_user.c                                         :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: dbousque <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2017/12/09 17:53:34 by dbousque          #+#    #+#             */
+/*   Updated: 2017/12/09 17:53:36 by dbousque         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
 #include "ft_irc.h"
 
@@ -47,11 +57,9 @@ void	set_unique_nickname(t_user *user, t_user *users, int nb_users)
 		i = 0;
 		while (i < nb_users)
 		{
-			if (ft_streq(user->nickname, users[i].nickname))
-			{
-				ok = 0;
+			ok = ft_streq(user->nickname, users[i].nickname) ? 0 : 1;
+			if (!ok)
 				break ;
-			}
 			i++;
 		}
 		if (ok)

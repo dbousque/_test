@@ -14,6 +14,8 @@ NAME	=	serveur
 
 SOURCES	=	srcs/circular_buffer.c \
 			srcs/commands.c \
+			srcs/commands2.c \
+			srcs/commands3.c \
 			srcs/list.c \
 			srcs/new_user.c \
 			srcs/parse_message.c \
@@ -24,6 +26,7 @@ SOURCES	=	srcs/circular_buffer.c \
 			srcs/utils4.c \
 			srcs/utils5.c \
 			srcs/utils6.c \
+			srcs/utils7.c \
 			srcs/utils.c \
 			srcs/validation.c \
 			srcs/write_user_output.c

@@ -1,4 +1,14 @@
-
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   utils4.c                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: dbousque <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2017/12/09 17:57:40 by dbousque          #+#    #+#             */
+/*   Updated: 2017/12/09 17:57:42 by dbousque         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
 #include "ft_irc.h"
 
@@ -38,7 +48,7 @@ t_channel	*find_channel(t_env *e, char *channel_name)
 	return (NULL);
 }
 
-int		unique_channel_id(t_list *channels)
+int			unique_channel_id(t_list *channels)
 {
 	int			i;
 	int			id;
@@ -95,7 +105,7 @@ t_channel	*create_channel(t_env *e, char *channel_name, char *description)
 	return (channel);
 }
 
-char	remove_user_from_friends2(t_user *user, t_user *friend)
+char		remove_user_from_friends2(t_user *user, t_user *friend)
 {
 	int		i;
 	int		decal;
