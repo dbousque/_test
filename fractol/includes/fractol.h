@@ -7,7 +7,6 @@
 # include <stdlib.h>
 # include <sys/time.h>
 # include <pthread.h>
-# include <X11/Xlib.h>
 
 # include "mlx.h"
 

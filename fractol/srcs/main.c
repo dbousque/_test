@@ -152,9 +152,9 @@ char	init_fractol(t_fractol *fractol, int width, int height, char *title)
 	mlx_expose_hook(fractol->window.win, expose_hook, (void*)fractol);
 	mlx_mouse_hook(fractol->window.win, mouse_hook, (void*)fractol);
 	mlx_hook(fractol->window.win, 6, 1L<<6, mouse_move_hook, (void*)fractol);
-	mlx_hook(fractol->window.win, KeyPress, KeyPressMask,
+	mlx_hook(fractol->window.win, 2, 1,
 										key_pressed_hook, (void*)fractol);
-	mlx_hook(fractol->window.win, KeyRelease, KeyReleaseMask,
+	mlx_hook(fractol->window.win, 3, 2,
 										key_released_hook, (void*)fractol);
 	return (1);
 }
@@ -231,7 +231,7 @@ int		main(int argc, char **argv)
 	int			height;
 
 	parse_opts(argc, argv, &width, &height);
-	if (!init_fractol(&fractol, width, height, "Helloz"))
+	if (!init_fractol(&fractol, width, height, "fractol - dbousque"))
 		return (1);
 	maybe_update_current_fractal(&fractol, argc, argv);
 	mlx_loop_hook(fractol.window.mlx, loop, (void*)&fractol);
