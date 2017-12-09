@@ -6,13 +6,13 @@ import requests as r
 import re
 
 def get_recast_response(user, inp):
-  headers = { 'Authorization': 'Token de54ffec9b29cd365cefc914477b4dfc' }
+  headers = { 'Authorization': 'Token c46ba906e94f1bf22599982dc29831b4' }
   msg = { 'attachment': { 'type': 'text', 'content': inp } }
   json = { 'message': msg, 'conversation_id': user }
   res = r.post('https://api.recast.ai/build/v1/dialog', headers=headers, json=json).json()
   if len(res['results']['messages']) > 0:
     return res['results']['messages'][0]['content']
-  return 'Je ne sais pas comment repondre'
+  return 'I don\'t know how to answer'
 
 if len(sys.argv) < 2:
   print('Usage : {} <port>'.format(sys.argv[0]))
