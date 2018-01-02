@@ -57,19 +57,31 @@ void	ft_itoa(int n, char *res)
 	res[i] = '\0';
 }
 
-void	zoom_on_point(t_fractal *fractal, int x, int y, float quantity, t_fractol *fractol)
+void	zoom_on_point(t_fractal *fractal, double x, double y, float quantity, t_fractol *fractol)
 {
-	(void)x;
-	(void)y;
 	fractal->zoom *= quantity;
 	if (quantity >= 1.0)
 	{
-		fractal->decal_x += (x / (float)fractol->window.width) * 60 * fractal->zoom;
-		fractal->decal_y += (y / (float)fractol->window.height) * 40 * fractal->zoom;
+		fractal->decal_x += (x - fractal->decal_x) / (double)fractol->window.width * 60;
+		fractal->decal_y += (y - fractal->decal_y) / (double)fractol->window.height * 40;
 	}
 	else
 	{
-		fractal->decal_x -= (x / (float)fractol->window.width) * 60 * fractal->zoom;
-		fractal->decal_y -= (y / (float)fractol->window.height) * 40 * fractal->zoom;
+		fractal->decal_x -= (x - fractal->decal_x) / (double)fractol->window.width * 60;
+		fractal->decal_y -= (y - fractal->decal_y) / (double)fractol->window.height * 40;
 	}
+}
+
+void	zoom_on_mouse(t_fractal *fractal, float quantity, t_fractol *fractol)
+{
+	double	actual_x;
+	double	actual_y;
+	double	pixel_decal_mouse_x;
+	double	pixel_decal_mouse_y;
+
+	pixel_decal_mouse_x = (double)fractol->window.mouse.x / (double)fractal->zoom;
+	pixel_decal_mouse_y = (double)fractol->window.mouse.y / (double)fractal->zoom;
+	actual_x = fractal->decal_x + pixel_decal_mouse_x;
+	actual_y = fractal->decal_y + pixel_decal_mouse_y;
+	zoom_on_point(fractal, actual_x, actual_y, quantity, fractol);
 }

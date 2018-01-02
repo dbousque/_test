@@ -7,13 +7,14 @@
 # include <stdlib.h>
 # include <sys/time.h>
 # include <pthread.h>
+# include <math.h>
 
 # include "mlx.h"
 
 # define DEFAULT_WIDTH 1200
 # define DEFAULT_HEIGHT 800
 # define NB_THREADS 32
-# define NB_FRACTALS 2
+# define NB_FRACTALS 3
 # define NB_PALETTES 6
 # define PALETTE_LEN 50
 # define NB_KEY_PRESS 8
@@ -66,12 +67,13 @@ typedef struct	s_window
 
 typedef struct	s_fractal
 {
-	float		params[1];
+	float		params[3];
+	char		update_mouse_params;
 	int			max_iter;
-	float		zoom;
-	float		decal_x;
-	float		decal_y;
-	int			(*handle)(struct s_fractal *f, float x, float y, t_window *w);
+	double		zoom;
+	double		decal_x;
+	double		decal_y;
+	int			(*handle)(struct s_fractal *f, double x, double y, t_window *w);
 }				t_fractal;
 
 typedef struct	s_fractol
@@ -111,9 +113,13 @@ char			init_window(t_window *window, int width, int height,
 																char *title);
 void			render_fractol(t_fractol *fractol);
 void			init_palettes(int palettes[NB_PALETTES][PALETTE_LEN]);
-int				mandelbrot(t_fractal *fractal, float x, float y, t_window *w);
-int				modulo(t_fractal *fractal, float x, float y, t_window *w);
-void			zoom_on_point(t_fractal *fractal, int x, int y, float quantity,
+int				mandelbrot(t_fractal *fractal, double x, double y, t_window *w);
+int				julia(t_fractal *fractal, double x, double y, t_window *w);
+int				burning_ship(t_fractal *fractal, double x, double y,
+																t_window *w);
+void			zoom_on_point(t_fractal *fractal, double x, double y,
+										float quantity, t_fractol *fractol);
+void			zoom_on_mouse(t_fractal *fractal, float quantity,
 														t_fractol *fractol);
 
 #endif

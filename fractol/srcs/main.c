@@ -30,7 +30,7 @@ void	render_fractol(t_fractol *fractol)
 
 	gettimeofday(&start, NULL);
 	apply_image_to_window(&(fractol->window));
-	print_time_taken(&start, "Apply took ", "\n");
+	//print_time_taken(&start, "Apply took ", "\n");
 }
 
 void	set_color_at(t_fractol *fractol, int x, int y, int color)
@@ -63,8 +63,8 @@ void	*compute_part(void *param)
 		{
 			it = fractal->handle(
 				fractal,
-				(x + fractal->decal_x) / fractal->zoom,
-				(y + fractal->decal_y) / fractal->zoom,
+				x / fractal->zoom + fractal->decal_x,
+				y / fractal->zoom + fractal->decal_y,
 				&(d->f->window)
 			);
 			co = d->f->palettes[d->f->current_palette][it % PALETTE_LEN];
@@ -90,6 +90,18 @@ void	wait_for_threads_to_finish(pthread_t *threads)
 			exit(1);
 		}
 		i++;
+	}
+}
+
+void	maybe_update_fractal_params(t_fractol *fractol)
+{
+	t_fractal	*fractal;
+
+	fractal = &(fractol->fractals[fractol->current_fractal]);
+	if (fractal->update_mouse_params)
+	{
+		fractal->params[1] = fractol->window.mouse.x;
+		fractal->params[2] = fractol->window.mouse.y;
 	}
 }
 
@@ -120,25 +132,42 @@ void	compute_fractol(t_fractol *fractol)
 	print_time_taken(&start, "Computing took ", "\n");
 }
 
+void	init_fractals(t_fractol *fractol)
+{
+	fractol->fractals[0] = (t_fractal) {
+		.handle = mandelbrot,
+		.zoom = 0.8,
+		.decal_x = 0.0,
+		.decal_y = -100.0,
+		.max_iter = 49,
+		.params = { 4.0 },
+		.update_mouse_params = 1
+	};
+	fractol->fractals[1] = (t_fractal) {
+		.handle = julia,
+		.zoom = 0.8,
+		.decal_x = 50.0,
+		.decal_y = -100.0,
+		.max_iter = 49,
+		.params = { 4.0 },
+		.update_mouse_params = 1
+	};
+	fractol->fractals[2] = (t_fractal) {
+		.handle = burning_ship,
+		.zoom = 0.8,
+		.decal_x = -100.0,
+		.decal_y = -300.0,
+		.max_iter = 27,
+		.params = { 4.0 },
+		.update_mouse_params = 1
+	};
+}
+
 char	init_fractol(t_fractol *fractol, int width, int height, char *title)
 {
 	fractol->changed = 1;
 	fractol->current_fractal = 0;
-
-	fractol->fractals[0].handle = mandelbrot;
-	fractol->fractals[0].zoom = 1.0;
-	fractol->fractals[0].decal_x = 0.0;
-	fractol->fractals[0].decal_y = 0.0;
-	fractol->fractals[0].max_iter = 49;
-	fractol->fractals[0].params[0] = 4.0;
-
-	fractol->fractals[1].handle = mandelbrot;
-	fractol->fractals[1].zoom = 1.0;
-	fractol->fractals[1].decal_x = 0.0;
-	fractol->fractals[1].decal_y = 0.0;
-	fractol->fractals[1].max_iter = 49;
-	fractol->fractals[1].params[0] = 4.0;
-
+	init_fractals(fractol);
 	gettimeofday(&(fractol->last_frame), NULL);
 
 	fractol->current_palette = 0;
@@ -168,31 +197,21 @@ void	update_values_with_input(t_fractol *fractol)
 	delta = millis_since(&(fractol->last_frame));
 	delta /= 30.0;
 	if (fractol->window.pressed_keys[0])
-		fractal->decal_y -= 20.0 * delta;
+		fractal->decal_y -= (20.0 * delta) / fractal->zoom;
 	if (fractol->window.pressed_keys[1])
-		fractal->decal_x -= 20.0 * delta;
+		fractal->decal_x -= (20.0 * delta) / fractal->zoom;
 	if (fractol->window.pressed_keys[2])
-		fractal->decal_y += 20.0 * delta;
+		fractal->decal_y += (20.0 * delta) / fractal->zoom;
 	if (fractol->window.pressed_keys[3])
-		fractal->decal_x += 20.0 * delta;
+		fractal->decal_x += (20.0 * delta) / fractal->zoom;
 	if (fractol->window.pressed_keys[4])
 		fractal->params[0] *= (1.0 + (delta / 20));
 	if (fractol->window.pressed_keys[5])
 		fractal->params[0] *= (1.0 - (delta / 20));
 	if (fractol->window.pressed_keys[6])
-	{
-		zoom_on_point(fractal, fractol->window.width / 2, fractol->window.height / 2,
-			1.0 + (delta / 20),
-			fractol
-		);
-	}
+		zoom_on_mouse(fractal, 1.05, fractol);
 	if (fractol->window.pressed_keys[7])
-	{
-		zoom_on_point(fractal, fractol->window.width / 2, fractol->window.height / 2,
-			1.0 - (delta / 20),
-			fractol
-		);
-	}
+		zoom_on_mouse(fractal, 0.95, fractol);
 }
 
 int		loop(void *param)
@@ -218,6 +237,7 @@ int		loop(void *param)
 	fractol->changed = 0;
 	if (key_pressed)
 		update_values_with_input(fractol);
+	maybe_update_fractal_params(fractol);
 	gettimeofday(&(fractol->last_frame), NULL);
 	compute_fractol(fractol);
 	render_fractol(fractol);
