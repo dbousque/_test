@@ -23,6 +23,10 @@ void	maybe_update_current_fractal(t_fractol *fractol, int argc, char **argv)
 	{
 		if (ft_streq(argv[1], "mandelbrot"))
 			fractal_ind = 0;
+		else if (ft_streq(argv[1], "julia"))
+			fractal_ind = 1;
+		else if (ft_streq(argv[1], "ship"))
+			fractal_ind = 2;
 		else
 			ft_putstr("Invalid fractal name, defaulting to mandelbrot\n");
 	}
