@@ -21,7 +21,7 @@ int		exit_fractol(t_fractol *fractol)
 	return (0);
 }
 
-int		parse_int(char *str)
+int		parse_uint(char *str)
 {
 	int		res;
 	int		i;
@@ -46,7 +46,7 @@ void	parse_opts(int argc, char **argv, int *width, int *height)
 	*height = DEFAULT_HEIGHT;
 	if (argc > 2)
 	{
-		*width = parse_int(argv[2]);
+		*width = parse_uint(argv[2]);
 		if (*width == -1 || *width > 4000)
 		{
 			ft_putstr("Invalid width, setting default value\n");
@@ -55,7 +55,7 @@ void	parse_opts(int argc, char **argv, int *width, int *height)
 	}
 	if (argc > 3)
 	{
-		*height = parse_int(argv[3]);
+		*height = parse_uint(argv[3]);
 		if (*height == -1 || *height > 3000)
 		{
 			ft_putstr("Invalid height, setting default value\n");

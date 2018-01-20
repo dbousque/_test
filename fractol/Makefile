@@ -37,10 +37,10 @@ OBJECTS	=	$(subst .c,.o,$(SOURCES))
 WFLAGS	=	-Wall -Werror -Wextra -O3
 
 ifeq ($(UNAME_S), Linux)
-	XLIB	=	-lXext -lX11
+	XLIB	=	-lXext -lX11 -lm
 endif
 ifeq ($(UNAME_S), Darwin)
-	XLIB	=	-framework OpenGL -framework AppKit
+	XLIB	=	-framework OpenGL -framework AppKit -lm
 endif
 
 CC		=	clang

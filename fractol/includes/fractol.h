@@ -14,7 +14,7 @@
 # define DEFAULT_WIDTH 1200
 # define DEFAULT_HEIGHT 800
 # define NB_THREADS 32
-# define NB_FRACTALS 3
+# define NB_FRACTALS 5
 # define NB_PALETTES 6
 # define PALETTE_LEN 50
 # define NB_KEY_PRESS 8
@@ -45,6 +45,8 @@
 # define IS_MOUSE_FORWARD(k) (k == 4)
 # define IS_MOUSE_BACKWARDS(k) (k == 5)
 
+# define DEG_TO_RAD(x) (x * 0.0174533)
+
 typedef struct timeval	t_timeval;
 
 typedef struct	s_mouse
@@ -65,6 +67,8 @@ typedef struct	s_window
 	char		pressed_keys[NB_KEY_PRESS];
 }				t_window;
 
+struct s_fractol;
+
 typedef struct	s_fractal
 {
 	float		params[3];
@@ -73,7 +77,9 @@ typedef struct	s_fractal
 	double		zoom;
 	double		decal_x;
 	double		decal_y;
+	char		raw;
 	int			(*handle)(struct s_fractal *f, double x, double y, t_window *w);
+	void		(*raw_handle)(struct s_fractol *f);
 }				t_fractal;
 
 typedef struct	s_fractol
@@ -112,11 +118,16 @@ void			apply_image_to_window(t_window *window);
 char			init_window(t_window *window, int width, int height,
 																char *title);
 void			render_fractol(t_fractol *fractol);
+void			set_color_at(t_fractol *fractol, int x, int y, int color);
 void			init_palettes(int palettes[NB_PALETTES][PALETTE_LEN]);
-int				mandelbrot(t_fractal *fractal, double x, double y, t_window *w);
+int				mandelbrot(t_fractal *fractal, double x, double y,
+																t_window *w);
 int				julia(t_fractal *fractal, double x, double y, t_window *w);
 int				burning_ship(t_fractal *fractal, double x, double y,
 																t_window *w);
+int				sierpinski(t_fractal *fractal, double px, double py,
+																t_window *w);
+void			tree(t_fractol *fractol);
 void			zoom_on_point(t_fractal *fractal, double x, double y,
 										float quantity, t_fractol *fractol);
 void			zoom_on_mouse(t_fractal *fractal, float quantity,

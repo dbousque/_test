@@ -41,7 +41,8 @@ int		julia(t_fractal *fractal, double px, double py, t_window *w)
 	new[0] = px / (w->width / 3.5) - 2.5;
 	new[1] = py / (w->height / 2.0) - 1.0;
 	iteration = 0;
-	while (new[0] * new[0] + new[1] * new[1] < params[0] && iteration < fractal->max_iter)
+	while (new[0] * new[0] + new[1] * new[1] < params[0]
+											&& iteration < fractal->max_iter)
 	{
 		old[0] = new[0];
 		old[1] = new[1];
@@ -77,4 +78,107 @@ int		burning_ship(t_fractal *fractal, double px, double py, t_window *w)
 		iteration++;
 	}
 	return (iteration);
+}
+
+int		sierpinski(t_fractal *fractal, double px, double py, t_window *w)
+{
+	int		x;
+	int		y;
+	int		iteration;
+
+	(void)w;
+	(void)fractal;
+	x = px;
+	y = py;
+	iteration = 0;
+	while (x > 0 && y > 0)
+	{
+		if ((int)x % 3 == 1 && (int)y % 3 == 1)
+			return (0);
+		x /= 3;
+		y /= 3;
+		iteration++;
+	}
+	return (49);
+}
+
+void	draw_line(t_fractol *f, double from[2], double to[2], int iter)
+{
+	double	x;
+	double	y;
+	double	step_x;
+	double	step_y;
+	int		co;
+
+	step_x = fabs(to[0] - from[0]);
+	step_y = fabs(to[1] - from[1]);
+	x = fmax(step_x, step_y);
+	step_x /= x;
+	step_y /= x;
+	x = from[0];
+	y = from[1];
+	step_x = to[0] < from[0] ? -step_x : step_x;
+	step_y = to[1] < from[1] ? -step_y : step_y;
+	co = f->palettes[f->current_palette][iter % PALETTE_LEN];
+	co = iter == f->fractals[f->current_fractal].max_iter ? 0 : co;
+	while (((step_x >= 0.0 && x <= to[0]) || (step_x < 0.0 && x >= to[0]))
+		&& ((step_y >= 0.0 && y <= to[1]) || (step_y < 0.0 && y >= to[1])))
+	{
+		if (x < f->window.width && y < f->window.height && x >= 0 && y >= 0)
+			set_color_at(f, (int)x, (int)y, co);
+		x += step_x;
+		y += step_y;
+	}
+}
+
+void	recursive_tree(t_fractol *frac, int iter, double from_angle[3],
+														double branch_len)
+{
+	double		angle;
+	double		from[2];
+	double		to[2];
+
+	if (iter >= frac->fractals[frac->current_fractal].max_iter || iter >= 20)
+		return ;
+	angle = from_angle[2];
+	from[0] = from_angle[0];
+	from[1] = from_angle[1];
+	to[0] = from[0] + (branch_len * cos(DEG_TO_RAD(angle)));
+	to[1] = from[1] - (branch_len * sin(DEG_TO_RAD(angle)));
+	draw_line(frac, from, to, iter);
+	from_angle[0] = to[0];
+	from_angle[1] = to[1];
+	from_angle[2] = angle + (frac->fractals[frac->current_fractal].params[0]);
+	recursive_tree(frac, iter + 1, from_angle, branch_len / 2);
+	from_angle[0] = to[0];
+	from_angle[1] = to[1];
+	from_angle[2] = angle - (frac->fractals[frac->current_fractal].params[0]);
+	recursive_tree(frac, iter + 1, from_angle, branch_len / 2);
+}
+
+void	tree(t_fractol *fractol)
+{
+	double		from_angle[3];
+	t_fractal	*fractal;
+	double		branch_len;
+	int			x;
+	int			y;	
+
+	x = 0;
+	while (x < fractol->window.width)
+	{
+		y = 0;
+		while (y < fractol->window.height)
+		{
+			set_color_at(fractol, x, y, 0x000000);
+			y++;
+		}
+		x++;
+	}
+	fractal = &(fractol->fractals[fractol->current_fractal]);
+	from_angle[0] = (fractol->window.width / 2) / fractal->zoom + fractal->decal_x;
+	from_angle[1] = fractol->window.height / fractal->zoom + fractal->decal_y;
+	from_angle[2] = 90.0;
+	branch_len = (fractol->window.height / 2) * fractal->zoom;
+	recursive_tree(fractol, 0, from_angle, branch_len);
 }

@@ -26,6 +26,8 @@ char	init_window(t_window *window, int width, int height, char *title)
 		return (0);
 	window->width = width;
 	window->height = height;
+	window->mouse.x = width / 2;
+	window->mouse.y = height / 2;
 	i = 0;
 	while (i < NB_KEY_PRESS)
 	{

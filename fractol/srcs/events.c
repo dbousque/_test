@@ -57,14 +57,17 @@ int		key_pressed_hook(int keycode, void *param)
 	if (IS_PLUS_BIS(keycode))
 		fractal->max_iter++;
 	if (IS_MINUS_BIS(keycode))
+	{
 		fractal->max_iter--;
-	if (IS_W(keycode))
+		fractal->max_iter = fractal->max_iter < 2 ? 2 : fractal->max_iter;
+	}
+	if (IS_UP(keycode))
 		fractol->window.pressed_keys[0] = 1;
-	if (IS_A(keycode))
+	if (IS_LEFT(keycode))
 		fractol->window.pressed_keys[1] = 1;
-	if (IS_S(keycode))
+	if (IS_DOWN(keycode))
 		fractol->window.pressed_keys[2] = 1;
-	if (IS_D(keycode))
+	if (IS_RIGHT(keycode))
 		fractol->window.pressed_keys[3] = 1;
 	if (IS_M(keycode))
 		fractal->update_mouse_params = fractal->update_mouse_params ? 0 : 1;
@@ -85,13 +88,13 @@ int		key_released_hook(int keycode, void *param)
 		fractol->window.pressed_keys[6] = 0;
 	if (IS_MINUS(keycode))
 		fractol->window.pressed_keys[7] = 0;
-	if (IS_W(keycode))
+	if (IS_UP(keycode))
 		fractol->window.pressed_keys[0] = 0;
-	if (IS_A(keycode))
+	if (IS_LEFT(keycode))
 		fractol->window.pressed_keys[1] = 0;
-	if (IS_S(keycode))
+	if (IS_DOWN(keycode))
 		fractol->window.pressed_keys[2] = 0;
-	if (IS_D(keycode))
+	if (IS_RIGHT(keycode))
 		fractol->window.pressed_keys[3] = 0;
 	return (0);
 }

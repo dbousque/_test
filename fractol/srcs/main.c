@@ -113,22 +113,27 @@ void	compute_fractol(t_fractol *fractol)
 	int				i;
 
 	gettimeofday(&start, NULL);
-	i = 0;
-	while (i < NB_THREADS)
+	if (fractol->fractals[fractol->current_fractal].raw)
+		fractol->fractals[fractol->current_fractal].raw_handle(fractol);
+	else
 	{
-		data[i].f = fractol;
-		data[i].from_x = fractol->window.width / NB_THREADS * i;
-		data[i].until_x = fractol->window.width / NB_THREADS * (i + 1);
-		data[i].from_y = 0;
-		data[i].until_y = fractol->window.height;
-		if (pthread_create(&(threads[i]), NULL, compute_part, &(data[i])) != 0)
+		i = 0;
+		while (i < NB_THREADS)
 		{
-			ft_putstr("Error while creating thread\n");
-			exit(1);
+			data[i].f = fractol;
+			data[i].from_x = fractol->window.width / NB_THREADS * i;
+			data[i].until_x = fractol->window.width / NB_THREADS * (i + 1);
+			data[i].from_y = 0;
+			data[i].until_y = fractol->window.height;
+			if (pthread_create(&(threads[i]), NULL, compute_part, &(data[i])) != 0)
+			{
+				ft_putstr("Error while creating thread\n");
+				exit(1);
+			}
+			i++;
 		}
-		i++;
+		wait_for_threads_to_finish(threads);
 	}
-	wait_for_threads_to_finish(threads);
 	print_time_taken(&start, "Computing took ", "\n");
 }
 
@@ -141,7 +146,9 @@ void	init_fractals(t_fractol *fractol)
 		.decal_y = -100.0,
 		.max_iter = 49,
 		.params = { 4.0 },
-		.update_mouse_params = 1
+		.update_mouse_params = 1,
+		.raw = 0,
+		.raw_handle = NULL
 	};
 	fractol->fractals[1] = (t_fractal) {
 		.handle = julia,
@@ -150,7 +157,9 @@ void	init_fractals(t_fractol *fractol)
 		.decal_y = -100.0,
 		.max_iter = 49,
 		.params = { 4.0 },
-		.update_mouse_params = 1
+		.update_mouse_params = 1,
+		.raw = 0,
+		.raw_handle = NULL
 	};
 	fractol->fractals[2] = (t_fractal) {
 		.handle = burning_ship,
@@ -159,7 +168,31 @@ void	init_fractals(t_fractol *fractol)
 		.decal_y = -300.0,
 		.max_iter = 27,
 		.params = { 4.0 },
-		.update_mouse_params = 1
+		.update_mouse_params = 1,
+		.raw = 0,
+		.raw_handle = NULL
+	};
+	fractol->fractals[3] = (t_fractal) {
+		.handle = sierpinski,
+		.zoom = 0.1,
+		.decal_x = 0.0,
+		.decal_y = 0.0,
+		.max_iter = 50,
+		.params = { 4.0 },
+		.update_mouse_params = 1,
+		.raw = 0,
+		.raw_handle = NULL
+	};
+	fractol->fractals[4] = (t_fractal) {
+		.handle = NULL,
+		.zoom = 1.0,
+		.decal_x = 0.0,
+		.decal_y = 0.0,
+		.max_iter = 20,
+		.params = { 20.0 },
+		.update_mouse_params = 1,
+		.raw = 1,
+		.raw_handle = tree
 	};
 }
 
