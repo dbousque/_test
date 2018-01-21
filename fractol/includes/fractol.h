@@ -103,6 +103,7 @@ typedef struct	s_thread_data
 	int			until_y;
 }				t_thread_data;
 
+void			init_fractals(t_fractol *fractol);
 void			ft_putstr(char *str);
 int				exit_fractol(t_fractol *fractol);
 void			parse_opts(int argc, char **argv, int *width, int *height);
@@ -137,5 +138,7 @@ void			zoom_on_mouse(t_fractal *fractal, float quantity,
 														t_fractol *fractol);
 void			recursive_dragon_right(t_fractol *frac, int iter,
 									double from_angle[3], double branch_len);
+void			clear_screen(t_fractol *fractol);
+void			draw_line(t_fractol *f, double from[2], double to[2], int iter);
 
 #endif

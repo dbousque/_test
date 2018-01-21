@@ -12,12 +12,16 @@
 
 NAME	=	fractol
 
-SOURCES	=	srcs/events.c \
+SOURCES	=	srcs/dragon.c \
+			srcs/events.c \
 			srcs/fractals.c \
+			srcs/fractals_non_std.c \
+			srcs/init_fractals.c \
 			srcs/main.c \
 			srcs/palettes.c \
 			srcs/utils.c \
 			srcs/utils2.c \
+			srcs/utils3.c \
 			srcs/window.c
 
 UNAME_S := $(shell uname -s)
