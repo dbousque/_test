@@ -14,7 +14,7 @@
 # define DEFAULT_WIDTH 1200
 # define DEFAULT_HEIGHT 800
 # define NB_THREADS 32
-# define NB_FRACTALS 5
+# define NB_FRACTALS 8
 # define NB_PALETTES 6
 # define PALETTE_LEN 50
 # define NB_KEY_PRESS 8
@@ -128,9 +128,14 @@ int				burning_ship(t_fractal *fractal, double x, double y,
 int				sierpinski(t_fractal *fractal, double px, double py,
 																t_window *w);
 void			tree(t_fractol *fractol);
+void			snowflake(t_fractol *fractol);
+void			losange(t_fractol *fractol);
+void			dragon(t_fractol *fractol);
 void			zoom_on_point(t_fractal *fractal, double x, double y,
 										float quantity, t_fractol *fractol);
 void			zoom_on_mouse(t_fractal *fractal, float quantity,
 														t_fractol *fractol);
+void			recursive_dragon_right(t_fractol *frac, int iter,
+									double from_angle[3], double branch_len);
 
 #endif

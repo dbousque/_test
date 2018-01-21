@@ -188,11 +188,44 @@ void	init_fractals(t_fractol *fractol)
 		.zoom = 1.0,
 		.decal_x = 0.0,
 		.decal_y = 0.0,
-		.max_iter = 20,
+		.max_iter = 16,
 		.params = { 20.0 },
 		.update_mouse_params = 1,
 		.raw = 1,
 		.raw_handle = tree
+	};
+	fractol->fractals[5] = (t_fractal) {
+		.handle = NULL,
+		.zoom = 1.5,
+		.decal_x = -350.0,
+		.decal_y = -200.0,
+		.max_iter = 5,
+		.params = { 20.0 },
+		.update_mouse_params = 1,
+		.raw = 1,
+		.raw_handle = snowflake
+	};
+	fractol->fractals[6] = (t_fractal) {
+		.handle = NULL,
+		.zoom = 1.5,
+		.decal_x = -350.0,
+		.decal_y = 80.0,
+		.max_iter = 5,
+		.params = { 20.0 },
+		.update_mouse_params = 1,
+		.raw = 1,
+		.raw_handle = losange
+	};
+	fractol->fractals[7] = (t_fractal) {
+		.handle = NULL,
+		.zoom = 1.5,
+		.decal_x = -300.0,
+		.decal_y = 0.0,
+		.max_iter = 1,
+		.params = { 20.0 },
+		.update_mouse_params = 1,
+		.raw = 1,
+		.raw_handle = dragon
 	};
 }
 

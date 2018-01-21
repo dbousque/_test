@@ -27,6 +27,16 @@ void	maybe_update_current_fractal(t_fractol *fractol, int argc, char **argv)
 			fractal_ind = 1;
 		else if (ft_streq(argv[1], "ship"))
 			fractal_ind = 2;
+		else if (ft_streq(argv[1], "sierpinski"))
+			fractal_ind = 3;
+		else if (ft_streq(argv[1], "tree"))
+			fractal_ind = 4;
+		else if (ft_streq(argv[1], "snowflake"))
+			fractal_ind = 5;
+		else if (ft_streq(argv[1], "losange"))
+			fractal_ind = 6;
+		else if (ft_streq(argv[1], "dragon"))
+			fractal_ind = 7;
 		else
 			ft_putstr("Invalid fractal name, defaulting to mandelbrot\n");
 	}

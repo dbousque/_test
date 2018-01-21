@@ -102,6 +102,24 @@ int		sierpinski(t_fractal *fractal, double px, double py, t_window *w)
 	return (49);
 }
 
+void	clear_screen(t_fractol *fractol)
+{
+	int			x;
+	int			y;	
+
+	x = 0;
+	while (x < fractol->window.width)
+	{
+		y = 0;
+		while (y < fractol->window.height)
+		{
+			set_color_at(fractol, x, y, 0x000000);
+			y++;
+		}
+		x++;
+	}
+}
+
 void	draw_line(t_fractol *f, double from[2], double to[2], int iter)
 {
 	double	x;
@@ -161,24 +179,180 @@ void	tree(t_fractol *fractol)
 	double		from_angle[3];
 	t_fractal	*fractal;
 	double		branch_len;
-	int			x;
-	int			y;	
-
-	x = 0;
-	while (x < fractol->window.width)
-	{
-		y = 0;
-		while (y < fractol->window.height)
-		{
-			set_color_at(fractol, x, y, 0x000000);
-			y++;
-		}
-		x++;
-	}
+	
+	clear_screen(fractol);
 	fractal = &(fractol->fractals[fractol->current_fractal]);
-	from_angle[0] = (fractol->window.width / 2) / fractal->zoom + fractal->decal_x;
-	from_angle[1] = fractol->window.height / fractal->zoom + fractal->decal_y;
+	from_angle[0] = (fractol->window.width / 2) / fractal->zoom
+										- (fractal->decal_x * fractal->zoom);
+	from_angle[1] = fractol->window.height / fractal->zoom
+										- (fractal->decal_y * fractal->zoom);
 	from_angle[2] = 90.0;
 	branch_len = (fractol->window.height / 2) * fractal->zoom;
 	recursive_tree(fractol, 0, from_angle, branch_len);
+}
+
+void	recursive_snowflake(t_fractol *frac, int iter, double from_angle[3],
+															double branch_len)
+{
+	double		angle;
+	double		from[2];
+	double		to[2];
+
+	angle = from_angle[2];
+	if (iter >= frac->fractals[frac->current_fractal].max_iter || iter >= 10)
+	{
+		from[0] = from_angle[0];
+		from[1] = from_angle[1];
+		to[0] = from[0] + (branch_len * cos(DEG_TO_RAD(angle)));
+		to[1] = from[1] - (branch_len * sin(DEG_TO_RAD(angle)));
+		from_angle[0] = to[0];
+		from_angle[1] = to[1];
+		return (draw_line(frac, from, to, 49));
+	}
+	recursive_snowflake(frac, iter + 1, from_angle, branch_len / 3);
+	from_angle[2] = angle + 60.0;
+	recursive_snowflake(frac, iter + 1, from_angle, branch_len / 3);
+	from_angle[2] = angle - 60.0;
+	recursive_snowflake(frac, iter + 1, from_angle, branch_len / 3);
+	from_angle[2] = angle;
+	recursive_snowflake(frac, iter + 1, from_angle, branch_len / 3);
+}
+
+void	snowflake(t_fractol *f)
+{
+	double		from_angle[3];
+	t_fractal	*fractal;
+	double		branch_len;
+	
+	clear_screen(f);
+	fractal = &(f->fractals[f->current_fractal]);
+	from_angle[0] = (f->window.width / 2) / fractal->zoom
+										- (fractal->decal_x * fractal->zoom);
+	from_angle[1] = (f->window.height / 2) / fractal->zoom
+										- (fractal->decal_y * fractal->zoom);
+	from_angle[2] = 160.0 + fractal->params[0];
+	branch_len = (f->window.height / 2) * fractal->zoom;
+	recursive_snowflake(f, 1, from_angle, branch_len);
+	from_angle[2] -= 120.0;
+	recursive_snowflake(f, 1, from_angle, branch_len);
+	from_angle[2] -= 120.0;
+	recursive_snowflake(f, 1, from_angle, branch_len);
+}
+
+void	losange(t_fractol *f)
+{
+	double		from_angle[3];
+	t_fractal	*fractal;
+	double		branch_len;
+	
+	clear_screen(f);
+	fractal = &(f->fractals[f->current_fractal]);
+	from_angle[0] = (f->window.width / 2) / fractal->zoom
+										- (fractal->decal_x * fractal->zoom);
+	from_angle[1] = (f->window.height / 2) / fractal->zoom
+										- (fractal->decal_y * fractal->zoom);
+	from_angle[2] = 160.0 + fractal->params[0];
+	branch_len = (f->window.height / 2) * fractal->zoom;
+	recursive_snowflake(f, 1, from_angle, branch_len);
+	from_angle[2] = 300.0;
+	recursive_snowflake(f, 1, from_angle, branch_len);
+	from_angle[2] = 60.0;
+	recursive_snowflake(f, 1, from_angle, branch_len);
+}
+
+void	rdl_draw(t_fractol *frac, double from_angle[3], double branch_len)
+{
+	double		from[2];
+	double		to[2];
+
+	from_angle[2] -= 45.0;
+	from[0] = from_angle[0];
+	from[1] = from_angle[1];
+	to[0] = from[0] + (branch_len * cos(DEG_TO_RAD(from_angle[2])));
+	to[1] = from[1] - (branch_len * sin(DEG_TO_RAD(from_angle[2])));
+	draw_line(frac, from, to, 49);
+	from_angle[2] += 90.0;
+	from[0] = to[0];
+	from[1] = to[1];
+	to[0] = from[0] + (branch_len * cos(DEG_TO_RAD(from_angle[2])));
+	to[1] = from[1] - (branch_len * sin(DEG_TO_RAD(from_angle[2])));
+	draw_line(frac, from, to, 49);
+	from_angle[0] = to[0];
+	from_angle[1] = to[1];
+	from_angle[2] -= 45.0;
+}
+
+void	recursive_dragon_left(t_fractol *frac, int iter, double from_angle[3],
+															double branch_len)
+{
+	iter--;
+	branch_len /= 1.41421;
+	if (iter > 0)
+	{
+		from_angle[2] -= 45.0;
+		recursive_dragon_right(frac, iter, from_angle, branch_len);
+		from_angle[2] += 90.0;
+		recursive_dragon_left(frac, iter, from_angle, branch_len);
+		from_angle[2] -= 45.0;
+		return ;
+	}
+	rdl_draw(frac, from_angle, branch_len);
+}
+
+void	rdr_draw(t_fractol *frac, double from_angle[3], double branch_len)
+{
+	double		from[2];
+	double		to[2];
+
+	from_angle[2] += 45.0;
+	from[0] = from_angle[0];
+	from[1] = from_angle[1];
+	to[0] = from[0] + (branch_len * cos(DEG_TO_RAD(from_angle[2])));
+	to[1] = from[1] - (branch_len * sin(DEG_TO_RAD(from_angle[2])));
+	draw_line(frac, from, to, 49);
+	from_angle[2] -= 90.0;
+	from[0] = to[0];
+	from[1] = to[1];
+	to[0] = from[0] + (branch_len * cos(DEG_TO_RAD(from_angle[2])));
+	to[1] = from[1] - (branch_len * sin(DEG_TO_RAD(from_angle[2])));
+	draw_line(frac, from, to, 49);
+	from_angle[0] = to[0];
+	from_angle[1] = to[1];
+	from_angle[2] += 45.0;
+}
+
+void	recursive_dragon_right(t_fractol *frac, int iter, double from_angle[3],
+															double branch_len)
+{
+	iter--;
+	branch_len /= 1.41421;
+	if (iter > 0)
+	{
+		from_angle[2] += 45.0;
+		recursive_dragon_right(frac, iter, from_angle, branch_len);
+		from_angle[2] -= 90.0;
+		recursive_dragon_left(frac, iter, from_angle, branch_len);
+		from_angle[2] += 45.0;
+		return ;
+	}
+	rdr_draw(frac, from_angle, branch_len);
+}
+
+void	dragon(t_fractol *f)
+{
+	double		from_angle[3];
+	t_fractal	*fractal;
+	double		branch_len;
+	int			iter;
+	
+	clear_screen(f);
+	fractal = &(f->fractals[f->current_fractal]);
+	from_angle[0] = (f->window.width / 2) / fractal->zoom - (fractal->decal_x * fractal->zoom);
+	from_angle[1] = (f->window.height / 2) / fractal->zoom - (fractal->decal_y * fractal->zoom);
+	from_angle[2] = 160.0 + fractal->params[0];
+	branch_len = (f->window.height / 2) * fractal->zoom;
+	iter = fractal->max_iter;
+	iter = iter > 21 ? 21 : iter;
+	iter--;
+	recursive_dragon_right(f, iter, from_angle, branch_len);
 }
