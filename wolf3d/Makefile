@@ -13,6 +13,7 @@
 NAME	=	wolf3d
 
 SOURCES	=	srcs/events.c \
+			srcs/list.c \
 			srcs/main.c \
 			srcs/utils.c \
 			srcs/window.c
@@ -27,7 +28,11 @@ endif
 
 LIB		=	$(LIB_DIR)/libmlx.a
 
-HEADERS	=	-I./includes/ -I./$(LIB_DIR)
+LIB2_DIR=	libjson
+
+LIB2	=	$(LIB2_DIR)/libjson.a
+
+HEADERS	=	-I./includes/ -I./$(LIB_DIR) -I./$(LIB2_DIR)
 
 OBJECTS	=	$(subst .c,.o,$(SOURCES))
 
@@ -46,7 +51,8 @@ CC		=	clang
 
 $(NAME): $(OBJECTS)
 	make -C $(LIB_DIR)
-	$(CC) $(WFLAGS) $(OBJECTS) -o $(NAME) $(LIB) $(XLIB) -lpthread
+	make -C $(LIB2_DIR)
+	$(CC) $(WFLAGS) $(OBJECTS) -o $(NAME) $(LIB) $(LIB2) $(XLIB) -lpthread
 	printf "\e[32m----------------------------------\e[36m\n"
 	printf "\e[32m[✔]\e[36m $@"
 	printf "\n\e[32m----------------------------------\e[36m"
@@ -61,6 +67,7 @@ all: $(NAME)
 
 clean:
 	make clean -C $(LIB_DIR)
+	make clean -C $(LIB2_DIR)
 	rm -Rf $(OBJECTS)
 	printf "\e[31m----------------------------------\n"
 	printf "[✔]\e[36m $(NAME): Objects deleted\n"

@@ -23,6 +23,9 @@ int		main(void)
 	if (!json)
 		ft_putstr("no json\n");
 	else
+	{
 		print_json(json);
+		free_value(json);
+	}
 	return (0);
 }

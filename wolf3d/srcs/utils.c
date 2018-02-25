@@ -2,16 +2,6 @@
 
 #include "wolf3d.h"
 
-void	ft_putstr(char *str)
-{
-	int		i;
-
-	i = 0;
-	while (str[i])
-		i++;
-	write(1, str, i);
-}
-
 int		exit_wolf3d(t_wolf3d *wolf3d)
 {
 	mlx_destroy_image(wolf3d->window.mlx, wolf3d->window.img);
@@ -41,7 +31,7 @@ int		millis_since(struct timeval *start)
 		+ (end.tv_usec - start->tv_usec) / 1000);
 }
 
-void	ft_itoa(int n, char *res)
+void	ft_itoa2(int n, char *res)
 {
 	int		i;
 	int		len;
@@ -76,7 +66,7 @@ void	print_time_taken(struct timeval *start, char *before, char *after)
 
 	ft_putstr(before);
 	time_taken = millis_since(start);
-	ft_itoa(time_taken, ms);
+	ft_itoa2(time_taken, ms);
 	ft_putstr(ms);
 	ft_putstr(" ms");
 	ft_putstr(after);

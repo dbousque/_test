@@ -9,8 +9,8 @@
   ],
   "blocks": [
     { "id": 2, "go_through": false, "faces": ["brick", "rocks", "cement", "wood"] },
-    { "id": 3, "go_through": false, "object_tex": "fountain", "scale": 0.4, "position": "bottom" },
-    { "id": 4, "go_through": true, "object_tex": "light", "scale": 0.15, "position": "top" }
+    { "id": 3, "go_through": false, "obj_texture": "fountain", "scale": 0.4, "position": "bottom" },
+    { "id": 4, "go_through": true, "obj_texture": "light", "scale": 0.15, "position": "top" }
   ],
   "map": [
     [2, 2, 2, 2, 2, 2, 2],

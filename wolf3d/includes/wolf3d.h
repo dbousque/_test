@@ -10,6 +10,7 @@
 # include <math.h>
 
 # include "mlx.h"
+# include "libjson.h"
 
 # define DEFAULT_WIDTH 1200
 # define DEFAULT_HEIGHT 800
@@ -64,20 +65,78 @@ typedef struct	s_window
 	char		pressed_keys[NB_KEY_PRESS];
 }				t_window;
 
+typedef struct	s_list2
+{
+	void		*elts;
+	int			size;
+	int			len;
+	size_t		elt_size;
+}				t_list2;
+
+typedef struct	s_texture
+{
+	char		*name;
+	int			*pixels;
+	int			width;
+	int			height;
+}				t_texture;
+
+typedef enum
+{
+	STD_BLOCK,
+	OBJECT_BLOCK
+}	t_block_typ;
+
+typedef enum
+{
+	POSITION_TOP,
+	POSITION_BOTTOM
+}	t_obj_pos;
+
+typedef struct	s_block
+{
+	t_block_typ	type;
+	int			id;
+	char		go_through;
+	char		is_object;
+	t_texture	faces[4];
+	t_texture	*obj_texture;
+	double		scale;
+	t_obj_pos	position;
+}				t_block;
+
+typedef struct	s_map
+{
+	t_list2		textures;
+	t_list2		blocks;
+	t_list2		blocks_positions;
+}				t_map;
+
+typedef struct	s_player
+{
+	float		x;
+	float		y;
+	float		looking_dir;
+}				t_player;
+
 typedef struct	s_wolf3d
 {
 	t_window	window;
 	char		changed;
 	char		big_mode;
 	t_timeval	last_frame;
+	t_map		map;
+	t_player	player;
 }				t_wolf3d;
 
-void			ft_putstr(char *str);
 int				exit_wolf3d(t_wolf3d *wolf3d);
 void			set_color_at(t_wolf3d *wolf3d, int x, int y, int color);
 int				millis_since(struct timeval *start);
 void			print_time_taken(struct timeval *start, char *before,
 																char *after);
+char			init_list(t_list2 *list, size_t elt_size);
+void			*new_elt(t_list2 *lst);
+void			remove_elt(t_list2 *lst, char *addr);
 void			wait_for_threads_to_finish(pthread_t *threads);
 int				expose_hook(void *param);
 int				key_pressed_hook(int keycode, void *param);

@@ -50,11 +50,75 @@ void	compute_wolf3d(t_wolf3d *wolf3d)
 	print_time_taken(&start, "Computing took ", "\n");
 }
 
-char	init_wolf3d(t_wolf3d *wolf3d, int width, int height, char *title)
+char	interpret_err(t_wolf3d *wolf3d, char *msg)
+{
+	free(wolf3d->map.textures.elts);
+	free(wolf3d->map.blocks.elts);
+	free(wolf3d->map.blocks_positions.elts);
+	ft_putstr(msg);
+	return (0);
+}
+
+char	populate_texture(t_value *json_texture, t_texture *texture)
+{
+	(void)json_texture;
+	(void)texture;
+	return (1);
+}
+
+char	interpret_map_file(t_wolf3d *wolf3d, t_value *map_json)
+{
+	t_value		*textures;
+	t_texture	*tmp_texture;
+	int		i;
+
+	ft_putstr("Reading map file...\n");
+	if (map_json->type != DICT)
+		return (interpret_err(wolf3d, "File is not a JSON object\n"));
+	textures = get_val(map_json, "textures");
+	if (!textures)
+		return (interpret_err(wolf3d, "Missing \"textures\" field\n"));
+	if (textures->type != ARRAY)
+		return (interpret_err(wolf3d, "\"textures\" field is not an array\n"));
+	i = 0;
+	while (get_tab(textures)[i])
+	{
+		if (get_tab(textures)[i]->type != DICT)
+			return (interpret_err(wolf3d, "a texture is not an object\n"));
+		if (!get_val(get_tab(textures)[i], "name"))
+			return (interpret_err(wolf3d, "a texture does not have a name\n"));
+		if (!get_val(get_tab(textures)[i], "file"))
+			return (interpret_err(wolf3d, "a texture does not have a file\n"));
+		if (get_val(get_tab(textures)[i], "name")->type != STRING)
+			return (interpret_err(wolf3d, "a texture's name is not string\n"));
+		if (get_val(get_tab(textures)[i], "file")->type != STRING)
+			return (interpret_err(wolf3d, "a texture's file is not string\n"));
+		if (!(tmp_texture = new_elt(&(wolf3d->map.textures))))
+			return (interpret_err(wolf3d, "malloc error\n"));
+		if (!populate_texture(get_tab(textures)[i], tmp_texture))
+			return (interpret_err(wolf3d, "invalid texture\n"));
+		i++;
+	}
+	ft_putstr("done\n");
+	return (1);
+}
+
+char	init_wolf3d(t_wolf3d *wolf3d, t_value *map_json)
 {
 	wolf3d->changed = 1;
 	gettimeofday(&(wolf3d->last_frame), NULL);
+	wolf3d->player.looking_dir = 90.0;
+	if (!(init_list(&(wolf3d->map.textures), sizeof(t_texture))))
+		return (0);
+	if (!(init_list(&(wolf3d->map.blocks), sizeof(t_block))))
+		return (0);
+	if (!(init_list(&(wolf3d->map.blocks_positions), sizeof(int))))
+		return (0);
+	return (interpret_map_file(wolf3d, map_json));
+}
 
+char	init_wolf3d_win(t_wolf3d *wolf3d, int width, int height, char *title)
+{
 	if (!(init_window(&(wolf3d->window), width, height, title)))
 	{
 		ft_putstr("Could not initialize window\n");
@@ -108,17 +172,50 @@ int		loop(void *param)
 	return (0);
 }
 
+t_value	*read_json_file(char *filename)
+{
+	t_value		*map_json;
+
+	if (!(map_json = read_json(filename)))
+	{
+		ft_putstr("Failed to read file \"");
+		ft_putstr(filename);
+		ft_putstr("\"\n");
+		return (NULL);
+	}
+	if (map_json->type == 0)
+	{
+		ft_putstr("Invalid JSON file\n");
+		return (NULL);
+	}
+	return (map_json);
+}
+
 int		main(int argc, char **argv)
 {
 	t_wolf3d	wolf3d;
 	int			width;
 	int			height;
+	t_value		*map_json;
 
-	(void)argc;
-	(void)argv;
+	if (argc <= 1)
+	{
+		ft_putstr("Usage : ");
+		ft_putstr(argv[0]);
+		ft_putstr(" <map_file>\n");
+		return (0);
+	}
+	if (!(map_json = read_json_file(argv[1])))
+		return (1);
+	if (!init_wolf3d(&wolf3d, map_json))
+	{
+		free_value(map_json);
+		return (1);
+	}
+	free_value(map_json);
 	width = DEFAULT_WIDTH;
 	height = DEFAULT_HEIGHT;
-	if (!init_wolf3d(&wolf3d, width, height, "wolf3d - dbousque"))
+	if (!init_wolf3d_win(&wolf3d, width, height, "wolf3d - dbousque"))
 		return (1);
 	mlx_loop_hook(wolf3d.window.mlx, loop, (void*)&wolf3d);
 	mlx_loop(wolf3d.window.mlx);

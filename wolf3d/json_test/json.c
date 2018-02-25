@@ -280,31 +280,11 @@ char	is_digit(char c)
 	return (0);
 }
 
-t_value	*handle_number(char *buf, int *i)
+t_value	*handle_number_end(t_value *res, char *tmp, char floating_point)
 {
-	int		start;
-	char	floating_point;
-	char	*tmp;
-	t_value	*res;
 	long	res1;
 	double	res2;
 
-	if (!(res = (t_value*)malloc(sizeof(t_value))))
-		malloc_error();
-	floating_point = 0;
-	if (buf[*i] == '-')
-		(*i)++;
-	start = *i;
-	while (buf[*i] && (is_digit(buf[*i]) || buf[*i] == '.'))
-	{
-		if (buf[*i] == '.')
-			floating_point = 1;
-		(*i)++;
-	}
-	if (!(tmp = (char*)malloc(sizeof(char) * (*i - start + 1))))
-		malloc_error();
-	tmp[*i - start] = '\0';
-	ft_strncpy(tmp, buf + start, *i - start);
 	if (!floating_point)
 	{
 		res1 = ft_atol(tmp);
@@ -324,6 +304,54 @@ t_value	*handle_number(char *buf, int *i)
 	return (res);
 }
 
+t_value	*handle_number(char *buf, int *i)
+{
+	int		start;
+	char	floating_point;
+	char	*tmp;
+	t_value	*res;
+
+	if (!(res = (t_value*)malloc(sizeof(t_value))))
+		malloc_error();
+	floating_point = 0;
+	if (buf[*i] == '-')
+		(*i)++;
+	start = *i;
+	while (buf[*i] && (is_digit(buf[*i]) || buf[*i] == '.'))
+	{
+		if (buf[*i] == '.')
+			floating_point = 1;
+		(*i)++;
+	}
+	if (!(tmp = (char*)malloc(sizeof(char) * (*i - start + 1))))
+		malloc_error();
+	tmp[*i - start] = '\0';
+	ft_strncpy(tmp, buf + start, *i - start);
+	return (handle_number_end(res, tmp, floating_point));
+}
+
+t_value	*handle_boolean(char *buf, int *i)
+{
+	t_value	*res;
+
+	if (!(res = (t_value*)malloc(sizeof(t_value))))
+		malloc_error();
+	if (!(res->data = (void*)malloc(sizeof(char))))
+		malloc_error();
+	res->type = BOOLEAN;
+	if (buf[*i] == 't')
+	{
+		*((char*)res->data) = 1;
+		*i += 4;
+	}
+	else
+	{
+		*((char*)res->data) = 0;
+		*i += 5;
+	}
+	return (res);
+}
+
 t_value	*handle_buf(char *buf, int *i)
 {
 	while (buf[*i])
@@ -336,6 +364,19 @@ t_value	*handle_buf(char *buf, int *i)
 			return (handle_array(buf, i));
 		if (is_digit(buf[*i]) || buf[*i] == '-')
 			return (handle_number(buf, i));
+		if (
+			(buf[*i] == 't' && buf[*i + 1] && buf[*i + 1] == 'r'
+				&& buf[*i + 2] && buf[*i + 2] == 'u'
+				&& buf[*i + 3] && buf[*i + 3] == 'e'
+			) || (buf[*i] == 'f' && buf[*i + 1] && buf[*i + 1] == 'a'
+				&& buf[*i + 2] && buf[*i + 2] == 'l'
+				&& buf[*i + 3] && buf[*i + 3] == 's'
+				&& buf[*i + 4] && buf[*i + 4] == 'e'
+			)
+		)
+		{
+			return (handle_boolean(buf, i));
+		}
 		(*i)++;
 	}
 	return (void_value());
@@ -371,7 +412,7 @@ void	print_n_tabs(int n)
 {
 	while (n > 0)
 	{
-		ft_putchar('\t');
+		ft_putstr("  ");
 		n--;
 	}
 }
@@ -388,7 +429,7 @@ void	print_dict(t_value *elt, int nb_tabs)
 		ft_putchar('"');
 		ft_putstr(((t_dict*)elt->data)->keys[i]);
 		ft_putstr("\": ");
-		print_elt(((t_dict*)elt->data)->values[i], nb_tabs + 1);
+		print_elt(((t_dict*)elt->data)->values[i], nb_tabs + 1, 0);
 		if (((t_dict*)elt->data)->keys[i + 1])
 			ft_putchar(',');
 		ft_putchar('\n');
@@ -406,7 +447,7 @@ void	print_array(t_value *elt, int nb_tabs)
 	ft_putstr("[\n");
 	while (((t_value**)elt->data)[i])
 	{
-		print_elt(((t_value**)elt->data)[i], nb_tabs + 1);
+		print_elt(((t_value**)elt->data)[i], nb_tabs + 1, 1);
 		if (((t_value**)elt->data)[i + 1])
 			ft_putchar(',');
 		ft_putchar('\n');
@@ -416,34 +457,31 @@ void	print_array(t_value *elt, int nb_tabs)
 	ft_putstr("]\n");
 }
 
-void	print_elt(t_value *elt, int nb_tabs)
+void	print_elt(t_value *elt, int nb_tabs, char print_tabs)
 {
+	if (print_tabs)
+		print_n_tabs(nb_tabs);
 	if (elt->type == DICT)
 		print_dict(elt, nb_tabs);
 	else if (elt->type == ARRAY)
 		print_array(elt, nb_tabs);
 	else if (elt->type == STRING)
 	{
-		print_n_tabs(nb_tabs);
 		ft_putchar('"');
 		ft_putstr((char*)elt->data);
 		ft_putchar('"');
 	}
 	else if (elt->type == LONG)
-	{
-		print_n_tabs(nb_tabs);
 		ft_printf("%ld", *((long*)elt->data));
-	}
 	else if (elt->type == DOUBLE)
-	{
-		print_n_tabs(nb_tabs);
 		ft_printf("%f", *((double*)elt->data));
-	}
+	else if (elt->type == BOOLEAN)
+		ft_putstr(*((char*)elt->data) == 1 ? "true" : "false");
 }
 
 void	print_json(t_value *json)
 {
-	print_elt(json, 0);
+	print_elt(json, 0, 1);
 }
 
 void	value_type_error(void)
@@ -512,6 +550,13 @@ char	*get_string(t_value *value)
 	if (value->type != STRING)
 		value_type_error();
 	return ((char*)value->data);
+}
+
+char	get_bool(t_value *value)
+{
+	if (value->type != BOOLEAN)
+		value_type_error();
+	return (*((char*)value->data));
 }
 
 void	free_dict(t_value *value)
