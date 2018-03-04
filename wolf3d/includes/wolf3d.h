@@ -9,6 +9,7 @@
 # include <pthread.h>
 # include <math.h>
 # include <float.h>
+# include "SOIL.h"
 
 # include "mlx.h"
 # include "libjson.h"
@@ -16,11 +17,12 @@
 # define DEFAULT_WIDTH 1200
 # define DEFAULT_HEIGHT 800
 # define NB_THREADS 32
-# define NB_KEY_PRESS 6
+# define NB_KEY_PRESS 8
 
 # define PIXEL_AT(window, x, y) window.pixels[(x) + (y) * window.width]
 # define MAP_BLOCKS(w) ((t_block**)w->map.blocks_positions.elts)
 # define BLOCK_AT(w, x, y) MAP_BLOCKS(w)[(x) + (y) * w->map.width]
+# define SOIL_LOAD(p, w, h, c) SOIL_load_image(p, w, h, c, SOIL_LOAD_RGBA)
 
 # define IS_W(k) (k == 13 || k == 119)
 # define IS_A(k) (k == 0 || k == 97)
@@ -112,6 +114,8 @@ typedef struct	s_player
 
 typedef struct	s_opts
 {
+	char		debug_mode;
+	int			debug_block_size;
 	char		big_mode;
 	float		fov;
 }				t_opts;
@@ -126,9 +130,20 @@ typedef struct	s_wolf3d
 	t_opts		opts;
 }				t_wolf3d;
 
+typedef struct	s_ray_result
+{
+	float		x;
+	float		y;
+	t_block		*block;
+	int			face;
+	float		decal_in_face;
+	float		distance;
+}				t_ray_result;
+
 void			free_map(t_map *map);
 int				exit_wolf3d(t_wolf3d *wolf3d);
 void			set_color_at(t_wolf3d *wolf3d, int x, int y, int color);
+void			safe_set_color_at(t_wolf3d *w, int x, int y, int color);
 char			*copy_str(char *str);
 char			equal_strings(char *str1, char *str2);
 int				millis_since(struct timeval *start);
@@ -139,6 +154,15 @@ void			*new_elt(t_list2 *lst);
 void			remove_elt(t_list2 *lst, char *addr);
 void			free_list(t_list2 *lst);
 void			wait_for_threads_to_finish(pthread_t *threads);
+char			endswith(char *str, char *end);
+void			draw_line(t_wolf3d *w, int from[2], int to[2], int color);
+void			safe_draw_line(t_wolf3d *w, int from[2], int to[2], int color);
+void			draw_square(t_wolf3d *w, int from[2], int size, int color);
+void			clear_screen(t_wolf3d *wolf3d);
+void			draw_debug_grid(t_wolf3d *wolf3d);
+void			draw_player_on_grid(t_wolf3d *wolf3d);
+void			render_debug_ray(t_wolf3d *wolf3d, int pixel_x,
+														t_ray_result *ray_res);
 char			*read_tga(char *path, int *width, int *height);
 int				expose_hook(void *param);
 int				key_pressed_hook(int keycode, void *param);

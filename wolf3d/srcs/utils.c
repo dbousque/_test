@@ -14,7 +14,10 @@ void	free_map(t_map *map)
 		if (tmp_texture->name)
 			free(tmp_texture->name);
 		if (tmp_texture->to_free)
+		{
+			SOIL_free_image_data
 			free(tmp_texture->to_free);
+		}
 		i++;
 	}
 	free_list(&(map->textures));
@@ -40,6 +43,30 @@ void	set_color_at(t_wolf3d *wolf3d, int x, int y, int color)
 		PIXEL_AT(wolf3d->window, x + 1, y) = color;
 		PIXEL_AT(wolf3d->window, x, y + 1) = color;
 		PIXEL_AT(wolf3d->window, x + 1, y + 1) = color;
+	}
+}
+
+void	safe_set_color_at(t_wolf3d *w, int x, int y, int color)
+{
+	if (x >= 0 && x < w->window.width && y >= 0 && y < w->window.height)
+		PIXEL_AT(w->window, x, y) = color;
+	if (w->opts.big_mode)
+	{
+		if (x + 1 >= 0 && x + 1 < w->window.width
+			&& y >= 0 && y < w->window.height)
+		{
+			PIXEL_AT(w->window, x + 1, y) = color;
+		}
+		if (x >= 0 && x < w->window.width
+			&& y + 1 >= 0 && y + 1 < w->window.height)
+		{
+			PIXEL_AT(w->window, x, y + 1) = color;
+		}
+		if (x + 1 >= 0 && x + 1 < w->window.width
+			&& y + 1 >= 0 && y + 1 < w->window.height)
+		{
+			PIXEL_AT(w->window, x + 1, y + 1) = color;
+		}
 	}
 }
 
@@ -135,6 +162,143 @@ void	wait_for_threads_to_finish(pthread_t *threads)
 			exit(1);
 		}
 		i++;
+	}
+}
+
+char	endswith(char *str, char *end)
+{
+	int		len1;
+	int		len2;
+
+	len1 = 0;
+	while (str[len1])
+		len1++;
+	len2 = 0;
+	while (end[len2])
+		len2++;
+	while (len1 >= 0 && len2 >= 0)
+	{
+		if (str[len1] != end[len2])
+			return (0);
+		len1--;
+		len2--;
+	}
+	if (len2 == -1)
+		return (1);
+	return (0);
+}
+
+void	draw_line(t_wolf3d *w, int from[2], int to[2], int color)
+{
+	float	x;
+	float	y;
+	float	step_x;
+	float	step_y;
+
+	step_x = fabsf((float)to[0] - (float)from[0]);
+	step_y = fabsf((float)to[1] - (float)from[1]);
+	x = fmaxf(step_x, step_y);
+	step_x /= x;
+	step_y /= x;
+	x = (float)from[0];
+	y = (float)from[1];
+	step_x = to[0] < from[0] ? -step_x : step_x;
+	step_y = to[1] < from[1] ? -step_y : step_y;
+	while (((step_x >= 0.0 && x <= to[0]) || (step_x < 0.0 && x >= to[0]))
+		&& ((step_y >= 0.0 && y <= to[1]) || (step_y < 0.0 && y >= to[1])))
+	{
+		if (x < w->window.width && y < w->window.height && x >= 0 && y >= 0)
+			set_color_at(w, (int)x, (int)y, color);
+		x += step_x;
+		y += step_y;
+	}
+}
+
+void	safe_draw_line(t_wolf3d *w, int from[2], int to[2], int color)
+{
+	float	x;
+	float	y;
+	float	step_x;
+	float	step_y;
+
+	step_x = fabsf((float)to[0] - (float)from[0]);
+	step_y = fabsf((float)to[1] - (float)from[1]);
+	x = fmaxf(step_x, step_y);
+	step_x /= x;
+	step_y /= x;
+	x = (float)from[0];
+	y = (float)from[1];
+	step_x = to[0] < from[0] ? -step_x : step_x;
+	step_y = to[1] < from[1] ? -step_y : step_y;
+	while (((step_x >= 0.0 && x <= to[0]) || (step_x < 0.0 && x >= to[0]))
+		&& ((step_y >= 0.0 && y <= to[1]) || (step_y < 0.0 && y >= to[1])))
+	{
+		if (x < w->window.width && y < w->window.height && x >= 0 && y >= 0)
+			safe_set_color_at(w, (int)x, (int)y, color);
+		x += step_x;
+		y += step_y;
+	}
+}
+
+void	draw_square2(t_wolf3d *w, int from[2], int size, int color)
+{
+	int		to[2];
+
+	from[1] += size;
+	to[0] = from[0] + size;
+	to[1] = from[1];
+	draw_line(w, from, to, color);
+	from[1] -= 1;
+	to[1] -= 1;
+	draw_line(w, from, to, color);
+	from[1] += 1;
+	to[1] += 1;
+	from[0] += size;
+	from[1] -= size;
+	draw_line(w, from, to, color);
+	from[0] -= 1;
+	to[0] -= 1;
+	draw_line(w, from, to, color);
+}
+
+void	draw_square(t_wolf3d *w, int from[2], int size, int color)
+{
+	int		to[2];
+
+	to[0] = from[0] + size;
+	to[1] = from[1];
+	draw_line(w, from, to, color);
+	from[1] += 1;
+	to[1] += 1;
+	draw_line(w, from, to, color);
+	from[1] -= 1;
+	to[1] -= 1;
+	to[0] = from[0];
+	to[1] = from[1] + size;
+	draw_line(w, from, to, color);
+	from[0] += 1;
+	to[0] += 1;
+	draw_line(w, from, to, color);
+	from[0] -= 1;
+	to[0] -= 1;
+	draw_square2(w, from, size, color);
+}
+
+void	clear_screen(t_wolf3d *wolf3d)
+{
+	int			x;
+	int			y;	
+
+	x = 0;
+	while (x < wolf3d->window.width)
+	{
+		y = 0;
+		while (y < wolf3d->window.height)
+		{
+			set_color_at(wolf3d, x, y, 0x000000);
+			y++;
+		}
+		x++;
 	}
 }
 

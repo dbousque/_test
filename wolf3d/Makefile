@@ -12,7 +12,8 @@
 
 NAME	=	wolf3d
 
-SOURCES	=	srcs/events.c \
+SOURCES	=	srcs/draw_debug.c \
+			srcs/events.c \
 			srcs/interpret_blocks.c \
 			srcs/interpret_map.c \
 			srcs/interpret_textures.c \
@@ -37,17 +38,17 @@ LIB2_DIR=	libjson
 
 LIB2	=	$(LIB2_DIR)/libjson.a
 
-HEADERS	=	-I./includes/ -I./$(LIB_DIR) -I./$(LIB2_DIR)
+HEADERS	=	-I./includes/ -I./$(LIB_DIR) -I./$(LIB2_DIR) -I ~/libSOIL/src
 
 OBJECTS	=	$(subst .c,.o,$(SOURCES))
 
 WFLAGS	=	-Wall -Werror -Wextra -O3
 
 ifeq ($(UNAME_S), Linux)
-	XLIB	=	-lXext -lX11 -lm
+	XLIB	=	-lXext -lX11 -lm -lSOIL -lGL
 endif
 ifeq ($(UNAME_S), Darwin)
-	XLIB	=	-framework OpenGL -framework AppKit -lm
+	XLIB	=	-framework OpenGL -framework AppKit -lm -lSOIL -lGL
 endif
 
 CC		=	clang

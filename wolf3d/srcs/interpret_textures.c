@@ -35,14 +35,26 @@ char	valid_texture(t_value *texture, char **error_msg)
 int		*read_image_file(char *path, int *width, int *height, char **to_free)
 {
 	int		*pixels;
+	int		channels;
 
-	//if (endswith(img_path, ".tga"))
+	if (endswith(path, ".tga"))
+	{
 		pixels = (int*)read_tga(path, width, height);
 		if (!pixels)
 			return (NULL);
 		*to_free = ((char*)pixels) - 18;
 		return (pixels);
-	//return (SOIL_load_image(path, width, height, &channels, SOIL_LOAD_RGB));
+	}
+	pixels = (int*)SOIL_LOAD(path, width, height, &channels);
+	if (!pixels)
+	{
+		ft_putstr("Could not read file \"");
+		ft_putstr(path);
+		ft_putstr("\"\n");
+		return (NULL);
+	}
+	*to_free = (char*)pixels;
+	return (pixels);
 }
 
 char	populate_texture(t_value *json_texture, t_texture *texture)
