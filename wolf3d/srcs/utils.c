@@ -2,10 +2,31 @@
 
 #include "wolf3d.h"
 
+void	free_map(t_map *map)
+{
+	int			i;
+	t_texture	*tmp_texture;
+
+	i = 0;
+	while (i < map->textures.len)
+	{
+		tmp_texture = &(((t_texture*)map->textures.elts)[i]);
+		if (tmp_texture->name)
+			free(tmp_texture->name);
+		if (tmp_texture->to_free)
+			free(tmp_texture->to_free);
+		i++;
+	}
+	free_list(&(map->textures));
+	free_list(&(map->blocks));
+	free_list(&(map->blocks_positions));
+}
+
 int		exit_wolf3d(t_wolf3d *wolf3d)
 {
 	mlx_destroy_image(wolf3d->window.mlx, wolf3d->window.img);
 	mlx_destroy_window(wolf3d->window.mlx, wolf3d->window.win);
+	free_map(&(wolf3d->map));
 	ft_putstr("Goodbye\n");
 	exit(0);
 	return (0);
@@ -14,12 +35,41 @@ int		exit_wolf3d(t_wolf3d *wolf3d)
 void	set_color_at(t_wolf3d *wolf3d, int x, int y, int color)
 {
 	PIXEL_AT(wolf3d->window, x, y) = color;
-	if (wolf3d->big_mode)
+	if (wolf3d->opts.big_mode)
 	{
 		PIXEL_AT(wolf3d->window, x + 1, y) = color;
 		PIXEL_AT(wolf3d->window, x, y + 1) = color;
 		PIXEL_AT(wolf3d->window, x + 1, y + 1) = color;
 	}
+}
+
+char	*copy_str(char *str)
+{
+	char	*res;
+	int		i;
+
+	if (!(res = malloc(sizeof(char) * (ft_strlen(str) + 1))))
+		return (NULL);
+	i = 0;
+	while (str[i])
+	{
+		res[i] = str[i];
+		i++;
+	}
+	res[i] = '\0';
+	return (res);
+}
+
+char	equal_strings(char *str1, char *str2)
+{
+	int		i;
+
+	i = 0;
+	while (str1[i] && str1[i] == str2[i])
+		i++;
+	if (str1[i] != str2[i])
+		return (0);
+	return (1);
 }
 
 int		millis_since(struct timeval *start)

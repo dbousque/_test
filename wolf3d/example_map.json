@@ -1,23 +1,24 @@
 {
   "textures": [
-    { "name": "fountain", "file": "fountain.png" },
-    { "name": "light", "file": "light.jpg" },
-    { "name": "brick", "file": "brick.tga" },
-    { "name": "rocks", "file": "rocks.png" },
-    { "name": "cement", "file": "cement.jpeg" },
-    { "name": "wood", "file": "wood.png" }
+    { "name": "fountain", "file": "resources/fountain.png" },
+    { "name": "barrel", "file": "resources/barrel.png" },
+    { "name": "light", "file": "resources/light.png" },
+    { "name": "brick", "file": "resources/brick.jpg" },
+    { "name": "rocks", "file": "resources/rocks.jpg" },
+    { "name": "cement", "file": "resources/cement.jpg" },
+    { "name": "wood", "file": "resources/wood.jpg" }
   ],
   "blocks": [
     { "id": 2, "go_through": false, "faces": ["brick", "rocks", "cement", "wood"] },
-    { "id": 3, "go_through": false, "obj_texture": "fountain", "scale": 0.4, "position": "bottom" },
-    { "id": 4, "go_through": true, "obj_texture": "light", "scale": 0.15, "position": "top" }
+    { "id": 3, "go_through": false, "obj_texture": "barrel" },
+    { "id": 4, "go_through": true, "obj_texture": "light" }
   ],
   "map": [
     [2, 2, 2, 2, 2, 2, 2],
+    [2, 0, 4, 0, 0, 0, 2],
     [2, 0, 0, 0, 0, 0, 2],
-    [2, 0, 0, 4, 0, 0, 2],
     [2, 3, 0, 0, 0, 3, 2],
-    [2, 0, 0, 4, 0, 0, 2],
+    [2, 0, 0, 0, 0, 0, 2],
     [2, 0, 0, 1, 0, 0, 2],
     [2, 2, 2, 2, 2, 2, 2]
   ]

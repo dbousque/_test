@@ -8,6 +8,7 @@
 # include <sys/time.h>
 # include <pthread.h>
 # include <math.h>
+# include <float.h>
 
 # include "mlx.h"
 # include "libjson.h"
@@ -15,9 +16,11 @@
 # define DEFAULT_WIDTH 1200
 # define DEFAULT_HEIGHT 800
 # define NB_THREADS 32
-# define NB_KEY_PRESS 0
+# define NB_KEY_PRESS 6
 
 # define PIXEL_AT(window, x, y) window.pixels[(x) + (y) * window.width]
+# define MAP_BLOCKS(w) ((t_block**)w->map.blocks_positions.elts)
+# define BLOCK_AT(w, x, y) MAP_BLOCKS(w)[(x) + (y) * w->map.width]
 
 # define IS_W(k) (k == 13 || k == 119)
 # define IS_A(k) (k == 0 || k == 97)
@@ -79,30 +82,16 @@ typedef struct	s_texture
 	int			*pixels;
 	int			width;
 	int			height;
+	char		*to_free;
 }				t_texture;
-
-typedef enum
-{
-	STD_BLOCK,
-	OBJECT_BLOCK
-}	t_block_typ;
-
-typedef enum
-{
-	POSITION_TOP,
-	POSITION_BOTTOM
-}	t_obj_pos;
 
 typedef struct	s_block
 {
-	t_block_typ	type;
 	int			id;
 	char		go_through;
 	char		is_object;
-	t_texture	faces[4];
+	t_texture	*faces[4];
 	t_texture	*obj_texture;
-	double		scale;
-	t_obj_pos	position;
 }				t_block;
 
 typedef struct	s_map
@@ -110,6 +99,8 @@ typedef struct	s_map
 	t_list2		textures;
 	t_list2		blocks;
 	t_list2		blocks_positions;
+	int			width;
+	int			height;
 }				t_map;
 
 typedef struct	s_player
@@ -119,25 +110,36 @@ typedef struct	s_player
 	float		looking_dir;
 }				t_player;
 
+typedef struct	s_opts
+{
+	char		big_mode;
+	float		fov;
+}				t_opts;
+
 typedef struct	s_wolf3d
 {
 	t_window	window;
 	char		changed;
-	char		big_mode;
 	t_timeval	last_frame;
 	t_map		map;
 	t_player	player;
+	t_opts		opts;
 }				t_wolf3d;
 
+void			free_map(t_map *map);
 int				exit_wolf3d(t_wolf3d *wolf3d);
 void			set_color_at(t_wolf3d *wolf3d, int x, int y, int color);
+char			*copy_str(char *str);
+char			equal_strings(char *str1, char *str2);
 int				millis_since(struct timeval *start);
 void			print_time_taken(struct timeval *start, char *before,
 																char *after);
-char			init_list(t_list2 *list, size_t elt_size);
+void			init_list(t_list2 *list, size_t elt_size);
 void			*new_elt(t_list2 *lst);
 void			remove_elt(t_list2 *lst, char *addr);
+void			free_list(t_list2 *lst);
 void			wait_for_threads_to_finish(pthread_t *threads);
+char			*read_tga(char *path, int *width, int *height);
 int				expose_hook(void *param);
 int				key_pressed_hook(int keycode, void *param);
 int				key_released_hook(int keycode, void *param);
@@ -146,5 +148,10 @@ int				mouse_move_hook(int x, int y, void *param);
 void			apply_image_to_window(t_window *window);
 char			init_window(t_window *window, int width, int height,
 																char *title);
+char			interpret_map_file(t_wolf3d *wolf3d, t_value *map_json);
+char			interpret_err(t_wolf3d *wolf3d, char *msg);
+char			interpret_textures(t_wolf3d *wolf3d, t_value *textures);
+char			interpret_blocks(t_wolf3d *wolf3d, t_value *blocks);
+char			valid_block(t_value *block, char **error_msg);
 
 #endif

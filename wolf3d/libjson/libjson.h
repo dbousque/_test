@@ -4,7 +4,6 @@
 # include <fcntl.h>
 # include "libdodo.h"
 
-# define BUFF_SIZE 1024
 # define LONG 1
 # define DOUBLE 2
 # define STRING 3
@@ -25,7 +24,7 @@ typedef struct	s_dict
 	t_value		**values;
 }				t_dict;
 
-t_value			*read_json(char *filename);
+t_value			*read_json(char *filename, int max_size);
 void			print_json(t_value *json);
 void			print_elt(t_value *elt, int nb_tabs, char print_tabs);
 void			free_value(t_value *value);

@@ -13,9 +13,14 @@
 NAME	=	wolf3d
 
 SOURCES	=	srcs/events.c \
+			srcs/interpret_blocks.c \
+			srcs/interpret_map.c \
+			srcs/interpret_textures.c \
 			srcs/list.c \
 			srcs/main.c \
+			srcs/read_tga.c \
 			srcs/utils.c \
+			srcs/valid_block.c \
 			srcs/window.c
 
 UNAME_S := $(shell uname -s)

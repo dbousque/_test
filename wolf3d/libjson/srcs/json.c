@@ -8,6 +8,13 @@ void	*open_failed(void)
 	return (NULL);
 }
 
+void	*max_size_exceeded(char *filename, int max_size)
+{
+	ft_printf("Maximum file size of %d bytes ", max_size);
+	ft_printf("exceeded while reading file \"%s\"\n", filename);
+	return (NULL);
+}
+
 void	malloc_error(void)
 {
 	int i = write(2, "Could not allocate enough memory.\n", 34);
@@ -280,14 +287,15 @@ char	is_digit(char c)
 	return (0);
 }
 
-t_value	*handle_number_end(t_value *res, char *tmp, char floating_point)
+t_value	*handle_number_end(t_value *res, char *tmp, char floating_point,
+																char negative)
 {
 	long	res1;
 	double	res2;
 
 	if (!floating_point)
 	{
-		res1 = ft_atol(tmp);
+		res1 = negative ? -(ft_atol(tmp)) : ft_atol(tmp);
 		if (!(res->data = (void*)malloc(sizeof(long))))
 			malloc_error();
 		*((long*)res->data) = res1;
@@ -295,7 +303,7 @@ t_value	*handle_number_end(t_value *res, char *tmp, char floating_point)
 		free(tmp);
 		return (res);
 	}
-	res2 = ft_atod(tmp);
+	res2 = negative ? -(ft_atod(tmp)) : ft_atod(tmp);
 	if (!(res->data = (void*)malloc(sizeof(double))))
 		malloc_error();
 	*((double*)res->data) = res2;
@@ -310,12 +318,17 @@ t_value	*handle_number(char *buf, int *i)
 	char	floating_point;
 	char	*tmp;
 	t_value	*res;
+	char	negative;
 
+	negative = 0;
 	if (!(res = (t_value*)malloc(sizeof(t_value))))
 		malloc_error();
 	floating_point = 0;
 	if (buf[*i] == '-')
+	{
+		negative = 1;
 		(*i)++;
+	}
 	start = *i;
 	while (buf[*i] && (is_digit(buf[*i]) || buf[*i] == '.'))
 	{
@@ -327,7 +340,7 @@ t_value	*handle_number(char *buf, int *i)
 		malloc_error();
 	tmp[*i - start] = '\0';
 	ft_strncpy(tmp, buf + start, *i - start);
-	return (handle_number_end(res, tmp, floating_point));
+	return (handle_number_end(res, tmp, floating_point, negative));
 }
 
 t_value	*handle_boolean(char *buf, int *i)
@@ -380,32 +393,6 @@ t_value	*handle_buf(char *buf, int *i)
 		(*i)++;
 	}
 	return (void_value());
-}
-
-char	*read_whole_file(char *filename)
-{
-	char	*res;
-	char	buf[BUFF_SIZE];
-	int		size;
-	int		ret;
-	int		fd;
-
-	fd = open(filename, O_RDONLY);
-	if (fd < 0)
-		return (open_failed());
-	size = 0;
-	while ((ret = read(fd, buf, BUFF_SIZE)) > 0)
-		size += ret;
-	close(fd);
-	fd = open(filename, O_RDONLY);
-	if (fd < 0)
-		return (open_failed());
-	if (!(res = (char*)malloc(sizeof(char) * (size + 1))))
-		malloc_error();
-	if (read(fd, res, size) < 0)
-		malloc_error();
-	res[size] = '\0';
-	return (res);
 }
 
 void	print_n_tabs(int n)
@@ -595,14 +582,21 @@ void	free_value(t_value *value)
 	free(value);
 }
 
-t_value	*read_json(char *filename)
+t_value	*read_json(char *filename, int max_size)
 {
 	char	*buf;
 	t_value	*json;
 	int		i;
+	char	err;
 
 	i = 0;
-	buf = read_whole_file(filename);
+	buf = read_whole_file(filename, &err, max_size);
+	if (err == 1)
+		return (open_failed());
+	if (err == 2)
+		malloc_error();
+	if (err == 3)
+		return (max_size_exceeded(filename, max_size));
 	if (!buf)
 		return (NULL);
 	json = handle_buf(buf, &i);

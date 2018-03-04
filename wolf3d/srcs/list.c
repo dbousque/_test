@@ -12,14 +12,12 @@
 
 #include "wolf3d.h"
 
-char	init_list(t_list2 *list, size_t elt_size)
+void	init_list(t_list2 *list, size_t elt_size)
 {
-	if (!(list->elts = malloc(elt_size * 4)))
-		return (0);
-	list->size = 4;
+	list->elts = NULL;
+	list->size = 0;
 	list->len = 0;
 	list->elt_size = elt_size;
-	return (1);
 }
 
 void	double_list_size(t_list2 *lst)
@@ -30,6 +28,8 @@ void	double_list_size(t_list2 *lst)
 	size_t	x;
 
 	lst->size *= 2;
+	if (lst->size == 0)
+		lst->size = 4;
 	if (!(new_elts = (char*)malloc(lst->elt_size * lst->size)))
 		return ;
 	elts = (char*)lst->elts;
@@ -74,4 +74,10 @@ void	remove_elt(t_list2 *lst, char *addr)
 		addr++;
 	}
 	lst->len--;
+}
+
+void	free_list(t_list2 *lst)
+{
+	if (lst->elts)
+		free(lst->elts);
 }

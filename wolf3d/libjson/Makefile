@@ -110,6 +110,7 @@ SRC		=	srcs/json.c \
 			libdodo_srcs/precision2.c \
 			libdodo_srcs/precision.c \
 			libdodo_srcs/print_format.c \
+			libdodo_srcs/read_whole_file.c \
 			libdodo_srcs/sharp.c \
 			libdodo_srcs/utils2.c \
 			libdodo_srcs/utils.c \

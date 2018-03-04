@@ -16,6 +16,139 @@ void	render_wolf3d(t_wolf3d *wolf3d)
 	}
 }*/
 
+void	draw_empty_column(t_wolf3d *wolf3d, int pixel_x)
+{
+	int		y;
+
+	y = 0;
+	while (y < wolf3d->window.height / 2)
+	{
+		set_color_at(wolf3d, pixel_x, y, 0xbecee8);
+		y++;
+	}
+	while (y < wolf3d->window.height)
+	{
+		set_color_at(wolf3d, pixel_x, y, 0x000000);
+		y++;
+	}
+}
+
+void	draw_mock_column(t_wolf3d *wolf3d, int pixel_x, float distance)
+{
+	int		rgb;
+	float	height_at_zero;
+	float	full_screen_point;
+	float	block_height;
+	int		block_until;
+	int		y;
+
+	//ft_printf("distance %.2f\n", distance);
+	//ft_printf("player at %.2f %.2f\n", wolf3d->player.x, wolf3d->player.y);
+	height_at_zero = 2.0;
+	full_screen_point = 1.3 - ((wolf3d->opts.fov - 40.0) / 100.0);
+	block_height = height_at_zero / (distance / full_screen_point);
+	//rgb = (random() % 256) + (random() % 256 * 256) + (random() % 256 * 65536);
+	rgb = 0xf2df4d;
+	block_until = (wolf3d->window.height / 2) * block_height;
+	if (block_until > wolf3d->window.height / 2)
+		block_until = wolf3d->window.height / 2;
+	y = 0;
+	while (y < (wolf3d->window.height / 2 - block_until))
+	{
+		set_color_at(wolf3d, pixel_x, y, 0xbecee8);
+		y++;
+	}
+	while (y < wolf3d->window.height / 2)
+	{
+		set_color_at(wolf3d, pixel_x, y, rgb);
+		y++;
+	}
+	while (y < (wolf3d->window.height / 2 + block_until))
+	{
+		set_color_at(wolf3d, pixel_x, y, rgb);
+		y++;
+	}
+	while (y < wolf3d->window.height)
+	{
+		set_color_at(wolf3d, pixel_x, y, 0x000000);
+		y++;
+	}
+}
+
+void	set_x_y_steps(float x, float y, float decals[2], float x_y_steps[2])
+{
+	x_y_steps[0] = FLT_MAX;
+	x_y_steps[1] = FLT_MAX;
+	if (decals[0] != 0.0)
+	{
+		x_y_steps[0] = -(x - ((int)x + 1));
+		if (decals[0] < 0.0)
+			x_y_steps[0] = x - (int)x;
+	}
+	if (decals[1] != 0.0)
+	{
+		x_y_steps[1] = -(y - ((int)y + 1));
+		if (decals[1] < 0.0)
+			x_y_steps[1] = y - (int)y;
+	}
+}
+
+void	advance_to_next_block(float x_y[2], float decals[2],
+									float x_y_steps[2], int blocks_x_y[2])
+{
+	if (fabsf(x_y_steps[0] / decals[0]) < fabsf(x_y_steps[1] / decals[1]))
+	{
+		blocks_x_y[0] = (int)x_y[0] + (decals[0] < 0.0 ? -1 : 1);
+		x_y[0] = blocks_x_y[0];
+		x_y[1] += decals[1] * fabsf(x_y_steps[0] / decals[0]);
+		blocks_x_y[1] = (int)x_y[1];
+	}
+	else
+	{
+		blocks_x_y[1] = (int)x_y[1] + (decals[1] < 0.0 ? -1 : 1);
+		x_y[1] = blocks_x_y[1];
+		x_y[0] += decals[0] * fabsf(x_y_steps[1] / decals[1]);
+		blocks_x_y[0] = (int)x_y[0];
+	}
+}
+
+void	send_ray_in_dir(t_wolf3d *wolf3d, float direction, int pixel_x)
+{
+	float		x_y[2];
+	int			blocks_x_y[2];
+	float		decals[2];
+	float		x_y_steps[2];
+	t_block		*block;
+
+	block = NULL;
+	x_y[0] = wolf3d->player.x;
+	x_y[1] = wolf3d->player.y;
+	decals[0] = cosf(DEG_TO_RAD(direction));
+	decals[1] = sinf(DEG_TO_RAD(direction));
+	while (1)
+	{
+		set_x_y_steps(x_y[0], x_y[1], decals, x_y_steps);
+		advance_to_next_block(x_y, decals, x_y_steps, blocks_x_y);
+		if (blocks_x_y[0] < 0 || blocks_x_y[0] > wolf3d->map.width ||
+			blocks_x_y[1] < 0 || blocks_x_y[1] > wolf3d->map.height)
+		{
+			break ;
+		}
+		if ((block = BLOCK_AT(wolf3d, blocks_x_y[0], blocks_x_y[1])))
+			break ;
+	}
+	if (!block)
+	{
+		draw_empty_column(wolf3d, pixel_x);
+		return ;
+	}
+	//ft_printf("block    %d %d\n", blocks_x_y[0], blocks_x_y[1]);
+	//ft_printf("block at %.2f %.2f\n", x_y[0], x_y[1]);
+	//((t_block**)wolf3d->map.blocks_positions.elts)
+	float distance = fabsf(wolf3d->player.x - x_y[0]) + fabsf(wolf3d->player.y - x_y[1]);
+	draw_mock_column(wolf3d, pixel_x, distance);
+}
+
 void	compute_wolf3d(t_wolf3d *wolf3d)
 {
 	/*struct timeval	start;
@@ -44,76 +177,33 @@ void	compute_wolf3d(t_wolf3d *wolf3d)
 	print_time_taken(&start, "Computing took ", "\n");*/
 
 	struct timeval	start;
+	int				x;
+	int				step;
+	float			dir;
 
 	gettimeofday(&start, NULL);
-	(void)wolf3d;
-	print_time_taken(&start, "Computing took ", "\n");
-}
-
-char	interpret_err(t_wolf3d *wolf3d, char *msg)
-{
-	free(wolf3d->map.textures.elts);
-	free(wolf3d->map.blocks.elts);
-	free(wolf3d->map.blocks_positions.elts);
-	ft_putstr(msg);
-	return (0);
-}
-
-char	populate_texture(t_value *json_texture, t_texture *texture)
-{
-	(void)json_texture;
-	(void)texture;
-	return (1);
-}
-
-char	interpret_map_file(t_wolf3d *wolf3d, t_value *map_json)
-{
-	t_value		*textures;
-	t_texture	*tmp_texture;
-	int		i;
-
-	ft_putstr("Reading map file...\n");
-	if (map_json->type != DICT)
-		return (interpret_err(wolf3d, "File is not a JSON object\n"));
-	textures = get_val(map_json, "textures");
-	if (!textures)
-		return (interpret_err(wolf3d, "Missing \"textures\" field\n"));
-	if (textures->type != ARRAY)
-		return (interpret_err(wolf3d, "\"textures\" field is not an array\n"));
-	i = 0;
-	while (get_tab(textures)[i])
+	step = wolf3d->opts.big_mode ? 4 : 1;
+	x = 0;
+	while (x < wolf3d->window.width)
 	{
-		if (get_tab(textures)[i]->type != DICT)
-			return (interpret_err(wolf3d, "a texture is not an object\n"));
-		if (!get_val(get_tab(textures)[i], "name"))
-			return (interpret_err(wolf3d, "a texture does not have a name\n"));
-		if (!get_val(get_tab(textures)[i], "file"))
-			return (interpret_err(wolf3d, "a texture does not have a file\n"));
-		if (get_val(get_tab(textures)[i], "name")->type != STRING)
-			return (interpret_err(wolf3d, "a texture's name is not string\n"));
-		if (get_val(get_tab(textures)[i], "file")->type != STRING)
-			return (interpret_err(wolf3d, "a texture's file is not string\n"));
-		if (!(tmp_texture = new_elt(&(wolf3d->map.textures))))
-			return (interpret_err(wolf3d, "malloc error\n"));
-		if (!populate_texture(get_tab(textures)[i], tmp_texture))
-			return (interpret_err(wolf3d, "invalid texture\n"));
-		i++;
+		dir = ((float)x / wolf3d->window.width) * wolf3d->opts.fov;
+		dir -= wolf3d->opts.fov / 2;
+		send_ray_in_dir(wolf3d, wolf3d->player.looking_dir + dir, x);
+		x += step;
 	}
-	ft_putstr("done\n");
-	return (1);
+	print_time_taken(&start, "Computing took ", "\n");
 }
 
 char	init_wolf3d(t_wolf3d *wolf3d, t_value *map_json)
 {
 	wolf3d->changed = 1;
 	gettimeofday(&(wolf3d->last_frame), NULL);
-	wolf3d->player.looking_dir = 90.0;
-	if (!(init_list(&(wolf3d->map.textures), sizeof(t_texture))))
-		return (0);
-	if (!(init_list(&(wolf3d->map.blocks), sizeof(t_block))))
-		return (0);
-	if (!(init_list(&(wolf3d->map.blocks_positions), sizeof(int))))
-		return (0);
+	wolf3d->player.looking_dir = 270.0;
+	wolf3d->opts.big_mode = 0;
+	wolf3d->opts.fov = 90.0;
+	init_list(&(wolf3d->map.textures), sizeof(t_texture));
+	init_list(&(wolf3d->map.blocks), sizeof(t_block));
+	init_list(&(wolf3d->map.blocks_positions), sizeof(t_block*));
 	return (interpret_map_file(wolf3d, map_json));
 }
 
@@ -137,10 +227,20 @@ void	update_values_with_input(t_wolf3d *wolf3d)
 	float		delta;
 
 	delta = millis_since(&(wolf3d->last_frame));
-	delta /= 30.0;
 	//if (fractol->window.pressed_keys[4])
 	//	fractal->params[0] *= (1.0 + (delta / 20));
-	(void)delta;
+	if (wolf3d->window.pressed_keys[0])
+		wolf3d->player.y -= 2.0 * (delta / 1000.0);
+	if (wolf3d->window.pressed_keys[1])
+		wolf3d->player.y += 2.0 * (delta / 1000.0);
+	if (wolf3d->window.pressed_keys[2])
+		wolf3d->player.x += 2.0 * (delta / 1000.0);
+	if (wolf3d->window.pressed_keys[3])
+		wolf3d->player.x -= 2.0 * (delta / 1000.0);
+	if (wolf3d->window.pressed_keys[4])
+		wolf3d->player.looking_dir -= 90.0 * (delta / 1000.0);
+	if (wolf3d->window.pressed_keys[5])
+		wolf3d->player.looking_dir += 90.0 * (delta / 1000.0);
 }
 
 int		loop(void *param)
@@ -176,7 +276,7 @@ t_value	*read_json_file(char *filename)
 {
 	t_value		*map_json;
 
-	if (!(map_json = read_json(filename)))
+	if (!(map_json = read_json(filename, 20 * 1024 * 1024)))
 	{
 		ft_putstr("Failed to read file \"");
 		ft_putstr(filename);
@@ -186,6 +286,7 @@ t_value	*read_json_file(char *filename)
 	if (map_json->type == 0)
 	{
 		ft_putstr("Invalid JSON file\n");
+		free_value(map_json);
 		return (NULL);
 	}
 	return (map_json);
