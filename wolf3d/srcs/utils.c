@@ -15,8 +15,10 @@ void	free_map(t_map *map)
 			free(tmp_texture->name);
 		if (tmp_texture->to_free)
 		{
-			SOIL_free_image_data
-			free(tmp_texture->to_free);
+			if (tmp_texture->soil_image)
+				SOIL_free_image_data((unsigned char *)tmp_texture->to_free);
+			else
+				free(tmp_texture->to_free);
 		}
 		i++;
 	}

@@ -32,7 +32,7 @@ char	valid_texture(t_value *texture, char **error_msg)
 	return (1);
 }
 
-int		*read_image_file(char *path, int *width, int *height, char **to_free)
+int		*read_image_file(char *path, int *width, int *height, t_texture *texture)
 {
 	int		*pixels;
 	int		channels;
@@ -42,7 +42,7 @@ int		*read_image_file(char *path, int *width, int *height, char **to_free)
 		pixels = (int*)read_tga(path, width, height);
 		if (!pixels)
 			return (NULL);
-		*to_free = ((char*)pixels) - 18;
+		texture->to_free = ((char*)pixels) - 18;
 		return (pixels);
 	}
 	pixels = (int*)SOIL_LOAD(path, width, height, &channels);
@@ -53,7 +53,8 @@ int		*read_image_file(char *path, int *width, int *height, char **to_free)
 		ft_putstr("\"\n");
 		return (NULL);
 	}
-	*to_free = (char*)pixels;
+	texture->to_free = (char*)pixels;
+	texture->soil_image = 1;
 	return (pixels);
 }
 
@@ -67,8 +68,9 @@ char	populate_texture(t_value *json_texture, t_texture *texture)
 	texture->name = NULL;
 	texture->pixels = NULL;
 	texture->to_free = NULL;
+	texture->soil_image = 0;
 	path = get_val(json_texture, "file")->data;
-	pixels = read_image_file(path, &width, &height, &(texture->to_free));
+	pixels = read_image_file(path, &width, &height, texture);
 	if (!pixels)
 		return (0);
 	texture->name = copy_str(get_val(json_texture, "name")->data);

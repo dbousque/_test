@@ -85,6 +85,7 @@ typedef struct	s_texture
 	int			width;
 	int			height;
 	char		*to_free;
+	char		soil_image;
 }				t_texture;
 
 typedef struct	s_block

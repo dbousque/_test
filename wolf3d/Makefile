@@ -38,7 +38,7 @@ LIB2_DIR=	libjson
 
 LIB2	=	$(LIB2_DIR)/libjson.a
 
-HEADERS	=	-I./includes/ -I./$(LIB_DIR) -I./$(LIB2_DIR) -I ~/libSOIL/src
+HEADERS	=	-I./includes/ -I./$(LIB_DIR) -I./$(LIB2_DIR) -I ~/libSOIL/src -I ~/.brew/include/SOIL
 
 OBJECTS	=	$(subst .c,.o,$(SOURCES))
 
@@ -48,7 +48,7 @@ ifeq ($(UNAME_S), Linux)
 	XLIB	=	-lXext -lX11 -lm -lSOIL -lGL
 endif
 ifeq ($(UNAME_S), Darwin)
-	XLIB	=	-framework OpenGL -framework AppKit -lm -lSOIL -lGL
+	XLIB	=	-framework OpenGL -framework AppKit -lm -L /Users/recast.ai/.brew/lib -lSOIL
 endif
 
 CC		=	clang
