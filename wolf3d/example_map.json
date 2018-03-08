@@ -3,10 +3,10 @@
     { "name": "fountain", "file": "resources/fountain.png" },
     { "name": "barrel", "file": "resources/barrel.png" },
     { "name": "light", "file": "resources/light.png" },
-    { "name": "brick", "file": "resources/brick.jpg" },
-    { "name": "rocks", "file": "resources/rocks.jpg" },
-    { "name": "cement", "file": "resources/cement.jpg" },
-    { "name": "wood", "file": "resources/wood.jpg" }
+    { "name": "brick", "file": "resources/brick.png" },
+    { "name": "rocks", "file": "resources/rocks.tga" },
+    { "name": "cement", "file": "resources/brick4.jpg" },
+    { "name": "wood", "file": "resources/brick3.jpg" }
   ],
   "blocks": [
     { "id": 2, "go_through": false, "faces": ["brick", "rocks", "cement", "wood"] },

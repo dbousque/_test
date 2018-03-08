@@ -22,7 +22,7 @@
 # define PIXEL_AT(window, x, y) window.pixels[(x) + (y) * window.width]
 # define MAP_BLOCKS(w) ((t_block**)w->map.blocks_positions.elts)
 # define BLOCK_AT(w, x, y) MAP_BLOCKS(w)[(x) + (y) * w->map.width]
-# define SOIL_LOAD(p, w, h, c) SOIL_load_image(p, w, h, c, SOIL_LOAD_RGBA)
+# define SOIL_LOAD(p, w, h, c) SOIL_load_image(p, w, h, c, SOIL_LOAD_RGB)
 
 # define IS_W(k) (k == 13 || k == 119)
 # define IS_A(k) (k == 0 || k == 97)
@@ -78,13 +78,16 @@ typedef struct	s_list2
 	size_t		elt_size;
 }				t_list2;
 
+typedef unsigned char uchar;
+
 typedef struct	s_texture
 {
 	char		*name;
-	int			*pixels;
+	uchar		*pixels;
 	int			width;
 	int			height;
-	char		*to_free;
+	int			pixel_width;
+	uchar		*to_free;
 	char		soil_image;
 }				t_texture;
 

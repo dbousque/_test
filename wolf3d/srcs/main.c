@@ -15,6 +15,22 @@ void	render_wolf3d(t_wolf3d *wolf3d)
 		exit(1);
 	}
 }*/
+#include <stdio.h>
+int		addr_to_c(t_texture *texture, unsigned char *addr)
+{
+	int		res;
+	int		i;
+
+	res = *(addr + texture->pixel_width - 1);
+	i = texture->pixel_width - 2;
+	while (i >= 0)
+	{
+		res *= 256;
+		res += *(addr + i);
+		i--;
+	}
+	return (res);
+}
 
 void	draw_texture(t_wolf3d *wolf3d, int pixel_x, t_ray_result *ray_res,
 															int block_until)
@@ -22,17 +38,19 @@ void	draw_texture(t_wolf3d *wolf3d, int pixel_x, t_ray_result *ray_res,
 	int			start_y;
 	int			i;
 	int			color;
-	t_texture	*texture;
-	int			inds[0];
+	t_texture	*text;
+	int			is[0];
 
 	start_y = wolf3d->window.height / 2 - block_until;
-	texture = ray_res->block->faces[ray_res->face];
-	inds[0] = (int)(ray_res->decal_in_face * (float)texture->width);
-	i = 0;
-	while (i < block_until * 2)
+	text = ray_res->block->faces[ray_res->face];
+	is[0] = (int)(ray_res->decal_in_face * (float)text->width);
+	is[0] *= text->pixel_width;
+	i = start_y < 0 ? -start_y : 0;
+	while (i < block_until * 2 && start_y + i < wolf3d->window.height)
 	{
-		inds[1] = ((float)i / block_until * 2) * texture->height;
-		color = texture->pixels[inds[0] + inds[1] * texture->width];
+		is[1] = ((float)i / (block_until * 2)) * text->height;
+		is[1] *= text->pixel_width;
+		color = addr_to_c(text, &(text->pixels[is[0] + is[1] * text->width]));
 		set_color_at(wolf3d, pixel_x, start_y + i, color);
 		i++;
 	}
@@ -49,9 +67,9 @@ void	draw_column(t_wolf3d *wolf3d, int pixel_x, t_ray_result *ray_res)
 	height_at_zero = 1.7;
 	full_screen_point = 1.6 - ((wolf3d->opts.fov - 40.0) / 50.0);
 	block_height = height_at_zero / (ray_res->distance / full_screen_point);
+	//if (block_height > height_at_zero / 2)
+	//	block_height = height_at_zero / 2;
 	block_until = (wolf3d->window.height / 2) * block_height;
-	if (block_until > wolf3d->window.height / 2)
-		block_until = wolf3d->window.height / 2;
 	y = 0;
 	while (y < (wolf3d->window.height / 2 - block_until))
 	{
@@ -93,7 +111,6 @@ void	render_ray(t_wolf3d *wolf3d, int pixel_x, t_ray_result *ray_res)
 	draw_column(wolf3d, pixel_x, ray_res);
 }
 
-#include <stdio.h>
 void	set_x_y_steps(float x, float y, float decals[2], float x_y_steps[2])
 {
 	x_y_steps[0] = -(x - ((int)x + 1));
@@ -119,7 +136,7 @@ void	advance_to_next_block(t_ray_result *ray_res, float decals[2],
 		advance_by = fabsf(x_y_steps[1] / decals[1]);
 		ray_res->face = decals[1] >= 0.0 ? 0 : 2;
 	}
-	advance_by += 0.01;
+	advance_by += 0.0001;
 	ray_res->x += decals[0] * advance_by;
 	ray_res->y += decals[1] * advance_by;
 	blocks_x_y[0] = (int)ray_res->x;
