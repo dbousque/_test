@@ -1,11 +1,11 @@
 {
   "textures": [
-    { "name": "fountain", "file": "resources/fountain.png" },
-    { "name": "barrel", "file": "resources/barrel.png" },
-    { "name": "light", "file": "resources/light.png" },
+    { "name": "fountain", "file": "resources/brick4.tga" },
+    { "name": "barrel", "file": "resources/brick4.tga" },
+    { "name": "light", "file": "resources/light.tga" },
     { "name": "brick", "file": "resources/brick.png" },
     { "name": "rocks", "file": "resources/rocks.tga" },
-    { "name": "cement", "file": "resources/brick4.jpg" },
+    { "name": "cement", "file": "resources/brick4.tga" },
     { "name": "wood", "file": "resources/brick3.jpg" }
   ],
   "blocks": [
@@ -17,7 +17,7 @@
     [2, 2, 2, 2, 0, 2, 2, 2, 2, 2],
     [2, 0, 0, 0, 0, 0, 0, 0, 0, 2],
     [2, 0, 0, 0, 0, 0, 0, 0, 0, 2],
-    [2, 0, 0, 0, 0, 0, 0, 0, 0, 2],
+    [2, 0, 0, 0, 0, 0, 4, 0, 0, 2],
     [2, 0, 0, 0, 0, 0, 0, 0, 0, 2],
     [2, 0, 0, 0, 0, 0, 0, 0, 0, 2],
     [2, 0, 0, 0, 0, 0, 0, 0, 0, 2],

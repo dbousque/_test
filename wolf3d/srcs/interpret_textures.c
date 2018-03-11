@@ -36,14 +36,15 @@ unsigned char	*read_image_file(char *path, int *width, int *height, t_texture *t
 {
 	unsigned char	*pixels;
 	int				channels;
+	int				pixel_width;
 
 	if (endswith(path, ".tga"))
 	{
-		pixels = (unsigned char*)read_tga(path, width, height);
+		pixels = (unsigned char*)read_tga(path, width, height, &pixel_width);
 		if (!pixels)
 			return (NULL);
 		texture->to_free = pixels - 18;
-		texture->pixel_width = 3;
+		texture->pixel_width = pixel_width;
 		return (pixels);
 	}
 	pixels = SOIL_LOAD(path, width, height, &channels);
@@ -56,7 +57,7 @@ unsigned char	*read_image_file(char *path, int *width, int *height, t_texture *t
 	}
 	texture->to_free = pixels;
 	texture->soil_image = 1;
-	texture->pixel_width = 3;
+	texture->pixel_width = 4;
 	return (pixels);
 }
 

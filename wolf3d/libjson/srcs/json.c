@@ -588,9 +588,10 @@ t_value	*read_json(char *filename, int max_size)
 	t_value	*json;
 	int		i;
 	char	err;
+	int		file_size;
 
 	i = 0;
-	buf = read_whole_file(filename, &err, max_size);
+	buf = read_whole_file(filename, &err, max_size, &file_size);
 	if (err == 1)
 		return (open_failed());
 	if (err == 2)

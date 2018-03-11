@@ -27,6 +27,15 @@ void	free_map(t_map *map)
 	free_list(&(map->blocks_positions));
 }
 
+void	normalize_decals(float *decal_x, float *decal_y)
+{
+	float	sum;
+
+	sum = fabsf(*decal_x) + fabsf(*decal_y);
+	*decal_x /= sum;
+	*decal_y /= sum;
+}
+
 int		exit_wolf3d(t_wolf3d *wolf3d)
 {
 	mlx_destroy_image(wolf3d->window.mlx, wolf3d->window.img);

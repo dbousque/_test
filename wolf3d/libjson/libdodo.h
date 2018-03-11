@@ -253,6 +253,7 @@ void					apply_precision(char **value, t_format *fo,
 void					cut_digits(char **value, t_format *format, int *length);
 char					is_spec_numb(char c);
 void					void_str(char **value, int *length);
-char					*read_whole_file(char *filename, char *error, int max_size);
+char					*read_whole_file(char *filename, char *error,
+												int max_size, int *file_size);
 
 #endif

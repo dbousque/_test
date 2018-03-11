@@ -22,7 +22,7 @@
 # define PIXEL_AT(window, x, y) window.pixels[(x) + (y) * window.width]
 # define MAP_BLOCKS(w) ((t_block**)w->map.blocks_positions.elts)
 # define BLOCK_AT(w, x, y) MAP_BLOCKS(w)[(x) + (y) * w->map.width]
-# define SOIL_LOAD(p, w, h, c) SOIL_load_image(p, w, h, c, SOIL_LOAD_RGB)
+# define SOIL_LOAD(p, w, h, c) SOIL_load_image(p, w, h, c, SOIL_LOAD_RGBA)
 
 # define IS_W(k) (k == 13 || k == 119)
 # define IS_A(k) (k == 0 || k == 97)
@@ -49,6 +49,7 @@
 # define IS_MOUSE_BACKWARDS(k) (k == 5)
 
 # define DEG_TO_RAD(x) (x * 0.0174533)
+# define RAD_TO_DEG(x) (x / 0.0174533)
 
 typedef struct timeval	t_timeval;
 
@@ -138,6 +139,9 @@ typedef struct	s_ray_result
 {
 	float		x;
 	float		y;
+	float		direction;
+	int			block_x;
+	int			block_y;
 	t_block		*block;
 	int			face;
 	float		decal_in_face;
@@ -149,6 +153,7 @@ int				exit_wolf3d(t_wolf3d *wolf3d);
 void			set_color_at(t_wolf3d *wolf3d, int x, int y, int color);
 void			safe_set_color_at(t_wolf3d *w, int x, int y, int color);
 char			*copy_str(char *str);
+void			normalize_decals(float *decal_x, float *decal_y);
 char			equal_strings(char *str1, char *str2);
 int				millis_since(struct timeval *start);
 void			print_time_taken(struct timeval *start, char *before,
@@ -167,7 +172,8 @@ void			draw_debug_grid(t_wolf3d *wolf3d);
 void			draw_player_on_grid(t_wolf3d *wolf3d);
 void			render_debug_ray(t_wolf3d *wolf3d, int pixel_x,
 														t_ray_result *ray_res);
-char			*read_tga(char *path, int *width, int *height);
+char			*read_tga(char *path, int *width, int *height,
+															int *pixel_width);
 int				expose_hook(void *param);
 int				key_pressed_hook(int keycode, void *param);
 int				key_released_hook(int keycode, void *param);
@@ -181,5 +187,7 @@ char			interpret_err(t_wolf3d *wolf3d, char *msg);
 char			interpret_textures(t_wolf3d *wolf3d, t_value *textures);
 char			interpret_blocks(t_wolf3d *wolf3d, t_value *blocks);
 char			valid_block(t_value *block, char **error_msg);
+void			send_ray_in_dir(t_wolf3d *wolf3d, float direction, int pixel_x,
+																float from[2]);
 
 #endif

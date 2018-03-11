@@ -18,7 +18,8 @@ char	*read_error(char *error, char err)
 	return (NULL);
 }
 
-char	*read_whole_file(char *filename, char *error, int max_size)
+char	*read_whole_file(char *filename, char *error, int max_size,
+																int *file_size)
 {
 	char	*res;
 	char	buf[BUF_SIZE];
@@ -44,5 +45,6 @@ char	*read_whole_file(char *filename, char *error, int max_size)
 	if (!(res = (char*)malloc(sizeof(char) * (size + 1))) || read(fd, res, size) < 0)
 		return (read_error(error, 2));
 	res[size] = '\0';
+	*file_size = size;
 	return (res);
 }
