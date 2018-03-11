@@ -20,6 +20,34 @@ char	*read_tga_error(char *path, char error, int max_size)
 	return (NULL);
 }
 
+char	*flip_rows(char *content, int width, int height, int pixel_width)
+{
+	char	*res;
+	int		x;
+	int		y;
+
+	if (!(res = malloc(sizeof(char) * (width * height * pixel_width))))
+	{
+		ft_putstr("malloc error\n");
+		return (NULL);
+	}
+	content += 18;
+	y = 0;
+	while (y < height)
+	{
+		x = 0;
+		while (x < width * pixel_width)
+		{
+			res[(y * width * pixel_width) + x] =
+					content[((height - y - 1) * width * pixel_width) + x];
+			x++;
+		}
+		y++;
+	}
+	free(content - 18);
+	return (res);
+}
+
 char	*read_tga(char *path, int *width, int *height, int *pixel_width)
 {
 	char	*content;
@@ -42,8 +70,10 @@ char	*read_tga(char *path, int *width, int *height, int *pixel_width)
 		*pixel_width = 4;
 	else
 	{
-		ft_printf("Invalid TGA file\n");
+		ft_putstr("Invalid TGA file\n");
 		return (NULL);
 	}
-	return (content + 18);
+	if (!(content = flip_rows(content, *width, *height, *pixel_width)))
+		return (NULL);
+	return (content);
 }

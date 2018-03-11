@@ -89,9 +89,30 @@ char	interpret_map(t_wolf3d *wolf3d, t_value *map)
 		return (interpret_err(wolf3d, "map must have at least one block\n"));
 	if (!seen_player)
 		return (interpret_err(wolf3d, "the player must be placed on map\n"));
+	wolf3d->map.floor = NULL;
 	wolf3d->map.width = width;
 	wolf3d->map.height = i;
 	return (1);
+}
+
+void	maybe_add_floor(t_wolf3d *wolf3d, t_value *map_json)
+{
+	t_value		*json;
+	t_texture	*texture;
+
+	if (!(json = get_val(map_json, "floor")))
+		return ;
+	if (json->type != STRING)
+	{
+		ft_putstr("\"floor\" field must be a string. Ignoring...\n");
+		return ;
+	}
+	if (!(texture = find_texture(wolf3d, json)))
+	{
+		ft_putstr("Invalid \"floor\" field. Ignoring...\n");
+		return ;
+	}
+	wolf3d->map.floor = texture;
 }
 
 char	interpret_map_file(t_wolf3d *wolf3d, t_value *map_json)
@@ -119,6 +140,7 @@ char	interpret_map_file(t_wolf3d *wolf3d, t_value *map_json)
 		return (interpret_err(wolf3d, "\"map\" field is not an array\n"));
 	if (!interpret_map(wolf3d, json))
 		return (0);
+	maybe_add_floor(wolf3d, map_json);
 	ft_putstr("done\n");
 	return (1);
 }

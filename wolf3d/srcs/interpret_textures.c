@@ -36,28 +36,25 @@ unsigned char	*read_image_file(char *path, int *width, int *height, t_texture *t
 {
 	unsigned char	*pixels;
 	int				channels;
-	int				pixel_width;
+	int				pix_w;
 
 	if (endswith(path, ".tga"))
 	{
-		pixels = (unsigned char*)read_tga(path, width, height, &pixel_width);
-		if (!pixels)
+		if (!(pixels = (unsigned char*)read_tga(path, width, height, &pix_w)))
 			return (NULL);
-		texture->to_free = pixels - 18;
-		texture->pixel_width = pixel_width;
+		texture->to_free = pixels;
+		texture->pixel_width = pix_w;
 		return (pixels);
 	}
 	pixels = SOIL_LOAD(path, width, height, &channels);
-	if (!pixels)
+	if (!pixels || (channels != 3 && channels != 4))
 	{
-		ft_putstr("Could not read file \"");
-		ft_putstr(path);
-		ft_putstr("\"\n");
+		ft_putstr("Could not read file, not existing or not 3-4 channels\n");
 		return (NULL);
 	}
 	texture->to_free = pixels;
 	texture->soil_image = 1;
-	texture->pixel_width = 4;
+	texture->pixel_width = channels;
 	return (pixels);
 }
 

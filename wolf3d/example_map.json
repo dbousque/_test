@@ -1,25 +1,32 @@
 {
   "textures": [
-    { "name": "fountain", "file": "resources/brick4.tga" },
-    { "name": "barrel", "file": "resources/brick4.tga" },
-    { "name": "light", "file": "resources/light.tga" },
+    { "name": "fountain", "file": "resources/fountain2.tga" },
+    { "name": "barrel", "file": "resources/barrel2.tga" },
+    { "name": "light", "file": "resources/light2.tga" },
     { "name": "brick", "file": "resources/brick.png" },
     { "name": "rocks", "file": "resources/rocks.tga" },
     { "name": "cement", "file": "resources/brick4.tga" },
-    { "name": "wood", "file": "resources/brick3.jpg" }
+    { "name": "wood", "file": "resources/brick3.jpg" },
+    { "name": "dom", "file": "resources/dom.tga" },
+    { "name": "other_fountain", "file": "resources/fountain3.tga" },
+    { "name": "metal_floor", "file": "resources/metal_floor.jpg" }
   ],
   "blocks": [
     { "id": 2, "go_through": false, "faces": ["brick", "rocks", "cement", "wood"] },
     { "id": 3, "go_through": false, "obj_texture": "barrel" },
-    { "id": 4, "go_through": true, "obj_texture": "light" }
+    { "id": 4, "go_through": true, "obj_texture": "light" },
+    { "id": 5, "go_through": true, "obj_texture": "fountain" },
+    { "id": 6, "go_through": false, "obj_texture": "dom" },
+    { "id": 7, "go_through": false, "obj_texture": "other_fountain" }
   ],
+  "floor": "metal_floor",
   "map": [
     [2, 2, 2, 2, 0, 2, 2, 2, 2, 2],
     [2, 0, 0, 0, 0, 0, 0, 0, 0, 2],
     [2, 0, 0, 0, 0, 0, 0, 0, 0, 2],
     [2, 0, 0, 0, 0, 0, 4, 0, 0, 2],
     [2, 0, 0, 0, 0, 0, 0, 0, 0, 2],
-    [2, 0, 0, 0, 0, 0, 0, 0, 0, 2],
+    [2, 0, 5, 0, 0, 0, 0, 0, 0, 2],
     [2, 0, 0, 0, 0, 0, 0, 0, 0, 2],
     [2, 0, 0, 0, 0, 0, 0, 0, 0, 2],
     [2, 0, 0, 0, 0, 0, 0, 0, 0, 2],
@@ -27,7 +34,7 @@
     [2, 0, 0, 1, 0, 0, 0, 0, 0, 2],
     [2, 0, 0, 0, 0, 0, 0, 0, 0, 2],
     [2, 0, 0, 0, 0, 0, 0, 0, 0, 2],
-    [2, 0, 0, 0, 0, 0, 0, 0, 0, 2],
+    [2, 0, 0, 7, 0, 0, 0, 3, 0, 2],
     [2, 0, 0, 0, 0, 0, 0, 0, 0, 2],
     [2, 0, 0, 0, 0, 0, 0, 0, 0, 2],
     [2, 2, 2, 2, 2, 2, 0, 0, 0, 2]
