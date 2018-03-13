@@ -316,6 +316,20 @@ void	draw_floor_and_ceiling(t_wolf3d *wolf3d)
 		}
 		y++;
 	}
+
+
+
+	float	height_at_zero;
+	float	full_screen_point;
+	float	block_height;
+
+	height_at_zero = 1.7;
+	full_screen_point = 1.6 - ((wolf3d->opts.fov - 40.0) / 50.0);
+	block_height = height_at_zero / (ray_res->distance / full_screen_point);
+
+
+
+
 	y = 0.0;
 	pixel_y = wolf3d->window.height / 2;
 	while (pixel_y < wolf3d->window.height)
