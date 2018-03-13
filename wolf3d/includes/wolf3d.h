@@ -64,6 +64,7 @@ typedef struct	s_window
 	void		*mlx;
 	void		*win;
 	void		*img;
+	int			*img_pixels;
 	int			*pixels;
 	int			width;
 	int			height;
@@ -183,6 +184,7 @@ int				mouse_move_hook(int x, int y, void *param);
 void			apply_image_to_window(t_window *window);
 char			init_window(t_window *window, int width, int height,
 																char *title);
+void			cpy_pixels_to_img(t_window *window);
 char			interpret_map_file(t_wolf3d *wolf3d, t_value *map_json);
 char			interpret_err(t_wolf3d *wolf3d, char *msg);
 char			interpret_textures(t_wolf3d *wolf3d, t_value *textures);

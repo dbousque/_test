@@ -22,7 +22,9 @@ char	init_window(t_window *window, int width, int height, char *title)
 		return (0);
 	if (!(window->img = mlx_new_image(window->mlx, width, height)))
 		return (0);
-	if (!(window->pixels = (int*)mlx_get_data_addr(window->img, &i, &i, &i)))
+	if (!(window->img_pixels = (int*)mlx_get_data_addr(window->img, &i, &i, &i)))
+		return (0);
+	if (!(window->pixels = malloc(sizeof(int) * (width * height))))
 		return (0);
 	window->width = width;
 	window->height = height;
@@ -35,4 +37,24 @@ char	init_window(t_window *window, int width, int height, char *title)
 		i++;
 	}
 	return (1);
+}
+
+void	cpy_pixels_to_img(t_window *window)
+{
+	int		x;
+	int		y;
+	int		ind;
+
+	y = 0;
+	while (y < window->height)
+	{
+		x = 0;
+		while (x < window->width)
+		{
+			ind = y * window->width + x;
+			window->img_pixels[ind] = window->pixels[ind];
+			x++;
+		}
+		y++;
+	}
 }

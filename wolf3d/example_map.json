@@ -9,7 +9,8 @@
     { "name": "wood", "file": "resources/brick3.jpg" },
     { "name": "dom", "file": "resources/dom.tga" },
     { "name": "other_fountain", "file": "resources/fountain3.tga" },
-    { "name": "metal_floor", "file": "resources/metal_floor.jpg" }
+    { "name": "metal_floor", "file": "resources/metal_floor.jpg" },
+    { "name": "dark_panel", "file": "resources/darker2.tga" }
   ],
   "blocks": [
     { "id": 2, "go_through": false, "faces": ["brick", "rocks", "cement", "wood"] },
@@ -17,7 +18,8 @@
     { "id": 4, "go_through": true, "obj_texture": "light" },
     { "id": 5, "go_through": true, "obj_texture": "fountain" },
     { "id": 6, "go_through": false, "obj_texture": "dom" },
-    { "id": 7, "go_through": false, "obj_texture": "other_fountain" }
+    { "id": 7, "go_through": false, "obj_texture": "other_fountain" },
+    { "id": 8, "go_through": false, "obj_texture": "dark_panel" }
   ],
   "floor": "metal_floor",
   "map": [
@@ -29,7 +31,7 @@
     [2, 0, 5, 0, 0, 0, 0, 0, 0, 2],
     [2, 0, 0, 0, 0, 0, 0, 0, 0, 2],
     [2, 0, 0, 0, 0, 0, 0, 0, 0, 2],
-    [2, 0, 0, 0, 0, 0, 0, 0, 0, 2],
+    [2, 0, 0, 0, 0, 0, 0, 8, 0, 2],
     [2, 0, 0, 0, 0, 0, 0, 0, 0, 2],
     [2, 0, 0, 1, 0, 0, 0, 0, 0, 2],
     [2, 0, 0, 0, 0, 0, 0, 0, 0, 2],

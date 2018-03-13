@@ -15,7 +15,7 @@ void	render_wolf3d(t_wolf3d *wolf3d)
 		exit(1);
 	}
 }*/
-#include <stdio.h>
+
 int		addr_to_c(t_texture *texture, unsigned char *addr, int ori)
 {
 	int		res;
@@ -130,7 +130,7 @@ void	draw_object(t_wolf3d *wolf3d, int pixel_x, t_ray_result *ray_res)
 	block_until = (wolf3d->window.height / 2) * block_height;
 	from[0] = ray_res->x;
 	from[1] = ray_res->y;
-	clear_column(wolf3d, pixel_x);
+	//clear_column(wolf3d, pixel_x);
 	send_ray_in_dir(wolf3d, ray_res->direction, pixel_x, from);
 	draw_texture(wolf3d, pixel_x, ray_res, block_until);
 }
@@ -298,12 +298,40 @@ void	send_ray_in_dir(t_wolf3d *wolf3d, float direction, int pixel_x,
 
 void	draw_floor_and_ceiling(t_wolf3d *wolf3d)
 {
-	int		x;
-	int		y;
+	int		pixel_x;
+	int		pixel_y;
+	//float	decals[2];
+	float	x;
+	float	y;
+	int		color;
 
-	(void)x;
-	(void)y;
-	(void)wolf3d;
+	y = 0;
+	while (y < wolf3d->window.height / 2)
+	{
+		pixel_x = 0;
+		while (pixel_x < wolf3d->window.width)
+		{
+			set_color_at(wolf3d, pixel_x, y, 0x0000ff);
+			pixel_x++;
+		}
+		y++;
+	}
+	y = 0.0;
+	pixel_y = wolf3d->window.height / 2;
+	while (pixel_y < wolf3d->window.height)
+	{
+		x = 0.0;
+		pixel_x = 0;
+		while (pixel_x < wolf3d->window.width)
+		{
+			color = fabsf(x - (int)x) < 0.1 || fabsf(y - (int)y) < 0.1 ? 0xffffff : 0x000000;
+			set_color_at(wolf3d, pixel_x, pixel_y, color);
+			pixel_x++;
+			x += 0.03;
+		}
+		y += 0.03;
+		pixel_y++;
+	}
 }
 
 void	compute_wolf3d(t_wolf3d *wolf3d)
@@ -391,11 +419,19 @@ char	init_wolf3d_win(t_wolf3d *wolf3d, int width, int height, char *title)
 #include <stdio.h>
 void	update_values_with_input(t_wolf3d *wolf3d)
 {
-	float		delta;
-	float		decal_x;
-	float		decal_y;
+	float			delta;
+	float			decal_x;
+	float			decal_y;
+	//struct timespec	ts;
 
 	delta = millis_since(&(wolf3d->last_frame));
+    /*ts.tv_sec = 0;
+    ts.tv_nsec = ((int)(20.0 - delta) % 1000) * 1000000;
+    if (ts.tv_nsec > 0)
+    {
+    	nanosleep(&ts, NULL);
+    	delta = millis_since(&(wolf3d->last_frame));
+    }*/
 	decal_x = cosf(DEG_TO_RAD(wolf3d->player.looking_dir));
 	decal_y = sinf(DEG_TO_RAD(wolf3d->player.looking_dir));
 	normalize_decals(&decal_x, &decal_y);
@@ -460,6 +496,7 @@ int		loop(void *param)
 	gettimeofday(&(wolf3d->last_frame), NULL);
 	//clear_screen(wolf3d);
 	compute_wolf3d(wolf3d);
+	cpy_pixels_to_img(&(wolf3d->window));
 	render_wolf3d(wolf3d);
 	return (0);
 }
