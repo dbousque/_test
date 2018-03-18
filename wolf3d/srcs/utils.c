@@ -160,6 +160,20 @@ void	print_time_taken(struct timeval *start, char *before, char *after)
 	ft_putstr(after);
 }
 
+void	launch_thread(pthread_t *threads, t_thread_data *data, int i)
+{
+	if (pthread_create(
+			&(threads[i]),
+			NULL,
+			compute_wolf3d_part,
+			&(data[i])
+		) != 0)
+	{
+		ft_putstr("Error while creating thread\n");
+		exit(1);
+	}
+}
+
 void	wait_for_threads_to_finish(pthread_t *threads)
 {
 	int		i;

@@ -90,6 +90,7 @@ char	interpret_map(t_wolf3d *wolf3d, t_value *map)
 	if (!seen_player)
 		return (interpret_err(wolf3d, "the player must be placed on map\n"));
 	wolf3d->map.floor = NULL;
+	wolf3d->map.ceiling = NULL;
 	wolf3d->map.width = width;
 	wolf3d->map.height = i;
 	return (1);
@@ -113,6 +114,26 @@ void	maybe_add_floor(t_wolf3d *wolf3d, t_value *map_json)
 		return ;
 	}
 	wolf3d->map.floor = texture;
+}
+
+void	maybe_add_ceiling(t_wolf3d *wolf3d, t_value *map_json)
+{
+	t_value		*json;
+	t_texture	*texture;
+
+	if (!(json = get_val(map_json, "ceiling")))
+		return ;
+	if (json->type != STRING)
+	{
+		ft_putstr("\"ceiling\" field must be a string. Ignoring...\n");
+		return ;
+	}
+	if (!(texture = find_texture(wolf3d, json)))
+	{
+		ft_putstr("Invalid \"ceiling\" field. Ignoring...\n");
+		return ;
+	}
+	wolf3d->map.ceiling = texture;
 }
 
 char	interpret_map_file(t_wolf3d *wolf3d, t_value *map_json)
@@ -141,6 +162,7 @@ char	interpret_map_file(t_wolf3d *wolf3d, t_value *map_json)
 	if (!interpret_map(wolf3d, json))
 		return (0);
 	maybe_add_floor(wolf3d, map_json);
+	maybe_add_ceiling(wolf3d, map_json);
 	ft_putstr("done\n");
 	return (1);
 }

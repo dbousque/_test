@@ -19,7 +19,7 @@
 # define NB_THREADS 32
 # define NB_KEY_PRESS 8
 
-# define PIXEL_AT(window, x, y) window.pixels[(x) + (y) * window.width]
+# define PIXEL_AT(window, x, y) (window).pixels[(x) + (y) * (window).width]
 # define MAP_BLOCKS(w) ((t_block**)w->map.blocks_positions.elts)
 # define BLOCK_AT(w, x, y) MAP_BLOCKS(w)[(x) + (y) * w->map.width]
 # define SOIL_LOAD(p, w, h, c) SOIL_load_image(p, w, h, c, SOIL_LOAD_RGB)
@@ -70,6 +70,7 @@ typedef struct	s_window
 	int			height;
 	t_mouse		mouse;
 	char		pressed_keys[NB_KEY_PRESS];
+	char		antialiasing;
 }				t_window;
 
 typedef struct	s_list2
@@ -108,6 +109,7 @@ typedef struct	s_map
 	t_list2		blocks;
 	t_list2		blocks_positions;
 	t_texture	*floor;
+	t_texture	*ceiling;
 	int			width;
 	int			height;
 }				t_map;
@@ -137,6 +139,13 @@ typedef struct	s_wolf3d
 	t_opts		opts;
 }				t_wolf3d;
 
+typedef struct	s_thread_data
+{
+	t_wolf3d	*wolf3d;
+	int			from_x;
+	int			until_x;
+}				t_thread_data;
+
 typedef struct	s_ray_result
 {
 	float		x;
@@ -164,6 +173,7 @@ void			init_list(t_list2 *list, size_t elt_size);
 void			*new_elt(t_list2 *lst);
 void			remove_elt(t_list2 *lst, char *addr);
 void			free_list(t_list2 *lst);
+void			launch_thread(pthread_t *threads, t_thread_data *data, int i);
 void			wait_for_threads_to_finish(pthread_t *threads);
 char			endswith(char *str, char *end);
 void			draw_line(t_wolf3d *w, int from[2], int to[2], int color);
@@ -193,5 +203,6 @@ char			valid_block(t_value *block, char **error_msg);
 void			send_ray_in_dir(t_wolf3d *wolf3d, float direction, int pixel_x,
 																float from[2]);
 t_texture		*find_texture(t_wolf3d *wolf3d, t_value *texture_name);
+void			*compute_wolf3d_part(void *thread_data);
 
 #endif

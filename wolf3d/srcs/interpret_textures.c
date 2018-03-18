@@ -31,7 +31,7 @@ char	valid_texture(t_value *texture, char **error_msg)
 	}
 	return (1);
 }
-
+#include <stdio.h>
 unsigned char	*read_image_file(char *path, int *width, int *height, t_texture *texture)
 {
 	unsigned char	*pixels;
@@ -54,7 +54,7 @@ unsigned char	*read_image_file(char *path, int *width, int *height, t_texture *t
 	}
 	texture->to_free = pixels;
 	texture->soil_image = 1;
-	texture->pixel_width = channels;
+	texture->pixel_width = 3;
 	return (pixels);
 }
 
