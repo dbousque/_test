@@ -16,7 +16,7 @@
 
 # define DEFAULT_WIDTH 1200
 # define DEFAULT_HEIGHT 800
-# define NB_THREADS 32
+# define NB_THREADS 16
 # define NB_KEY_PRESS 8
 
 # define PIXEL_AT(window, x, y) (window).pixels[(x) + (y) * (window).width]

@@ -14,9 +14,9 @@
     { "name": "blue_floor", "file": "resources/floor2.tga" },
     { "name": "marble_floor", "file": "resources/marble.png" },
     { "name": "metal_floor3", "file": "resources/metal_floor3.jpg" },
-    { "name": "rock_floor", "file": "resources/rock_floor.jpg" },
+    { "name": "rock_floor", "file": "resources/rock_floor.tga" },
     { "name": "ceiling1", "file": "resources/ceiling1.tga" },
-    { "name": "metal_ceiling", "file": "resources/metal_ceiling.jpg" },
+    { "name": "metal_ceiling", "file": "resources/metal_ceiling.tga" },
     { "name": "pillar", "file": "resources/pillar3.tga" },
     { "name": "dark_panel", "file": "resources/darker2.tga" }
   ],

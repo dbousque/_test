@@ -9,27 +9,27 @@ void	render_wolf3d(t_wolf3d *wolf3d)
 
 int		addr_to_c(t_texture *texture, unsigned char *addr, int ori, float distance_from_angle)
 {
-	int		res;
 	float	ratio;
-	float	brightness;
+	float	bright;
+	int		res;
 
 	ratio = 0.0;
+	bright = 0.4 + (distance_from_angle * 10);
+	bright = fminf(bright, 1.0);
 	res = 0;
-	brightness = 0.4 + (distance_from_angle * 10);
-	brightness = fminf(brightness, 1.0);
 	if (texture->pixel_width == 4)
 	{
 		ratio = ((float)*(addr + 3)) / 256.0;
 		ratio = 1.0 - ratio;
-		res = (int)(((float)*(((unsigned char*)&ori) + 2)) * ratio * brightness);
+		res = (int)(((float)*(((unsigned char*)&ori) + 2)) * ratio * bright);
 		res *= 256;
-		res += (int)(((float)*(((unsigned char*)&ori) + 1)) * ratio * brightness);
+		res += (int)(((float)*(((unsigned char*)&ori) + 1)) * ratio * bright);
 		res *= 256;
-		res += (int)(((float)*(((unsigned char*)&ori) + 0)) * ratio * brightness);
+		res += (int)(((float)*(((unsigned char*)&ori) + 0)) * ratio * bright);
 	}
-	res += (int)(((float)*(addr + 2)) * (1.0 - ratio) * brightness) * 256 * 256;
-	res += (int)(((float)*(addr + 1)) * (1.0 - ratio) * brightness) * 256;
-	res += (int)(((float)*(addr + 0)) * (1.0 - ratio) * brightness);
+	res += (int)(((float)*(addr + 2)) * (1.0 - ratio) * bright) * 256 * 256;
+	res += (int)(((float)*(addr + 1)) * (1.0 - ratio) * bright) * 256;
+	res += (int)(((float)*(addr + 0)) * (1.0 - ratio) * bright);
 	return (res);
 }
 
@@ -45,9 +45,8 @@ void	draw_texture(t_wolf3d *wolf3d, int pixel_x, t_ray_result *ray_res,
 	if (ray_res->decal_in_face < 0.0 || ray_res->decal_in_face > 1.0)
 		return ;
 	start_y = wolf3d->window.height / 2 - block_until;
-	if (ray_res->block->is_object)
-		text = ray_res->block->obj_texture;
-	else
+	text = ray_res->block->obj_texture;
+	if (!ray_res->block->is_object)
 		text = ray_res->block->faces[ray_res->face];
 	is[0] = (int)(ray_res->decal_in_face * (float)text->width);
 	is[0] *= text->pixel_width;
@@ -56,9 +55,7 @@ void	draw_texture(t_wolf3d *wolf3d, int pixel_x, t_ray_result *ray_res,
 	{
 		is[1] = ((float)i / (block_until * 2)) * text->height;
 		is[1] *= text->pixel_width;
-		color = addr_to_c(
-			text,
-			&(text->pixels[is[0] + is[1] * text->width]),
+		color = addr_to_c(text, &(text->pixels[is[0] + is[1] * text->width]),
 			PIXEL_AT(wolf3d->window, pixel_x, start_y + i),
 			ray_res->block->is_object ? 1.0 : fminf((float)i / (block_until * 2), 1.015 - ((float)i / (block_until * 2)))
 		);
@@ -67,62 +64,104 @@ void	draw_texture(t_wolf3d *wolf3d, int pixel_x, t_ray_result *ray_res,
 	}
 }
 
-void	draw_floor_and_ceiling(t_wolf3d *wolf3d, t_ray_result *ray_res,
+void	draw_floor_and_ceiling_from_coords(t_wolf3d *wolf3d, int p_xy[2],
+								float distance_from_angle, int texture_inds[2])
+{
+	int			color;
+	t_texture	*tex;
+
+	tex = wolf3d->map.floor;
+	color = 0x333333;
+	if (tex)
+	{
+		color = addr_to_c(
+			tex, &(tex->pixels[texture_inds[0]]), 0x000000,
+			distance_from_angle + 0.02
+		);
+	}
+	set_color_at(wolf3d, p_xy[0], p_xy[1], color);
+	tex = wolf3d->map.ceiling;
+	color = 0x333333;
+	if (tex)
+	{
+		color = addr_to_c(
+			tex, &(tex->pixels[texture_inds[1]]), 0x000000, distance_from_angle
+		);
+	}
+	set_color_at(wolf3d, p_xy[0], (wolf3d->window.height - p_xy[1]), color);
+}
+
+float	get_distance_from_angle(t_wolf3d *wolf3d, int y, int start_y,
+													t_ray_result *ray_res)
+{
+	float	distance_from_angle;
+
+	distance_from_angle = fminf(
+		(float)(y - start_y) / (wolf3d->window.height - start_y), 
+		1.015 - ((float)(y - start_y) / (wolf3d->window.height - start_y)));
+	distance_from_angle = distance_from_angle * ray_res->distance / 3.0;
+	return (distance_from_angle);
+}
+
+void	get_texture_inds(t_wolf3d *wolf3d, float text_x, float text_y,
+														int texture_inds[2])
+{
+	t_texture	*tex;
+
+	tex = wolf3d->map.floor;
+	if (tex)
+	{
+		texture_inds[0] =
+			(int)(text_x * tex->width) * tex->pixel_width +
+			(int)(text_y * tex->height) * tex->width * tex->pixel_width;
+	}
+	tex = wolf3d->map.ceiling;
+	if (tex)
+	{
+		texture_inds[1] =
+			(int)(text_x * tex->width) * tex->pixel_width +
+			(int)(text_y * tex->height) * tex->width * tex->pixel_width;
+	}
+}
+
+void	calc_text_xy(t_wolf3d *wolf3d, float hw[2], float floor_xy[2],
+															float text_xy[2])
+{
+	text_xy[0] = hw[1] * floor_xy[0] + (0.7 - hw[1]) * wolf3d->player.x;
+    text_xy[1] = hw[1] * floor_xy[1] + (0.7 - hw[1]) * wolf3d->player.y;
+    text_xy[0] -= (int)text_xy[0];
+    text_xy[1] -= (int)text_xy[1];
+}
+
+void	draw_floor_and_ceiling(t_wolf3d *wolf3d, t_ray_result *rr,
 														int pixel_x, int y)
 {
-	t_texture	*floor;
-	t_texture	*ceiling;
-	int			start_y;
+	int		tex_inds_st_y[3];
+	int		pixel_xy[2];
+	float	t_xy[2];
+	float	floor_xy[2];
+	float	hw[2];
 
-	start_y = y;
-	float posX = wolf3d->player.x;
-	float posY = wolf3d->player.y;
-
-	float distWall = ray_res->distance;
-
-	float floorXWall = ray_res->x;
-	float floorYWall = ray_res->y;
-
-	floor = wolf3d->map.floor;
-	ceiling = wolf3d->map.ceiling;
-
-	while (y < wolf3d->window.height)
+	hw[0] = wolf3d->window.height;
+	pixel_xy[0] = pixel_x;
+	tex_inds_st_y[2] = y;
+	floor_xy[0] = rr->x;
+	floor_xy[1] = rr->y;
+	pixel_xy[1] = y;
+	while (pixel_xy[1] < wolf3d->window.height)
 	{
-		float h = wolf3d->window.height;
-		float currentDist = h / (y * 2.0 - h + 0.0001);
-
-        float weight = currentDist / distWall;
-
-        float currentFloorX = weight * floorXWall + (0.7 - weight) * posX;
-        float currentFloorY = weight * floorYWall + (0.7 - weight) * posY;
-
-        float text_x = currentFloorX - (int)currentFloorX;
-        float text_y = currentFloorY - (int)currentFloorY;
-
-        if (text_x < 0.0 || text_y < 0.0 || text_x >= 1.0 || text_y >= 1.0)
+        hw[1] = (hw[0] / (pixel_xy[1] * 2.0 - hw[0] + 0.0001)) / rr->distance;
+        calc_text_xy(wolf3d, hw, floor_xy, t_xy);
+        if (t_xy[0] < 0.0 || t_xy[1] < 0.0 || t_xy[0] >= 1.0 || t_xy[1] >= 1.0)
         {
-        	y++;
+        	pixel_xy[1]++;
         	continue ;
         }
-        int color = floor ? addr_to_c(
-        	floor,
-        	&(floor->pixels[
-        		(int)(text_x * floor->width) * floor->pixel_width +
-        		(int)(text_y * floor->height) * floor->width * floor->pixel_width]),
-			0x000000,
-			fminf((float)(y - start_y) / (wolf3d->window.height - start_y), 1.015 - ((float)(y - start_y) / (wolf3d->window.height - start_y))) * distWall / 3.0 + 0.02
-		) : 0x333333;
-        set_color_at(wolf3d, pixel_x, y, color);
-        color = ceiling ? addr_to_c(
-        	ceiling,
-        	&(ceiling->pixels[
-        		(int)(text_x * ceiling->width) * ceiling->pixel_width +
-        		(int)(text_y * ceiling->height) * ceiling->width * ceiling->pixel_width]),
-			0x000000,
-			fminf((float)(y - start_y) / (wolf3d->window.height - start_y), 1.015 - ((float)(y - start_y) / (wolf3d->window.height - start_y))) * distWall / 3.0
-		) : 0x333333;
-        set_color_at(wolf3d, pixel_x, (wolf3d->window.height - y), color);
-		y++;
+        get_texture_inds(wolf3d, t_xy[0], t_xy[1], tex_inds_st_y);
+        draw_floor_and_ceiling_from_coords(wolf3d, pixel_xy, 
+        	get_distance_from_angle(wolf3d, pixel_xy[1], tex_inds_st_y[2], rr),
+        	tex_inds_st_y);
+		pixel_xy[1]++;
 	}
 }
 
@@ -416,7 +455,7 @@ char	init_wolf3d(t_wolf3d *wolf3d, t_value *map_json)
 
 char	init_wolf3d_win(t_wolf3d *wolf3d, int width, int height, char *title)
 {
-	wolf3d->window.antialiasing = 1;
+	wolf3d->window.antialiasing = 0;
 	if (!(init_window(&(wolf3d->window), width, height, title)))
 	{
 		ft_putstr("Could not initialize window\n");
