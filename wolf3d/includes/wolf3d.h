@@ -14,10 +14,8 @@
 # include "mlx.h"
 # include "libjson.h"
 
-# define DEFAULT_WIDTH 1200
-# define DEFAULT_HEIGHT 800
 # define NB_THREADS 16
-# define NB_KEY_PRESS 8
+# define NB_KEY_PRESS 10
 
 # define PIXEL_AT(window, x, y) (window).pixels[(x) + (y) * (window).width]
 # define MAP_BLOCKS(w) ((t_block**)w->map.blocks_positions.elts)
@@ -127,6 +125,7 @@ typedef struct	s_opts
 	int			debug_block_size;
 	char		big_mode;
 	float		fov;
+	float		hour_of_day;
 }				t_opts;
 
 typedef struct	s_wolf3d
@@ -158,6 +157,13 @@ typedef struct	s_ray_result
 	float		decal_in_face;
 	float		distance;
 }				t_ray_result;
+
+typedef struct	s_config
+{
+	int			height;
+	int			width;
+	char		antialiasing;
+}				t_config;
 
 void			free_map(t_map *map);
 int				exit_wolf3d(t_wolf3d *wolf3d);

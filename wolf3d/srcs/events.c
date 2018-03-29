@@ -38,6 +38,10 @@ int		key_pressed_hook(int keycode, void *param)
 		wolf3d->window.pressed_keys[6] = 1;
 	if (IS_X(keycode))
 		wolf3d->window.pressed_keys[7] = 1;
+	if (IS_H(keycode))
+		wolf3d->window.pressed_keys[8] = 1;
+	if (IS_J(keycode))
+		wolf3d->window.pressed_keys[9] = 1;
 	wolf3d->changed = 1;
 	return (0);
 }
@@ -63,6 +67,10 @@ int		key_released_hook(int keycode, void *param)
 		wolf3d->window.pressed_keys[6] = 0;
 	if (IS_X(keycode))
 		wolf3d->window.pressed_keys[7] = 0;
+	if (IS_H(keycode))
+		wolf3d->window.pressed_keys[8] = 0;
+	if (IS_J(keycode))
+		wolf3d->window.pressed_keys[9] = 0;
 	wolf3d->changed = 1;
 	return (0);
 }

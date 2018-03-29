@@ -42,7 +42,7 @@
     { "id": 10, "go_through": false, "faces": ["quake_texture1", "quake_texture1", "quake_texture1", "quake_texture1"] },
     { "id": 11, "go_through": false, "faces": ["quake_texture3", "quake_texture3", "quake_texture3", "quake_texture3"] }
   ],
-  "floor": "quake_floor8", //quake_texture2
+  "floor": "quake_texture2", //quake_texture2
   "ceiling": "metal_ceiling",
   "map": [
     [2, 2, 2, 2, 0, 2, 2, 2, 2, 2],
