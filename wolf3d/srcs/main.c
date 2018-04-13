@@ -280,7 +280,7 @@ void	clear_column(t_wolf3d *wolf3d, int pixel_x)
 		y++;
 	}
 }
-
+#include <stdio.h>
 void	draw_object(t_wolf3d *wolf3d, int pixel_x, t_ray_result *ray_res)
 {
 	float		height_at_zero;
@@ -295,9 +295,7 @@ void	draw_object(t_wolf3d *wolf3d, int pixel_x, t_ray_result *ray_res)
 	block_until = (wolf3d->window.height / 2) * block_height;
 	from[0] = ray_res->x;
 	from[1] = ray_res->y;
-	write(1, "sa\n", 3);
 	send_ray_in_dir(wolf3d, ray_res->direction, pixel_x, from);
-	write(1, "dt\n", 3);
 	draw_texture(wolf3d, pixel_x, ray_res, block_until);
 }
 
@@ -370,7 +368,6 @@ void	render_object(t_wolf3d *wolf3d, int pixel_x, t_ray_result *ray_res)
 		/ sinf(DEG_TO_RAD(90.0));
 	decal = vector_on_the_left(vector, center_vector) ? decal : -decal;
 	ray_res->decal_in_face = ((decal * 1.7) + 1) / 2.0;
-	write(1, "do\n", 3);
 	draw_object(wolf3d, pixel_x, ray_res);
 }
 
@@ -378,9 +375,6 @@ void	render_ray(t_wolf3d *wolf3d, int pixel_x, t_ray_result *ray_res)
 {
 	if (wolf3d->opts.debug_mode)
 		return (render_debug_ray(wolf3d, pixel_x, ray_res));
-	write(1, "rra\n", 4);
-	if (ray_res->block && ray_res->block->is_object)
-		write(1, "iso\n", 4);
 	if (ray_res->block && ray_res->block->is_object)
 		return (render_object(wolf3d, pixel_x, ray_res));
 	ray_res->distance =
@@ -400,7 +394,6 @@ void	render_ray(t_wolf3d *wolf3d, int pixel_x, t_ray_result *ray_res)
 		else
 			ray_res->decal_in_face = ray_res->y - (int)ray_res->y;
 	}
-	write(1, "dc\n", 3);
 	draw_column(wolf3d, pixel_x, ray_res);
 }
 
@@ -429,13 +422,13 @@ void	advance_to_next_block(t_ray_result *ray_res, float decals[2],
 		advance_by = fabsf(x_y_steps[1] / decals[1]);
 		ray_res->face = decals[1] >= 0.0 ? 0 : 2;
 	}
-	advance_by += 0.0001;
+	advance_by += 0.001;
 	ray_res->x += decals[0] * advance_by;
 	ray_res->y += decals[1] * advance_by;
 	ray_res->block_x = floorf(ray_res->x);
 	ray_res->block_y = floorf(ray_res->y);
 }
-#include <stdio.h>
+
 void	send_ray_in_dir(t_wolf3d *wolf3d, float direction, int pixel_x,
 																float from[2])
 {
@@ -447,15 +440,9 @@ void	send_ray_in_dir(t_wolf3d *wolf3d, float direction, int pixel_x,
 	ray_res.x = from[0];
 	ray_res.y = from[1];
 	ray_res.direction = direction;
-	write(1, "sri\n", 4);
-	fflush(stdout);
 	decals[0] = cosf(DEG_TO_RAD(direction));
 	decals[1] = sinf(DEG_TO_RAD(direction));
-	write(1, "decals\n", 7);
-	fflush(stdout);
 	normalize_decals(&(decals[0]), &(decals[1]));
-	write(1, "norm\n", 5);
-	fflush(stdout);
 	while (1)
 	{
 		set_x_y_steps(ray_res.x, ray_res.y, decals, x_y_steps);
@@ -469,7 +456,6 @@ void	send_ray_in_dir(t_wolf3d *wolf3d, float direction, int pixel_x,
 		if (ray_res.block)
 			break ;
 	}
-	write(1, "rer\n", 4);
 	return (render_ray(wolf3d, pixel_x, &ray_res));
 }
 
@@ -490,7 +476,6 @@ void	*compute_wolf3d_part(void *thread_data)
 	{
 		dir = ((float)x / wolf3d->window.width) * wolf3d->opts.fov;
 		dir -= wolf3d->opts.fov / 2;
-		write(1, "dir\n", 4);
 		send_ray_in_dir(wolf3d, wolf3d->player.looking_dir + dir, x, from);
 		x += step;
 	}

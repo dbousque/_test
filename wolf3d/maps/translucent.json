@@ -1,0 +1,41 @@
+{
+  "textures": [
+    { "name": "stock1", "file": "resources/simple/stock1.tga" },
+    { "name": "stock2", "file": "resources/simple/stock2.tga" },
+    { "name": "stock3", "file": "resources/simple/stock3.tga" },
+    { "name": "stock4", "file": "resources/simple/stock4.tga" },
+    { "name": "black_0_5", "file": "resources/translucent/black_0_5.tga" },
+    { "name": "black_0_5_red", "file": "resources/translucent/black_0_5_red.tga" },
+    { "name": "yellow_0_5_red", "file": "resources/translucent/yellow_0_5_red.tga" },
+    { "name": "blue_0_5_red", "file": "resources/translucent/blue_0_5_red.tga" },
+    { "name": "green_0_5_red", "file": "resources/translucent/green_0_5_red.tga" }
+  ],
+  "blocks": [
+    { "id": 2, "go_through": false, "faces": ["stock1", "stock1", "stock1", "stock1"] },
+    { "id": 3, "go_through": false, "obj_texture": "black_0_5" },
+    { "id": 4, "go_through": false, "obj_texture": "black_0_5_red" },
+    { "id": 5, "go_through": false, "obj_texture": "yellow_0_5_red" },
+    { "id": 6, "go_through": false, "faces": ["stock1", "stock2", "stock3", "stock4"] },
+    { "id": 7, "go_through": false, "obj_texture": "blue_0_5_red" },
+    { "id": 8, "go_through": false, "obj_texture": "green_0_5_red" }
+  ],
+  "map": [
+    [2, 2, 2, 2, 2, 2, 2, 2, 2, 2],
+    [2, 0, 0, 0, 0, 0, 0, 0, 0, 2],
+    [2, 0, 0, 0, 0, 0, 0, 0, 0, 2],
+    [2, 0, 0, 0, 0, 8, 0, 0, 0, 2],
+    [2, 0, 0, 6, 0, 0, 6, 0, 0, 2],
+    [2, 0, 0, 0, 0, 0, 0, 0, 0, 2],
+    [2, 0, 0, 0, 0, 0, 0, 5, 0, 2],
+    [2, 0, 7, 0, 0, 0, 0, 0, 0, 2],
+    [2, 0, 0, 0, 0, 0, 0, 0, 0, 2],
+    [2, 0, 0, 0, 4, 0, 0, 0, 0, 2],
+    [2, 0, 0, 0, 0, 0, 0, 0, 0, 2],
+    [2, 0, 0, 0, 0, 0, 0, 0, 0, 2],
+    [2, 0, 0, 6, 0, 0, 6, 0, 0, 2],
+    [2, 0, 0, 0, 0, 0, 0, 0, 0, 2],
+    [2, 0, 0, 0, 1, 0, 0, 0, 0, 2],
+    [2, 0, 0, 0, 0, 0, 0, 0, 0, 2],
+    [2, 2, 2, 2, 2, 2, 2, 2, 2, 2]
+  ]
+}

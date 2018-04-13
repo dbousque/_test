@@ -1,0 +1,45 @@
+{
+  "textures": [
+    { "name": "light", "file": "resources/photo/light.tga" },
+    { "name": "rocks", "file": "resources/photo/rocks.tga" },
+    { "name": "grass", "file": "resources/photo/grass.tga" },
+    { "name": "metal_ceiling", "file": "resources/photo/metal_ceiling.tga" },
+    { "name": "quake_texture", "file": "resources/photo/quake_texture.tga" },
+    { "name": "troll", "file": "resources/photo/troll.tga" },
+    { "name": "turn_around", "file": "resources/photo/turn_around.tga" },
+    { "name": "thumbs", "file": "resources/photo/thumbs.tga" }
+  ],
+  "blocks": [
+    { "id": 4, "go_through": true, "obj_texture": "light" },
+    { "id": 5, "go_through": false, "faces": ["rocks", "rocks", "rocks", "rocks"] },
+    { "id": 11, "go_through": false, "faces": ["quake_texture", "quake_texture", "quake_texture", "quake_texture"] },
+    { "id": 12, "go_through": true, "obj_texture": "troll" },
+    { "id": 13, "go_through": true, "obj_texture": "turn_around" },
+    { "id": 14, "go_through": false, "faces": ["quake_texture", "rocks", "rocks", "quake_texture"] },
+    { "id": 15, "go_through": true, "obj_texture": "thumbs" }
+  ],
+  "floor": "grass",
+  "ceiling": "metal_ceiling",
+  "map": [
+    [11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11],
+    [11,0, 0, 0, 0, 4, 0, 0, 0, 4, 0, 0, 0, 0, 4, 0, 0, 0, 0, 11],
+    [11,0, 11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,0, 11],
+    [11,0, 11,0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 11,0, 11],
+    [11,4, 11,0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 11,0, 11],
+    [11,0, 11,0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 11,12,11],
+    [11,0, 11,0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 11,11,11],
+    [11,13,11,0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 11],
+    [11,4, 11,0, 0, 0, 5, 5, 5, 5, 5, 5, 0, 0, 0, 5, 5, 5, 0, 11],
+    [11,0, 11,0, 0, 0, 5, 0, 0, 0, 0, 5, 0, 0, 0, 5, 15,5, 0, 11],
+    [11,0, 11,11,11,11,5, 0, 0, 0, 0, 5, 5, 5, 5, 5, 0, 5, 0, 11],
+    [11,0, 0, 0, 0, 11,5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 0, 11],
+    [11,11,11,11,4, 11,5, 0, 0, 0, 0, 5, 5, 5, 5, 5, 5, 5, 0, 11],
+    [11,0, 0, 11,0, 11,5, 0, 0, 0, 0, 5, 0, 0, 0, 0, 0, 0, 0, 11],
+    [11,0, 0, 11,1, 14,5, 0, 5, 5, 5, 5, 0, 0, 0, 0, 0, 0, 0, 11],
+    [11,0, 0, 11,0, 0, 0, 0, 5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 11],
+    [11,0, 0, 11,14,0, 0, 0, 5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 11],
+    [11,0, 0, 0, 5, 0, 0, 0, 5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 11],
+    [11,0, 0, 0, 5, 0, 0, 0, 5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 11],
+    [11,11,11,11,5, 5, 5, 5, 5, 11,11,11,11,11,11,11,11,11,11,11]
+  ]
+}
