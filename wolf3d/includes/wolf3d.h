@@ -210,5 +210,24 @@ void			send_ray_in_dir(t_wolf3d *wolf3d, float direction, int pixel_x,
 																float from[2]);
 t_texture		*find_texture(t_wolf3d *wolf3d, t_value *texture_name);
 void			*compute_wolf3d_part(void *thread_data);
+void			render_ray(t_wolf3d *wolf3d, int pixel_x,
+														t_ray_result *ray_res);
+void			compute_wolf3d(t_wolf3d *wolf3d);
+char			read_config_file(char *filename, t_config *config);
+int				loop(void *param);
+void			render_wolf3d(t_wolf3d *wolf3d);
+char			init_wolf3d_win(t_wolf3d *wolf3d, t_config *conf, char *title);
+char			init_wolf3d(t_wolf3d *wolf3d, t_value *map_json);
+void			draw_column(t_wolf3d *wolf3d, int pixel_x,
+														t_ray_result *ray_res);
+void			init_draw_floor_vars(float floor_xy[2], int pixel_xy[2],
+													t_ray_result *rr, int y);
+void			draw_floor_and_ceiling(t_wolf3d *wolf3d, t_ray_result *rr,
+														int pixel_x, int y);
+void			draw_texture(t_wolf3d *wolf3d, int pixel_x,
+									t_ray_result *ray_res, int block_until);
+void			draw_floor_and_ceiling_from_coords(t_wolf3d *wolf3d,
+				int p_xy[2], float distance_from_angle, int texture_inds[2]);
+float			make_distance(int i, int block_until);
 
 #endif

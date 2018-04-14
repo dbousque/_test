@@ -31,7 +31,7 @@ char	valid_texture(t_value *texture, char **error_msg)
 	}
 	return (1);
 }
-#include <stdio.h>
+
 unsigned char	*read_image_file(char *path, int *width, int *height, t_texture *texture)
 {
 	unsigned char	*pixels;

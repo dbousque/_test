@@ -31,7 +31,7 @@ void	set_seen_player(t_wolf3d *wolf3d, int i, char *seen_player)
 	wolf3d->player.x = i + 0.5;
 	*seen_player = 1;
 }
-#include <stdio.h>
+
 char	interpret_map_row(t_wolf3d *wolf3d, t_value *tmp_tab, int *width,
 															char *seen_player)
 {

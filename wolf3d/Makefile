@@ -12,15 +12,26 @@
 
 NAME	=	wolf3d
 
-SOURCES	=	srcs/draw_debug.c \
+SOURCES	=	srcs/compute_wolf3d.c \
+			srcs/draw_debug.c \
+			srcs/draw_ray_result.c \
+			srcs/draw_ray_result2.c \
+			srcs/draw_texture.c \
+			srcs/draw_utils.c \
 			srcs/events.c \
+			srcs/init_wolf3d.c \
 			srcs/interpret_blocks.c \
 			srcs/interpret_map.c \
 			srcs/interpret_textures.c \
 			srcs/list.c \
+			srcs/loop.c \
 			srcs/main.c \
+			srcs/read_config_file.c \
 			srcs/read_tga.c \
+			srcs/render_ray.c \
+			srcs/threads_utils.c \
 			srcs/utils.c \
+			srcs/utils2.c \
 			srcs/valid_block.c \
 			srcs/window.c
 
