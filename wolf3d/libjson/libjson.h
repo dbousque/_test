@@ -39,4 +39,22 @@ t_value			**get_tab(t_value *value);
 t_dict			*get_dict(t_value *dict_val);
 t_value			*read_json_str(char *content);
 
+/* internal */
+
+void			*open_failed(void);
+void			*max_size_exceeded(char *filename, int max_size);
+void			malloc_error(void);
+void			wrong_format(void);
+void			no_colon(void);
+void			value_type_error(void);
+t_value			*handle_array(char *buf, int *i);
+t_value			*handle_dict(char *buf, int *i);
+t_value			*keys_n_values_to_value(t_list *keys, t_list *values);
+t_value			*string_value(char *buf, int *i);
+t_value			*void_value(void);
+void			go_to_next_char(char *buf, int *i, char c);
+char			*take_up_to_char(char *buf, int *i, char c, char preceed, int *len);
+t_list			*new_list_elt(void *content, int content_size);
+void			go_to_next_char_not_in_string(char *buf, int *i, char c);
+
 #endif

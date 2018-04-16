@@ -18,7 +18,15 @@ CFLAGS	=	-Wall -Wextra -Werror
 
 RM		=	rm -f
 
-SRC		=	srcs/json.c \
+SRC		=	srcs/get_helpers.c \
+			srcs/get_helpers2.c \
+			srcs/handle_x.c \
+			srcs/handle_x2.c \
+			srcs/json.c \
+			srcs/json2.c \
+			srcs/json_errors.c \
+			srcs/print_utils.c \
+			srcs/read_free_json.c \
 			libdodo_srcs/arg_put2.c \
 			libdodo_srcs/arg_put3.c \
 			libdodo_srcs/arg_put4.c \
