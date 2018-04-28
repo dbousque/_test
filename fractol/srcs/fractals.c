@@ -1,4 +1,14 @@
-
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   fractals.c                                         :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: dbousque <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2018/04/28 14:31:54 by dbousque          #+#    #+#             */
+/*   Updated: 2018/04/28 14:31:56 by dbousque         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
 #include "fractol.h"
 
@@ -56,25 +66,24 @@ int		julia(t_fractal *fractal, double px, double py, t_window *w)
 int		burning_ship(t_fractal *fractal, double px, double py, t_window *w)
 {
 	float	*params;
-	double	x0;
-	double	y0;
-	double	x;
-	double	y;
+	double	xy0[2];
+	double	xy[2];
 	double	x_temp;
 	int		iteration;
 
 	params = fractal->params;
 	params[0] = 4.0;
-	x0 = px / (w->width / 3.5) - 2.5;
-	y0 = py / (w->height / 2.0) - 1.0;
-	x = 0.0;
-	y = 0.0;
+	xy0[0] = px / (w->width / 3.5) - 2.5;
+	xy0[1] = py / (w->height / 2.0) - 1.0;
+	xy[0] = 0.0;
+	xy[1] = 0.0;
 	iteration = 0;
-	while (x * x + y * y < params[0] && iteration < fractal->max_iter)
+	while (xy[0] * xy[0] + xy[1] * xy[1] < params[0]
+		&& iteration < fractal->max_iter)
 	{
-		x_temp = x * x - y * y + x0;
-		y = fabs(2 * x * y + y0);
-		x = fabs(x_temp);
+		x_temp = xy[0] * xy[0] - xy[1] * xy[1] + xy0[0];
+		xy[1] = fabs(2 * xy[0] * xy[1] + xy0[1]);
+		xy[0] = fabs(x_temp);
 		iteration++;
 	}
 	return (iteration);

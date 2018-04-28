@@ -1,11 +1,31 @@
-
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   utils3.c                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: dbousque <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2018/04/28 14:32:44 by dbousque          #+#    #+#             */
+/*   Updated: 2018/04/28 14:32:48 by dbousque         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
 #include "fractol.h"
+
+void	ft_putstr(char *str)
+{
+	int		i;
+
+	i = 0;
+	while (str[i])
+		i++;
+	write(1, str, i);
+}
 
 void	clear_screen(t_fractol *fractol)
 {
 	int			x;
-	int			y;	
+	int			y;
 
 	x = 0;
 	while (x < fractol->window.width)

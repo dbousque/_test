@@ -1,4 +1,14 @@
-
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   dragon.c                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: dbousque <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2018/04/28 14:31:20 by dbousque          #+#    #+#             */
+/*   Updated: 2018/04/28 14:31:22 by dbousque         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
 #include "fractol.h"
 
@@ -86,11 +96,13 @@ void	dragon(t_fractol *f)
 	t_fractal	*fractal;
 	double		branch_len;
 	int			iter;
-	
+
 	clear_screen(f);
 	fractal = &(f->fractals[f->current_fractal]);
-	from_angle[0] = (f->window.width / 2) / fractal->zoom - (fractal->decal_x * fractal->zoom);
-	from_angle[1] = (f->window.height / 2) / fractal->zoom - (fractal->decal_y * fractal->zoom);
+	from_angle[0] = (f->window.width / 2) / fractal->zoom -
+		(fractal->decal_x * fractal->zoom);
+	from_angle[1] = (f->window.height / 2) / fractal->zoom -
+		(fractal->decal_y * fractal->zoom);
 	from_angle[2] = 160.0 + fractal->params[0];
 	branch_len = (f->window.height / 2) * fractal->zoom;
 	iter = fractal->max_iter;

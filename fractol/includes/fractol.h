@@ -1,4 +1,14 @@
-
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   fractol.h                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: dbousque <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2018/04/28 14:54:53 by dbousque          #+#    #+#             */
+/*   Updated: 2018/04/28 14:54:54 by dbousque         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
 #ifndef FRACTOL_H
 # define FRACTOL_H
@@ -40,7 +50,7 @@
 # define IS_B(k) (k == 11 || k == 98)
 # define IS_PLUS(k) (k == 24 || k == 61)
 # define IS_MINUS(k) (k == 27 || k == 45)
-# define IS_PLUS_BIS(k) (k == 44 || k == 47)
+# define IS_PLUS_BIS(k) (k == 44)
 # define IS_MINUS_BIS(k) (k == 47 || k == 46)
 # define IS_MOUSE_FORWARD(k) (k == 4)
 # define IS_MOUSE_BACKWARDS(k) (k == 5)
@@ -106,7 +116,7 @@ typedef struct	s_thread_data
 void			init_fractals(t_fractol *fractol);
 void			ft_putstr(char *str);
 int				exit_fractol(t_fractol *fractol);
-void			parse_opts(int argc, char **argv, int *width, int *height);
+char			parse_opts(int argc, char **argv, int *width, int *height);
 void			maybe_update_current_fractal(t_fractol *fractol, int argc,
 																char **argv);
 void			ft_itoa(int n, char *res);
@@ -132,13 +142,20 @@ void			tree(t_fractol *fractol);
 void			snowflake(t_fractol *fractol);
 void			losange(t_fractol *fractol);
 void			dragon(t_fractol *fractol);
-void			zoom_on_point(t_fractal *fractal, double x, double y,
-										float quantity, t_fractol *fractol);
 void			zoom_on_mouse(t_fractal *fractal, float quantity,
 														t_fractol *fractol);
 void			recursive_dragon_right(t_fractol *frac, int iter,
 									double from_angle[3], double branch_len);
 void			clear_screen(t_fractol *fractol);
 void			draw_line(t_fractol *f, double from[2], double to[2], int iter);
+char			init_fractol(t_fractol *fractol, int width, int height,
+																char *title);
+void			print_time_taken(struct timeval *start, char *before,
+																char *after);
+int				millis_since(struct timeval *start);
+void			compute_fractol(t_fractol *fractol);
+void			init_greyscale_palette(int *palette);
+void			init_bluescale_palette(int *palette);
+char			ft_streq(char *str1, char *str2);
 
 #endif

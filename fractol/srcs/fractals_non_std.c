@@ -1,4 +1,14 @@
-
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   fractals_non_std.c                                 :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: dbousque <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2018/04/28 14:32:01 by dbousque          #+#    #+#             */
+/*   Updated: 2018/04/28 14:32:03 by dbousque         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
 #include "fractol.h"
 
@@ -32,7 +42,7 @@ void	tree(t_fractol *fractol)
 	double		from_angle[3];
 	t_fractal	*fractal;
 	double		branch_len;
-	
+
 	clear_screen(fractol);
 	fractal = &(fractol->fractals[fractol->current_fractal]);
 	from_angle[0] = (fractol->window.width / 2) / fractal->zoom
@@ -76,7 +86,7 @@ void	snowflake(t_fractol *f)
 	double		from_angle[3];
 	t_fractal	*fractal;
 	double		branch_len;
-	
+
 	clear_screen(f);
 	fractal = &(f->fractals[f->current_fractal]);
 	from_angle[0] = (f->window.width / 2) / fractal->zoom
@@ -97,7 +107,7 @@ void	losange(t_fractol *f)
 	double		from_angle[3];
 	t_fractal	*fractal;
 	double		branch_len;
-	
+
 	clear_screen(f);
 	fractal = &(f->fractals[f->current_fractal]);
 	from_angle[0] = (f->window.width / 2) / fractal->zoom

@@ -12,13 +12,17 @@
 
 NAME	=	fractol
 
-SOURCES	=	srcs/dragon.c \
+SOURCES	=	srcs/compute_fractol.c \
+			srcs/compute_utils.c \
+			srcs/dragon.c \
 			srcs/events.c \
+			srcs/events2.c \
 			srcs/fractals.c \
 			srcs/fractals_non_std.c \
 			srcs/init_fractals.c \
 			srcs/main.c \
 			srcs/palettes.c \
+			srcs/palettes2.c \
 			srcs/utils.c \
 			srcs/utils2.c \
 			srcs/utils3.c \
