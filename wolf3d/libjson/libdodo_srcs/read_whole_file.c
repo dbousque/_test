@@ -6,7 +6,7 @@
 /*   By: dbousque <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/03 15:57:53 by dbousque          #+#    #+#             */
-/*   Updated: 2015/12/30 15:58:14 by dbousque         ###   ########.fr       */
+/*   Updated: 2018/04/28 18:12:27 by dbousque         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,30 +21,28 @@ char	*read_error(char *error, char err)
 char	*read_whole_file(char *filename, char *error, int max_size,
 																int *file_size)
 {
-	char	*res;
+	char	*r;
 	char	buf[BUF_SIZE];
-	int		size;
-	int		ret;
-	int		fd;
+	int		s[3];
 
 	*error = 0;
-	fd = open(filename, O_RDONLY);
-	if (fd < 0)
+	s[2] = open(filename, O_RDONLY);
+	if (s[2] < 0)
 		return (read_error(error, 1));
-	size = 0;
-	while ((ret = read(fd, buf, BUF_SIZE)) > 0)
+	s[0] = 0;
+	while ((s[1] = read(s[2], buf, BUF_SIZE)) > 0)
 	{
-		size += ret;
-		if (size > max_size)
+		s[0] += s[1];
+		if (s[0] > max_size)
 			return (read_error(error, 3));
 	}
-	close(fd);
-	fd = open(filename, O_RDONLY);
-	if (fd < 0)
+	close(s[2]);
+	s[2] = open(filename, O_RDONLY);
+	if (s[2] < 0)
 		return (read_error(error, 1));
-	if (!(res = (char*)malloc(sizeof(char) * (size + 1))) || read(fd, res, size) < 0)
+	if (!(r = malloc(sizeof(char) * (s[0] + 1))) || read(s[2], r, s[0]) < 0)
 		return (read_error(error, 2));
-	res[size] = '\0';
-	*file_size = size;
-	return (res);
+	r[s[0]] = '\0';
+	*file_size = s[0];
+	return (r);
 }

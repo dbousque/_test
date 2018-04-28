@@ -6,7 +6,7 @@
 #    By: dbousque <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2016/12/08 16:58:25 by dbousque          #+#    #+#              #
-#    Updated: 2016/12/08 17:07:13 by dbousque         ###   ########.fr        #
+#    Updated: 2018/04/28 19:35:15 by dbousque         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -59,7 +59,7 @@ ifeq ($(UNAME_S), Linux)
 	XLIB	=	-lXext -lX11 -lm -lSOIL -lGL
 endif
 ifeq ($(UNAME_S), Darwin)
-	XLIB	=	-framework OpenGL -framework AppKit -lm -L /Users/recast.ai/.brew/lib -lSOIL
+	XLIB	=	-framework OpenGL -framework AppKit -lm -L ~/.brew/lib -lSOIL
 endif
 
 CC		=	clang

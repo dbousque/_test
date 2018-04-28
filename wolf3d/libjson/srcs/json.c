@@ -1,15 +1,28 @@
-
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   json.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: dbousque <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2018/04/28 17:13:37 by dbousque          #+#    #+#             */
+/*   Updated: 2018/04/28 17:13:39 by dbousque         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
 #include "libjson.h"
 
-char	*take_up_to_char(char *buf, int *i, char c, char preceed, int *len)
+char	*take_up_to_char(char *buf, int *i, char c_preceed[2], int *len)
 {
 	int		start;
 	char	*res;
 
 	start = *i;
-	while (buf[*i] && (buf[*i] != c || (*i > 0 && buf[*i - 1] == preceed)))
+	while (buf[*i] && (buf[*i] != c_preceed[0]
+		|| (*i > 0 && buf[*i - 1] == c_preceed[1])))
+	{
 		(*i)++;
+	}
 	*len = *i - start;
 	if (!(res = (char*)malloc(sizeof(char) * (*len + 1))))
 		malloc_error();
@@ -34,10 +47,13 @@ t_value	*string_value(char *buf, int *i)
 	char	*str;
 	int		len;
 	t_value	*res;
+	char	c_preceed[2];
 
+	c_preceed[0] = '"';
+	c_preceed[1] = '\\';
 	go_to_next_char(buf, i, '"');
 	(*i)++;
-	str = take_up_to_char(buf, i, '"', '\\', &len);
+	str = take_up_to_char(buf, i, c_preceed, &len);
 	(*i)++;
 	if (!(res = (t_value*)malloc(sizeof(t_value))))
 		malloc_error();

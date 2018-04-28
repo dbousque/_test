@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   libjson.h                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: dbousque <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2018/04/28 18:08:01 by dbousque          #+#    #+#             */
+/*   Updated: 2018/04/28 18:08:04 by dbousque         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef LIBJSON_H
 # define LIBJSON_H
 
@@ -32,14 +44,12 @@ t_value			*handle_buf(char *buf, int *i);
 double			get_double(t_value *value);
 long			get_long(t_value *value);
 char			*get_string(t_value *value);
-char 			get_bool(t_value *value);
+char			get_bool(t_value *value);
 t_value			*get_val(t_value *dict_inp, char *key);
 t_value			*get(t_value *array, int i);
 t_value			**get_tab(t_value *value);
 t_dict			*get_dict(t_value *dict_val);
 t_value			*read_json_str(char *content);
-
-/* internal */
 
 void			*open_failed(void);
 void			*max_size_exceeded(char *filename, int max_size);
@@ -53,8 +63,10 @@ t_value			*keys_n_values_to_value(t_list *keys, t_list *values);
 t_value			*string_value(char *buf, int *i);
 t_value			*void_value(void);
 void			go_to_next_char(char *buf, int *i, char c);
-char			*take_up_to_char(char *buf, int *i, char c, char preceed, int *len);
+char			*take_up_to_char(char *buf, int *i, char c_preceed[2],
+																	int *len);
 t_list			*new_list_elt(void *content, int content_size);
 void			go_to_next_char_not_in_string(char *buf, int *i, char c);
+char			is_digit(char c);
 
 #endif

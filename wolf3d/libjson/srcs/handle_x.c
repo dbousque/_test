@@ -1,13 +1,16 @@
-
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   handle_x.c                                         :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: dbousque <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2018/04/28 17:13:23 by dbousque          #+#    #+#             */
+/*   Updated: 2018/04/28 17:13:26 by dbousque         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
 #include "libjson.h"
-
-char	is_digit(char c)
-{
-	if (c >= '0' && c <= '9')
-		return (1);
-	return (0);
-}
 
 t_value	*handle_number_end(t_value *res, char *tmp, char floating_point,
 																char negative)
@@ -34,17 +37,25 @@ t_value	*handle_number_end(t_value *res, char *tmp, char floating_point,
 	return (res);
 }
 
+void	handle_number2(char *buf, int *i, int start, char **tmp)
+{
+	if (!(*tmp = (char*)malloc(sizeof(char) * (*i - start + 1))))
+		malloc_error();
+	(*tmp)[*i - start] = '\0';
+	ft_strncpy(*tmp, buf + start, *i - start);
+}
+
 t_value	*handle_number(char *buf, int *i)
 {
 	int		start;
 	char	floating_point;
-	char	*tmp;
-	t_value	*res;
 	char	negative;
+	t_value	*res;
+	char	*tmp;
 
-	negative = 0;
 	if (!(res = (t_value*)malloc(sizeof(t_value))))
 		malloc_error();
+	negative = 0;
 	floating_point = 0;
 	if (buf[*i] == '-')
 	{
@@ -58,10 +69,7 @@ t_value	*handle_number(char *buf, int *i)
 			floating_point = 1;
 		(*i)++;
 	}
-	if (!(tmp = (char*)malloc(sizeof(char) * (*i - start + 1))))
-		malloc_error();
-	tmp[*i - start] = '\0';
-	ft_strncpy(tmp, buf + start, *i - start);
+	handle_number2(buf, i, start, &tmp);
 	return (handle_number_end(res, tmp, floating_point, negative));
 }
 
@@ -102,13 +110,11 @@ t_value	*handle_buf(char *buf, int *i)
 		if (
 			(buf[*i] == 't' && buf[*i + 1] && buf[*i + 1] == 'r'
 				&& buf[*i + 2] && buf[*i + 2] == 'u'
-				&& buf[*i + 3] && buf[*i + 3] == 'e'
-			) || (buf[*i] == 'f' && buf[*i + 1] && buf[*i + 1] == 'a'
+				&& buf[*i + 3] && buf[*i + 3] == 'e')
+			|| (buf[*i] == 'f' && buf[*i + 1] && buf[*i + 1] == 'a'
 				&& buf[*i + 2] && buf[*i + 2] == 'l'
 				&& buf[*i + 3] && buf[*i + 3] == 's'
-				&& buf[*i + 4] && buf[*i + 4] == 'e'
-			)
-		)
+				&& buf[*i + 4] && buf[*i + 4] == 'e'))
 		{
 			return (handle_boolean(buf, i));
 		}

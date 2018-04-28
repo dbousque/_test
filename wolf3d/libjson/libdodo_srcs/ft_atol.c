@@ -6,7 +6,7 @@
 /*   By: dbousque <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/11/23 15:49:34 by dbousque          #+#    #+#             */
-/*   Updated: 2016/01/02 11:59:20 by dbousque         ###   ########.fr       */
+/*   Updated: 2018/04/28 19:00:18 by dbousque         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ static int	ft_is_valid(char c)
 	return (0);
 }
 
-long	ft_atol(const char *str)
+long		ft_atol(const char *str)
 {
 	long	res;
 	int		i;
