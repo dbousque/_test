@@ -1,6 +1,6 @@
 
 
-#include "Tintin_reporter.hpp"
+#include "matt_daemon.hpp"
 
 int		create_server(int port)
 {
@@ -23,7 +23,7 @@ int		create_server(int port)
 	ret = bind(sock, (const struct sockaddr*)&sin, sizeof(sin));
 	if (ret == -1)
 		return (-1);
-	ret = listen(sock, 4);
+	ret = listen(sock, MAX_NB_CLIENTS);
 	if (ret == -1)
 		return (-1);
 	return (sock);
