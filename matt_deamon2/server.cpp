@@ -17,6 +17,7 @@ int		create_server(int port)
 		return (-1);
 	ret = 0;
 	setsockopt(sock, IPPROTO_IPV6, IPV6_V6ONLY, &ret, sizeof(int));
+	sin.sin6_flowinfo = 0;
 	sin.sin6_family = AF_INET6;
 	sin.sin6_port = htons(port);
 	sin.sin6_addr = in6addr_any;
@@ -45,6 +46,7 @@ bool	read_and_log_client_input(Tintin_reporter &reporter, int i, int *clients, i
 	{
 		if (!(reporter.log((char*)"Closing client", INFO)))
 			return (false);
+		close(clients[i]);
 		x = i;
 		while (x < *nb_clients - 1)
 		{
@@ -67,17 +69,20 @@ bool	read_and_log_client_input(Tintin_reporter &reporter, int i, int *clients, i
 
 bool	accept_client(Tintin_reporter &reporter, int server_fd, int *clients, int *nb_clients)
 {
-	struct sockaddr_in	sin;
+	struct sockaddr_in6	sin;
 	socklen_t			len;
+	int					fd;
 
-	clients[*nb_clients] = accept(server_fd, (struct sockaddr*)&sin, &len);
+	len = sizeof(sin);
+	fd = accept(server_fd, (struct sockaddr*)&sin, &len);
 	if (*nb_clients >= MAX_NB_CLIENTS)
 	{
-		close(clients[*nb_clients]);
+		close(fd);
 		if (!(reporter.log((char*)"Could not accept new client, too many clients connected", INFO)))
 			return (false);
 		return (true);
 	}
+	clients[*nb_clients] = fd;
 	if (clients[*nb_clients] == -1)
 	{
 		if (!(reporter.log((char*)"accept failed", INFO)))
@@ -113,12 +118,7 @@ void	run_server(Tintin_reporter &reporter, int server_fd, int lock_file_fd)
 			FD_SET(clients[i], &fds);
 			i++;
 		}
-		reporter.log((char*)"before select", INFO);
 		nb_ready = select(highest_fd + 1, &fds, NULL, NULL, NULL);
-		char buf[100];
-		sprintf(buf, "nb_ready %d\n", nb_ready);
-		reporter.log(buf, INFO);
-		reporter.log((char*)"after select", INFO);
 		if (nb_ready == -1)
 		{
 			reporter.log((char*)"select error", ERROR);
@@ -128,7 +128,6 @@ void	run_server(Tintin_reporter &reporter, int server_fd, int lock_file_fd)
 		{
 			if (FD_ISSET(server_fd, &fds))
 			{
-				reporter.log((char*)"server_fd is ready !", INFO);
 				if (!accept_client(reporter, server_fd, clients, &nb_clients))
 					return (exit_daemon(reporter, server_fd, lock_file_fd));
 				nb_ready--;
@@ -138,7 +137,6 @@ void	run_server(Tintin_reporter &reporter, int server_fd, int lock_file_fd)
 			{
 				if (FD_ISSET(clients[i], &fds))
 				{
-					reporter.log((char*)"client is ready !", INFO);
 					if (!read_and_log_client_input(reporter, i, clients, &nb_clients))
 						return (exit_daemon(reporter, server_fd, lock_file_fd));
 				}

@@ -10,6 +10,7 @@
 # include <signal.h>
 # include <stdio.h>
 # include <iostream>
+# include <stdlib.h>
 # include "Tintin_reporter.hpp"
 
 # define MAX_NB_CLIENTS 3

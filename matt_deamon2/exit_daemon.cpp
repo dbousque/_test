@@ -6,6 +6,7 @@ void	exit_daemon(Tintin_reporter &reporter, int server_fd, int lock_file_fd)
 {
 	if (server_fd >= 0)
 		close(server_fd);
+  reporter.log((char*)"Quitting", INFO);
 	delete &reporter;
 	if (lock_file_fd >= 0)
 	{
@@ -13,4 +14,5 @@ void	exit_daemon(Tintin_reporter &reporter, int server_fd, int lock_file_fd)
 		close(lock_file_fd);
 		unlink("/var/lock/matt_daemon.lock");
 	}
+  exit(0);
 }
